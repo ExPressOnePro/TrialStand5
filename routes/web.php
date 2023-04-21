@@ -21,8 +21,14 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-/*Route::group(['middleware' => 'role:web-developer'], function() {
+Route::group(['middleware' => 'role:web-developer'], function() {
     Route::get('/dashboard', function() {
         return 'Добро пожаловать, Веб-разработчик';
     });
-});*/
+});
+
+Route::group(['middleware' => 'role:project-manager'], function() {
+    Route::get('/dashboard', function() {
+        return 'Добро пожаловать, Project Manager';
+    });
+});
