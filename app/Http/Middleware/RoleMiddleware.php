@@ -13,8 +13,8 @@ class RoleMiddleware
             abort(404);
         }
         if($permission !== null && !auth()->user()->can($permission)) {
-            abort(404);
-        }
+        abort(404);
+    }
         return $next($request);
     }
 }
