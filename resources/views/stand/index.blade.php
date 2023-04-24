@@ -20,10 +20,10 @@
                         <table class='table table-sm table-hover mb-0'>
                             <thead>
                             <tr>
-                                <th class='not-sortable'>время</th>
-                                <th class='not-sortable'>возвещатель"</th>
-                                <th class='not-sortable'>возвещатель"</th>
-                                <th class='not-sortable'>отчет</th>
+                                <th class='not-sortable'>Время</th>
+                                <th class='not-sortable'>Возвещатель</th>
+                                <th class='not-sortable'>Возвещатель</th>
+                                <th class='not-sortable'>Отчет</th>
                             </tr>
                             </thead>
                             <tbody>
