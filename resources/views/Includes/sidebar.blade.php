@@ -11,7 +11,7 @@
                     <ul class="metismenu" id="menu">
                         <li class="Ul_li--hover"><a class="has-arrow" href="#"><i class="i-Bar-Chart text-20 mr-2 text-muted"></i><span class="item-name text-15 text-muted">Dashboard</span></a>
                             <ul class="mm-collapse">
-                                <li class="item-name"><a href="{{ route('dash') }}"><i class="i-Circular-Point mr-2 text-muted"></i><span class="text-muted">User control</span></a></li>
+                                <li class="item-name"><a href="{{ route('UserControl') }}"><i class="i-Circular-Point mr-2 text-muted"></i><span class="text-muted">User control</span></a></li>
                                 <li class="item-name"><a href="{{ route('stand') }}"><i class="i-Circular-Point mr-2 text-muted"></i><span class="text-muted">Stand</span></a></li>
                                 <li class="item-name"><a href="dashboard3.html"><i class="i-Circular-Point mr-2 text-muted"></i><span class="text-muted">Version 3</span></a></li>
                                 <li class="item-name"><a href="dashboard4.html"><i class="i-Circular-Point mr-2 text-muted"></i><span class="text-muted">Version 4</span></a></li>

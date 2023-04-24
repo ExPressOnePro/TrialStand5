@@ -71,14 +71,14 @@
     </div>
 </div>--}}
 
-<div class="auth-layout-wrap" style="background-image: url(../../dist-assets/images/photo-wide-4.jpg)">
+<div class="auth-layout-wrap" style="background-image: url(../../dist-assets/images/log2.jpg)">
     <div class="auth-content">
         <div class="card o-hidden">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col">
                     <div class="p-4">
                         <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-                        <h1 class="mb-3 text-18">Sign In</h1>
+                        <h1 class="mb-3 text-36 text-center">Вход</h1>
 
                         <form method="POST" action="{{ route('login') }}">
 
@@ -108,23 +108,25 @@
                                 </div>
                             </div>
 
-
-                            <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('Login') }}</button>
-                            @if (Route::has('password.request'))
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                            @endif
+                                    <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('Войти') }}</button>
+                                        @if (Route::has('password.request'))
+                                            <a class="btn btn-link" href="{{ route('password.request') }}">
+                                                {{ __('Forgot Your Password?') }}
+                                            </a>
+                                        @endif
                         </form>
-                        <div class="mt-3 text-center"><a class="text-muted" href="forgot.html">
-                                <u>Forgot Password?</u></a></div>
-                    </div>
-                </div>
-                <div class="col-md-6 text-center" style="background-size: cover;background-image: url(../../dist-assets/images/photo-long-3.jpg)">
-                    <div class="pr-3 auth-right"><a class="btn btn-rounded btn-outline-primary btn-outline-email btn-block btn-icon-text" href="signup.html"><i class="i-Mail-with-At-Sign"></i> Sign up with Email</a><a class="btn btn-rounded btn-outline-google btn-block btn-icon-text"><i class="i-Google-Plus"></i> Sign up with Google</a><a class="btn btn-rounded btn-block btn-icon-text btn-outline-facebook"><i class="i-Facebook-2"></i> Sign up with Facebook</a></div>
+
+                                <div class="col-md-6">
+                                    <a href="{{ route('pageRegistration') }}">
+                                    <button class="btn btn-rounded btn-primary btn-block mt-2">
+                                        {{ __('Register') }}
+                                    </button>
+                                    </a>
+                                </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection

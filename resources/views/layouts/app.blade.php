@@ -27,9 +27,9 @@
                 <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
                         @if(Request::is(
                             'dashboard-3',
-                            'admin',
+                            'UserControl',
                             'stand',
-                            'stands/create',
+                            'home',
                             'congregations'
                         ))
                             @include('includes.sidebar')

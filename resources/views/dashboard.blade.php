@@ -137,50 +137,7 @@
                     </div>
                 </div>
             </div>
-            <!-- mask-form-->
-            <div class="mt-4 col-md-6">
-                <div class="card bg-defualt text-black">
-                    <!-- -->
-                    <!-- -->
-                    <div class="card-body">
-                        <!-- -->
-                        <!-- -->
-                        <div class="d-flex align-items-center mb-4"><i class="i-ID-Card text-22 mr-2"></i>
-                            <h5 class="text-18 font-weight-700 card-title m-0">Card Information</h5>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p class="font-weight-400 mb-2">CPF</p>
-                                <input class="form-control" type="text" placeholder="999.999.999-99" />
-                            </div>
-                            <div class="mb-3 col-md-6">
-                                <p class="font-weight-400 mb-2">Zip Code</p>
-                                <input class="form-control" type="text" placeholder="99999-999" />
-                            </div>
-                            <div class="mb-3 col-md-6">
-                                <p class="font-weight-400 mb-2">Phone</p>
-                                <input class="form-control" type="text" placeholder="+9 (999) 999-9999" />
-                            </div>
-                            <div class="mb-3 col-md-6">
-                                <p class="font-weight-400 mb-2">Master Card</p>
-                                <input class="form-control" type="text" placeholder="9999 9999 9999 9999" />
-                            </div>
-                            <div class="mb-3 col-md-6">
-                                <p class="font-weight-400 mb-2">Date</p>
-                                <input class="form-control" type="text" placeholder="mm/dd/yy" />
-                            </div>
-                            <div class="mb-3 col-md-6">
-                                <p class="font-weight-400 mb-2">CPF/CNPJ</p>
-                                <input class="form-control" type="text" placeholder="99.999.999/9999-99" />
-                            </div>
-                        </div>
-                        <button class="btn float-right btn-danger" type="button">Submit</button>
-                    </div>
-                    <!-- -->
-                    <!-- -->
-                </div>
-            </div>
-            <!-- sales-status-->
+
         </div>
 
         <!-- end of row-->

@@ -13,7 +13,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
+
 
     public const TABLE = 'users';
 

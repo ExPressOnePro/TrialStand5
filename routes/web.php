@@ -12,33 +12,36 @@ use App\Models\User;
 });*/
 
 Route::get('/', function () {
-
     return view('auth.login');
-
 });
 
+
+Route::get('/registration', 'App\Http\Controllers\Auth\RegisterController@pageRegistration')->name('pageRegistration');
+
 /*Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);*/
+
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::get('/stand', 'App\Http\Controllers\StandController@index')->name('stand');
 
 
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/dashboard-3', function () {
-
-    $users = User::all();
-    return view('dashboard', ['users' => $users]);
-})->name('dash');
-
-Route::get('/stand', 'App\Http\Controllers\StandController@index')->name('stand');
-
-
 Route::group(['middleware' => 'role:web-developer'], function() {
     Route::get('/dashboard-1', function() {
         return view('dashboard');
     });
+    Route::get('/UserControl', function () {
+        $users = User::all();
+        return view('Dev.UserControl', ['users' => $users]);
+    })->name('UserControl');
 });
+
+
+
 
 Route::group(['middleware' => 'role:project-manager'], function() {
     Route::get('/dashboar-2', function() {
