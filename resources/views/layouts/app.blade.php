@@ -10,71 +10,55 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
+    <link href="../../dist-assets/css/themes/lite-purple.css" rel="stylesheet" />
+    <link href="../../dist-assets/css/plugins/perfect-scrollbar.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../dist-assets/css/plugins/fontawesome-5.css" />
+    <link href="../../dist-assets/css/plugins/metisMenu.min.css" rel="stylesheet" />
+    <!-- Style css -->
+    <link href="/public/css/style.css" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    {{--@vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <main>
+            <body class="text-left">
+                <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
+                        @if(Request::is(
+                            'dashboard-3',
+                            'admin',
+                            'stand',
+                            'stands/create',
+                            'congregations'
+                        ))
+                            @include('includes.sidebar')
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+                    <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
+                        @include('includes.header')
+                        @endif
 
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
+                        @yield('content')
+                    </div>
                 </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
+            </body>
         </main>
-    </div>
+
+
+    <!--**********************************
+       Scripts
+   ***********************************-->
+    <!-- Required vendors -->
+    <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+    <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+    <script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../../dist-assets/js/scripts/tooltip.script.min.js"></script>
+    <script src="../../dist-assets/js/scripts/script.min.js"></script>
+    <script src="../../dist-assets/js/scripts/script_2.min.js"></script>
+    <script src="../../dist-assets/js/scripts/sidebar.large.script.min.js"></script>
+    <script src="../../dist-assets/js/plugins/feather.min.js"></script>
+    <script src="../../dist-assets/js/plugins/metisMenu.min.js"></script>
+    <script src="../../dist-assets/js/scripts/layout-sidebar-vertical.min.js"></script>
 </body>
+
 </html>
