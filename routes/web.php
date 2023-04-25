@@ -21,16 +21,16 @@ Route::get('/registration', 'App\Http\Controllers\Auth\RegisterController@pageRe
 /*Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);*/
 
 
+
+
+
+
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-
-Route::get('/stand', 'App\Http\Controllers\StandController@index')->name('stand');
-
-
-
 Auth::routes();
 
-Route::group(['middleware' => 'role:web-developer'], function() {
+
+Route::group(['middleware' => 'role:User'], function() {
     Route::get('/dashboard-1', function() {
         return view('dashboard');
     });
@@ -38,6 +38,7 @@ Route::group(['middleware' => 'role:web-developer'], function() {
         $users = User::all();
         return view('Dev.UserControl', ['users' => $users]);
     })->name('UserControl');
+    Route::get('/stand', 'App\Http\Controllers\StandController@index')->name('stand');
 });
 
 

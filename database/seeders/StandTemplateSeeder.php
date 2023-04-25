@@ -82,6 +82,7 @@ class StandTemplateSeeder extends Seeder
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
+
             [
                 'type' => 'next',
                 'day' => 2,
@@ -100,7 +101,7 @@ class StandTemplateSeeder extends Seeder
             'time' => 8,
             'user_1' => User::first()->id,
             'user_2' => User::skip(1)->take(1)->first()->id,
-            'date' => now()->timestamp
+            'date' => $date = date('Y-m-d'),
         ]);
     }
 }

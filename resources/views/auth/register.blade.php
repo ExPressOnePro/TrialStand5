@@ -77,57 +77,77 @@
 
 <div class="auth-layout-wrap" style="background-image: url(../../dist-assets/images/log2.jpg)">
     <div class="auth-content">
-        <div class="card o-hidden">
+        <div class="card o-hidden align-items-center">
             <div class="row">
                 <div class="col">
-                    <div class="col-xl-12 pa-0">
-                <div class="auth-form-wrap py-xl-0 py-50">
-                    <div class="auth-form w-xxl-55 w-xl-75 w-sm-90 w-100">
-                        <form action="" method='POST'>
-                            @csrf
-                            <h1 class="display-4 mb-10">Зарегистрироваться</h1>
-                            <p class="mb-30">Создайте новый аккаунт чтобы пользоваться возможностями стенда</p>
-                            <div class="form-row">
-                                <div class="col-md-6 form-group">
-                                    <input class="form-control" name="name" placeholder="First name" value="" type="text">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <input class="form-control" name="prename"  placeholder="Last name" value="" type="text">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control"  name="email" placeholder="Email" type="email">
-                            </div>
-                            <div class="form-group">
-                                <select class="btn border-primary col-md-12 dropdown-toggle" name="congregation">
-                                    <option>Select congregation</option>
-                                    @foreach($congregations as $congregation)
-                                        <option value="{{ $congregation->id }}">{{ $congregation->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control"  name="password" placeholder="Password" type="password">
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input class="form-control" name="remember_password"  placeholder="Confirm Password" type="password">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><span class="feather-icon"><i data-feather="eye-off"></i></span></span>
+                    <div class="p-4">
+                        {{--<div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>--}}
+                            <h1 class="mb-3 text-36 text-center">Зарегистрироваться</h1>
+                            <p class="mb-30 text-center">Создайте новый аккаунт чтобы пользоваться возможностями стенда</p>
+                            <form action="{{ route('register') }}" method='POST'>
+                                @csrf
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <input class="form-control form-control-rounded @error('email') is-invalid @enderror"  name="email" placeholder="Эл. адрес" type="email">
+                                        <div class="col-md-6">
+                                            @error('email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="custom-control custom-checkbox mb-25">
-                                <input class="custom-control-input" id="same-address" type="checkbox" checked>
-                                <label class="custom-control-label font-14" for="same-address">I have read and agree to the <a href=""><u>term and conditions</u></a></label>
-                            </div>
-                            <button class="btn btn-primary btn-block" type="submit">Register</button>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <input class="form-control form-control-rounded @error('name') is-invalid @enderror" name="name" placeholder="Имя и фамилия" value="" type="text">
+                                        <div class="col-md-6">
+                                            @error('name')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <input class="form-control form-control-rounded @error('login') is-invalid @enderror" name="name" placeholder="Имя пользователя" value="" type="text">
+                                        <div class="col-md-6">
+                                            @error('login')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <input class="form-control form-control-rounded @error('password') is-invalid @enderror"  name="password" placeholder="Password" type="password">
+                                        <div class="col-md-6">
+                                            @error('password')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                {{--<div class="form-group">
+                                    <select class="btn border-primary col-md-12 dropdown-toggle text-center" name="congregation">
+                                        <option>Выберите собрание</option>
+                                        @foreach($congregations as $congregation)
+                                            <option  value="{{ $congregation->id }}">{{ $congregation->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>--}}
+                                <button class="btn btn-primary btn-block" type="submit">Register</button>
 
-                            <p class="text-center">Already have an account? <a href="{{ route('login') }}">Sign In</a></p>
+                                <p class="text-center">Уже есть аккаунт <a href="{{ route('login') }}">Войдите</a></p>
                         </form>
+                        </div>
                     </div>
-                </div>
-            </div>
                 </div>
             </div>
         </div>

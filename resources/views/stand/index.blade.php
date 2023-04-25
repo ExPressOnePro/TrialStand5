@@ -51,7 +51,7 @@
                                                 <th>-</th>
                                                 <th>-</th>
                                             @else
-                                                <th><button class="btn btn-outline-success m-1" type="button">Информация</button></th>
+                                                <th>-</th>
                                                 <th>-</th>
                                                 <th>-</th>
                                                 <th>-</th>

@@ -84,10 +84,10 @@
 
                             @csrf
                             <div class="form-group">
-                                <label for="email">{{ __('Email Address') }}</label>
-                                <input id="email" type="email" class="form-control form-control-rounded @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <label for="login">{{ __('Email or Username') }}</label>
+                                <input id="login" type="login" class="form-control form-control-rounded @error('login') is-invalid @enderror" name="login" value="{{ old('login') }}" required autocomplete="email" autofocus>
                                 <div class="col-md-6">
-                                    @error('email')
+                                    @error('login')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -129,4 +129,20 @@
     </div>
 </div>
 
+    {{--<div class="form-group row">
+        <label for="login" class="col-sm-4 col-form-label text-md-right">
+            {{ __('Email or Username') }}
+        </label>
+        <div class="col-md-6">
+            <input id="login" type="text"
+                   class="form-control{{ $errors->has('login') ? ' is-invalid' : '' }}"
+                   name="login" value="{{ old('login') }}" required autofocus>
+
+            @if ($errors->has('login'))
+                <span class="invalid-feedback">
+                <strong>{{ $errors->first('login') }}</strong>
+            </span>
+            @endif
+        </div>
+    </div>--}}
 @endsection
