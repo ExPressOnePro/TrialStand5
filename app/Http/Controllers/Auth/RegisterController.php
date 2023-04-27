@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use function Illuminate\Validation\message;
+use function Symfony\Component\HttpFoundation\Session\Storage\save;
 
 class RegisterController extends Controller
 {
@@ -54,7 +56,8 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'login' => ['required', 'string', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:6'],
         ]);
     }
 
@@ -69,14 +72,14 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'congregation_id' => '0',
+            'login' => $data['login'],
+            'congregation_id' => '1',
             'password' => Hash::make($data['password']),
         ]);
     }
 
     public function pageRegistration()
     {
-        $congregations = Congregation::all();
-        return view('auth.register', ['congregations' => $congregations]);
+        return view('auth.register');
     }
 }

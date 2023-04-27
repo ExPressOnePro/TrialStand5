@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
@@ -30,14 +31,16 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Auth::routes();
 
 
-Route::group(['middleware' => 'role:User'], function() {
+Route::group(['middleware' => 'role:web-developer'], function() {
+
     Route::get('/dashboard-1', function() {
         return view('dashboard');
     });
-    Route::get('/UserControl', function () {
-        $users = User::all();
-        return view('Dev.UserControl', ['users' => $users]);
-    })->name('UserControl');
+
+    Route::get('/UserControl', 'App\Http\Controllers\UserControlController@pageUserControl')->name('pageUserControl');
+
+    Route::post('/my-route', 'App\Http\Controllers\UserControlController@myAction')->name('my-route');
+
     Route::get('/stand', 'App\Http\Controllers\StandController@index')->name('stand');
 });
 

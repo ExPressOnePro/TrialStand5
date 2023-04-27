@@ -22,6 +22,7 @@
     {{--@vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
 </head>
 <body>
+
         <main>
             <body class="text-left">
                 <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
@@ -59,6 +60,7 @@
     <script src="../../dist-assets/js/plugins/feather.min.js"></script>
     <script src="../../dist-assets/js/plugins/metisMenu.min.js"></script>
     <script src="../../dist-assets/js/scripts/layout-sidebar-vertical.min.js"></script>
+        <script src="../../dist-assets/js/custom/actionbutton.js"></script>
 </body>
 
 </html>

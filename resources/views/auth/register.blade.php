@@ -82,9 +82,9 @@
                 <div class="col">
                     <div class="p-4">
                         {{--<div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>--}}
-                            <h1 class="mb-3 text-36 text-center">Зарегистрироваться</h1>
+                            <h1 class="mb-3 text-36 text-center">Регистрация</h1>
                             <p class="mb-30 text-center">Создайте новый аккаунт чтобы пользоваться возможностями стенда</p>
-                            <form action="{{ route('register') }}" method='POST'>
+                            <form method="POST" action="{{ route('register') }}">
                                 @csrf
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <input class="form-control form-control-rounded @error('login') is-invalid @enderror" name="name" placeholder="Имя пользователя" value="" type="text">
+                                        <input class="form-control form-control-rounded @error('login') is-invalid @enderror" name="login" placeholder="Имя пользователя" value="" type="text">
                                         <div class="col-md-6">
                                             @error('login')
                                             <span class="invalid-feedback" role="alert">
@@ -142,10 +142,9 @@
                                         @endforeach
                                     </select>
                                 </div>--}}
-                                <button class="btn btn-primary btn-block" type="submit">Register</button>
-
+                                <button class="btn btn-rounded btn-primary btn-block mt-2" type="submit">Зарегистрироваться</button>
                                 <p class="text-center">Уже есть аккаунт <a href="{{ route('login') }}">Войдите</a></p>
-                        </form>
+                            </form>
                         </div>
                     </div>
                 </div>
