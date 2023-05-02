@@ -27,21 +27,50 @@ Route::get('/registration', 'App\Http\Controllers\Auth\RegisterController@pageRe
 
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Auth::routes();
 
 
-Route::group(['middleware' => 'role:web-developer'], function() {
+Route::group(['middleware' => 'role:dev'], function() {
+
+    Route::get('/home',
+        [App\Http\Controllers\HomeController::class, 'index'])
+        ->name('home');
 
     Route::get('/dashboard-1', function() {
         return view('dashboard');
     });
 
-    Route::get('/UserControl', 'App\Http\Controllers\UserControlController@pageUserControl')->name('pageUserControl');
+    /*UserControl Block BEGIN*/
+    Route::get('/UserControl',
+        'App\Http\Controllers\UserControlController@pageUserControl')
+        ->name('pageUserControl');
 
-    Route::post('/my-route', 'App\Http\Controllers\UserControlController@myAction')->name('my-route');
+    Route::get('/UserControl/Role/{id}',
+        'App\Http\Controllers\UserControlController@pageRole')
+        ->name('UCRole');
 
-    Route::get('/stand', 'App\Http\Controllers\StandController@index')->name('stand');
+    Route::get('/UserControl/User/{id}',
+        'App\Http\Controllers\UserControlController@pageUser')
+        ->name('UCRUser');
+
+
+
+    /*UserControl Block END*/
+
+
+
+    /*UserControl Block BEGIN*/
+    Route::get('/stand', 'App\Http\Controllers\StandController@index')
+        ->name('stand');
+
+    Route::get('/stand/table', 'App\Http\Controllers\StandController@table')
+        ->name('tableStand');
+
+    Route::get('/stand/record', 'App\Http\Controllers\StandController@record')
+        ->name('recToStand');
+
+
+    /*UserControl Block END*/
 });
 
 

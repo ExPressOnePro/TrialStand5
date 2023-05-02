@@ -81,7 +81,6 @@
                         <h1 class="mb-3 text-36 text-center">Вход</h1>
 
                         <form method="POST" action="{{ route('login') }}">
-
                             @csrf
                             <div class="form-group">
                                 <label for="login">{{ __('Email or Username') }}</label>
@@ -94,7 +93,6 @@
                                     @enderror
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="password">{{ __('Password') }}</label>
                                 <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
@@ -107,22 +105,24 @@
                                     @enderror
                                 </div>
                             </div>
-
+                            <div class="row">
+                                <div class="col-md-6">
                                     <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('Войти') }}</button>
-                                        @if (Route::has('password.request'))
-                                            <a class="btn btn-link" href="{{ route('password.request') }}">
-                                                {{ __('Forgot Your Password?') }}
-                                            </a>
-                                        @endif
+                                    @if (Route::has('password.request'))
+                                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                                            {{ __('Забыли пароль?') }}
+                                        </a>
+                                    @endif
+                                </div>
                         </form>
-
                                 <div class="col-md-6">
                                     <a href="{{ route('pageRegistration') }}">
-                                    <button class="btn btn-rounded btn-primary btn-block mt-2">
-                                        {{ __('Register') }}
-                                    </button>
+                                        <button class="btn btn-rounded btn-primary btn-block mt-2">
+                                            {{ __('Register') }}
+                                        </button>
                                     </a>
                                 </div>
+                        </div>
                 </div>
             </div>
         </div>

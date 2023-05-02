@@ -27,8 +27,9 @@
             <body class="text-left">
                 <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
                         @if(Request::is(
-                            'dashboard-3',
+                            'dashboard-2',
                             'UserControl',
+                            'UserControl/*',
                             'stand',
                             'home',
                             'congregations'
@@ -60,7 +61,12 @@
     <script src="../../dist-assets/js/plugins/feather.min.js"></script>
     <script src="../../dist-assets/js/plugins/metisMenu.min.js"></script>
     <script src="../../dist-assets/js/scripts/layout-sidebar-vertical.min.js"></script>
-        <script src="../../dist-assets/js/custom/actionbutton.js"></script>
+    <script src="../../dist-assets/js/custom/actionbutton.js"></script>
+        <script src="../../dist-assets/js/plugins/datatables.min.js"></script>
+        <script src="../../dist-assets/js/scripts/contact-list-table.min.js"></script>
+        <script src="../../dist-assets/js/scripts/datatables.script.min.js"></script>
+
+
 </body>
 
 </html>

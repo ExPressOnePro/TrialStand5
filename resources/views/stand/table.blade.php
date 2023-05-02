@@ -15,7 +15,7 @@
             @foreach($asftu as $asfu)
                 <div class="col-md-4">
                     <div class="card card-icon mb-4">
-                        <a href="{{ route('tableStand', $asfu->id) }}">
+                        <a href="">
                             <div class="card-body text-center">
                                 <p class="text-muted text-22 mt-2 mb-2">Стенд </p>
                                 <p class="lead text-22 m-0">{{ $asfu->location }}</p>

@@ -11,20 +11,7 @@
         </ul>
     </div>
     <div class="separator-breadcrumb border-top"></div>
-        <div class="row">
-            @foreach($asftu as $asfu)
-                <div class="col-md-4">
-                    <div class="card card-icon mb-4">
-                        <a href="{{ route('tableStand', $asfu->id) }}">
-                            <div class="card-body text-center">
-                                <p class="text-muted text-22 mt-2 mb-2">Стенд </p>
-                                <p class="lead text-22 m-0">{{ $asfu->location }}</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+
 
     @foreach ($templates as $template)
         <div class='d-flex align-items-center justify-content-between mt-40 mb-20'>
@@ -44,8 +31,8 @@
                             <thead>
                             <tr>
                                 <th class='not-sortable'>Время</th>
-                                <th class='not-sortable'>Возвещатель</th>
-                                <th class='not-sortable'>Возвещатель</th>
+                                <th class='not-sortable'>Возвещатель 1</th>
+                                <th class='not-sortable'>Возвещатель 2</th>
                                 <th class='not-sortable'>Отчет</th>
                             </tr>
                             </thead>
@@ -59,24 +46,20 @@
                                                 isset($standPublishers->user)
                                                 && $time_range === $standPublishers->time
                                             )
-                                                <th class="text-center">{{$standPublishers->user->name}}</th>
-                                                <th class="text-center">{{$standPublishers->user2->name}}</th>
+                                                <th>{{$standPublishers->user->name}}</th>
+                                                <th>{{$standPublishers->user2->name}}</th>
                                                 <th>-</th>
-                                                <th>
-                                                    <a href="">
-                                                        <button class="btn btn-outline-warning m-1" type="button">
-                                                            Редактировать</button>
-                                                    </a></th>
+                                                <th>-</th>
                                             @else
                                                 <th>
-                                                    <a href="{{ route('recToStand', $time_range) }}">
-                                                        <button class="btn btn-success m-1" type="button">
+                                                    <a href="">
+                                                        <button class="btn btn-outline-success m-1" type="button">
                                                             Записаться</button>
                                                     </a>
                                                 </th>
                                                 <th>
-                                                    <a href="">
-                                                        <button class="btn btn-success m-1" type="button">
+                                                    <a href="{{ route }}">
+                                                        <button class="btn btn-outline-success m-1" type="button">
                                                             Записаться</button>
                                                     </a>
                                                 </th>
