@@ -32,16 +32,18 @@ class WeekDaysEnum
         return self::WEEK_DAYS[$day];
     }
 
+
+
     public static function getWeekDayDate(int $day): string
     {
         return match($day) {
-            self::MON => (new Carbon('this Monday'))->format('d.m'),
-            self::TUE => (new Carbon('this Tuesday'))->format('d.m'),
-            self::WED => (new Carbon('this Wednesday'))->format('d.m'),
-            self::THU => (new Carbon('this Thursday'))->format('d.m'),
-            self::FRI => (new Carbon('this Friday'))->format('d.m'),
-            self::SAT => (new Carbon('this Saturday'))->format('d.m'),
-            self::SUN => (new Carbon('this Sunday'))->format('d.m'),
+            self::MON => (new Carbon('this Monday'))->format('d.m.Y'),
+            self::TUE => (new Carbon('this Tuesday'))->format('d.m.Y'),
+            self::WED => (new Carbon('this Wednesday'))->format('d.m.Y'),
+            self::THU => (new Carbon('this Thursday'))->format('d.m.Y'),
+            self::FRI => (new Carbon('this Friday'))->format('d.m.Y'),
+            self::SAT => (new Carbon('this Saturday'))->format('d.m.Y'),
+            self::SUN => (new Carbon('this Sunday'))->format('d.m.Y'),
         };
     }
 }

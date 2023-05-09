@@ -20,11 +20,8 @@ class StandTemplateSeeder extends Seeder
      */
     public function run()
     {
-        $congregation = [
-            'name' => 'Бэлц',
-        ];
 
-        $congregation_id = DB::table(app(Congregation::class)->getTable())->insertGetId($congregation);
+        $congregation_id = 1;
 
         $stands = [
             [
@@ -48,45 +45,128 @@ class StandTemplateSeeder extends Seeder
             [
                 'type' => 'current',
                 'day' => 1,
-                'times_range' => json_encode([8,9,10,11,12,13,14,15,16]),
+                'time' => '06:00',
+                'status' => 'active',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
-            [
-                'type' => 'current',
-                'day' => 2,
-                'times_range' => json_encode([8,9,10,11,12,13,14,15,16]),
-                'stand_id' => Stand::whereName('Стелуца')->first()->id,
-                'congregation_id' => $congregation_id,
-            ],
-
             [
                 'type' => 'current',
                 'day' => 1,
-                'times_range' => json_encode([8,9,10,11,12,13,14,15,16]),
-                'stand_id' => Stand::whereName('Борис Главан')->first()->id,
+                'time' => '07:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
                 'type' => 'current',
-                'day' => 3,
-                'times_range' => json_encode([8,9,10,11,12,13,14,15,16]),
-                'stand_id' => Stand::whereName('Борис Главан')->first()->id,
-                'congregation_id' => $congregation_id,
-            ],
-
-            [
-                'type' => 'next',
                 'day' => 1,
-                'times_range' => json_encode([8,9,10,11,12,13,14,15,16]),
+                'time' => '08:00',
+                'status' => 'active',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
-
             [
-                'type' => 'next',
-                'day' => 2,
-                'times_range' => json_encode([8,9,10,11,12,13,14,15,16]),
+                'type' => 'current',
+                'day' => 1,
+                'time' => '09:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '10:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '11:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '12:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '13:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '14:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '15:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '16:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '17:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '18:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '19:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '20:00',
+                'status' => 'active',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'type' => 'current',
+                'day' => 1,
+                'time' => '21:00',
+                'status' => 'active',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
@@ -96,12 +176,5 @@ class StandTemplateSeeder extends Seeder
             $stand_template_id = DB::table(app(StandTemplate::class)->getTable())->insertGetId($stand_template);
         }
 
-        StandPublishers::create([
-            'stand_template_id' => StandTemplate::first()->id,
-            'time' => 8,
-            'user_1' => User::first()->id,
-            'user_2' => User::skip(1)->take(1)->first()->id,
-            'date' => $date = date('Y-m-d'),
-        ]);
     }
 }

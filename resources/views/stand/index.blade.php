@@ -17,8 +17,10 @@
                     <div class="card card-icon mb-4">
                         <a href="{{ route('tableStand', $asfu->id) }}">
                             <div class="card-body text-center">
-                                <p class="text-muted text-22 mt-2 mb-2">Стенд </p>
+                                <p class="text-dark text-22 mt-2 mb-2">Стенд </p>
                                 <p class="lead text-22 m-0">{{ $asfu->location }}</p>
+                                {{--@if(Auth::id() = )
+                                @endif--}}
                             </div>
                         </a>
                     </div>
@@ -26,10 +28,10 @@
             @endforeach
         </div>
 
-    @foreach ($templates as $template)
+    {{--@foreach ($templates as $template)
         <div class='d-flex align-items-center justify-content-between mt-40 mb-20'>
             <h4>
-                {{-- fix date week --}}
+                --}}{{-- fix date week --}}{{--
                 {{ \App\Enums\WeekDaysEnum::getWeekDay($template->day) }}
                 {{ \App\Enums\WeekDaysEnum::getWeekDayDate($template->day) }}
                 <span> "{{ $template->stand->name }}" </span>
@@ -69,7 +71,7 @@
                                                     </a></th>
                                             @else
                                                 <th>
-                                                    <a href="{{ route('recToStand', $time_range) }}">
+                                                    <a href="--}}{{--{{ route('recToStand', $time_range) }}--}}{{--">
                                                         <button class="btn btn-success m-1" type="button">
                                                             Записаться</button>
                                                     </a>
@@ -101,7 +103,7 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @endforeach--}}
     </div>
 
 @endsection

@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StandTemplateSeeder::class);
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);
+
     }
 }

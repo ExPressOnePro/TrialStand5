@@ -11,7 +11,11 @@ class CongregationSeeder extends Seeder
     public function run(): void
     {
         $congregation = new Congregation();
-        $congregation->name = 'Бельцы-Пэмынтень';
+        $congregation->name = 'Бельцы - Пэмынтень';
+        $congregation->save();
+
+        $congregation = new Congregation();
+        $congregation->name = 'Бельцы - Центр';
         $congregation->save();
     }
 }

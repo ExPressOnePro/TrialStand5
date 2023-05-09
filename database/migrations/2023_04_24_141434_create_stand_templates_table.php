@@ -17,7 +17,8 @@ class CreateStandTemplatesTable extends Migration
             $table->id();
             $table->enum('type', ['current', 'next'])->default('current');
             $table->enum('day', [1,2,3,4,5,6,7])->default(1);
-            $table->json('times_range');
+            $table->string('time');
+            $table->string('status');
             $table->unsignedBigInteger('stand_id');
             $table->unsignedBigInteger('congregation_id');
             $table->timestamps();

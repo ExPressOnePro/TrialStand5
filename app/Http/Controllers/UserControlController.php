@@ -68,7 +68,9 @@ class UserControlController extends Controller
             ->get();*/
 
 
-        return view('Dev.UserControlRoleUser',['user' => [$user->find($id)]], ['citn' => $congregation_id_to_name]);
+        return view('Dev.UserControlRoleUser',
+            ['user' => [$user->find($id)]],
+            ['citn' => $congregation_id_to_name]);
 
     }
 }

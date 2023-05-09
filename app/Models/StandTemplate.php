@@ -16,7 +16,8 @@ class StandTemplate extends Model
     protected $fillable = [
         'type',
         'day',
-        'times_range',
+        'time',
+        'status',
         'stand_id',
         'congregation_id',
     ];

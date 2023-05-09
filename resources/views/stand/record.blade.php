@@ -4,7 +4,7 @@
 
     <div class="main-content pt-4">
     <div class="breadcrumb">
-        <h1 class="mr-2">Стенд</h1>
+        <h1 class="mr-2">{{ $art }}</h1>
         <ul>
             <li><a href="">страница</a></li>
             <li></li>
@@ -13,10 +13,10 @@
     <div class="separator-breadcrumb border-top"></div>
 
 
-    @foreach ($templates as $template)
+    {{--@foreach ($templates as $template)
         <div class='d-flex align-items-center justify-content-between mt-40 mb-20'>
             <h4>
-                {{-- fix date week --}}
+                --}}{{-- fix date week --}}{{--
                 {{ \App\Enums\WeekDaysEnum::getWeekDay($template->day) }}
                 {{ \App\Enums\WeekDaysEnum::getWeekDayDate($template->day) }}
                 <span> "{{ $template->stand->name }}" </span>
@@ -58,7 +58,7 @@
                                                     </a>
                                                 </th>
                                                 <th>
-                                                    <a href="{{ route }}">
+                                                    <a href="">
                                                         <button class="btn btn-outline-success m-1" type="button">
                                                             Записаться</button>
                                                     </a>
@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @endforeach--}}
     </div>
 
 @endsection

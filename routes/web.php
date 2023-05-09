@@ -59,15 +59,23 @@ Route::group(['middleware' => 'role:dev'], function() {
 
 
 
-    /*UserControl Block BEGIN*/
-    Route::get('/stand', 'App\Http\Controllers\StandController@index')
+    /*StandControl Block BEGIN*/
+    Route::get('/stand', 'App\Http\Controllers\StandController@allstands')
         ->name('stand');
 
-    Route::get('/stand/table', 'App\Http\Controllers\StandController@table')
+    Route::get('/stand/table/{id}', 'App\Http\Controllers\StandController@tables')
         ->name('tableStand');
 
     Route::get('/stand/record', 'App\Http\Controllers\StandController@record')
         ->name('recToStand');
+
+    Route::get('/stand/test', 'App\Http\Controllers\StandController@test')
+        ->name('test');
+
+    Route::get('/stand/testtemp', 'App\Http\Controllers\StandController@test_insert_temp')
+        ->name('testtemp');
+
+
 
 
     /*UserControl Block END*/

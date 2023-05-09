@@ -31,6 +31,7 @@
                             'UserControl',
                             'UserControl/*',
                             'stand',
+                            'stand/*',
                             'home',
                             'congregations'
                         ))

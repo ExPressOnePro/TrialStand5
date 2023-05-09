@@ -17,9 +17,10 @@ class StandPublishers extends Model
 
     protected $fillable = [
         'stand_template_id',
-        'time',
+        'period',
         'user_1',
         'user_2',
+        'date',
     ];
 
     /**
