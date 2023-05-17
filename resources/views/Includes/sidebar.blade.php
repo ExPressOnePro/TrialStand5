@@ -9,25 +9,50 @@
             <div class="side-nav">
                 <div class="main-menu">
                     <ul class="metismenu" id="menu">
-                        <li class="Ul_li--hover"><a class="has-arrow" href="#"><i class="i-Bar-Chart text-20 mr-2 text-muted"></i><span class="item-name text-15 text-muted">Администратор</span></a>
+                        <li class="Ul_li--hover"><a class="has-arrow" href="#"><i class="i-Bar-Chart text-20 mr-2 text-muted"></i><span class="item-name text-15 text-muted">Developer</span></a>
                             <ul class="mm-collapse">
-                                <li class="item-name">
-                                    <a href="{{ route('pageUserControl') }}">
-                                        <i class="nav-icon i-Business-Mens mr-2 text-muted"></i>
-                                        <span class="text-muted">Управление пользователями</span>
-                                    </a>
+                                <li class="Ul_li--hover"><a class="has-arrow" href="#"><i class="text-20 mr-2 text-muted"></i><span class="item-name text-15 heading">User
+                                        </span></a>
+                                    <ul class="mm-collapse">
+                                        <li class="item-name">
+                                            <a href="{{ route('pageUserControl') }}">
+                                                <i class="nav-icon i-Business-Mens mr-2 text-muted"></i>
+                                                <span class="t-font-bolder">Control</span>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
-                                <li class="item-name">
-                                    <a href="{{ route('stand') }}">
-                                        <i class="i-Circular-Point mr-2 text-muted"></i>
-                                        <span class="text-muted">Стенд</span>
-                                    </a>
+                                <li class="Ul_li--hover"><a class="has-arrow" href="#"><i class="text-20 mr-2 text-muted"></i><span class="item-name text-15 heading">Stand</span></a>
+                                    <ul class="mm-collapse">
+                                        <li class="item-name">
+                                            <a href="{{ route('createNewStandPage') }}">{{--создать новый стенд--}}
+                                                <i class="i-Add mr-2 text-muted"></i>
+                                                <span class="t-font-bolder">Create</span>
+                                            </a>
+                                        </li>
+                                        <li class="item-name">
+                                            <a href="{{ route('stand') }}">
+                                                <i class="i-Big-Data mr-2 text-muted"></i>
+                                                <span class="t-font-bolder">Control</span>
+                                            </a>
+                                        </li>
+                                        <li class="item-name">
+                                            <a href="">
+                                                <i class="i-Time-Backup mr-2 text-muted"></i>
+                                                <span class="t-font-bolder">Time</span>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
-                                <li class="item-name">
-                                    <a href="">
-                                        <i class="i-Circular-Point mr-2 text-muted"></i>
-                                        <span class="text-muted">Version 3</span>
-                                    </a>
+                                <li class="Ul_li--hover"><a class="has-arrow" href="#"><i class="text-20 mr-2 text-muted"></i><span class="item-name text-15 text-muted">Congregation</span></a>
+                                    <ul class="mm-collapse">
+                                        <li class="item-name">
+                                            <a href="">
+                                                <i class="i-Circular-Point mr-2 text-muted"></i>
+                                                <span class="text-muted">Control</span>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li class="item-name">
                                     <a href=""><i class="i-Circular-Point mr-2 text-muted"></i>

@@ -16,10 +16,9 @@ class CreateStandsPublishersTable extends Migration
         Schema::create('stands_publishers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('stand_template_id');
-            $table->string('period');
             $table->unsignedBigInteger('user_1')->nullable();
             $table->unsignedBigInteger('user_2')->nullable();
-            $table->timestamp('date');
+            $table->date('date');
             $table->timestamps();
 
             $table->foreign('stand_template_id')->references('id')->on('stand_templates');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Congregation;
+use App\Models\Stand;
 use App\Models\StandPublishers;
 use App\Models\StandTemplate;
 use App\Models\User;
@@ -10,12 +11,15 @@ use App\Models\UsersRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class StandController extends Controller
 {
 
     public function allstands() {
-        $user = User::find(1);
+
+        $user = User::find(Auth::id());
+
 
         $accessible_stands_for_the_user = DB::table('users')
             ->join('stands', 'stands.congregation_id', '=', 'users.congregation_id')
@@ -23,39 +27,35 @@ class StandController extends Controller
             ->where('users.id', Auth::id())
             ->get();
 
-        $accessible_stands_for_dev = DB::table('users')
-            ->join('stands', 'stands.congregation_id', '=', 'users.congregation_id')
-            ->select('stands.*')
+        $accessible_stands_for_dev = DB::table('stands')
             ->get();
 
-        if ($user = User::find(1)){
+        if ($user->hasRole('Developer')){
             return view('stand.index',
-                ['asftu' => $accessible_stands_for_dev]);
+                ['accessible_stands_for_the_user' => $accessible_stands_for_dev]);
         }
         else {
             return view('stand.index',
-                ['asftu' => $accessible_stands_for_the_user]);
+                ['accessible_stands_for_the_user' => $accessible_stands_for_the_user]);
         }
 
     }
 
     public function tables($id) {
-        $templates = StandTemplate::with(
-            'stand',
-            'standPublishers.user',
-            'standPublishers.user2',
-            'congregation'
-        )
-            ->where('type', '=', 'current')
-            ->where('stand_id', '=', $id)
-            ->orderBy('day')
-            ->get();
+
+    $templates = StandTemplate::with(
+        'stand',
+        'standPublishers.user',
+        'standPublishers.user2',
+        'congregation'
+    )
+        ->where('stand_id', '=', $id)
+        ->orderBy('day')
+        ->get();
 
 
-        $active_day = StandTemplate::select('day')->distinct()->get();
-
-
-        $ardates = [
+    $active_day = StandTemplate::select('day')->distinct()->get();
+    $ardates = [
 
         $currentMON = date ("d.m.Y", time() - (      date("N")-1) * 24*60*60),
         $currentTUE = date ("d.m.Y", time() - ( -1 + date("N")-1) * 24*60*60),
@@ -74,63 +74,143 @@ class StandController extends Controller
         $nextSUN = date ("d.m.Y", time() - (-13 + date("N")-1) * 24*60*60),
     ];
 
+    return view('stand.table')
+        ->with([
+            'templates' => $templates,
+            'active_day' => $active_day,
+            'ardates' => $ardates,
+        ]);
+}
 
+    public function settings($id) {
+        $standID = Stand::where('id', $id)->get();
+        $active_day = StandTemplate::select('day')->distinct()->get();
+        $time_array = [
+            '00:00',
+            '01:00',
+            '02:00',
+            /*'03:00',
+            '04:00',
+            '05:00',
+            '06:00',
+            '07:00',
+            '08:00',
+            '09:00',
+            '10:00',
+            '11:00',
+            '12:00',
+            '13:00',
+            '14:00',
+            '15:00',
+            '16:00',
+            '17:00',
+            '18:00',
+            '19:00',
+            '20:00',
+            '21:00',
+            '22:00',
+            '23:00',*/
+        ];
 
-        /*SELECT id FROM `stand_templates` WHERE type = "current" AND day = "(SELECT DISTINCT day FROM `stand_templates`)"
-
-        (SELECT time FROM `stand_templates` WHERE type = "current" AND day = "(SELECT DISTINCT day FROM `stand_templates`)")
-
-        DB::table('users')->insert([
-    ['email' => 'picard@example.com', 'votes' => 0],
-    ['email' => 'janeway@example.com', 'votes' => 0],
-]);
-
-
-
-        /*$enable_time = StandTemplate::select('time')
-            ->where('')
-            ->get();*/
-
-        /*$groupdays = DB::table('Stand_Templates')
-            /*->select('day')*/
-        /*->where('status', 'active')*/
-        /*->distinct()
-        ->count('day');
-
-    dd($groupdays);*/
-
-
-        /*$active_day = StandTemplate::distinct()->count(['day']);*/
-
-
-        /*$groupdays123 = json_decode($groupdays, true);*/
-
-
-        /*$active_day = StandTemplate::select('day')
-            ->where('status', 'active')
-            ->where('day', $groupdays)
+        $template = StandTemplate::where('stand_id', $id)
+            ->where('type','=','next')
             ->get();
 
-        dd($active_day);*/
 
-
-        /*$active_time = StandTemplate::get();
-           /* dd($templates);*/
-
-
-        return view('stand.table')
+        return view('stand.settings')
             ->with([
-                'templates' => $templates,
-                'active_day' => $active_day,
-                'ardates' => $ardates,
+                'standID' => $standID,
+                'template' => $template,
+                'active_day' => $active_day
             ]);
     }
 
+    public function createNewStandPage() {
 
-    /*public function record($time_range) {
+        $congregations = Congregation::all();
 
-        dd($time_range);
-    }*/
+        return view('stand.settings')
+            ->with([
+                'congregations' => $congregations,
+            ]);
+
+    }
+
+    public function createNewStand(Request $request) {
+
+        $this->validate($request, [
+            'name' => 'required',
+            'location' => 'required'
+        ]);
+
+        $congrId = DB::table('congregations')
+            ->where('name', $request->input('congregation'))
+            ->value('id');
+
+        $stand = new Stand();
+        $stand->name = $request->input('name');
+        $stand->location = $request->input('location');
+        $stand->congregation_id = $congrId;
+        $stand->save();
+
+        $createdStandId = DB::table('stands')
+            ->where('name', $request->input('name'))
+            ->value('id');
+
+        $time_array = [
+            '00:00',
+            '01:00',
+            '02:00',
+            '03:00',
+            '04:00',
+            '05:00',
+            '06:00',
+            '07:00',
+            '08:00',
+            '09:00',
+            '10:00',
+            '11:00',
+            '12:00',
+            '13:00',
+            '14:00',
+            '15:00',
+            '16:00',
+            '17:00',
+            '18:00',
+            '19:00',
+            '20:00',
+            '21:00',
+            '22:00',
+            '23:00',
+        ];
+        $day_array = [1, 2, 3, 4, 5, 6, 7];
+        $req1 = DB::table('stand_templates')->get();
+        $typeArray = ['last', 'current', 'next'];
+
+        foreach ($day_array as $day_arr) {
+            foreach ($typeArray as $tA) {
+                foreach ($time_array as $time_arr) {
+                    foreach ($req1 as $r1) {
+                        StandTemplate::firstOrCreate([
+                            'type' => $tA,
+                            'day' => $day_arr,
+                            'time' => $time_arr,
+                            'status' => '1',
+                            'stand_id' => $createdStandId,
+                            'congregation_id' => $congrId,
+                        ]);
+                    }
+                }
+            }
+        }
+        $this->tables();
+    }
+
+    public function time(Request $request) {
+
+        var_dump($request);
+
+    }
 
     public function test12() {
         $test = StandTemplate::with(
@@ -154,20 +234,14 @@ class StandController extends Controller
 
             $test4 = $stid->times_range;
 
-            $test3 = "DB::insert(insert into stands_publishers (stand_template_id, time) 
+            $test3 = "DB::insert(insert into stands_publishers (stand_template_id, time)
             VALUES (
-            $stid->id, 
+            $stid->id,
             $test4
             )";
 
             dd($test3);
         }
-
-        /*->join('stands', 'stands.congregation_id', '=', 'users.congregation_id' )
-        ->select('stands.')
-        ->where('type', 'current')
-        ->get();*/
-
     }
 
     public function record($art)
@@ -220,7 +294,6 @@ class StandController extends Controller
                     foreach ($time_array as $time_arr) {
                         foreach ($req1 as $r1) {
                             $insert_template = StandTemplate::firstOrCreate([
-                                    'type' => 'current',
                                     'day' => $day_arr,
                                     'time' => $time_arr,
                                     'status' => '1',
@@ -238,53 +311,55 @@ class StandController extends Controller
 
     public function test() {
 
-        $active = DB::table('stand_templates')
-            ->distinct()
-            ->pluck('day');
+        $nextWeekArray1 = [
+        $thisMon = date('d.m.Y', strtotime('Mon this week')),
+        $thisTue = date('d.m.Y', strtotime('Tue this week')),
+        $thisWed = date('d.m.Y', strtotime('Wed this week')),
+        $thisThu = date('d.m.Y', strtotime('Thu this week')),
+        $thisFri = date('d.m.Y', strtotime('Fri this week')),
+        $thisSat = date('d.m.Y', strtotime('Sat this week')),
+        $thisSun = date('d.m.Y', strtotime('Sun this week')),
+            ];
+        $nextWeekArray2 = [
+            $nextMon = date('d.m.Y', strtotime('Mon next week')),
+            $nextTue = date('d.m.Y', strtotime('Tue next week')),
+            $nextWed = date('d.m.Y', strtotime('Wed next week')),
+            $nextThu = date('d.m.Y', strtotime('Thu next week')),
+            $nextFri = date('d.m.Y', strtotime('Fri next week')),
+            $nextSat = date('d.m.Y', strtotime('Sat next week')),
+            $nextSun = date('d.m.Y', strtotime('Sun next week')),
+        ];
 
+        $day_array = [1, 2, 3, 4, 5, 6, 7];
 
+        foreach ($day_array as $item) {
 
-        foreach ($active as $item) {
-
-            $get_by_active = DB::table('stand_templates')
-                ->select('id', 'time')
-                ->where('type', '=', 'current')
+            $get_by_current = DB::table('stand_templates')
                 ->where('day', '=', $item)
+                ->where('type', '=', 'current')
+                ->where('stand_id', '=', 2)
                 ->get();
-            foreach ($get_by_active as $gba) {
 
-                $ins = DB::table('stands_publishers')
-                    ->insert([
-                    'stand_template_id' => $gba->id,
-                    'period' => $gba->time,
-                    'user_1' => null,
-                    'user_2' => null,
-                    'date' =>'2023-05-15 00:00:00',
-                ]);
+            foreach ($get_by_current as $gbc) {
 
+                $record = StandTemplate::find($gbc->id);
+                $record->status = DB::table('stand_templates')
+                    ->where('day', '=', $gbc->day)
+                    ->where('time', '=', $gbc->time)
+                    ->where('type', '=', 'next')
+                    ->where('stand_id', '=', 2)
+                    ->value('status');
+                $record->save();
             }
         }
-
-
-
-        /*$ins = StandPublishers::insert([
-            ['stand_template_id' => $get_id_by_active],
-            ['period' => (DB::table('stand_templates')
-                ->select('time')
-                ->where('type', '=', 'current')
-                ->where('day', '=', StandTemplate::select('day')->distinct()->get()))],
-            ['user_1' => null],
-            ['user_2' => null],
-            ['date' =>'2023-05-08 11:35:25'],
-        ]);
-
-        dd($ins);*/
-
-
-
     }
 
+    public function redactionTime() {
 
+        $timePerDay = StandTemplate::where('stand_id');
+
+        return view('stand.time');
+    }
 
     public function testasd() {
         /*for ($i = 1; $i < count($request->en_answer); $i++) {

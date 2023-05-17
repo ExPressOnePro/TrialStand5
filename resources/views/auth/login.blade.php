@@ -84,7 +84,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="login">{{ __('Email or Username') }}</label>
-                                <input id="login" type="login" class="form-control form-control-rounded @error('login') is-invalid @enderror" name="login" value="{{ old('login') }}" required autocomplete="email" autofocus>
+                                <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
                                 <div class="col-md-6">
                                     @error('login')
                                     <span class="invalid-feedback" role="alert">
@@ -114,15 +114,16 @@
                                         </a>
                                     @endif
                                 </div>
-                        </form>
                                 <div class="col-md-6">
-                                    <a href="{{ route('pageRegistration') }}">
+                                    <a href="{{'auth.register'}}">
                                         <button class="btn btn-rounded btn-primary btn-block mt-2">
                                             {{ __('Register') }}
                                         </button>
                                     </a>
                                 </div>
-                        </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

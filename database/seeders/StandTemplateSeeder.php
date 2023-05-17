@@ -29,12 +29,6 @@ class StandTemplateSeeder extends Seeder
                 'name' => 'Стелуца',
                 'location' => 'ул. Стелуца',
             ],
-
-            [
-                'congregation_id' => $congregation_id,
-                'name' => 'Борис Главан',
-                'location' => 'ул. Б. Главан',
-            ],
         ];
 
         foreach($stands as $stand) {
@@ -43,133 +37,182 @@ class StandTemplateSeeder extends Seeder
 
         $stand_templates = [
             [
-                'type' => 'current',
+                'day' => 1,
+                'time' => '00:00',
+                'status' => '1',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'day' => 1,
+                'time' => '01:00',
+                'status' => '1',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+
+                'day' => 1,
+                'time' => '02:00',
+                'status' => '1',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+
+                'day' => 1,
+                'time' => '03:00',
+                'status' => '1',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+
+                'day' => 1,
+                'time' => '04:00',
+                'status' => '1',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+
+                'day' => 1,
+                'time' => '05:00',
+                'status' => '1',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+
                 'day' => 1,
                 'time' => '06:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
+
                 'day' => 1,
                 'time' => '07:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
+
                 'day' => 1,
                 'time' => '08:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '09:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '10:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '11:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '12:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '13:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
+
                 'day' => 1,
                 'time' => '14:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '15:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '16:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '17:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '18:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '19:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '20:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
             [
-                'type' => 'current',
                 'day' => 1,
                 'time' => '21:00',
-                'status' => 'active',
+                'status' => '1',
                 'stand_id' => Stand::whereName('Стелуца')->first()->id,
                 'congregation_id' => $congregation_id,
             ],
+            [
+                'day' => 1,
+                'time' => '22:00',
+                'status' => '1',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+            [
+                'day' => 1,
+                'time' => '23:00',
+                'status' => '1',
+                'stand_id' => Stand::whereName('Стелуца')->first()->id,
+                'congregation_id' => $congregation_id,
+            ],
+
         ];
 
         foreach($stand_templates as $stand_template) {

@@ -15,7 +15,7 @@ class CreateStandTemplatesTable extends Migration
     {
         Schema::create('stand_templates', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['current', 'next'])->default('current');
+            $table->enum('type', ['last', 'current', 'next'])->default('current');
             $table->enum('day', [1,2,3,4,5,6,7])->default(1);
             $table->string('time');
             $table->string('status');

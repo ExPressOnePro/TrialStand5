@@ -37,13 +37,25 @@ class WeekDaysEnum
     public static function getWeekDayDate(int $day): string
     {
         return match($day) {
-            self::MON => (new Carbon('this Monday'))->format('d.m.Y'),
-            self::TUE => (new Carbon('this Tuesday'))->format('d.m.Y'),
-            self::WED => (new Carbon('this Wednesday'))->format('d.m.Y'),
-            self::THU => (new Carbon('this Thursday'))->format('d.m.Y'),
-            self::FRI => (new Carbon('this Friday'))->format('d.m.Y'),
-            self::SAT => (new Carbon('this Saturday'))->format('d.m.Y'),
-            self::SUN => (new Carbon('this Sunday'))->format('d.m.Y'),
+            self::MON => (new Carbon('Mon this week'))->format('d.m.Y'),
+            self::TUE => (new Carbon('Tue this week'))->format('d.m.Y'),
+            self::WED => (new Carbon('Wed this week'))->format('d.m.Y'),
+            self::THU => (new Carbon('Thu this week'))->format('d.m.Y'),
+            self::FRI => (new Carbon('Fri this week'))->format('d.m.Y'),
+            self::SAT => (new Carbon('Sat this week'))->format('d.m.Y'),
+            self::SUN => (new Carbon('Sun this week'))->format('d.m.Y'),
+        };
+    }
+    public static function getNextWeekDayDate(int $day): string
+    {
+        return match($day) {
+            self::MON => (new Carbon('Mon next week'))->format('d.m.Y'),
+            self::TUE => (new Carbon('Tue next week'))->format('d.m.Y'),
+            self::WED => (new Carbon('Wed next week'))->format('d.m.Y'),
+            self::THU => (new Carbon('Thu next week'))->format('d.m.Y'),
+            self::FRI => (new Carbon('Fri next week'))->format('d.m.Y'),
+            self::SAT => (new Carbon('Sat next week'))->format('d.m.Y'),
+            self::SUN => (new Carbon('Sun next week'))->format('d.m.Y'),
         };
     }
 }

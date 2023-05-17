@@ -30,7 +30,7 @@ Route::get('/registration', 'App\Http\Controllers\Auth\RegisterController@pageRe
 Auth::routes();
 
 
-Route::group(['middleware' => 'role:dev'], function() {
+Route::group(['middleware' => 'role:Developer'], function() {
 
     Route::get('/home',
         [App\Http\Controllers\HomeController::class, 'index'])
@@ -63,8 +63,22 @@ Route::group(['middleware' => 'role:dev'], function() {
     Route::get('/stand', 'App\Http\Controllers\StandController@allstands')
         ->name('stand');
 
+    Route::get('/stand/create', 'App\Http\Controllers\StandController@createNewStandPage')
+        ->name('createNewStandPage');
+
+    Route::post('/stand/create', 'App\Http\Controllers\StandController@createNewStand')
+        ->name('createNewStand');
+
     Route::get('/stand/table/{id}', 'App\Http\Controllers\StandController@tables')
-        ->name('tableStand');
+        ->name('StandTable');
+
+    Route::get('/stand/settings/{id}', 'App\Http\Controllers\StandController@settings')
+        ->name('StandSettings');
+
+    Route::post('/stand/settings', 'App\Http\Controllers\StandController@time')
+        ->name('StandTime');
+
+
 
     Route::get('/stand/record', 'App\Http\Controllers\StandController@record')
         ->name('recToStand');

@@ -1,17 +1,17 @@
-$('#contactForm').on('submit',function(event){
-    event.preventDefault();
+$(document).ready(function () {
 
-    let name = $('#name').val();
+    $('.status').on('click', function () {
 
-    $.ajax({
-        url: "/UserControl",
-        type:"POST",
-        data:{
-            "_token": "{{ csrf_token() }}",
-            name:name,
-        },
-        success:function(response){
-            console.log(response);
-        },
-    });
+        var status = $("#status").val();
+
+        $.ajax({
+            url:'stand.settings',
+            type: 'POST',
+            data:{'status': status},
+            success: function(data) {
+                alert(data);
+            }
+        });
+
+    })
 });
