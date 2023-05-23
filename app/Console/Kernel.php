@@ -2,17 +2,22 @@
 
 namespace App\Console;
 
+use App\Models\StandTemplate;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule): void
-    {
-        // $schedule->command('inspire')->hourly();
+    protected function schedule(Schedule $schedule): void {
+
+        $schedule->command('create:insertPublishersNextWeekDate')->weeklyOn(4, '08:00');
+        $schedule->command('app:update-templates')->weeklyOn(1, '00:00');
+        $schedule->command('app:update-publishers')->weeklyOn(1, '00:01');
+
     }
 
     /**

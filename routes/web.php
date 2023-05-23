@@ -72,22 +72,28 @@ Route::group(['middleware' => 'role:Developer'], function() {
     Route::get('/stand/table/{id}', 'App\Http\Controllers\StandController@tables')
         ->name('StandTable');
 
+    Route::post('/stand/table/{id}', 'App\Http\Controllers\StandController@record')
+        ->name('StandRecord');
+
     Route::get('/stand/settings/{id}', 'App\Http\Controllers\StandController@settings')
         ->name('StandSettings');
 
-    Route::post('/stand/settings', 'App\Http\Controllers\StandController@time')
+    Route::post('/stand/settings/{id}', 'App\Http\Controllers\StandController@timeUpdate')
         ->name('StandTime');
-
-
-
-    Route::get('/stand/record', 'App\Http\Controllers\StandController@record')
-        ->name('recToStand');
 
     Route::get('/stand/test', 'App\Http\Controllers\StandController@test')
         ->name('test');
 
-    Route::get('/stand/testtemp', 'App\Http\Controllers\StandController@test_insert_temp')
-        ->name('testtemp');
+    Route::get('/stand/ExampleNext', 'App\Http\Controllers\StandController@ExampleTestVersionOfAddingToPublishersNextWeek')
+        ->name('ExampleNext');
+
+    Route::get('/stand/ExampleCurrent', 'App\Http\Controllers\StandController@ExampleTestVersionOfAddingToPublishersCurrentWeek')
+        ->name('ExampleCurrent');
+
+    Route::post('/post/updateRecordStand', 'App\Http\Controllers\StandController@updateRecordStand')
+        ->name('updateRecordStand');
+
+
 
 
 

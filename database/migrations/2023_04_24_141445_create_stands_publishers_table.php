@@ -18,7 +18,7 @@ class CreateStandsPublishersTable extends Migration
             $table->unsignedBigInteger('stand_template_id');
             $table->unsignedBigInteger('user_1')->nullable();
             $table->unsignedBigInteger('user_2')->nullable();
-            $table->date('date');
+            $table->date('date')->format('d.m.Y');;
             $table->timestamps();
 
             $table->foreign('stand_template_id')->references('id')->on('stand_templates');

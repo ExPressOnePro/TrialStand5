@@ -22,7 +22,7 @@
                             @foreach($active_day as $actday)
                             <div class="col-md-3">
                                 <div class="card mt-2 m-1">
-                                    <h5 class="display mb-2">{{ \App\Enums\WeekDaysEnum::getWeekDay($actday->day)}}</h5>
+                                    <h5 class="display mt-1 mb-2">{{ \App\Enums\WeekDaysEnum::getWeekDay($actday->day)}}</h5>
                                     @foreach($template as $nc)
                                         @if(
                                         $nc->day === $actday->day
@@ -34,11 +34,11 @@
                                                 <div class="col-md-6">
                                                     <label class="switch  switch-success ">
                                                         @if ($nc->status != 0)
-
+                                                            <form method="post" action="{{ route('StandTime', $nc->id) }}">
                                                                 @csrf
                                                                 <input type="checkbox" class="status" value="1" id="status" name="status" href="javascript:void(0)" checked>
                                                                 <span class="slider"></span>
-
+                                                            </form>
                                                         @else
 
                                                                 @csrf
@@ -64,10 +64,18 @@
             document.getElementById('status').addEventListener('change', (e) => {
                 this.checkboxValue = e.target.checked ? '1' : '0';
 
+                var url = "{{URL('settings/'.$nc->id)}}";
+                var id = $("{{ $nc->id }}").val();
                 $.ajax({
-                    method: "POST",
-                    url: '{{ route('StandTime') }}',
-                    data: { value: this.checkboxValue}
+                    url: url,
+                    type: "POST",
+                    cache: false,
+                    data: {
+                        _token:'{{ csrf_token() }}',
+                        type: 3,
+                        id: console.log(id),
+                        status: console.log(this.checkboxValue),
+                    },
                 })
                     .done(function( msg ) {
                         alert( data );

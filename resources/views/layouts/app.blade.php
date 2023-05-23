@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="../../dist-assets/css/plugins/fontawesome-5.css" />
     <link href="../../dist-assets/css/plugins/metisMenu.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../dist-assets/css/plugins/sweetalert2.min.css" />
+    <link rel="stylesheet" href="../../dist-assets/css/plugins/toastr.css" />
     <!-- Style css -->
     <link href="public/css/style.css" rel="stylesheet">
 
@@ -70,6 +71,8 @@
     <script src="../../dist-assets/js/scripts/datatables.script.min.js"></script>
     <script src="../../dist-assets/js/plugins/sweetalert2.min.js"></script>
     <script src="../../dist-assets/js/scripts/sweetalert.script.min.js"></script>
+    <script src="../../dist-assets/js/plugins/toastr.min.js"></script>
+    <script src="../../dist-assets/js/scripts/toastr.script.min.js"></script>
 
 
 

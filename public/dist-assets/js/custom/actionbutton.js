@@ -1,17 +1,14 @@
-$(document).ready(function () {
-
-    $('.status').on('click', function () {
-
-        var status = $("#status").val();
-
-        $.ajax({
-            url:'stand.settings',
-            type: 'POST',
-            data:{'status': status},
-            success: function(data) {
-                alert(data);
-            }
-        });
-
-    })
-});
+function sendData() {
+    var selectedRow = document.querySelector('#elem .table-row.selected');
+    var rowData = selectedRow.innerText;
+    $.ajax({
+        type: 'POST',
+        url: '/your/url',
+        data: {
+            row_data: rowData
+        },
+        success: function(response) {
+            console.log(response);
+        }
+    });
+}
