@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Routing\Loader\Configurator\Traits\AddTrait;
+use function Nette\Utils\removeChildren;
 
 class StandController extends Controller
 {
@@ -91,8 +92,17 @@ class StandController extends Controller
 
     public function updateRecordStand(Request $request) {
 
-        echo $request->username;
+        $id = $request->input('templateId');
+        $user = DB::table('stands_publishers')
+            ->where('id',$id)
+            ->update([
+               'user_1', $request->usernameID
+            ]);
 
+
+
+        /*$user->user_1 = $request->usernameID;
+        $user->update();*/
 
 
         /*return response()->json(['success' => 'Post created successfully.'])*/;

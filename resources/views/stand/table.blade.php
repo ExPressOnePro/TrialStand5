@@ -81,8 +81,7 @@
                                                                         )
                                                                             <th class="value1">
                                                                                 <div class="mt-2">
-                                                                                    <span class="text-mute text">{{ $tepmid =$template->id }}</span>
-                                                                                    {{ $tepm = $template->time }}
+                                                                                    <span class="text">{{ $tepm = $template->time }}</span>
                                                                                 </div>
                                                                             </th>
                                                                             <th class="value2">
@@ -90,7 +89,7 @@
                                                                                     is_null($standPublishers->user)
                                                                                 )
                                                                                     {{--<a href="--}}{{--{{ route('recToStand') }}--}}{{--">--}}
-                                                                                        <button class="btn btn-success m-1 editButton" type="button" data-toggle="modal" data-target="#ModalForRecord">
+                                                                                        <button class="btn btn-success m-1 editButton1" type="button" data-toggle="modal" data-id="{{ $template->id}}">
                                                                                             Записаться</button>
                                                                                     {{--</a>--}}
                                                                                 @else
@@ -102,7 +101,7 @@
                                                                                     is_null($standPublishers->user_2)
                                                                                 )
                                                                                     <a href="{{--{{ route('recToStand') }}--}}">
-                                                                                        <button class="btn btn-success m-1 editButton" type="button" data-toggle="modal" data-target="#ModalForRecord">
+                                                                                        <button class="btn btn-success m-1 editButton2" type="button" data-toggle="modal" data-target="#ModalForRecord">
                                                                                             Записаться</button>
                                                                                     </a>
                                                                                 @else
@@ -234,23 +233,23 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle-2">Запись</h5>
+                    <h4 class="modal-title heading">Запись для cтенда {{ $StandID->name }}</h4>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
-                <form>
+                <form method="post" action="">
                     @csrf
                     <div class="modal-body">
+                        <input type="hidden" id="templateId">
                         <label for="picker1">Выберите из списка</label>
-                        <h4 class="heading">Запись для cтенда {{ $StandID->name }}</h4>
                         <select class="form-control form-control-rounded" id="usernameID">
                             @foreach($user as $us)
-                                <option>{{ $us->name }}</option>
+                                <option value="{{$us->id}}">{{ $us->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" type="button" data-dismiss="modal">Отменить</button>
-                        <button class="btn btn-success saveUpd" type="submit" id="toast-close-button">Сохранить</button>
+                        <button class="btn btn-success saveUpd" type="button" {{--id="toast-close-button"--}}>Сохранить</button>
                     </div>
                 </form>
             </div>
@@ -268,9 +267,19 @@
     <div id="toast-bottom-full-width" class="toast-bottom-full-width"></div>
     <div id="toast-bottom-center" class="toast-bottom-center"></div>
     <div id="toast-bottom-left" class="toast-bottom-left"></div>
-
-
     <div id="sm-wrapper"></div>
+
+    <script>
+        window.onload = function () { //Выполнить при загрузке
+            var elems = document.querySelectorAll('[data-elementor-id]'); // Находим элементы с нужным атрибутом.
+            var newArr = [];
+            for (let i = 0; i < elems.length; i++) {
+                newArr.push(elems[i].dataset.elementorId); // Записываем в массив полученные id из атрибутов.
+            }
+            document.getElementById('dataset').value = newArr; // Вариант первый - записываем в скрытое поле input или можно его создать через js сразу при действии
+        }
+    </script>
+
     <script>
         /*$(document).ready(function() {
             $('.editButton').click(function() {
@@ -293,41 +302,39 @@
                 console.log( value4);
             });
         });*/
-        $.ajaxSetup({
+        /*$.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        });
+        });*/
+        $('.editButton1').click(function() {
+            var templateId = $(this).data('id');
+            $('#templateId').text(templateId);
+            $('#ModalForRecord').modal('show');
 
-        $('.saveUpd').click(function(e) {
-            e.preventDefault();
-
-            var row = $(this).closest('tr'); // Получаем ближайшую строку таблицы
-            var value1 = row.find('.value1').text(); // Получаем значение из ячейки с классом "value1"
-            var value2 = row.find('.value2').text();// Получаем значение из ячейки с классом "value2"
-            var value3 = row.find('.value3').text();// Получаем значение из ячейки с классом "value3"
-            var value4 = row.find('.value4').text();// Получаем значение из ячейки с классом "value4"
-            var username = $("#usernameID").val();
-
-            /*$('#ModalForRecord{{--{{$template->id}}--}}').modal('show');*/
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('updateRecordStand') }}',  //Как пример, можно  просто /ajax. Тогда в роуте тоже исправь
-                dataType: 'html',
-                data: {
-                    _token: '{{csrf_token()}}',
-                    username:username,
-                },
-                success: function(data){
-                    /*console.log(data);
-                    location.reload();*/
-                        data = JSON.parse(data);
-                        if(data.statusCode)
+            $('.saveUpd').click(function(e) {
+                e.preventDefault();
+                var usernameID = $("#usernameID").val();
+                var templateId = $(this).data('id');
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('updateRecordStand') }}',
+                    dataType: 'html',
+                    data: {
+                        _token: '{{csrf_token()}}',
+                        usernameID:usernameID,
+                        templateId:templateId,
+                    },
+                    success: function(data){
+                        console.log(data);
+                        /*location.reload();*/
+                        /*data = JSON.parse(data);
+                            if(data.statusCode)
                         {
                             window.location = "/stand";
-                        }
-                }
+                        }*/
+                    }
+                });
             });
         });
 

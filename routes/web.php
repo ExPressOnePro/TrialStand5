@@ -94,10 +94,6 @@ Route::group(['middleware' => 'role:Developer'], function() {
         ->name('updateRecordStand');
 
 
-
-
-
-
     /*UserControl Block END*/
 });
 
