@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Congregation;
+use App\Models\UsersRoles;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -59,13 +60,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $newUser = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'login' => $data['login'],
             'congregation_id' => '1',
             'password' => Hash::make($data['password']),
         ]);
+
+        $idUser = $newUser->id;
+        UsersRoles::create([
+            'user_id' => $idUser,
+            'role_id' => 1,
+        ]);
+
     }
 
     public function pageRegistration()

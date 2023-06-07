@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')Stand | Создание@endsection
+@section('title')Stand | Стенды@endsection
 @section('content')
 
     <div class="main-content pt-4">
@@ -15,34 +15,34 @@
             @foreach($accessible_stands_for_the_user as $asfu)
                 <div class="col-md-3">
                     <a  data-toggle="collapse" href="#collapse-link-collapsed{{ $asfu->id }}" aria-expanded="true">
-                    <div class="card card-body ul-border__bottom mb-4">
-                        <div class="text-center">
-                            <h1 class="heading">{{ $asfu->name }}</h1>
-                            <p class="mb-3 text-muted">Этот стенд находится - "{{ $asfu->location }}"</p>
-                        </div>
-                        <div class="collapse" id="collapse-link-collapsed{{ $asfu->id }}" style="">
-                            <div class="mt-3">
-                                <a href="{{ route('StandTable', $asfu->id) }}">
-                                    <button class="btn btn-outline-success btn-block text-left" type="button">
-                                        <h3 class="heading">
-                                            <span><i class="fa fa-table"></i></span>
-                                            Таблица записей
-                                        </h3>
-                                    </button>
-                                </a>
+                        <div class="card card-body ul-border__bottom mb-4">
+                            <div class="text-center">
+                                <h1 class="heading">{{ $asfu->name }}</h1>
+                                <p class="mb-3 text-muted">Этот стенд находится - "{{ $asfu->location }}"</p>
                             </div>
-                            <div class="mt-3">
-                                <a href="{{ route('StandSettings', $asfu->id) }}">
-                                    <button class="btn btn-outline-success btn-block text-left" type="button">
-                                        <h3 class="heading">
-                                            <span><i class="fa fa-gear"></i></span>
-                                            Настройка
-                                        </h3>
-                                    </button>
-                                </a>
+                            <div class="collapse" id="collapse-link-collapsed{{ $asfu->id }}" style="">
+                                <div class="mt-3">
+                                    <a href="{{ route('StandTable', $asfu->id) }}">
+                                        <button class="btn btn-outline-success btn-block text-left" type="button">
+                                            <h3 class="heading">
+                                                <span><i class="fa fa-table"></i></span>
+                                                Таблица записей
+                                            </h3>
+                                        </button>
+                                    </a>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="{{ route('StandSettings', $asfu->id) }}">
+                                        <button class="btn btn-outline-success btn-block text-left" type="button">
+                                            <h3 class="heading">
+                                                <span><i class="fa fa-gear"></i></span>
+                                                Настройка
+                                            </h3>
+                                        </button>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </a>
                 </div>
             @endforeach

@@ -3,19 +3,19 @@
 @section('content')
 
     <div class="main-content pt-4">
-    <div class="breadcrumb">
-        <h1 class="mr-2"></h1>
-        <ul>
-            <li><a href="">страница</a></li>
-            <li></li>
-        </ul>
-    </div>
-    <div class="separator-breadcrumb border-top"></div>
+        <div class="breadcrumb">
+            <h1 class="mr-2"></h1>
+            <ul>
+                <li><a href="">страница</a></li>
+                <li></li>
+            </ul>
+        </div>
+        <div class="separator-breadcrumb border-top"></div>
         <div class="row">
             <div class="col-lg-8 col-md-8 col-xl-8  mb-4 mt-4 offset-md-1">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <form method="post" action="{{ route('UpdateRecordStand', $stpubl->id) }}">
+                        <form method="post" action="{{ route('UpdateRecordStandFirst', $stpubl->id) }}">
                             @csrf
                             <div class="row">
                                 <div class="col-md-11 mb-3 mb-sm-0">
@@ -29,17 +29,9 @@
                             <div class="row mb-5">
                                 <div class="col-md-6 mb-3 mb-sm-0">
                                     <h5 class="font-weight-bold">Первый возвещатель</h5>
-                                    <select class="form-control form-control-rounded" name="usernameID1" id="usernameID1">
+                                    <select class="form-control form-control-rounded" name="usernameID" id="usernameID">
                                         @foreach($user as $us)
-                                            <option id="user1" name="user1" value="{{$us->id}}">{{ $us->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 text-sm">
-                                    <h5 class="font-weight-bold">Второй возвещатель</h5>
-                                    <select class="form-control form-control-rounded" name="usernameID2" id="usernameID2">
-                                        @foreach($user as $us)
-                                            <option id="user2" name="user2" value="{{$us->id}}">{{ $us->name }}</option>
+                                            <option id="user" name="user" value="{{$us->id}}">{{ $us->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

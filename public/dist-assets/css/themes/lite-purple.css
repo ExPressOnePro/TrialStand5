@@ -84,8 +84,8 @@ figure,
 footer,
 header,
 hgroup,
-main,
 nav,
+main,
 section {
   display: block;
 }
@@ -3770,6 +3770,8 @@ input[type="button"].btn-block {
   font-size: 0.71137rem;
   color: #70657b;
   white-space: nowrap;
+    border: #0a0d1e;
+    border-radius: 25px;
 }
 
 .dropdown-item-text {

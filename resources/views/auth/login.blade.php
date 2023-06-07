@@ -71,7 +71,7 @@
     </div>
 </div>--}}
 
-<div class="auth-layout-wrap" style="background-image: url(../../dist-assets/images/log2.jpg)">
+<div class="auth-layout-wrap">
     <div class="auth-content">
         <div class="card o-hidden">
             <div class="row">
@@ -105,24 +105,26 @@
                                     @enderror
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('Войти') }}</button>
+
                                     @if (Route::has('password.request'))
                                         <a class="btn btn-link" href="{{ route('password.request') }}">
                                             {{ __('Забыли пароль?') }}
                                         </a>
                                     @endif
                                 </div>
+                        </form>
                                 <div class="col-md-6">
-                                    <a href="{{'auth.register'}}">
+                                    <a href="{{ '/registration' }}">
                                         <button class="btn btn-rounded btn-primary btn-block mt-2">
-                                            {{ __('Register') }}
+                                            {{ __('Регистрация') }}
                                         </button>
                                     </a>
                                 </div>
                             </div>
-                        </form>
                     </div>
                 </div>
             </div>

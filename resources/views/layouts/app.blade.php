@@ -17,8 +17,10 @@
     <link href="../../dist-assets/css/plugins/metisMenu.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../dist-assets/css/plugins/sweetalert2.min.css" />
     <link rel="stylesheet" href="../../dist-assets/css/plugins/toastr.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Style css -->
-    <link href="public/css/style.css" rel="stylesheet">
+    <link href="../public/css/style.css" rel="stylesheet">
+    <link href="../public/css/app.css" rel="stylesheet">
 
     <!-- Scripts -->
     <script
@@ -31,29 +33,72 @@
 <body>
 <main>
     <body class="text-left">
-    <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
-        @if(Request::is(
-            'dashboard-2',
-            'UserControl',
-            'UserControl/*',
-            'stand',
-            'stand/*',
-            'home',
-            'congregations'
-        ))
-            @include('includes.sidebar')
-
+    @inject('mobile_detect', 'Mobile_Detect')
+    @if ($mobile_detect->isMobile())
+        <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
-                @include('includes.header')
+                @if(Request::is(
+                    'dashboard-2',
+                    'UserControl',
+                    'UserControl/*',
+                    'stand',
+                    'users',
+                    'stand/*',
+                    'home',
+                    'congregations'
+                    ))
+                    @include('includes.header')
+                    @include('includes.menuBarPhone')
                 @endif
-
-                @yield('content')
+                    @yield('content')
+                    @include('includes.footer')
             </div>
-    </div>
+
+        </div>
+    @elseif ($mobile_detect->isTablet())
+        <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
+            @if(Request::is(
+                'dashboard-2',
+                'UserControl',
+                'UserControl/*',
+                'stand',
+                'stand/*',
+                'home',
+                'congregations'
+                ))
+                <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
+                    @endif
+                    @yield('content')
+                </div>
+                @include('includes.menuBarPhone')
+                @include('includes.footer')
+        </div>
+    @else
+        <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
+            @if(Request::is(
+                'users',
+                'users/*',
+                'dashboard-2',
+                'UserControl',
+                'UserControl/*',
+                'stand',
+                'stand/*',
+                'home',
+                'congregations'
+                ))
+                <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
+                    @include('includes.sidebar')
+                    @endif
+                    @include('includes.header')
+                    @yield('content')
+                    @include('includes.footer')
+                </div>
+        </div>
+    @endif
     </body>
 </main>
     <!--Scripts-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    {{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>--}}
     <!-- Required vendors -->
     <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
     <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
@@ -72,9 +117,8 @@
     <script src="../../dist-assets/js/plugins/sweetalert2.min.js"></script>
     <script src="../../dist-assets/js/scripts/sweetalert.script.min.js"></script>
     <script src="../../dist-assets/js/plugins/toastr.min.js"></script>
-    <script src="../../dist-assets/js/scripts/toastr.script.min.js"></script>
-
-
+    <script src="../../dist-../../dist-assets/js/plugins/datatables.min.js"></script>
+    <script src="../../dist-../../dist-assets/js/scripts/tooltip.script.min.js"></script>
 
 
 </body>

@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable {
 
@@ -54,6 +55,7 @@ class User extends Authenticatable {
     {
         return $this->belongsTo(Congregation::class);
     }
+
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

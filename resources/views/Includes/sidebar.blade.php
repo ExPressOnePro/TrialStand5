@@ -20,6 +20,12 @@
                                                 <span class="t-font-bolder">Control</span>
                                             </a>
                                         </li>
+                                        <li class="item-name">
+                                            <a href="{{ route('users') }}">
+                                                <i class="nav-icon i-Business-Mens mr-2 text-muted"></i>
+                                                <span class="t-font-bolder">All users</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li class="Ul_li--hover"><a class="has-arrow" href="#"><i class="text-20 mr-2 text-muted"></i><span class="item-name text-15 heading">Stand</span></a>

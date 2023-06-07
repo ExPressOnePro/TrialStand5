@@ -21,7 +21,7 @@ class Congregation extends Model
      *
      * @return HasMany
      */
-    public function stands(): HasMany
+    public function stand(): HasMany
     {
         return $this->hasMany(Stand::class, 'stand_id', 'id');
     }

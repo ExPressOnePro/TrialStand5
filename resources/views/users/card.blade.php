@@ -1,6 +1,76 @@
 @extends('layouts.app')
-@section('title')Stand | Создание@endsection
+@section('title')Stand | Профиль @endsection
 @section('content')
+
+    <div class="main-content pt-4">
+        <div class="row">
+            <div class="col-lg-4 col-xl-4">
+            <div class="card o-hidden">
+                <img class="d-block w-100" src="../../dist-assets/images/products/iphone-1.jpg" alt="First slide">
+                <div class="card-body">
+                    <div class="ul-contact-detail__info">
+                        <div class="row">
+                            <div class="col-6 text-center">
+                                <div class="ul-contact-detail__info-1">
+                                    @foreach($user as $u)
+                                        <h5>Имя</h5><span class="heading text-18">{{ $u->name }}</span>
+                                    @endforeach
+                                </div>
+                                <div class="ul-contact-detail__info-1">
+                                    @foreach($user as $u)
+                                        <h5>Логин</h5><span>{{ $u->login }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="col-6 text-center">
+                                <div class="ul-contact-detail__info-1">
+                                    @foreach($user as $u)
+                                        <h5>Почта</h5><span>{{ $u->email }}</span>
+                                    @endforeach
+                                </div>
+                                <div class="ul-contact-detail__info-1">
+                                    @foreach($citn as $c)
+                                        <h5>Собрание</h5><span>{{ $c->name }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <div class="ul-contact-detail__info-1">
+                                    <h5>Address</h5><span>DieSachbearbeiter Choriner Straße 49 10435 Berlin</span>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <div class="ul-contact-detail__social">
+                                    <div class="ul-contact-detail__social-1">
+                                        <button class="btn btn-facebook btn-icon m-1" type="button"><span class="ul-btn__icon"><i class="i-Facebook-2"></i></span></button><span class="t-font-boldest ul-contact-detail__followers">400</span>
+                                    </div>
+                                    <div class="ul-contact-detail__social-1">
+                                        <button class="btn btn-twitter btn-icon m-1" type="button"><span class="ul-btn__icon"><i class="i-Twitter"></i></span></button><span class="t-font-boldest ul-contact-detail__followers">900</span>
+                                    </div>
+                                    <div class="ul-contact-detail__social-1">
+                                        <button class="btn btn-dribble btn-icon m-1" type="button"><span class="ul-btn__icon"><i class="i-Dribble"></i></span></button><span class="t-font-boldest ul-contact-detail__followers">658</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="col-md-4">
+                <h2 class="small-title">Доступы</h2>
+                <div class="card card-icon mb-4">
+                    <div class="card-body text-center"><i class="i-Data-Upload"></i>
+                        <p class="text-muted mt-2 mb-2">Today's Upload</p>
+                        <p class="lead text-22 m-0">21</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="main-content pt-4">
         <div class="page-title-container">
             <div class="row">
@@ -27,21 +97,21 @@
                         <div class="mb-5">
                             <p class="text-lg-center text-black text-20 mb-4">Основная информация</p>
                             @foreach($user as $u)
-                            <div class="row g-0 mb-2">
-                                <div class="col-md-3 text-18">Логин:</div>
-                                <div class="col text-16">{{ $u->login }}</div>
-                            </div>
-                            <div class="row g-0 mb-2">
-                                <div class="col-md-3 text-18">Почта:</div>
-                                <div class="col text-16">{{ $u->email }}</div>
-                            </div>
+                                <div class="row g-0 mb-2">
+                                    <div class="col-md-3 text-18">Логин:</div>
+                                    <div class="col text-16">{{ $u->login }}</div>
+                                </div>
+                                <div class="row g-0 mb-2">
+                                    <div class="col-md-3 text-18">Почта:</div>
+                                    <div class="col text-16">{{ $u->email }}</div>
+                                </div>
                             @endforeach
-                            @foreach($citn as $c)
+                            {{--@foreach($citn as $c)
                                 <div class="row g-0 mb-2">
                                     <div class="col-md-3 text-18">Собрание:</div>
                                     <div class="col text-16">{{ $c->name }}</div>
                                 </div>
-                            @endforeach
+                            @endforeach--}}
                         </div>
                         <div class="mb-5">
                             <p class="text-lg-center text-black text-20 mb-4">Контактная информация</p>
@@ -94,12 +164,12 @@
             </div>
             <div class="col-md-4">
                 <h2 class="small-title">Доступы</h2>
-                    <div class="card card-icon mb-4">
-                        <div class="card-body text-center"><i class="i-Data-Upload"></i>
-                            <p class="text-muted mt-2 mb-2">Today's Upload</p>
-                            <p class="lead text-22 m-0">21</p>
-                        </div>
+                <div class="card card-icon mb-4">
+                    <div class="card-body text-center"><i class="i-Data-Upload"></i>
+                        <p class="text-muted mt-2 mb-2">Today's Upload</p>
+                        <p class="lead text-22 m-0">21</p>
                     </div>
+                </div>
             </div>
         </div>
     </div>

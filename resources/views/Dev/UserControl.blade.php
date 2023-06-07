@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title')Stand | Создание@endsection
 @section('content')
 
     <div class="main-content pt-4">
@@ -94,4 +94,26 @@
         <!-- end of main-content -->
     </div>
 
+    <div class="row">
+        <div class="col-lg-12 col-md-12 mb-4">
+            <div class="form-group ul-form-group d-flex align-items-center">
+                <input class="form-control ul-form-input" type="text" placeholder="Enter your name.....">
+            </div>
+        </div>
+        <div class="col-lg-4 col-xl-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="ul-contact-page__profile">
+                        <div class="user-profile"><img class="profile-picture mb-2" src="../../dist-assets/images/faces/1.png" alt="alt"></div>
+                        <div class="ul-contact-page__info">
+                            <p class="m-0 text-24">Timothy Carlson</p>
+                            <p class="text-muted m-0">Digital Marketer</p>
+                            <p class="text-muted mt-3">DieSachbearbeiter Choriner Straße 49 10435 Berlin</p>
+                            <p class="text-muted mt-3">NO: 234-987-665-340</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

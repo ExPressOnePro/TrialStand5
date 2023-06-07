@@ -1,6 +1,13 @@
 @extends('layouts.app')
 @section('title')Stand | таблица@endsection
 @section('content')
+    @if(session('success'))
+        <div class="alert alert-card alert-success" role="alert"><strong class="text-capitalize">Успешно</strong>
+            <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            {{ session('success') }}
+        </div>
+        <div class="swal2-modal swal2-hide" style="display: none; width: 500px; padding: 20px; background: rgb(255, 255, 255);" tabindex="-1"><ul class="swal2-progresssteps" style="display: none;"></ul><div class="swal2-icon swal2-error" style="display: none;"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="swal2-icon swal2-question" style="display: none;">?</div><div class="swal2-icon swal2-warning" style="display: none;">!</div><div class="swal2-icon swal2-info" style="display: none;">i</div><div class="swal2-icon swal2-success" style="display: none;"><span class="line tip"></span> <span class="line long"></span><div class="placeholder"></div> <div class="fix"></div></div><img class="swal2-image" style="display: none;"><h2>Auto close alert!</h2><div class="swal2-content" style="display: block;">I will close in <strong>2</strong> seconds.</div><input style="display: none;" class="swal2-input"><input type="file" style="display: none;" class="swal2-file"><div class="swal2-range" style="display: none;"><output></output><input type="range"></div><select style="display: none;" class="swal2-select"></select><div class="swal2-radio" style="display: none;"></div><label for="swal2-checkbox" class="swal2-checkbox" style="display: none;"><input type="checkbox"></label><textarea style="display: none;" class="swal2-textarea"></textarea><div class="swal2-validationerror" style="display: none;"></div><hr class="swal2-spacer" style="display: block;"><button type="button" class="swal2-confirm swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">OK</button><button type="button" class="swal2-cancel swal2-styled" style="display: none; background-color: rgb(170, 170, 170);">Cancel</button><span class="swal2-close" style="display: none;">×</span></div>
+    @endif
 
     <div class="main-content pt-4">
     <div class="breadcrumb">
@@ -26,7 +33,7 @@
 
     <div class="separator-breadcrumb border-top"></div>
         <div class="row">
-            <div class="col-lg-10 col-md-10 col-xl-10  mb-4 mt-4 offset-md-1">
+            <div class="col-lg-8 col-md-8 col-xl-8  mb-4 mt-4 offset-md-1">
                 <div class="col ul-widget__head ">
                     <div class="ul-widget__head-toolbar">
                         <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold ul-widget-nav-tabs-line" role="tablist">
@@ -63,7 +70,7 @@
                                                             <th class='not-sortable'>Время</th>
                                                             <th class='not-sortable'>Возвещатель</th>
                                                             <th class='not-sortable'>Возвещатель</th>
-                                                            {{--<th class='not-sortable'>Отчет</th>--}}
+                                                            <th class='not-sortable'>Редактирование</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
@@ -88,10 +95,13 @@
                                                                                 @if(
                                                                                     is_null($standPublishers->user)
                                                                                 )
-                                                                                    {{--<a href="--}}{{--{{ route('recToStand') }}--}}{{--">--}}
-                                                                                        <button class="btn btn-success m-1 editButton1" type="button" data-toggle="modal" data-id="{{ $template->id}}">
-                                                                                            Записаться</button>
-                                                                                    {{--</a>--}}
+                                                                                    <a href="{{ route('PageUpdateRecordStandFirst',
+                                                                                    ['id' => $standPublishers->id]
+                                                                                    ) }}">
+                                                                                        <button class="btn btn-success m-1" type="button" >
+                                                                                            Записаться
+                                                                                        </button>
+                                                                                    </a>
                                                                                 @else
                                                                                     <div class="mt-2 ">{{$standPublishers->user->name}}</div>
                                                                                 @endif
@@ -100,9 +110,12 @@
                                                                                 @if(
                                                                                     is_null($standPublishers->user_2)
                                                                                 )
-                                                                                    <a href="{{--{{ route('recToStand') }}--}}">
-                                                                                        <button class="btn btn-success m-1 editButton2" type="button" data-toggle="modal" data-target="#ModalForRecord">
-                                                                                            Записаться</button>
+                                                                                    <a href="{{ route('PageUpdateRecordStandSecond',
+                                                                                    ['id' => $standPublishers->id]
+                                                                                    ) }}">
+                                                                                        <button class="btn btn-success m-1" type="button" >
+                                                                                            Записаться
+                                                                                        </button>
                                                                                     </a>
                                                                                 @else
                                                                                     <div class="mt-2">{{$standPublishers->user2->name}}</div>
@@ -116,8 +129,8 @@
 
                                                                                 @else
                                                                                     <a href="">
-                                                                                        <button class="btn btn-outline-warning m-1" type="button">
-                                                                                            :</button>
+                                                                                        <button class="btn btn-outline-primary m-1" type="button">
+                                                                                            Изменить</button>
                                                                                     </a>
                                                                                 @endif
                                                                             </th>
@@ -157,7 +170,7 @@
                                                             <th class='not-sortable'>Время</th>
                                                             <th class='not-sortable'>Возвещатель</th>
                                                             <th class='not-sortable'>Возвещатель</th>
-                                                            {{--<th class='not-sortable'>Отчет</th>--}}
+                                                            <th class='not-sortable'>Редактирование</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
@@ -168,7 +181,8 @@
                                                                     && $template->day === $actday->day
                                                                 )
                                                                 @foreach($template->standPublishers as $standPublishers)
-                                                                    <tr>
+                                                                    <tr data-id="{{$standPublishers->id}}">
+
                                                                         @if(
                                                                          $gwe === date('d.m.Y', strtotime($standPublishers->date))
                                                                         && $template->status === '1'
@@ -182,8 +196,14 @@
                                                                                 @if(
                                                                                     is_null($standPublishers->user)
                                                                                 )
-                                                                                        <button class="btn btn-success m-1" type="button" data-toggle="modal" data-target="#exampleModalCenter">
-                                                                                            Записаться</button>
+                                                                                    <a href="{{ route('PageUpdateRecordStandFirst',
+                                                                                    ['id' => $standPublishers->id]
+                                                                                    ) }}">
+                                                                                        <button class="btn btn-success m-1" type="button" >
+                                                                                            Записаться
+                                                                                        </button>
+                                                                                    </a>
+
                                                                                 @else
                                                                                     <div class="mt-2 ">{{$standPublishers->user->name}}</div>
                                                                                 @endif
@@ -192,8 +212,13 @@
                                                                                 @if(
                                                                                     is_null($standPublishers->user_2)
                                                                                 )
-                                                                                        <button class="btn btn-success m-1" type="button" data-toggle="modal" data-target="#exampleModalCenter">
-                                                                                            Записаться</button>
+                                                                                    <a href="{{ route('PageUpdateRecordStandSecond',
+                                                                                    ['id' => $standPublishers->id]
+                                                                                    ) }}">
+                                                                                        <button class="btn btn-success m-1" type="button" >
+                                                                                            Записаться
+                                                                                        </button>
+                                                                                    </a>
                                                                                 @else
                                                                                     <div class="mt-2">{{$standPublishers->user2->name}}</div>
                                                                                 @endif
@@ -236,10 +261,10 @@
                     <h4 class="modal-title heading">Запись для cтенда {{ $StandID->name }}</h4>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
-                <form method="post" action="">
+                {{--<form method="post" action="{{ route('updateRecordStand' ) }}">
                     @csrf
                     <div class="modal-body">
-                        <input type="hidden" id="templateId">
+                        <input type="" id="templateid">
                         <label for="picker1">Выберите из списка</label>
                         <select class="form-control form-control-rounded" id="usernameID">
                             @foreach($user as $us)
@@ -249,13 +274,15 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" type="button" data-dismiss="modal">Отменить</button>
-                        <button class="btn btn-success saveUpd" type="button" {{--id="toast-close-button"--}}>Сохранить</button>
+                        <button class="btn btn-success saveUpd" type="button" --}}{{--id="toast-close-button"--}}{{-->Сохранить</button>
                     </div>
-                </form>
+                </form>--}}
             </div>
         </div>
     </div>
+
     <button class="btn btn-outline-success btn-success" id="toast-close-button">Show Toast</button>
+    <button class="btn btn-success btn-block mb-3" id="alert-success" type="button">Success Alert</button>
     <button class="btn btn-block btn-outline-info btn-info mb-3" id="toast-slow-duration">Hide Toast</button>
     <button class="btn btn-block btn-outline-info btn-info" id="toast-position-top-center">Top Center</button>
 
@@ -269,61 +296,52 @@
     <div id="toast-bottom-left" class="toast-bottom-left"></div>
     <div id="sm-wrapper"></div>
 
-    <script>
-        window.onload = function () { //Выполнить при загрузке
-            var elems = document.querySelectorAll('[data-elementor-id]'); // Находим элементы с нужным атрибутом.
-            var newArr = [];
-            for (let i = 0; i < elems.length; i++) {
-                newArr.push(elems[i].dataset.elementorId); // Записываем в массив полученные id из атрибутов.
-            }
-            document.getElementById('dataset').value = newArr; // Вариант первый - записываем в скрытое поле input или можно его создать через js сразу при действии
-        }
-    </script>
-
-    <script>
-        /*$(document).ready(function() {
-            $('.editButton').click(function() {
-                var row = $(this).closest('tr'); // Получаем ближайшую строку таблицы
-                var value1 = row.find('.value1').text(); // Получаем значение из ячейки с классом "value1"
-                var value2 = row.find('.value2').text();// Получаем значение из ячейки с классом "value2"
-                var value3 = row.find('.value3').text();// Получаем значение из ячейки с классом "value3"
-                var value4 = row.find('.value4').text();// Получаем значение из ячейки с классом "value4"
-                $('#ModalForRecord').modal('show');
-                /!*$('#ModalForRecord').find('modal-body.newtrow').val(value1)*!/
+    <div class="swal2-container swal2-fade" style="overflow-y: auto;">
+        <div class="swal2-modal swal2-hide" style="display: none; width: 500px; padding: 20px; background: rgb(255, 255, 255);" tabindex="-1">
+            <ul class="swal2-progresssteps" style="display: none;"></ul>
+            <div class="swal2-icon swal2-error" style="display: none;">
+                <span class="x-mark"><span class="line left"></span>
+                    <span class="line right"></span>
+                </span>
+            </div>
+            <div class="swal2-icon swal2-question" style="display: none;">?</div>
+            <div class="swal2-icon swal2-warning" style="display: none;">!</div>
+            <div class="swal2-icon swal2-info" style="display: none;">i</div>
+            <div class="swal2-icon swal2-success" style="display: block;"><span class="line tip"></span> <span class="line long"></span>
+                <div class="placeholder"></div> <div class="fix"></div>
+            </div><img class="swal2-image" style="display: none;"><h2>Success!</h2>
+            <div class="swal2-content" style="display: block;">Your work has been saved</div>
+            <input class="swal2-input" style="display: none;"><input type="file" class="swal2-file" style="display: none;">
+            <div class="swal2-range" style="display: none;"><output></output><input type="range"></div>
+            <select class="swal2-select" style="display: none;"></select>
+            <div class="swal2-radio" style="display: none;"></div><label for="swal2-checkbox" class="swal2-checkbox" style="display: none;"><input type="checkbox"></label><textarea class="swal2-textarea" style="display: none;"></textarea><div class="swal2-validationerror" style="display: none;"></div><hr class="swal2-spacer" style="display: block;"><button type="button" class="swal2-confirm btn btn-lg btn-success">OK</button><button type="button" class="swal2-cancel" style="display: none;">Cancel</button><span class="swal2-close" style="display: none;">×</span></div></div>
 
 
-                // Дальше вы можете использовать полученные значения по своему усмотрению,
-                // например, передать их в другую функцию для дальнейшей обработки или отобразить в модальном окне редактирования.
 
-                // Пример вывода значений в консоль:
-                console.log( value1);
-                console.log( value2);
-                console.log( value3);
-                console.log( value4);
-            });
-        });*/
-        /*$.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });*/
+    {{--<script>
         $('.editButton1').click(function() {
-            var templateId = $(this).data('id');
-            $('#templateId').text(templateId);
+/*            var id = $(this).data('id');
+            $('#templateid').text(templateid);
+            $('#ModalForRecord').modal('show');*/
             $('#ModalForRecord').modal('show');
+            $('#ModalForRecord').on('shown.bs.modal', function () {
+                $(this).data('id');
+                $('#templateid').text(templateid);
+            });
 
             $('.saveUpd').click(function(e) {
                 e.preventDefault();
                 var usernameID = $("#usernameID").val();
-                var templateId = $(this).data('id');
+                var id = $(this).data('id');
+                $('#templateid').text(templateid);
+
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('updateRecordStand') }}',
+                    url: '/post/updateRecordStand/' + id,
                     dataType: 'html',
                     data: {
                         _token: '{{csrf_token()}}',
                         usernameID:usernameID,
-                        templateId:templateId,
                     },
                     success: function(data){
                         console.log(data);
@@ -358,6 +376,6 @@
                 alert('Fill all fields');
             }
         });*/
-    </script>
+    </script>--}}
 
 @endsection

@@ -17,30 +17,39 @@ Route::get('/', function () {
 });
 
 
-Route::get('/registration', 'App\Http\Controllers\Auth\RegisterController@pageRegistration')->name('pageRegistration');
+Route::get('/registration', function () {
+    return view('auth.register');
+});
 
 /*Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);*/
 
 
-
-
-
-
+Route::get('/home',
+    'App\Http\Controllers\HomeController@index')
+    ->name('home');
 
 Auth::routes();
 
-
 Route::group(['middleware' => 'role:Developer'], function() {
 
-    Route::get('/home',
-        [App\Http\Controllers\HomeController::class, 'index'])
-        ->name('home');
 
     Route::get('/dashboard-1', function() {
         return view('dashboard');
     });
 
     /*UserControl Block BEGIN*/
+    Route::get('/users',
+        'App\Http\Controllers\UsersController@allUsersPage')
+        ->name('users');
+
+    Route::get('/users/card/{id}',
+        'App\Http\Controllers\UsersController@userCard')
+        ->name('userCard');
+
+    Route::get('/users',
+        'App\Http\Controllers\UsersController@allUsersPage')
+        ->name('users');
+
     Route::get('/UserControl',
         'App\Http\Controllers\UserControlController@pageUserControl')
         ->name('pageUserControl');
@@ -72,9 +81,6 @@ Route::group(['middleware' => 'role:Developer'], function() {
     Route::get('/stand/table/{id}', 'App\Http\Controllers\StandController@tables')
         ->name('StandTable');
 
-    Route::post('/stand/table/{id}', 'App\Http\Controllers\StandController@record')
-        ->name('StandRecord');
-
     Route::get('/stand/settings/{id}', 'App\Http\Controllers\StandController@settings')
         ->name('StandSettings');
 
@@ -90,18 +96,24 @@ Route::group(['middleware' => 'role:Developer'], function() {
     Route::get('/stand/ExampleCurrent', 'App\Http\Controllers\StandController@ExampleTestVersionOfAddingToPublishersCurrentWeek')
         ->name('ExampleCurrent');
 
-    Route::post('/post/updateRecordStand', 'App\Http\Controllers\StandController@updateRecordStand')
-        ->name('updateRecordStand');
+    Route::get('/stand/record1/{id}', 'App\Http\Controllers\StandController@PageUpdateRecordStandFirst')
+        ->name('PageUpdateRecordStandFirst');
+
+    Route::get('/stand/record2/{id}', 'App\Http\Controllers\StandController@PageUpdateRecordStandSecond')
+        ->name('PageUpdateRecordStandSecond');
+
+    Route::post('/stand/record1/{id}', 'App\Http\Controllers\StandController@UpdateRecordStandFirst')
+        ->name('UpdateRecordStandFirst');
+
+    Route::post('/stand/record2/{id}', 'App\Http\Controllers\StandController@UpdateRecordStandSecond')
+        ->name('UpdateRecordStandSecond');
+
 
 
     /*UserControl Block END*/
 });
 
+Route::group(['middleware' => 'role:User'], function() {
 
-
-
-Route::group(['middleware' => 'role:project-manager'], function() {
-    Route::get('/dashboar-2', function() {
-        return 'Добро пожаловать, Project Manager';
-    });
 });
+

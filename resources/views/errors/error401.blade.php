@@ -1,5 +1,5 @@
 @extends('layouts.error')
-  
+@section('title')Stand | Error 401 @endsection
 @section('content')
         <div class="not-found-wrap text-center">
         <h1 class="text-60">401</h1>

@@ -12,8 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver;
 use Symfony\Component\Routing\Loader\Configurator\Traits\AddTrait;
 use function Nette\Utils\removeChildren;
+use function Symfony\Component\Console\Style\table;
 
 class StandController extends Controller
 {
@@ -90,31 +92,52 @@ class StandController extends Controller
             ]);
     }
 
-    public function updateRecordStand(Request $request) {
+    public function PageUpdateRecordStandFirst($id) {
+    $stpubl = StandPublishers::find($id);
+    $user = User::get();
+    $stid = StandTemplate::find($stpubl->stand_template_id);
+    $stname = Stand::find($stid->stand_id);
 
-        $id = $request->input('templateId');
-        $user = DB::table('stands_publishers')
-            ->where('id',$id)
+    return view('stand.recordFirst')
+        ->with(['stpubl' => $stpubl,])
+        ->with(['user' => $user,])
+        ->with(['standname' => $stname->name,]);
+    }
+    public function PageUpdateRecordStandSecond($id) {
+        $stpubl = StandPublishers::find($id);
+        $user = User::get();
+        $stid = StandTemplate::find($stpubl->stand_template_id);
+        $stname = Stand::find($stid->stand_id);
+
+        return view('stand.recordSecond')
+            ->with(['stpubl' => $stpubl,])
+            ->with(['user' => $user,])
+            ->with(['standname' => $stname->name,]);
+    }
+    public function UpdateRecordStandFirst(Request $request, $id) {
+        $stpubl = StandPublishers::find($id);
+        $stid = StandTemplate::find($stpubl->stand_template_id);
+        $value = $request->input('usernameID');
+        DB::table('stands_publishers')
+            ->where('id', $id)
             ->update([
-               'user_1', $request->usernameID
+                'user_1' => $value,
             ]);
 
+        return redirect()->route('StandTable', $stid->stand_id)->with('success', 'Ваша запись добавлена');
 
-
-        /*$user->user_1 = $request->usernameID;
-        $user->update();*/
-
-
-        /*return response()->json(['success' => 'Post created successfully.'])*/;
     }
+    public function UpdateRecordStandSecond(Request $request, $id) {
+        $stpubl = StandPublishers::find($id);
+        $stid = StandTemplate::find($stpubl->stand_template_id);
+        $value = $request->input('usernameID');
+        DB::table('stands_publishers')
+            ->where('id', $id)
+            ->update([
+                'user_2' => $value,
+            ]);
 
-    public function update($id)
-    {
-        $userPublish = StandPublishers::find($id);
-        $userPublish->user_1 = request('type');
-        $userPublish->save();
-
-        return json_encode(array('statusCode'=>200));
+        return redirect()->route('StandTable', $stid->stand_id)->with('success', 'Ваша запись добавлена');
 
     }
 
@@ -282,11 +305,6 @@ class StandController extends Controller
             dd($test3);
         }
     }
-
-    /*public function record(Request $request) {
-
-
-    }*/
 
     public function ExampleTestVersionOfAddingToPublishersNextWeek() {
 
@@ -464,7 +482,6 @@ class StandController extends Controller
 
 
     }
-
     public function ExampleTestVersionOfAddingToPublishersCurrentWeek() {
 
         /*пример добавления в базу по основным критериям в таблицу Publishers текущей недели*/
