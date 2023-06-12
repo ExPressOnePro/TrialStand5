@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')Stand | Создание@endsection
+@section('title') Meeper | Создание@endsection
 @section('content')
 
     <div class="main-content pt-4">

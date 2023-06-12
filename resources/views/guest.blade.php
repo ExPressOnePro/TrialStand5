@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')Stand | Гость@endsection
+@section('title')Meeper | Гость@endsection
 @section('content')
 
     <div class="main-content pt-4">

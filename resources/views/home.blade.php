@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')Stand | Главная @endsection
+@section('title')Meeper | Главная @endsection
 @section('content')
 
 

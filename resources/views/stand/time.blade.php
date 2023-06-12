@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')Stand | изменение времени@endsection
+@section('title') Meeper | Изменение времени @endsection
 @section('content')
 
     <div class="main-content pt-4">

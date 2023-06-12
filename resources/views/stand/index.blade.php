@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')Stand | Стенды@endsection
+@section('title') Meeper | Стенды@endsection
 @section('content')
 
     <div class="main-content pt-4">

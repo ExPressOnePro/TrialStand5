@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')Stand | таблица@endsection
+@section('title') Meeper | таблица@endsection
 @section('content')
     @if(session('success'))
         <div class="alert alert-card alert-success" role="alert"><strong class="text-capitalize">Успешно</strong>
