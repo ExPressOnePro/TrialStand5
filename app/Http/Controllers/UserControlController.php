@@ -49,6 +49,9 @@ class UserControlController extends Controller
     public function pageUser($id) {
 
         $user = new User;
+        $role = Role::where('name','!=', 'Developer')
+            ->where('name','!=', 'Guest')
+            ->get();
 
         /*$congregation_id_to_name = Congregation::where('id', $id)->get();*/
         $congregation_id_to_name = DB::table('users')
@@ -57,10 +60,6 @@ class UserControlController extends Controller
             ->where('congregations.id', $id)
             ->get();
 
-
-
-
-
         /*$users_name_from_role = DB::table('users')
             ->join('users_roles', 'users.id', '=', 'users_roles.user_id')
             ->select('users.*')
@@ -68,9 +67,10 @@ class UserControlController extends Controller
             ->get();*/
 
 
-        return view('Dev.UserControlRoleUser',
-            ['user' => [$user->find($id)]],
-            ['citn' => $congregation_id_to_name]);
+        return view('Dev.UserControlRoleUser')
+            ->with(['user' => $user->find($id)])
+            ->with(['role' => $role])
+            ->with(['citn' => $congregation_id_to_name]);
 
     }
 }

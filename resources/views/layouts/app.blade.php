@@ -45,7 +45,10 @@
                     'users',
                     'stand/*',
                     'home',
-                    'congregations'
+                    'congregation',
+                    'guest',
+                    'roles',
+                    'roles/*'
                     ))
                     @include('includes.header')
                     @include('includes.menuBarPhone')
@@ -53,7 +56,6 @@
                     @yield('content')
                     @include('includes.footer')
             </div>
-
         </div>
     @elseif ($mobile_detect->isTablet())
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
@@ -64,7 +66,8 @@
                 'stand',
                 'stand/*',
                 'home',
-                'congregations'
+                'congregations',
+                'guest'
                 ))
                 <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
                     @endif
@@ -76,6 +79,7 @@
     @else
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             @if(Request::is(
+                'profile',
                 'users',
                 'users/*',
                 'dashboard-2',
@@ -84,12 +88,16 @@
                 'stand',
                 'stand/*',
                 'home',
-                'congregations'
+                'congregation',
+                'congregation/*',
+                'guest',
+                'roles',
+                'roles/*'
                 ))
                 <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
                     @include('includes.sidebar')
-                    @endif
                     @include('includes.header')
+                    @endif
                     @yield('content')
                     @include('includes.footer')
                 </div>

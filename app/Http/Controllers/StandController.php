@@ -23,6 +23,7 @@ class StandController extends Controller
     public function allstands() {
 
         $user = User::find(Auth::id());
+
         $accessible_stands_for_the_user = DB::table('users')
             ->join('stands', 'stands.congregation_id', '=', 'users.congregation_id')
             ->select('stands.*')
@@ -31,6 +32,12 @@ class StandController extends Controller
 
         $accessible_stands_for_dev = DB::table('stands')
             ->get();
+
+
+        if( $user->congregation_id === 1) {
+            return view('guest');
+        }
+
 
         if ($user->hasRole('Developer')){
             return view('stand.index',
@@ -92,6 +99,61 @@ class StandController extends Controller
             ]);
     }
 
+    public function recordRedactionPage($id){
+
+        $stpubl = StandPublishers::find($id);
+        $user = User::get();
+        $stid = StandTemplate::find($stpubl->stand_template_id);
+        $stname = Stand::find($stid->stand_id);
+
+
+        return view ('stand.redaction')
+            ->with(['stpubl' => $stpubl,])
+            ->with(['user' => $user,])
+            ->with(['stand' => $stname,]);;
+    }
+
+    public function recordRedactionChange1(Request $request, $id, $stand) {
+
+        $value = $request->input('1_user_id');
+
+        $StandPublishers = StandPublishers::find($id);
+        $StandPublishers->user_1 = $value;
+        $StandPublishers->save();
+
+        return redirect()->route('StandTable',  ['id' => $stand]);
+    }
+    public function recordRedactionChange2(Request $request, $id, $stand) {
+
+        $value = $request->input('2_user_id');
+
+        $StandPublishers = StandPublishers::find($id);
+        $StandPublishers->user_2 = $value;
+        $StandPublishers->save();
+
+        return redirect()->route('StandTable',  ['id' => $stand]);
+    }
+    public function recordRedactionDelete1($id, $stand) {
+
+        $StandPublishers = StandPublishers::findOrFail($id);
+        $StandPublishers->user_1 = null;
+        $StandPublishers->save();
+
+        $id = $stand;
+
+        return redirect()->route('StandTable',  $id);
+    }
+    public function recordRedactionDelete2($id, $stand) {
+
+        $StandPublishers = StandPublishers::findOrFail($id);
+        $StandPublishers->user_2 = null;
+        $StandPublishers->save();
+
+        $id = $stand;
+
+        return redirect()->route('StandTable',  $id);
+    }
+
     public function PageUpdateRecordStandFirst($id) {
     $stpubl = StandPublishers::find($id);
     $user = User::get();
@@ -142,6 +204,7 @@ class StandController extends Controller
     }
 
     public function settings($id) {
+
         $standID = Stand::where('id', $id)->get();
         $active_day = StandTemplate::select('day')->distinct()->get();
         $time_array = [
@@ -264,13 +327,57 @@ class StandController extends Controller
 
     }
 
-    public function timeUpdate($id) {
+    public function timeUpdate( Request $request)
+    {
+        $items = StandTemplate::all();
 
-        $time = StandTemplate::find($id);
-        $time->status = 1;
+        foreach ($items as $item) {
+            $item->status = in_array($item->id, $request->items) ? true : false;
+            $item->save();
+        }
+        /*$items = StandTemplate::whereIn('id', $request->input('items'))->get();
 
-        dd($time);
-        /*$time->save();*/
+        foreach ($items as $item) {
+            $item->status = !$item->status;
+            $item->save();
+        }*/
+
+        /*$items = StandTemplate::whereIn('id', $request->input('active'))->get();
+        foreach ($items as $item) {
+            $item->status = true;
+            $item->save();
+        }*/
+
+        /*foreach ($request->input('active', []) as $tempId => $active) {
+            $template = StandTemplate::findOrFail($tempId);
+            $template->status = (bool) $active;
+            $template->save();
+        }*/
+
+        /*foreach($request->input('task_id') as $key => $id) {
+            $task = StandTemplate::find($id);
+            $task->status = in_array($id, $request->input('task_enabled', []));
+            $task->save();
+        }*/
+
+        /*foreach ($request->input('item') as $id => $value) {
+            $item = Item::findOrFail($id);
+            $item->status = $value == '1'; // 'on' - это значение, которое отправляется в случае, если флажок отмечен,
+            // в противном случае пользователь не отправляет значение флажка, только
+            // ключ.
+            $item->save();
+        }*/
+
+        /*foreach ($request->all() as $key => $value) {
+            if (strpos($key, 'item') === 0) {
+                $item_id = substr($key, 4);
+                $item = StandTemplate::findOrFail($item_id);
+                $item->status = $value == 1;
+                $item->save();
+            }
+        }*/
+
+        return redirect()->back()->with('success', 'Изменения сохранены');
 
     }
 
@@ -757,5 +864,6 @@ class StandController extends Controller
 
         return view('stand.time');
     }
+
 
 }

@@ -13,11 +13,24 @@ class UsersController extends Controller{
 
     public function allUsersPage() {
 
-        $user = User::get();
+        $user = User::with(
+            'usersroles.role'
+        )
+            ->get();
+
+        $role = UsersRoles::with(
+            'role'
+        )
+            ->get();
+
+
         return view('users.users')
             ->with([
-                'user' => $user
-            ]);
+                'user' => $user,
+            ])
+        ->with([
+            'role' => $role,
+        ]);
     }
 
     public function userCard($id) {

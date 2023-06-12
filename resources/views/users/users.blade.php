@@ -119,9 +119,28 @@
                                                         </td>
                                                         <td>{{ $us->email }}</td>
                                                         <td>{{ $us->login }}</td>
-                                                        <td>
-                                                            <a class="badge badge-danger m-2 p-2" href="#"></a>
-                                                        </td>
+                                                        @foreach($us->usersroles as $ii)
+                                                            @if($ii->role->name === 'Developer')
+                                                                <td>
+                                                                    <a class="badge badge-danger m-2 p-2" href="#">{{ $ii->role->name }}</a>
+                                                                </td>
+                                                            @endif
+                                                                @if($ii->role->name === 'Guest')
+                                                                    <td>
+                                                                        <a class="badge badge-secondary m-2 p-2" href="#">{{ $ii->role->name }}</a>
+                                                                    </td>
+                                                                @endif
+                                                                @if($ii->role->name === 'User')
+                                                                    <td>
+                                                                        <a class="badge badge-primary m-2 p-2" href="#">{{ $ii->role->name }}</a>
+                                                                    </td>
+                                                                @endif
+                                                                @if($ii->role->name === 'Manager')
+                                                                    <td>
+                                                                        <a class="badge badge-warning m-2 p-2" href="#">{{ $ii->role->name }}</a>
+                                                                    </td>
+                                                                @endif
+                                                        @endforeach
                                                         <td>20</td>
                                                         <td>April 34, 2019</td>
                                                         <td>$320,800</td>

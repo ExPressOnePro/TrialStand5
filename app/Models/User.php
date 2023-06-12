@@ -56,6 +56,14 @@ class User extends Authenticatable {
         return $this->belongsTo(Congregation::class);
     }
 
+    public function usersroles() {
+        return $this->hasMany(UsersRoles::class, 'user_id', 'id');
+    }
+
+    public function CongregationRequests() {
+        return $this->hasMany(CongregationRequests::class, 'user_id', 'id');
+    }
+
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

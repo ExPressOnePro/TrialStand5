@@ -59,22 +59,29 @@
                 <a href="{{ route('home') }}"><i class="choice fa fa-home"></i><p class="choice">Главная</p></a>
                 <a href="{{ route('stand') }}"><i class="fa-solid fa-table"></i><p>Стенд</p></a>
                 <a href="{{ route('users') }}"><i class="fa-solid fa-address-book"></i><p>Контакты</p></a>
-                <a href="#"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
                 <a href="#"><i class="fa-solid fa-pen"></i><p>Записи</p></a>
+                <a href="{{ route('account', Auth::id()) }}"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
             @endif
             @if (request()->is('stand', 'stand/*'))
                 <a href="{{ route('home') }}"><i class="fa fa-home"></i><p>Главная</p></a>
                 <a href="{{ route('stand') }}"><i class="choice fa-solid fa-table"></i><p class="choice">Стенд</p></a>
                 <a href="{{ route('users') }}"><i class="fa-solid fa-address-book"></i><p>Контакты</p></a>
-                <a href="#"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
                 <a href="#"><i class="fa-solid fa-pen"></i><p>Записи</p></a>
+                <a href="{{ route('userCard', Auth::id()) }}"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
             @endif
             @if (request()->is('users', '/users/*'))
                     <a href="{{ route('home') }}"><i class="fa fa-home"></i><p>Главная</p></a>
                     <a href="{{ route('stand') }}"><i class="fa-solid fa-table"></i><p>Стенд</p></a>
                     <a href="{{ route('users') }}"><i class="choice fa-solid fa-address-book"></i><p class="choice">Контакты</p></a>
-                    <a href="#"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
                     <a href="#"><i class="fa-solid fa-pen"></i><p>Записи</p></a>
+                    <a href="{{ route('userCard', Auth::id()) }}"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
+            @endif
+            @if (request()->is('account', '/account/*'))
+                <a href="{{ route('home') }}"><i class="fa fa-home"></i><p>Главная</p></a>
+                <a href="{{ route('stand') }}"><i class="fa-solid fa-table"></i><p>Стенд</p></a>
+                <a href="{{ route('users') }}"><i class="choice fa-solid fa-address-book"></i><p>Контакты</p></a>
+                <a href="#"><i class="fa-solid fa-pen"></i><p>Записи</p></a>
+                <a href="{{ route('userCard') }}"><i class="fa-solid fa-user" class="choice"></i><p>Аккаунт</p></a>
             @endif
 
         </div>
@@ -84,22 +91,22 @@
                 <a href="{{ route('home') }}"><i class="choice fa fa-home"></i><p class="choice">Главная</p></a>
                 <a href="{{ route('stand') }}"><i class="fa-solid fa-table"></i><p>Стенд</p></a>
                 <a href="{{ route('users') }}"><i class="fa-solid fa-address-book"></i><p>Контакты</p></a>
-                <a href="#"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
                 <a href="#"><i class="fa-solid fa-pen"></i><p>Записи</p></a>
+                <a href="#"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
             @endif
             @if (request()->is('stand', 'stand/*'))
                 <a href="{{ route('home') }}"><i class="fa fa-home"></i><p>Главная</p></a>
                 <a href="{{ route('stand') }}"><i class="choice fa-solid fa-table"></i><p class="choice">Стенд</p></a>
                 <a href="{{ route('users') }}"><i class="fa-solid fa-address-book"></i><p>Контакты</p></a>
-                <a href="#"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
                 <a href="#"><i class="fa-solid fa-pen"></i><p>Записи</p></a>
+                <a href="{{ route('userCard', Auth::id()) }}"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
             @endif
             @if (request()->is('UserControl', '/UserControl/*'))
                 <a href="{{ route('home') }}"><i class="fa fa-home"></i><p>Главная</p></a>
                 <a href="{{ route('stand') }}"><i class="fa-solid fa-table"></i><p>Стенд</p></a>
                 <a href="{{ route('users') }}"><i class="choice fa-solid fa-address-book"></i><p class="choice">Контакты</p></a>
-                <a href="#"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
                 <a href="#"><i class="fa-solid fa-pen"></i><p>Записи</p></a>
+                <a href="{{ route('userCard', Auth::id()) }}"><i class="fa-solid fa-user"></i><p>Аккаунт</p></a>
             @endif
 
         </div>

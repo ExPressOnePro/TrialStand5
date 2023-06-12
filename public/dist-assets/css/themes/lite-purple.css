@@ -3720,6 +3720,7 @@ input[type="button"].btn-block {
 .dropdown-menu[x-placement^="left"] {
   right: auto;
   bottom: auto;
+
 }
 
 .dropdown-divider {
@@ -21122,8 +21123,9 @@ a.typo_link.text-gray-900:after {
   display: flex;
   align-items: center;
 }
-.main-header .header-part-right .user {
+.main-header .header-part-right .user i {
   margin-right: 2rem;
+
 }
 .main-header .header-part-right .user img {
   width: 36px;

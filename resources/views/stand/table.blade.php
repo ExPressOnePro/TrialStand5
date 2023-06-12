@@ -128,7 +128,9 @@
                                                                                 )
 
                                                                                 @else
-                                                                                    <a href="">
+                                                                                    <a href="{{ route('recordRedactionPage',
+                                                                                    ['id' => $standPublishers->id]
+                                                                                    ) }}">
                                                                                         <button class="btn btn-outline-primary m-1" type="button">
                                                                                             Изменить</button>
                                                                                     </a>
@@ -230,8 +232,10 @@
                                                                                 )
 
                                                                                 @else
-                                                                                        <button class="btn btn-outline-warning m-1" type="button">
+                                                                                    <a href="{{ route('recordRedactionPage', ['id' => $standPublishers->id]) }}">
+                                                                                        <button class="btn btn-outline-primary m-1" type="button">
                                                                                             Изменить</button>
+                                                                                    </a>
                                                                                 @endif
                                                                             </th>
                                                                         @endif
@@ -253,129 +257,4 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="ModalForRecord" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle-2" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title heading">Запись для cтенда {{ $StandID->name }}</h4>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                {{--<form method="post" action="{{ route('updateRecordStand' ) }}">
-                    @csrf
-                    <div class="modal-body">
-                        <input type="" id="templateid">
-                        <label for="picker1">Выберите из списка</label>
-                        <select class="form-control form-control-rounded" id="usernameID">
-                            @foreach($user as $us)
-                                <option value="{{$us->id}}">{{ $us->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Отменить</button>
-                        <button class="btn btn-success saveUpd" type="button" --}}{{--id="toast-close-button"--}}{{-->Сохранить</button>
-                    </div>
-                </form>--}}
-            </div>
-        </div>
-    </div>
-
-    <button class="btn btn-outline-success btn-success" id="toast-close-button">Show Toast</button>
-    <button class="btn btn-success btn-block mb-3" id="alert-success" type="button">Success Alert</button>
-    <button class="btn btn-block btn-outline-info btn-info mb-3" id="toast-slow-duration">Hide Toast</button>
-    <button class="btn btn-block btn-outline-info btn-info" id="toast-position-top-center">Top Center</button>
-
-    <div id="toast-top-left" class="toast-top-left"></div>
-    <div id="toast-top-center" class="toast-top-center"></div>
-    <div id="toast-top-right" class="toast-top-right"></div>
-    <div id="toast-top-full-width" class="toast-top-full-width"></div>
-    <div id="toast-bottom-right" class="toast-bottom-right"></div>
-    <div id="toast-bottom-full-width" class="toast-bottom-full-width"></div>
-    <div id="toast-bottom-center" class="toast-bottom-center"></div>
-    <div id="toast-bottom-left" class="toast-bottom-left"></div>
-    <div id="sm-wrapper"></div>
-
-    <div class="swal2-container swal2-fade" style="overflow-y: auto;">
-        <div class="swal2-modal swal2-hide" style="display: none; width: 500px; padding: 20px; background: rgb(255, 255, 255);" tabindex="-1">
-            <ul class="swal2-progresssteps" style="display: none;"></ul>
-            <div class="swal2-icon swal2-error" style="display: none;">
-                <span class="x-mark"><span class="line left"></span>
-                    <span class="line right"></span>
-                </span>
-            </div>
-            <div class="swal2-icon swal2-question" style="display: none;">?</div>
-            <div class="swal2-icon swal2-warning" style="display: none;">!</div>
-            <div class="swal2-icon swal2-info" style="display: none;">i</div>
-            <div class="swal2-icon swal2-success" style="display: block;"><span class="line tip"></span> <span class="line long"></span>
-                <div class="placeholder"></div> <div class="fix"></div>
-            </div><img class="swal2-image" style="display: none;"><h2>Success!</h2>
-            <div class="swal2-content" style="display: block;">Your work has been saved</div>
-            <input class="swal2-input" style="display: none;"><input type="file" class="swal2-file" style="display: none;">
-            <div class="swal2-range" style="display: none;"><output></output><input type="range"></div>
-            <select class="swal2-select" style="display: none;"></select>
-            <div class="swal2-radio" style="display: none;"></div><label for="swal2-checkbox" class="swal2-checkbox" style="display: none;"><input type="checkbox"></label><textarea class="swal2-textarea" style="display: none;"></textarea><div class="swal2-validationerror" style="display: none;"></div><hr class="swal2-spacer" style="display: block;"><button type="button" class="swal2-confirm btn btn-lg btn-success">OK</button><button type="button" class="swal2-cancel" style="display: none;">Cancel</button><span class="swal2-close" style="display: none;">×</span></div></div>
-
-
-
-    {{--<script>
-        $('.editButton1').click(function() {
-/*            var id = $(this).data('id');
-            $('#templateid').text(templateid);
-            $('#ModalForRecord').modal('show');*/
-            $('#ModalForRecord').modal('show');
-            $('#ModalForRecord').on('shown.bs.modal', function () {
-                $(this).data('id');
-                $('#templateid').text(templateid);
-            });
-
-            $('.saveUpd').click(function(e) {
-                e.preventDefault();
-                var usernameID = $("#usernameID").val();
-                var id = $(this).data('id');
-                $('#templateid').text(templateid);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/post/updateRecordStand/' + id,
-                    dataType: 'html',
-                    data: {
-                        _token: '{{csrf_token()}}',
-                        usernameID:usernameID,
-                    },
-                    success: function(data){
-                        console.log(data);
-                        /*location.reload();*/
-                        /*data = JSON.parse(data);
-                            if(data.statusCode)
-                        {
-                            window.location = "/stand";
-                        }*/
-                    }
-                });
-            });
-        });
-
-        /*// Update record
-        $(document).on("click", ".update" , function() {
-            var edit_id = $(this).data('id');
-
-            var name = $('#name_'+edit_id).val();
-            var email = $('#email_'+edit_id).val();
-
-            if(name != '' && email != ''){
-                $.ajax({
-                    url: 'updateUser',
-                    type: 'post',
-                    data: {_token: CSRF_TOKEN,editid: edit_id,name: name,email: email},
-                    success: function(response){
-                        alert(response);
-                    }
-                });
-            }else{
-                alert('Fill all fields');
-            }
-        });*/
-    </script>--}}
-
 @endsection

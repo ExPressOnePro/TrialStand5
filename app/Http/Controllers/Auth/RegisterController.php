@@ -60,24 +60,21 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $newUser = User::create([
+        return tap(User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'login' => $data['login'],
             'congregation_id' => '1',
-            'password' => Hash::make($data['password']),
-        ]);
-
-        $idUser = $newUser->id;
-        UsersRoles::create([
-            'user_id' => $idUser,
-            'role_id' => 1,
-        ]);
-
+            'password' => Hash::make($data['password'])
+        ]), function ($user) {
+            UsersRoles::create([
+                'user_id' => $user->id,
+                'role_id' => 1,
+            ]);
+        });
     }
 
-    public function pageRegistration()
-    {
+    public function pageRegistration() {
         return view('auth.register');
     }
 }

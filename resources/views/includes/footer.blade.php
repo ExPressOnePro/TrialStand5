@@ -4,8 +4,8 @@
         <div class="app-footer" style="padding-bottom: 30%">
             <div class="row">
                 <div class="col-md-9">
-                    <p><strong>Gull - Laravel + Bootstrap 4 admin template</strong></p>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Libero quis beatae officia saepe perferendis voluptatum minima eveniet voluptates dolorum, temporibus nisi maxime nesciunt totam repudiandae commodi sequi dolor quibusdam
+                    <p><strong>{{--...--}}</strong></p>
+                    <p>{{--...--}}
                         <sunt></sunt>
                     </p>
                 </div>
@@ -15,7 +15,7 @@
                 <div class="d-flex align-items-center">
                     <img class="logo" src="../../dist-assets/images/logo.png" alt="">
                     <div>
-                        <p class="m-0">© 2023 Stand</p>
+                        <p class="m-0">© 2023 MeePer</p>
                         <p class="m-0">All rights reserved</p>
                     </div>
                 </div>
@@ -25,8 +25,8 @@
         <div class="app-footer" style="padding-bottom: 30%">
             <div class="row">
                 <div class="col-md-9">
-                    <p><strong>Gull - Laravel + Bootstrap 4 admin template</strong></p>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Libero quis beatae officia saepe perferendis voluptatum minima eveniet voluptates dolorum, temporibus nisi maxime nesciunt totam repudiandae commodi sequi dolor quibusdam
+                    <p><strong>MeePer</strong></p>
+                    <p>
                         <sunt></sunt>
                     </p>
                 </div>

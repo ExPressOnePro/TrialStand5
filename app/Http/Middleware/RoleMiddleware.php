@@ -18,7 +18,8 @@ class RoleMiddleware
             return response()->view('errors.423Locked');
         }
 
-       /* if(is_null($request->user())){
+
+        /*if(is_null($request->user())){
             abort(401);
         }*/
 
