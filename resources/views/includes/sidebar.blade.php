@@ -1,8 +1,12 @@
 @section('sidebar')
     <div class="sidebar-panel bg-white">
         <div class="gull-brand pr-3 text-center mt-4 mb-2 d-flex justify-content-center align-items-center">
-            <img class="pl-3" src="../../dist-assets/images/logo.png" alt="alt" />
-            <span class=" item-name text-20 text-primary font-weight-700">MEEPER</span>
+            <a href="{{ route('home') }}">
+                <img class="pl-3" src="../../dist-assets/images/logo.png" alt="alt" />
+                <span class=" item-name text-20 text-primary font-weight-700">MEEPER</span>
+            </a>
+            {{--<img class="pl-3" src="../../dist-assets/images/logo.png" alt="alt" />
+            <span class=" item-name text-20 text-primary font-weight-700">MEEPER</span>--}}
             <div class="sidebar-compact-switch ml-auto"><span></span></div>
         </div>
         <!--  Developer -->

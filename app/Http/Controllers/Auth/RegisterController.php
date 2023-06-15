@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use function Illuminate\Validation\message;
 use function Symfony\Component\HttpFoundation\Session\Storage\save;
+use App\Http\Requests\AuthRequest;
 
 class RegisterController extends Controller
 {
@@ -45,7 +46,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'min:4', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'login' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],

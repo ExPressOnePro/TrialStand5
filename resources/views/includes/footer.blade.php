@@ -15,8 +15,8 @@
                 <div class="d-flex align-items-center">
                     <img class="logo" src="../../dist-assets/images/logo.png" alt="">
                     <div>
-                        <p class="m-0">© 2023 MeePer</p>
-                        <p class="m-0">All rights reserved</p>
+                        <p class="m-0">© 2023 Meeper</p>
+                        <p class="m-0">Все права сохранены</p>
                     </div>
                 </div>
             </div>

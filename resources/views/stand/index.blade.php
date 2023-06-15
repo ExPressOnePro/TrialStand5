@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') Meeper | Стенды@endsection
+@section('title') Meeper | Стенды @endsection
 @section('content')
 
     <div class="main-content pt-4">
@@ -22,7 +22,7 @@
                             </div>
                             <div class="collapse" id="collapse-link-collapsed{{ $asfu->id }}" style="">
                                 <div class="mt-3">
-                                    <a href="{{ route('StandTable', $asfu->id) }}">
+                                    <a href="{{ route('currentWeekTable', $asfu->id) }}">
                                         <button class="btn btn-outline-success btn-block text-left" type="button">
                                             <h3 class="heading">
                                                 <span><i class="fa fa-table"></i></span>

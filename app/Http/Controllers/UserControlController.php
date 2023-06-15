@@ -49,9 +49,7 @@ class UserControlController extends Controller
     public function pageUser($id) {
 
         $user = new User;
-        $role = Role::where('name','!=', 'Developer')
-            ->where('name','!=', 'Guest')
-            ->get();
+        $role = Role::get();
 
         /*$congregation_id_to_name = Congregation::where('id', $id)->get();*/
         $congregation_id_to_name = DB::table('users')

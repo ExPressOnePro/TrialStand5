@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Congregation;
 use App\Models\CongregationRequests;
+use App\Models\Stand;
+use App\Models\StandPublishers;
+use App\Models\StandTemplate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,20 +35,33 @@ class HomeController extends Controller
         $congregationRequests = CongregationRequests::get();
         if( $user->congregation_id === 1) {
             return view('guest')
-                ->with([
-                    'congregation' => $congregation
-                ])
-                ->with([
-                    'congregationRequests' => $congregationRequests
-                ]);
+                ->with(['congregation' => $congregation])
+                ->with(['congregationRequests' => $congregationRequests]);
         }
-        return view('home');
+        else {
+
+            $stand = Stand::where('congregation_id', $user->congregation_id)->get();
+            $active_day = StandTemplate::select('day')->distinct()->get();
+            $standPublishers = StandPublishers::with(
+                'standTemplates'
+            )
+                ->where('user_1', $user->id)
+                ->orWhere('user_2', $user->id)
+                ->orderBy('date', 'asc')
+                ->get();
+
+            return view('home')
+                ->with(['standPublishers' => $standPublishers])
+                ->with(['stand' => $stand])
+                ->with(['active_day' => $active_day]);
+        }
+
     }
 
     public function guest() {
 
         $user = User::find(Auth::id());
-        $congregation = Congregation::get();
+        $congregation = Congregation::where('id', '>', 1)->get();
         $congregationRequests = CongregationRequests::get();
 
 

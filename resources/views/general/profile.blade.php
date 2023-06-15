@@ -1,104 +1,49 @@
 @extends('layouts.app')
-@section('title')Stand | Мой аккаунт @endsection
+@section('title') Meeper | Мой аккаунт @endsection
 @section('content')
 
     <div class="main-content pt-4">
-        <div class="page-title-container">
-            <div class="row">
-                <div class="col-12 col-md-7">
-                </div>
-            </div>
-        </div>
         <div class="row">
-            <div class="col-md-5 mb-5">
-                <h2 class="small-title">Общее</h2>
-                <div class="card h-100-card">
-                    <div class="card-header gradient-steel-gray text-center">
-                        <div class="h2 text-white text-center m-4">{{ auth()->user()->name }}</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex align-items-center flex-column mb-4">
-                            <div class="d-flex align-items-center flex-column">
-                                <div class="sw-13 position-relative mb-3">
-                                </div>
-                            </div>
+            <!-- Основная информация пользователя-->
+            <div class="col-md-4">
+                <div class="card card-profile-1 mb-4">
+                    <div class="card-body text-center">
+                        <div class="avatar box-shadow-2 mb-3"><img src="../../dist-assets/images/faces/16.jpg" alt=""></div>
+                        <h5 class="m-0">{{ $user->name }}</h5>
+                        <p class="mt-0">{{ $user->Congregation->name }}</p>
+                        <div class="row g-0 mb-2">
+                            <div class="col text-left text-18">Логин:</div>
+                            <div class="col text-left heading text-16">{{ $user->login }}</div>
                         </div>
-                        <div class="mb-5">
-                            <p class="text-lg-center text-black text-20 mb-4">Основная информация</p>
-                                <div class="row g-0 mb-2">
-                                    <div class="col-md-3 text-18">Логин:</div>
-                                    <div class="col text-16">{{ auth()->user()->login }}</div>
-                                </div>
-                                <div class="row g-0 mb-2">
-                                    <div class="col-md-3 text-18">Почта:</div>
-                                    <div class="col text-16">{{ auth()->user()->email }}</div>
-                                </div>
-                            {{--@foreach($citn as $c)
-                                <div class="row g-0 mb-2">
-                                    <div class="col-md-3 text-18">Собрание:</div>
-                                    <div class="col text-16">{{ $c->name }}</div>
-                                </div>
-                            @endforeach--}}
+                        <div class="row g-0 mb-2">
+                            <div class="col text-left text-18">Почта:</div>
+                            <div class="col text-left heading text-16">{{ $user->email }}</div>
                         </div>
-                        <div class="mb-5">
-                            <p class="text-lg-center text-black text-20 mb-4">Контактная информация</p>
-                            <div class="row g-0 mb-2">
-                                <div class="col text-alternate">
-
-                                </div>
-                            </div>
-                            <div class="row g-0 mb-2">
-                                <div class="col text-alternate"></div>
-                            </div>
-                            <div class="row g-0 mb-2">
-                                <div class="col text-alternate"></div>
-                            </div>
-                        </div>
-                        <div class="mb-5">
-                            <p class="text-lg-center text-black text-20 mb-2">Управление</p>
-                            <div class="row g-0 mb-2">
-                                <div class="col-md-4 text-alternate align-middle">
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto culpa dolor eligendi expedita iure optio sint tenetur voluptates. Alias asperiores aspernatur aut deleniti dolor nihil nisi optio sed, ut voluptatum?</span>
-                                    <a href="">
-                                        <button class="btn btn-outline-danger m-1" type="button">Permission</button>
-                                    </a>
-                                </div>
-                                <div class="col-md-4 text-alternate align-middle">
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto culpa dolor eligendi expedita iure optio sint tenetur voluptates. Alias asperiores aspernatur aut deleniti dolor nihil nisi optio sed, ut voluptatum?</span>
-                                    <a href="">
-                                        <button class="btn btn-outline-danger m-1" type="button">Permission</button>
-                                    </a>
-                                </div>
-                                <div class="col-md-4 text-alternate align-middle">
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto culpa dolor eligendi expedita iure optio sint tenetur voluptates. Alias asperiores aspernatur aut deleniti dolor nihil nisi optio sed, ut voluptatum?</span>
-                                    <a href="">
-                                        <button class="btn btn-outline-danger m-1" type="button">Permission</button>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row g-0 mb-2">
-                                <div class="col text-alternate">The Royal Melbourne Hospital City</div>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-small text-muted mb-2">NOTES</p>
-                            <div class="row g-0">
-                                <div class="col text-alternate align-middle">Penicillin Allergy</div>
-                            </div>
-                        </div>
+                        <p> Дополнительная информация будет добавляться в зависимости от потребностей </p>
+                        <button class="btn btn-outline-primary btn-rounded">Дополнительно</button>
+                        {{--<div class="card-socials-simple mt-4">
+                            <a href=""><i class="i-Linkedin-2"></i></a>
+                            <a href=""><i class="i-Facebook-2"></i></a>
+                            <a href=""><i class="i-Twitter"></i></a>
+                        </div>--}}
                     </div>
                 </div>
+                {{--<div class="card mb-4">
+                    <div class="card-header">Будущие разработки</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Card title text</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p><a class="btn btn-primary btn-rounded" href="#">Go somewhere</a>
+                    </div>
+                </div>--}}
             </div>
             <div class="col-md-4">
-                <h2 class="small-title">Доступы</h2>
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Data-Upload"></i>
-                        <p class="text-muted mt-2 mb-2">Today's Upload</p>
-                        <p class="lead text-22 m-0">21</p>
+                    <div class="card-body text-center"><i class="fa-solid fa-passport text-40 text-primary"></i>
+                        <div class="card-title">Доступные вам сервисы</div>
+                        <div class="loader-bubble loader-bubble-primary m-5"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection

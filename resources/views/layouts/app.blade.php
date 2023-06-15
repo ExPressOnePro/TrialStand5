@@ -1,9 +1,14 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ asset('public/favicon.ico') }}" sizes="any"><!-- 32×32 -->
+    <link rel="apple-touch-icon" href="{{ asset('public/apple-touch-icon.png') }}"><!-- 180×180 -->
+    <link rel="manifest" href="{{ asset('public/manifest.webmanifest') }}"> <!--Manifest -->
 
+    {{--<link rel="icon" type="image/x-icon" href="{{ asset('public/favicon.ico') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('public/android-chrome-512x512.png') }}"/>--}}
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -28,7 +33,7 @@
         integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
         crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/d19fab2cf2.js" crossorigin="anonymous"></script>
-    {{--@vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
+
 </head>
 <body>
 <main>
@@ -38,29 +43,28 @@
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
                 @if(Request::is(
-                    'dashboard-2',
-                    'UserControl',
-                    'UserControl/*',
-                    'stand',
-                    'users',
-                    'stand/*',
-                    'home',
-                    'congregation',
-                    'guest',
-                    'roles',
-                    'roles/*'
+                    'profile*',
+                    'UserControl*',
+                    'stand*',
+                    'users*',
+                    'stand*',
+                    'home*',
+                    'congregation*',
+                    'guest*',
+                    'roles*'
                     ))
                     @include('includes.header')
+                    @yield('content')
                     @include('includes.menuBarPhone')
                 @endif
-                    @yield('content')
-                    @include('includes.footer')
+
+
             </div>
         </div>
     @elseif ($mobile_detect->isTablet())
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             @if(Request::is(
-                'dashboard-2',
+                'profile*',
                 'UserControl',
                 'UserControl/*',
                 'stand',
@@ -74,12 +78,11 @@
                     @yield('content')
                 </div>
                 @include('includes.menuBarPhone')
-                @include('includes.footer')
         </div>
     @else
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             @if(Request::is(
-                'profile',
+                'profile*',
                 'users',
                 'users/*',
                 'dashboard-2',
@@ -104,9 +107,11 @@
         </div>
     @endif
     </body>
+    @include('includes.footer')
 </main>
     <!--Scripts-->
-    {{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>--}}
+
+
     <!-- Required vendors -->
     <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
     <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>

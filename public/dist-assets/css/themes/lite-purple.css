@@ -22488,6 +22488,8 @@ a.typo_link.text-gray-900:after {
   padding: 1.25rem;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+    bottom: 0;
+
 }
 .app-footer .footer-bottom {
   width: 100%;
@@ -22496,6 +22498,7 @@ a.typo_link.text-gray-900:after {
   width: 3rem;
   height: auto;
   margin: 4px;
+    bottom:0;
 }
 
 .layout-sidebar-vertical .main-content-wrap {

@@ -11,6 +11,7 @@ use App\Models\UsersRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver;
 use Symfony\Component\Routing\Loader\Configurator\Traits\AddTrait;
@@ -23,13 +24,13 @@ class StandController extends Controller
     public function allstands() {
 
         $user = User::find(Auth::id());
-
+        $congregation_id = $user->congregation_id;
         $accessible_stands_for_the_user = DB::table('users')
             ->join('stands', 'stands.congregation_id', '=', 'users.congregation_id')
             ->select('stands.*')
             ->where('users.id', Auth::id())
+            ->where('stands.congregation_id', $congregation_id)
             ->get();
-
         $accessible_stands_for_dev = DB::table('stands')
             ->get();
 
@@ -37,8 +38,6 @@ class StandController extends Controller
         if( $user->congregation_id === 1) {
             return view('guest');
         }
-
-
         if ($user->hasRole('Developer')){
             return view('stand.index',
                 ['accessible_stands_for_the_user' => $accessible_stands_for_dev]);
@@ -54,7 +53,30 @@ class StandController extends Controller
 
         $user = User::get();
         $StandID = Stand::find($id);
+        $templates = StandTemplate::with(
+            'stand',
+            'standPublishers.user',
+            'standPublishers.user2',
+            'congregation'
+        )
+            ->where('stand_id', '=', $id)
+            ->orderBy('day')
+            ->get();
 
+        $active_day = StandTemplate::select('day')->distinct()->get();
+
+        return view('stand.table')
+            ->with(['templates' => $templates])
+            ->with(['active_day' => $active_day])
+            ->with(['user' => $user,])
+            ->with(['StandID' => $StandID,]);
+    }
+
+    /*Страницы текущей и следующей недели стенда*/
+    public function currentWeekTable($id) {
+
+        $user = User::get();
+        $StandID = Stand::find($id);
         $templates = StandTemplate::with(
             'stand',
             'standPublishers.user',
@@ -86,7 +108,54 @@ class StandController extends Controller
             $nextSUN = date("d.m.Y", time() - (-13 + date("N") - 1) * 24 * 60 * 60),
         ];
 
-        return view('stand.table')
+        return view('stand.currentWeekTable')
+            ->with([
+                'templates' => $templates,
+                'active_day' => $active_day,
+            ])
+            ->with([
+                'user' => $user,
+            ])
+            ->with([
+                'StandID' => $StandID,
+            ]);
+    }
+    public function nextWeekTable($id) {
+
+        $user = User::get();
+        $StandID = Stand::find($id);
+        $templates = StandTemplate::with(
+            'stand',
+            'standPublishers.user',
+            'standPublishers.user2',
+            'congregation'
+        )
+            ->where('stand_id', '=', $id)
+            ->orderBy('day')
+            ->get();
+
+
+        $active_day = StandTemplate::select('day')->distinct()->get();
+        $ardates = [
+
+            $currentMON = date("d.m.Y", time() - (date("N") - 1) * 24 * 60 * 60),
+            $currentTUE = date("d.m.Y", time() - (-1 + date("N") - 1) * 24 * 60 * 60),
+            $currentWED = date("d.m.Y", time() - (-2 + date("N") - 1) * 24 * 60 * 60),
+            $currentTHU = date("d.m.Y", time() - (-3 + date("N") - 1) * 24 * 60 * 60),
+            $currentFRI = date("d.m.Y", time() - (-4 + date("N") - 1) * 24 * 60 * 60),
+            $currentSAT = date("d.m.Y", time() - (-5 + date("N") - 1) * 24 * 60 * 60),
+            $currentSUN = date("d.m.Y", time() - (-6 + date("N") - 1) * 24 * 60 * 60),
+            # Понедельник следующей
+            $nextMON = date("d.m.Y", time() - (-7 + date("N") - 1) * 24 * 60 * 60),
+            $nextTUE = date("d.m.Y", time() - (-8 + date("N") - 1) * 24 * 60 * 60),
+            $nextWED = date("d.m.Y", time() - (-9 + date("N") - 1) * 24 * 60 * 60),
+            $nextTHU = date("d.m.Y", time() - (-10 + date("N") - 1) * 24 * 60 * 60),
+            $nextFRI = date("d.m.Y", time() - (-11 + date("N") - 1) * 24 * 60 * 60),
+            $nextSAT = date("d.m.Y", time() - (-12 + date("N") - 1) * 24 * 60 * 60),
+            $nextSUN = date("d.m.Y", time() - (-13 + date("N") - 1) * 24 * 60 * 60),
+        ];
+
+        return view('stand.nextWeekTable')
             ->with([
                 'templates' => $templates,
                 'active_day' => $active_day,
@@ -99,49 +168,104 @@ class StandController extends Controller
             ]);
     }
 
-    public function recordRedactionPage($id){
+    /*Страницы первой записи пользователей на стенде*/
+    public function PageUpdateRecordStandFirst($id) {
+        $standPublishers = StandPublishers::find($id);
+        $standTemplate = StandTemplate::find($standPublishers->stand_template_id);
+        $stand = Stand::find($standTemplate->stand_id);
+        $congregation = Congregation::find($stand->congregation_id);
+        $user = User::where('congregation_id', $congregation->id)->get();
 
-        $stpubl = StandPublishers::find($id);
-        $user = User::get();
-        $stid = StandTemplate::find($stpubl->stand_template_id);
-        $stname = Stand::find($stid->stand_id);
-
-
-        return view ('stand.redaction')
-            ->with(['stpubl' => $stpubl,])
+        return view('stand.recordFirst')
+            ->with(['stpubl' => $standPublishers,])
             ->with(['user' => $user,])
-            ->with(['stand' => $stname,]);;
+            ->with(['standname' => $stand->name,]);
+    }
+    public function PageUpdateRecordStandSecond($id) {
+        $standPublishers = StandPublishers::find($id);
+        $standTemplate = StandTemplate::find($standPublishers->stand_template_id);
+        $stand = Stand::find($standTemplate->stand_id);
+        $congregation = Congregation::find($stand->congregation_id);
+        $user = User::where('congregation_id', $congregation->id)->get();
+
+        return view('stand.recordSecond')
+            ->with(['stpubl' => $standPublishers,])
+            ->with(['user' => $user,])
+            ->with(['standname' => $stand->name,]);
     }
 
-    public function recordRedactionChange1(Request $request, $id, $stand) {
-
-        $value = $request->input('1_user_id');
-
+    /*Записать первый раз пользователя на стенд*/
+    public function UpdateRecordStandFirst(Request $request, $id) {
+        $value = $request->input('usernameID');
         $StandPublishers = StandPublishers::find($id);
-        $StandPublishers->user_1 = $value;
-        $StandPublishers->save();
+        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
-        return redirect()->route('StandTable',  ['id' => $stand]);
+        if($StandPublishers->user_2 != $value) {
+
+            $StandPublishers->user_1 = $value;
+            $StandPublishers->save();
+
+            if($stand_full->type != 'next') {
+                return redirect()->route('currentWeekTable', ['id' => $stand_full->stand_id]);
+            }
+            else {
+                return redirect()->route('nextWeekTable',  ['id' => $stand_full->stand_id]);
+            }
+        }
+        else {
+            if($stand_full->type == 'next') {
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            }
+            else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            }
+        }
     }
-    public function recordRedactionChange2(Request $request, $id, $stand) {
-
-        $value = $request->input('2_user_id');
-
+    public function UpdateRecordStandSecond(Request $request, $id) {
+        $value = $request->input('usernameID');
         $StandPublishers = StandPublishers::find($id);
-        $StandPublishers->user_2 = $value;
-        $StandPublishers->save();
+        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
-        return redirect()->route('StandTable',  ['id' => $stand]);
+        if($StandPublishers->user_1 != $value) {
+
+            $StandPublishers->user_2 = $value;
+            $StandPublishers->save();
+
+            if($stand_full->type == 'next') {
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id]);
+            }
+            else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id]);
+            }
+        }
+        else {
+            if($stand_full->type == 'next') {
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            }
+            else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            }
+        }
     }
+
+    /*выписаться со стенда*/
     public function recordRedactionDelete1($id, $stand) {
 
         $StandPublishers = StandPublishers::findOrFail($id);
         $StandPublishers->user_1 = null;
         $StandPublishers->save();
 
-        $id = $stand;
+        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
-        return redirect()->route('StandTable',  $id);
+
+        if($stand_full->type == 'next') {
+            return redirect()->route('nextWeekTable', ['id' => $stand]);
+        }
+        else {
+            return redirect()->route('currentWeekTable',  ['id' => $stand]);
+        }
+
+        /*return redirect()->route('StandTable',  $id);*/
     }
     public function recordRedactionDelete2($id, $stand) {
 
@@ -149,103 +273,86 @@ class StandController extends Controller
         $StandPublishers->user_2 = null;
         $StandPublishers->save();
 
-        $id = $stand;
+        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
-        return redirect()->route('StandTable',  $id);
+        if($stand_full->type == 'next') {
+            return redirect()->route('nextWeekTable', ['id' => $stand]);
+        }
+        else {
+            return redirect()->route('currentWeekTable',  ['id' => $stand]);
+        }
+
+        /*return redirect()->route('StandTable',  $id);*/
     }
 
-    public function PageUpdateRecordStandFirst($id) {
-    $stpubl = StandPublishers::find($id);
-    $user = User::get();
-    $stid = StandTemplate::find($stpubl->stand_template_id);
-    $stname = Stand::find($stid->stand_id);
+    /*Страница перезаписи пользователей на стенд*/
+    public function recordRedactionPage($id){
+        $standPublishers = StandPublishers::find($id);
+        $standTemplate = StandTemplate::find($standPublishers->stand_template_id);
+        $stand = Stand::find($standTemplate->stand_id);
+        $congregation = Congregation::find($stand->congregation_id);
+        $user = User::where('congregation_id', $congregation->id)->get();
 
-    return view('stand.recordFirst')
-        ->with(['stpubl' => $stpubl,])
-        ->with(['user' => $user,])
-        ->with(['standname' => $stname->name,]);
-    }
-    public function PageUpdateRecordStandSecond($id) {
-        $stpubl = StandPublishers::find($id);
-        $user = User::get();
-        $stid = StandTemplate::find($stpubl->stand_template_id);
-        $stname = Stand::find($stid->stand_id);
 
-        return view('stand.recordSecond')
-            ->with(['stpubl' => $stpubl,])
+        return view ('stand.redaction')
+            ->with(['stpubl' => $standPublishers,])
             ->with(['user' => $user,])
-            ->with(['standname' => $stname->name,]);
-    }
-    public function UpdateRecordStandFirst(Request $request, $id) {
-        $stpubl = StandPublishers::find($id);
-        $stid = StandTemplate::find($stpubl->stand_template_id);
-        $value = $request->input('usernameID');
-        DB::table('stands_publishers')
-            ->where('id', $id)
-            ->update([
-                'user_1' => $value,
-            ]);
-
-        return redirect()->route('StandTable', $stid->stand_id)->with('success', 'Ваша запись добавлена');
-
-    }
-    public function UpdateRecordStandSecond(Request $request, $id) {
-        $stpubl = StandPublishers::find($id);
-        $stid = StandTemplate::find($stpubl->stand_template_id);
-        $value = $request->input('usernameID');
-        DB::table('stands_publishers')
-            ->where('id', $id)
-            ->update([
-                'user_2' => $value,
-            ]);
-
-        return redirect()->route('StandTable', $stid->stand_id)->with('success', 'Ваша запись добавлена');
-
+            ->with(['stand' => $stand]);
     }
 
-    public function settings($id) {
+    /*Перезаписать пользователя на стенд*/
+    public function recordRedactionChange1(Request $request, $id, $stand) {
+        $value = $request->input('1_user_id');
+        $StandPublishers = StandPublishers::find($id);
+        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
-        $standID = Stand::where('id', $id)->get();
-        $active_day = StandTemplate::select('day')->distinct()->get();
-        $time_array = [
-            '00:00',
-            '01:00',
-            '02:00',
-            '03:00',
-            '04:00',
-            '05:00',
-            '06:00',
-            '07:00',
-            '08:00',
-            '09:00',
-            '10:00',
-            '11:00',
-            '12:00',
-            '13:00',
-            '14:00',
-            '15:00',
-            '16:00',
-            '17:00',
-            '18:00',
-            '19:00',
-            '20:00',
-            '21:00',
-            '22:00',
-            '23:00',
-        ];
+        if($StandPublishers->user_2 != $value) {
+            $StandPublishers->user_1 = $value;
+            $StandPublishers->save();
 
-        $template = StandTemplate::where('stand_id', $id)
-            ->where('type','=','next')
-            ->get();
-
-
-        return view('stand.settings')
-            ->with([
-                'standID' => $standID,
-                'template' => $template,
-                'active_day' => $active_day
-            ]);
+            if($stand_full->type == 'next') {
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id]);
+            }
+            else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id]);
+            }
+        }
+        else {
+            if($stand_full->type == 'next') {
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            }
+            else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            }
+        }
     }
+    public function recordRedactionChange2(Request $request, $id, $stand) {
+        $value = $request->input('2_user_id');
+        $StandPublishers = StandPublishers::find($id);
+        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
+
+        if($StandPublishers->user_2 != $value) {
+
+            $StandPublishers->user_1 = $value;
+            $StandPublishers->save();
+
+            if($stand_full->type == 'next') {
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id]);
+            }
+            else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id]);
+            }
+        }
+        else {
+            if($stand_full->type == 'next') {
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            }
+            else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            }
+        }
+    }
+
 
     public function createNewStandPage() {
 
@@ -258,7 +365,6 @@ class StandController extends Controller
             ]);
 
     }
-
     public function createNewStand(Request $request) {
 
         $this->validate($request, [
@@ -306,7 +412,7 @@ class StandController extends Controller
             '23:00',
         ];
         $day_array = [1, 2, 3, 4, 5, 6, 7];
-        $typeArray = ['last', 'current', 'next'];
+        $typeArray = ['current', 'next'];
 
         foreach ($day_array as $day_arr) {
             foreach ($typeArray as $tA) {
@@ -327,58 +433,169 @@ class StandController extends Controller
 
     }
 
-    public function timeUpdate( Request $request)
+    public function settings($id) {
+
+        $stand_id = Stand::find($id);
+        $active_day = StandTemplate::select('day')->distinct()->get();
+        $time_array = [
+            '00:00',
+            '01:00',
+            '02:00',
+            '03:00',
+            '04:00',
+            '05:00',
+            '06:00',
+            '07:00',
+            '08:00',
+            '09:00',
+            '10:00',
+            '11:00',
+            '12:00',
+            '13:00',
+            '14:00',
+            '15:00',
+            '16:00',
+            '17:00',
+            '18:00',
+            '19:00',
+            '20:00',
+            '21:00',
+            '22:00',
+            '23:00',
+        ];
+
+        $template = StandTemplate::where('stand_id', $id)
+            ->where('type','=','next')
+            ->get();
+
+
+        return view('stand.settings')
+            ->with([
+                'stand_id' => $stand_id,
+                'template' => $template,
+                'active_day' => $active_day
+            ]);
+    }
+
+    public function timeUpdateNext(Request $request, $id)
     {
-        $items = StandTemplate::all();
+        $items = StandTemplate::where('type', 'next')
+            ->where('stand_id', $id)
+            ->get();
 
         foreach ($items as $item) {
             $item->status = in_array($item->id, $request->items) ? true : false;
             $item->save();
         }
-        /*$items = StandTemplate::whereIn('id', $request->input('items'))->get();
 
-        foreach ($items as $item) {
-            $item->status = !$item->status;
-            $item->save();
-        }*/
+        return redirect()->back();
+    }
+    public function timeUpdateNextToCurrent($id) {
 
-        /*$items = StandTemplate::whereIn('id', $request->input('active'))->get();
-        foreach ($items as $item) {
-            $item->status = true;
-            $item->save();
-        }*/
+        $stand_id = Stand::find($id);
+        $congr_id = $stand_id->congregation_id;
+        $time_array = [
+            '00:00',
+            '01:00',
+            '02:00',
+            '03:00',
+            '04:00',
+            '05:00',
+            '06:00',
+            '07:00',
+            '08:00',
+            '09:00',
+            '10:00',
+            '11:00',
+            '12:00',
+            '13:00',
+            '14:00',
+            '15:00',
+            '16:00',
+            '17:00',
+            '18:00',
+            '19:00',
+            '20:00',
+            '21:00',
+            '22:00',
+            '23:00',
+        ];
+        $day_array = [1, 2, 3, 4, 5, 6, 7];
+        foreach ($day_array as $dar) {
+            foreach ($time_array as $time_arr) {
+                $req1 = StandTemplate::
+                where('type', '=', 'next')
+                    ->where('day', $dar)
+                    ->where('time', $time_arr)
+                    ->where('stand_id', $id)
+                    ->where('congregation_id', $congr_id)
+                    ->get();
+                foreach ($req1 as $r1) {
+                    $user = StandTemplate::
+                    where('type', '=', 'current')
+                        ->where('day', $dar)
+                        ->where('time', $time_arr)
+                        ->where('stand_id',$id)
+                        ->where('congregation_id', $congr_id)
+                        ->update([
+                            'status' => $r1->status,
+                        ]);
+                }
+            }
+        }
+        return redirect()->back();
 
-        /*foreach ($request->input('active', []) as $tempId => $active) {
-            $template = StandTemplate::findOrFail($tempId);
-            $template->status = (bool) $active;
-            $template->save();
-        }*/
+        /*$congr_id = $stand_id->congregation_id;
+        $time_array = [
+            '00:00',
+            '01:00',
+            '02:00',
+            '03:00',
+            '04:00',
+            '05:00',
+            '06:00',
+            '07:00',
+            '08:00',
+            '09:00',
+            '10:00',
+            '11:00',
+            '12:00',
+            '13:00',
+            '14:00',
+            '15:00',
+            '16:00',
+            '17:00',
+            '18:00',
+            '19:00',
+            '20:00',
+            '21:00',
+            '22:00',
+            '23:00',
+        ];
+        $day_array = [1, 2, 3, 4, 5, 6, 7];
 
-        /*foreach($request->input('task_id') as $key => $id) {
-            $task = StandTemplate::find($id);
-            $task->status = in_array($id, $request->input('task_enabled', []));
-            $task->save();
-        }*/
-
-        /*foreach ($request->input('item') as $id => $value) {
-            $item = Item::findOrFail($id);
-            $item->status = $value == '1'; // 'on' - это значение, которое отправляется в случае, если флажок отмечен,
-            // в противном случае пользователь не отправляет значение флажка, только
-            // ключ.
-            $item->save();
-        }*/
-
-        /*foreach ($request->all() as $key => $value) {
-            if (strpos($key, 'item') === 0) {
-                $item_id = substr($key, 4);
-                $item = StandTemplate::findOrFail($item_id);
-                $item->status = $value == 1;
-                $item->save();
+        foreach ($day_array as $dar) {
+            foreach ($time_array as $time_arr) {
+                $valueTemplate = StandTemplate::
+                    where('type', 'next')
+                    ->where('day', $dar)
+                    ->where('time', $time_arr)
+                    ->where('stand_id', $stand_id->id)
+                    ->where('congregation_id', $congr_id)
+                    ->get();
+                foreach ($valueTemplate as $vt) {
+                    StandTemplate::
+                        where('type', 'current')
+                        ->where('day', $dar)
+                        ->where('time', $time_arr)
+                        ->where('stand_id', $stand_id->id)
+                        ->where('congregation_id', $congr_id)
+                        ->update([
+                            'status' => $vt->status,
+                        ]);
+                }
             }
         }*/
-
-        return redirect()->back()->with('success', 'Изменения сохранены');
-
     }
 
     public function test12() {
@@ -864,6 +1081,5 @@ class StandController extends Controller
 
         return view('stand.time');
     }
-
 
 }

@@ -35,16 +35,17 @@ class UsersController extends Controller{
 
     public function userCard($id) {
 
-        $user = User::where('id', $id)->get();
+        $role = Role::get();
+        $user = User::find($id);
 
         $congregation_id_to_name = DB::table('users')
             ->join('congregations', 'users.id', '=', 'congregations.id')
-            ->select('congregations.*')
             ->where('congregations.id', $id)
             ->get();
 
         return view('users.card')
             ->with(['user' => $user])
+            ->with(['role' => $role])
             ->with(['citn' => $congregation_id_to_name]);
     }
 

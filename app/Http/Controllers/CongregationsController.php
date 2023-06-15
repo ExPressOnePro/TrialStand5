@@ -54,24 +54,42 @@ class CongregationsController extends Controller {
 
     }
 
-    public function allow($id, $user_id, $conReq) {
+    public function allow($id, $user_id) {
 
-        $user = User::find($user_id);
+       /* Gate::define('menage-users', function ($id, $user_id) {*/
+            $user = User::find($user_id);
+            $user->congregation_id = $id;
+            $user->save();
+
+            $roleUserID = Role::where('name', 'User')->first();
+
+            $UsersRoles = new UsersRoles();
+            $UsersRoles->user_id = $user_id;
+            $UsersRoles->role_id = $roleUserID->id;
+            $UsersRoles->save();
+
+            $congrRequests = CongregationRequests::where('user_id', $user_id);
+            $congrRequests->delete();
+
+            return redirect()->route('congregationView', $id);
+        /*});*/
+
+
+        /*$user = User::find($user_id);
         $user->congregation_id = $id;
         $user->save();
 
         $roleUserID = Role::where('name', 'User')->first();
 
-        DB::table('users_roles')
-            ->where('user_id', $user_id)
-            ->update([
-                'role_id' => $roleUserID->id,
-            ]);
+        $UsersRoles = new UsersRoles();
+        $UsersRoles->user_id = $user_id;
+        $UsersRoles->role_id = $roleUserID->id;
+        $UsersRoles->save();
 
         $congrRequests = CongregationRequests::where('user_id', $user_id);
         $congrRequests->delete();
 
-        return redirect()->route('congregationView', $id);
+        return redirect()->route('congregationView', $id);*/
     }
 
     public function reject($id, $conReq) {

@@ -32,6 +32,7 @@ class StandPublishers extends Model
         return $this->hasMany(StandTemplate::class, 'id', 'stand_template_id');
     }
 
+
     /**
      * Get the user associated with the StandPublishers
      *
