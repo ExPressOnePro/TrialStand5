@@ -30,8 +30,12 @@
                                 <div class="col-md-6 mb-3 mb-sm-0">
                                     <h5 class="font-weight-bold">Первый возвещатель</h5>
                                     <select class="form-control form-control-rounded" name="usernameID" id="usernameID">
-                                        @foreach($user as $us)
-                                            <option id="user" name="user" value="{{$us->id}}">{{ $us->name }}</option>
+                                        @foreach ($user as $us)
+                                            @if (auth()->user()->id == $us->id)
+                                                <option value="{{ $us->id }}" selected>{{ $us->name }}</option>
+                                            @else
+                                                <option value="{{ $us->id }}">{{ $us->name }}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>

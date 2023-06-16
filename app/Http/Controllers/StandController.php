@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Congregation;
 use App\Models\Stand;
 use App\Models\StandPublishers;
+use App\Models\StandReports;
 use App\Models\StandTemplate;
 use App\Models\User;
 use App\Models\UsersRoles;
@@ -353,6 +354,57 @@ class StandController extends Controller
         }
     }
 
+    /*Страница отчета стенда*/
+    public function standReportPage(Request $request, $id) {
+        $value = $request->input('2_user_id');
+        $StandPublishers = StandPublishers::find($id);
+        $StandTemplate = StandTemplate::find($StandPublishers->stand_template_id);
+        $StandReports = StandReports::first();
+
+        return view ('stand.report')
+            ->with(['StandPublishers' => $StandPublishers,])
+            ->with(['StandReports' => $StandReports,])
+            ->with(['StandTemplate' => $StandTemplate]);
+    }
+
+    public function standReportSend(Request $request, $id) {
+        $publications = $request->input('publications');
+        $videos = $request->input('videos');
+        $return_visits = $request->input('return_visits');
+        $bible_studies = $request->input('bible_studies');
+        $StandPublishers = StandPublishers::find($id);
+
+        $StandReports = StandReports::where('StandPublishers_id', $id)->count();
+
+        if($StandReports > 0) {
+            StandReports::where('StandPublishers_id', $id)
+                ->update([
+                    'publications' => $publications,
+                    'videos' => $videos,
+                    'return_visits' => $return_visits,
+                    'bible_studies' => $bible_studies,
+                    'StandPublishers_id' => $id,
+                ]);
+        }
+        else {
+            StandReports::firstOrCreate([
+            'publications' => $publications,
+            'videos' => $videos,
+            'return_visits' => $return_visits,
+            'bible_studies' => $bible_studies,
+            'StandPublishers_id' => $id,
+        ]);
+        }
+        $StandTemplate = StandTemplate::find($StandPublishers->stand_template_id);
+
+
+        if($StandTemplate->type == 'next') {
+            return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])->with('success', 'Отчет отправлен');
+        }
+        else {
+            return redirect()->route('currentWeekTable',  ['id' => $StandTemplate->stand_id])->with('success', 'Отчет отправлен');
+        }
+    }
 
     public function createNewStandPage() {
 

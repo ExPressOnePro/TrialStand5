@@ -60,4 +60,9 @@ class StandPublishers extends Model
     {
         return $this->hasMany(User::class, '');
     }
+    public function standReports()
+    {
+        return $this->hasMany(StandReports::class, '');
+    }
+
 }

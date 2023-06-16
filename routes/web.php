@@ -77,6 +77,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/stand/nextWeek/{id}', 'App\Http\Controllers\StandController@nextWeekTable')
             ->name('nextWeekTable');
 
+        Route::get('/stand/report/{id}', 'App\Http\Controllers\StandController@standReportPage')
+            ->name('standReportPage');
+
+        Route::post('/stand/report/{id}', 'App\Http\Controllers\StandController@standReportSend')
+            ->name('standReportSend');
     /**
      * GENERAL ROUTES
      */

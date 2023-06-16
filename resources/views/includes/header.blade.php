@@ -44,14 +44,16 @@
                 </div>--}}
                 @endrole
 
-                <div class="user col align-self-end">
-                    <div class="dropdown-header" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                {{--<div class="user col align-self-end">--}}
+                    <div class="dropdown dropdown">
+                        <button class="btn btn-outline-twitter m-1" id="dropdownMenuButton"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" x-placement="bottom-end">
                         <i class="mr-1 heading text-15">
                             @if (auth()->check())
                                 {{ auth()->user()->name }}
                             @endif
                         </i>
-                    </div>
+                        </button>
+
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-109px, 36px, 0px);">
                         {{--<a class="dropdown-item">Account settings</a>
                         <a class="dropdown-item">Billing history</a>--}}
@@ -66,7 +68,8 @@
                             @csrf
                         </form>
                     </div>
-                </div>
+            </div>
+                {{--</div>--}}
                 {{--<button class="btn btn-outline-danger m-1" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                document.getElementById('logout-form').submit();">

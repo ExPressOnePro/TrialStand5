@@ -26,4 +26,5 @@ class Stand extends Model
     {
         return $this->belongsTo(Congregation::class);
     }
+
 }

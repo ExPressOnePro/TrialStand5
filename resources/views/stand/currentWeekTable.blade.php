@@ -19,12 +19,17 @@
             </div>
             @endrole
             <h1 class="headint text-center font-weight-bold">{{ $StandID->name }}</h1>
-
+                <h3 class="headint text-center font-weight-bold">{{ $StandID->location }}</h3>
             @if (session('error'))
                 <div class="alert alert-card alert-danger">
                     {{ session('error') }}
                 </div>
             @endif
+                @if (session('success'))
+                    <div class="alert alert-card alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
 
             <div class="row mt-3">
                 <div class="col text-left ml-0">
@@ -45,8 +50,18 @@
                 @foreach ($active_day as $actday)
                     <div class="col-md-12 mb-4">
                         <div class="card text-left">
+                            <div class="card-header d-flex align-items-center" style="background: #ebdd9b">
+                                <h4 class="card-title mb-3"><i class="fa-regular fa-clipboard text-30 mr-2"></i></h4>
+                                <h5 class="text-18 font-weight-600 card-title m-0">
+                                    {{  $dayperweek = \App\Enums\WeekDaysEnum::getWeekDay($actday->day) }}
+                                    {{  $gwe = \App\Enums\WeekDaysEnum::getWeekDayDate($actday->day) }}
+                                </h5>
+                                <h5 class="text-18 font-weight-700 card-title m-8">
+                                    <span class="text-black text-22">{{ $actday->stand }} </span>
+                                </h5>
+                            </div>
                             <div class="card-body">
-                                <div class=" d-flex align-items-center mb-4 mt-4">
+                                {{--<div class="card-header d-flex align-items-center mb-4 mt-4" style="background: #d8d8c1">
                                     <h4 class="card-title mb-3"><i class="fa-regular fa-clipboard text-30 mr-2"></i></h4>
                                     <h5 class="text-18 font-weight-600 card-title m-0">
                                         {{  $dayperweek = \App\Enums\WeekDaysEnum::getWeekDay($actday->day) }}
@@ -55,7 +70,7 @@
                                     <h5 class="text-18 font-weight-700 card-title m-8">
                                         <span class="text-black text-22">{{ $actday->stand }} </span>
                                     </h5>
-                                </div>
+                                </div>--}}
                                 <div class='table-responsive'>
                                         <table class='table table-sm table-hover mb-0'>
                                             <thead>
@@ -63,7 +78,8 @@
                                                 <th class='not-sortable'>Время</th>
                                                 <th class='not-sortable'>Возвещатель</th>
                                                 <th class='not-sortable'>Возвещатель</th>
-                                                <th class='not-sortable'>Редактирование</th>
+                                                <th class='not-sortable'>Изменения</th>
+                                                <th class='not-sortable'>Отчет</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -124,8 +140,23 @@
                                                                         <a href="{{ route('recordRedactionPage',
                                                                                     ['id' => $standPublishers->id]
                                                                                     ) }}">
-                                                                            <button class="btn btn-outline-primary m-1" type="button">
+                                                                            <button class="btn btn-primary m-1" type="button">
                                                                                 Изменить</button>
+                                                                        </a>
+                                                                    @endif
+                                                                </th>
+                                                                <th class="value5">
+                                                                    @if(
+                                                                        ($standPublishers->user === null)
+                                                                        && $standPublishers->user2 === null
+                                                                    )
+
+                                                                    @else
+                                                                        <a href="{{ route('standReportPage',
+                                                                                    ['id' => $standPublishers->id]
+                                                                                    ) }}">
+                                                                            <button class="btn btn-dark m-1" type="button">
+                                                                                Отчет</button>
                                                                         </a>
                                                                     @endif
                                                                 </th>
@@ -292,7 +323,6 @@
                     <button class="btn btn-light m-1" type="button">
                         Создать таблицу на следующую неделю</button>
                 </a>
-
                 <a href="{{ route('ExampleCurrent') }}">
                     <button class="btn btn-light m-1" type="button">
                         Создать таблицу на текущую неделю</button>
@@ -326,8 +356,18 @@
                 @foreach ($active_day as $actday)
                     <div class="col-md-12 mb-4">
                         <div class="card text-left">
+                            <div class="card-header d-flex align-items-center" style="background: #ebdd9b">
+                                <h4 class="card-title mb-3"><i class="fa-regular fa-clipboard text-30 mr-2"></i></h4>
+                                <h5 class="text-18 font-weight-600 card-title m-0">
+                                    {{  $dayperweek = \App\Enums\WeekDaysEnum::getWeekDay($actday->day) }}
+                                    {{  $gwe = \App\Enums\WeekDaysEnum::getWeekDayDate($actday->day) }}
+                                </h5>
+                                <h5 class="text-18 font-weight-700 card-title m-8">
+                                    <span class="text-black text-22">{{ $actday->stand }} </span>
+                                </h5>
+                            </div>
                             <div class="card-body">
-                                <div class=" d-flex align-items-center mb-4 mt-4">
+                                {{--<div class=" d-flex align-items-center mb-4 mt-4">
                                     <h4 class="card-title mb-3"><i class="fa-regular fa-clipboard text-30 mr-2"></i></h4>
                                     <h5 class="text-18 font-weight-600 card-title m-0">
                                         {{  $dayperweek = \App\Enums\WeekDaysEnum::getWeekDay($actday->day) }}
@@ -336,7 +376,7 @@
                                     <h5 class="text-18 font-weight-700 card-title m-8">
                                         <span class="text-black text-22">{{ $actday->stand }} </span>
                                     </h5>
-                                </div>
+                                </div>--}}
                                 <div class='table-responsive'>
                                     <table class='table table-sm table-hover mb-0'>
                                         <thead>
@@ -344,7 +384,8 @@
                                             <th class='not-sortable'>Время</th>
                                             <th class='not-sortable'>Возвещатель</th>
                                             <th class='not-sortable'>Возвещатель</th>
-                                            <th class='not-sortable'>Редактирование</th>
+                                            <th class='not-sortable'>Изменения</th>
+                                            <th class='not-sortable'>Отчет</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -405,8 +446,23 @@
                                                                     <a href="{{ route('recordRedactionPage',
                                                                                     ['id' => $standPublishers->id]
                                                                                     ) }}">
-                                                                        <button class="btn btn-outline-primary m-1" type="button">
+                                                                        <button class="btn btn-primary m-1" type="button">
                                                                             Изменить</button>
+                                                                    </a>
+                                                                @endif
+                                                            </th>
+                                                            <th class="value5">
+                                                                @if(
+                                                                    ($standPublishers->user === null)
+                                                                    && $standPublishers->user2 === null
+                                                                )
+
+                                                                @else
+                                                                    <a href="{{ route('standReportPage',
+                                                                                    ['id' => $standPublishers->id]
+                                                                                    ) }}">
+                                                                        <button class="btn btn-dark m-1" type="button">
+                                                                            Отчет</button>
                                                                     </a>
                                                                 @endif
                                                             </th>

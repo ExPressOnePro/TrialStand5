@@ -29,14 +29,10 @@
     @if ($mobile_detect->isMobile())
         <div class="app-admin-wrap">
             <div class="main-content-wrap">
-                @if(Request::is(
-                        '/',
-                        'login',
-                        'registration'
-                        ))
-                    @yield('content')
-                @endif
-                    @include('includes.footer')
+                @include('includes.header')
+                @yield('content')
+                @include('includes.menuBarPhone')
+                @include('includes.footer')
             </div>
         </div>
     @elseif ($mobile_detect->isTablet())

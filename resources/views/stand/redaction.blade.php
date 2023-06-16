@@ -49,7 +49,6 @@
                                                         @else
                                                             <option value="{{ $us->id }}">{{ $us->name }}</option>
                                                         @endif
-
                                                     @endforeach
                                                 </select>
                                             </form>

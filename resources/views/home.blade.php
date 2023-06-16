@@ -49,49 +49,52 @@
         </div>--}}
         <!-- CARD ICON-->
         <div class="row">
-            <div class="col-lg-6 col-md-12">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title heading text-center">Добро пожаловать в Meeper</h5>
-                                <p class="card-text">На главной странице вы увидите основную информацию</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card mb-4 o-hidden">
-                            <div class="card-body">
-                                <h5 class="card-title heading text-center">Вы записаны на стенд</h5>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach ($standPublishers as $publisher)
-                                    <li class="list-group-item">
-                                        @foreach ($publisher->standTemplates as $standTemplate)
-                                            <div class="d-flex justify-content-between mt-3">
-                                                <div class="flex-grow-1 text-left">
-                                                    <h7 class="heading">
-                                                        {{ $standTemplate->Stand->name }}
-                                                    </h7>
-                                                </div>
-                                                <div class="flex-grow-1 mt-0 text-right">
-                                                    <h7 class="heading">
-                                                        {{ $publisher->date }}
-                                                        <br>
-                                                        Время: {{ $standTemplate->time }}
-                                                    </h7>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </li>
-                                @endforeach
-
-                            </ul>
-
-                        </div>
+            <div class="col-lg-12 col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3 class="card-header-pills heading text-center text-primary">Добро пожаловать в Meeper</h3>
+                        <p class="card-text heading text-center">На главной странице вы увидите основную информацию</p>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-6">
+                    <div class="card mb-4 o-hidden">
+                        <div class="card-body">
+                            <h5 class="card-title heading text-center">Вы записались на стенд в следующие даты</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            @foreach ($standPublishers as $publisher)
+                                <li class="list-group-item">
+                                    @foreach ($publisher->standTemplates as $standTemplate)
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <div class="flex-grow-1 text-left">
+                                                <h7 class="heading">
+                                                    {{ \App\Enums\WeekDaysEnum::getWeekDay($standTemplate->day) }}
+                                                    <br>
+                                                    {{ $standTemplate->Stand->location }}
+                                                </h7>
+                                            </div>
+                                            <div class="flex-grow-1 mt-0 text-right">
+                                                <h7 class="heading">
+                                                    {{ $publisher->date }}
+                                                    <br>
+                                                    Время: {{ $standTemplate->time }}
+                                                </h7>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </li>
+                            @endforeach
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
             {{--<div class="col-lg-6 col-md-12">
                 <div class="row">
                     <!-- BG IMAGE CARDS-->
