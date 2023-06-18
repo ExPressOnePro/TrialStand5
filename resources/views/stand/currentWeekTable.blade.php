@@ -336,6 +336,9 @@
                     {{ session('error') }}
                 </div>
             @endif
+            @if (session('Toastr'))
+
+            @endif
 
             <div class="row mt-3">
                 <div class="col text-left ml-0">
@@ -481,5 +484,8 @@
             </div>
         </div>
     @endif
+
+    <script src="../../dist-assets/js/plugins/toastr.min.js"></script>
+    <script src="../../dist-assets/js/scripts/toastr.script.min.js"></script>
 
 @endsection

@@ -71,4 +71,5 @@ class UserControlController extends Controller
             ->with(['citn' => $congregation_id_to_name]);
 
     }
+
 }

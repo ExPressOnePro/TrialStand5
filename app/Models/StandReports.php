@@ -11,15 +11,19 @@ class StandReports extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
+        'StandPublishers_id',
         'publications',
         'videos',
         'return_visits',
         'bible_studies',
-        'StandPublishers_id',
     ];
 
-    public function standPublishers(): HasOne
-    {
+    public function standPublishers(): HasOne {
         return $this->hasOne(StandPublishers::class, 'id', 'stand_id');
+    }
+
+    public function User() {
+        return $this->belongsTo(User::class);
     }
 }

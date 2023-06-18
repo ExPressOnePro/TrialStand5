@@ -21,6 +21,13 @@
 
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/d19fab2cf2.js" crossorigin="anonymous"></script>
+    <script>
+        const swJsFiles = "/js/sw.js";
+        const installAppIcons = {
+            "192x192": "{{ asset('/images/icons/icon-192x192.png') }}",
+            "512x512": "{{ asset('/images/icons/icon-512x512.png') }}"
+        };
+    </script>
 
 </head>
 <main>
@@ -29,6 +36,8 @@
     @if ($mobile_detect->isMobile())
         <div class="app-admin-wrap">
             <div class="main-content-wrap">
+                <div id="install-app" style="display: none;"></div>
+                @include('register-sw')
                 @if(Request::is(
                         '/',
                         'login',
@@ -36,7 +45,6 @@
                         ))
                     @yield('content')
                 @endif
-                    @include('includes.footer')
             </div>
         </div>
     @elseif ($mobile_detect->isTablet())

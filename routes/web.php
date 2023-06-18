@@ -144,6 +144,15 @@ Route::group(['middleware' => ['role:Manager']], function () {
             'App\Http\Controllers\UsersController@userCard')
             ->name('userCard');
 
+        Route::post('/user/card/{id}',
+            'App\Http\Controllers\UsersController@roleAllow')
+            ->name('roleAllow');
+
+        Route::post('/user/card/{id}/delete',
+            'App\Http\Controllers\UsersController@roleDelete')
+            ->name('roleDelete');
+
+
         Route::get('/UserControl',
             'App\Http\Controllers\UserControlController@pageUserControl')
             ->name('pageUserControl');
@@ -163,6 +172,7 @@ Route::group(['middleware' => ['role:Manager']], function () {
         Route::post('/UserControl/user/{id}/delete',
             'App\Http\Controllers\DeveloperController@rolesPermissionsDelete')
             ->name('rolesPermissionsDelete');
+
 
 
 

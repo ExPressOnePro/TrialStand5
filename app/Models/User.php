@@ -64,6 +64,10 @@ class User extends Authenticatable {
         return $this->hasMany(CongregationRequests::class, 'user_id', 'id');
     }
 
+    public function StandReports() {
+        return $this->hasMany(StandReports::class, 'user_id', 'id');
+    }
+
 
 
     /**

@@ -2,28 +2,32 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
+    <!-- разрешение экрана -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Icon -->
     <link rel="icon" href="{{ asset('public/favicon.ico') }}" sizes="any"><!-- 32×32 -->
     <link rel="apple-touch-icon" href="{{ asset('public/apple-touch-icon.png') }}"><!-- 180×180 -->
     <link rel="manifest" href="{{ asset('public/manifest.webmanifest') }}"> <!--Manifest -->
 
-    {{--<link rel="icon" type="image/x-icon" href="{{ asset('public/favicon.ico') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('public/android-chrome-512x512.png') }}"/>--}}
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title')</title>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
-    <link href="../../dist-assets/css/themes/lite-purple.css" rel="stylesheet" />
-    <link href="../../dist-assets/css/plugins/perfect-scrollbar.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" />
+
+    <!-- Style css dist-assets -->
+    <link rel="stylesheet" href="../../dist-assets/css/themes/lite-purple.css" />
+    <link rel="stylesheet" href="../../dist-assets/css/plugins/perfect-scrollbar.css" />
     <link rel="stylesheet" href="../../dist-assets/css/plugins/fontawesome-5.css" />
-    <link href="../../dist-assets/css/plugins/metisMenu.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../dist-assets/css/plugins/metisMenu.min.css" />
     <link rel="stylesheet" href="../../dist-assets/css/plugins/sweetalert2.min.css" />
     <link rel="stylesheet" href="../../dist-assets/css/plugins/toastr.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- Style css -->
+
+    <!-- Style css customization -->
     {{--<link href="../public/css/style.css" rel="stylesheet">--}}
     <link href="../public/css/app.css" rel="stylesheet">
 
@@ -130,9 +134,9 @@
     <script src="../../dist-assets/js/plugins/sweetalert2.min.js"></script>
     <script src="../../dist-assets/js/scripts/sweetalert.script.min.js"></script>
     <script src="../../dist-assets/js/plugins/toastr.min.js"></script>
+    <script src="../../dist-assets/js/scripts/toastr.script.min.js"></script>
     <script src="../../dist-../../dist-assets/js/plugins/datatables.min.js"></script>
     <script src="../../dist-../../dist-assets/js/scripts/tooltip.script.min.js"></script>
-
 
 </body>
 

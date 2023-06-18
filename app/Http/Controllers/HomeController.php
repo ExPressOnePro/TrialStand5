@@ -50,9 +50,20 @@ class HomeController extends Controller
                 ->orderBy('date', 'asc')
                 ->get();
 
+            $standPublishersCount = StandPublishers::where('user_1', $user->id)
+                ->orWhere('user_2', $user->id)
+                ->orderBy('date', 'asc')
+                ->count();
+
+            $user_congregation_id = $user->congregation_id;
+            $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
+
             return view('home')
                 ->with(['standPublishers' => $standPublishers])
                 ->with(['stand' => $stand])
+                ->with(['user_congregation_id' => $user_congregation_id])
+                ->with(['standPublishersCount' => $standPublishersCount])
+                ->with(['congregationRequestsCount' => $congregationRequestsCount])
                 ->with(['active_day' => $active_day]);
         }
 

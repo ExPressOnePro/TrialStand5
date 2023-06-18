@@ -56,14 +56,14 @@
                                     <div class="col mb-3">
                                         <span class="text-success heading text-left">
                                             <i class="fa-solid fa-circle-check"></i> Доступная роль</span>
-                                        <form method="post" action="{{ route('rolesPermissionsDelete', $user->id) }}">
+                                        <form method="post" action="{{ route('roleDelete', $user->id) }}">
                                             @csrf
                                             <input type="hidden" name="delete_role_id" value="{{ $rol->id }}">
                                             <button class="btn btn-danger btn-sm">Запретить</button>
                                         </form>
                                     </div>
                                 @else
-                                    <form method="post" action="{{ route('rolesPermissionsChange', $user->id) }}">
+                                    <form method="post" action="{{ route('roleAllow', $user->id) }}">
                                         @csrf
                                         <div class="col-md-6 mb-3">
                                             <input type="hidden" name="allow_role_id" value="{{ $rol->id }}">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StandReportRequest;
 use App\Models\Congregation;
 use App\Models\Stand;
 use App\Models\StandPublishers;
@@ -359,7 +360,12 @@ class StandController extends Controller
         $value = $request->input('2_user_id');
         $StandPublishers = StandPublishers::find($id);
         $StandTemplate = StandTemplate::find($StandPublishers->stand_template_id);
-        $StandReports = StandReports::first();
+        $StandReports = StandReports::with(
+            'User',
+            'standPublishers'
+        )
+            ->where('StandPublishers_id', $id)
+            ->first();
 
         return view ('stand.report')
             ->with(['StandPublishers' => $StandPublishers,])
@@ -367,45 +373,50 @@ class StandController extends Controller
             ->with(['StandTemplate' => $StandTemplate]);
     }
 
-    public function standReportSend(Request $request, $id) {
+    /*POST отправка отчета стенда*/
+    public function standReportSend(StandReportRequest $request, $id) {
+
         $publications = $request->input('publications');
         $videos = $request->input('videos');
         $return_visits = $request->input('return_visits');
         $bible_studies = $request->input('bible_studies');
         $StandPublishers = StandPublishers::find($id);
 
-        $StandReports = StandReports::where('StandPublishers_id', $id)->count();
+        $StandReportsCount = StandReports::where('StandPublishers_id', $id)->count();
+        $StandReports = StandReports::with('users')->where('StandPublishers_id', $id)->get();
 
-        if($StandReports > 0) {
+        if($StandReports->user_id == Auth::id()) {
             StandReports::where('StandPublishers_id', $id)
                 ->update([
+                    'user_id' => Auth::id(),
+                    'StandPublishers_id' => $id,
                     'publications' => $publications,
                     'videos' => $videos,
                     'return_visits' => $return_visits,
                     'bible_studies' => $bible_studies,
-                    'StandPublishers_id' => $id,
                 ]);
         }
         else {
             StandReports::firstOrCreate([
+            'user_id' => Auth::id(),
+            'StandPublishers_id' => $id,
             'publications' => $publications,
             'videos' => $videos,
             'return_visits' => $return_visits,
             'bible_studies' => $bible_studies,
-            'StandPublishers_id' => $id,
-        ]);
+            ]);
         }
         $StandTemplate = StandTemplate::find($StandPublishers->stand_template_id);
 
-
         if($StandTemplate->type == 'next') {
-            return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])->with('success', 'Отчет отправлен');
+            return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])->with('Toastr', '');
         }
         else {
-            return redirect()->route('currentWeekTable',  ['id' => $StandTemplate->stand_id])->with('success', 'Отчет отправлен');
+            return redirect()->route('currentWeekTable',  ['id' => $StandTemplate->stand_id])->with('Toastr', 'Отчет отправлен');
         }
     }
 
+    /*Страница создания нового стенда*/
     public function createNewStandPage() {
 
         $congregations = Congregation::all();
@@ -417,6 +428,8 @@ class StandController extends Controller
             ]);
 
     }
+
+    /*POST отправка создания нового стенда*/
     public function createNewStand(Request $request) {
 
         $this->validate($request, [
@@ -485,6 +498,7 @@ class StandController extends Controller
 
     }
 
+    /*Настройки стенда*/
     public function settings($id) {
 
         $stand_id = Stand::find($id);
@@ -528,6 +542,7 @@ class StandController extends Controller
                 'active_day' => $active_day
             ]);
     }
+
 
     public function timeUpdateNext(Request $request, $id)
     {
@@ -727,8 +742,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -7 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -747,8 +760,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -8 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -767,8 +778,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -9 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -787,8 +796,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -10 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -807,8 +814,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -11 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -827,8 +832,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -12 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -847,8 +850,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -13 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -901,12 +902,12 @@ class StandController extends Controller
                         ->where('congregation_id', $cid->id)
                         ->get();
                     foreach ($req1 as $r1) {
-                        StandPublishers::firstOrCreate([
-                            'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
-                            'date' => date ("Y-m-d", time() - (      date("N")-1) * 24*60*60),
-                        ]);
+
+                            StandPublishers::firstOrCreate([
+                                'stand_template_id' => $r1->id,
+                                'date' => date ("Y-m-d", time() - (      date("N")-1) * 24*60*60),
+                            ]);
+
                     }
                 }
             }
@@ -923,8 +924,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => $currentTUE = date ("Y-m-d", time() - ( -1 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -943,8 +942,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => $currentTUE = date ("Y-m-d", time() - ( -2 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -963,8 +960,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => $currentTUE = date ("Y-m-d", time() - ( -3 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -983,8 +978,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => $currentTUE = date ("Y-m-d", time() - ( -4 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -1003,8 +996,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -5 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -1023,8 +1014,6 @@ class StandController extends Controller
                     foreach ($req1 as $r1) {
                         StandPublishers::firstOrCreate([
                             'stand_template_id' => $r1->id,
-                            'user_1' => null,
-                            'user_2' => null,
                             'date' => date ("Y-m-d", time() - ( -6 + date("N")-1) * 24*60*60),
                         ]);
                     }
@@ -1130,7 +1119,6 @@ class StandController extends Controller
     public function redactionTime() {
 
         $timePerDay = StandTemplate::where('stand_id');
-
         return view('stand.time');
     }
 

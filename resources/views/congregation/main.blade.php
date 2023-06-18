@@ -97,7 +97,7 @@
                 <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
                     <div class="card-body text-center">
 
-                        <p class="heading text-primary text-24 line-height-1 mb-2">
+                        <p class="heading text-primary line-height-1 mb-2">
                             {{ $manCon->name }}
                         </p>
                         <div class="content">

@@ -13,11 +13,11 @@
             <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
                 <span class="flex-grow-1"></span>
                 <div class="d-flex align-items-center">
-                    <img class="logo" src="../../dist-assets/images/logo.png" alt="">
+                    {{--<img class="logo" src="../../dist-assets/images/logo.png" alt="">
                     <div>
                         <p class="m-0">© 2023 Meeper</p>
-                        <p class="m-0">Все права сохранены</p>
-                    </div>
+                        <p class="m-0"></p>
+                    </div>--}}
                 </div>
             </div>
         </div>
@@ -34,11 +34,11 @@
             <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
                 <span class="flex-grow-1"></span>
                 <div class="d-flex align-items-center">
-                    <img class="logo" src="../../dist-assets/images/logo.png" alt="">
+                    {{--<img class="logo" src="../../dist-assets/images/logo.png" alt="">
                     <div>
                         <p class="m-0">© 2023 Stand</p>
-                        <p class="m-0">All rights reserved</p>
-                    </div>
+                        <p class="m-0"></p>
+                    </div>--}}
                 </div>
             </div>
         </div>

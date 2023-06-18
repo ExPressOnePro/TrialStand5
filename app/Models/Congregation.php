@@ -27,5 +27,10 @@ class Congregation extends Model
         return $this->hasMany(Stand::class, 'stand_id', 'id');
     }
 
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class, 'congregation_id', 'id');
+    }
+
 
 }

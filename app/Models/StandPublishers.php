@@ -56,12 +56,11 @@ class StandPublishers extends Model
     /**
      * Get the user associated with the StandPublishers
      */
-    public function users()
-    {
+    public function users(){
         return $this->hasMany(User::class, '');
     }
-    public function standReports()
-    {
+
+    public function standReports(){
         return $this->hasMany(StandReports::class, '');
     }
 
