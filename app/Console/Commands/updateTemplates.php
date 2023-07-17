@@ -30,7 +30,6 @@ class updateTemplates extends Command
     public function handle(){
 
         #•выбирать все ID из StandTemplate next и переписать status в current
-        #•current переписать ID в StandPublishers
 
         $congr_id = Congregation::get();
         $stand_id = Stand::get();

@@ -46,8 +46,7 @@ trait HasRolesAndPermissions
         return false;
     }
 
-    public function getAllPermissions(array $permissions)
-    {
+    public function getAllPermissions(array $permissions) {
         return Permission::whereIn('slug',$permissions)->get();
     }
 

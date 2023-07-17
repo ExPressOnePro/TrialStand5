@@ -12,7 +12,7 @@ class CongregationRequestsController extends Controller {
     public function joinCongregation(Request $request, $id) {
 
         $user = Auth::user(); // получаем текущего пользователя
-        $congregation = Congregation::find($id); // получаем собрания, к которой нужно присоединиться
+        $congregation = Congregation::find($id); // получаем собрания, к которому нужно присоединиться
         CongregationRequests::firstOrCreate([
             'user_id' => $user->id,
             'congregation_id' => $congregation->id,

@@ -11,10 +11,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable {
+class User extends Authenticatable implements Auditable {
 
-    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions, \OwenIt\Auditing\Auditable;
 
 
     public const TABLE = 'users';
@@ -25,11 +26,26 @@ class User extends Authenticatable {
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'login',
         'email',
         'password',
         'congregation_id',
+        'groups_id',
+        'mobile_phone',
+        'additional_phone',
+        'brief_information',
+        'gender',
+        'hometown',
+        'languages',
+        'city',
+        'address',
+        'birthday',
+        'christening_day',
+        'last_login',
+        'user_agent',
+        'email_verified_at',
     ];
 
     /**
@@ -51,8 +67,7 @@ class User extends Authenticatable {
         'email_verified_at' => 'datetime',
     ];
 
-    public function congregation(): BelongsTo
-    {
+    public function congregation(): BelongsTo {
         return $this->belongsTo(Congregation::class);
     }
 
@@ -66,6 +81,18 @@ class User extends Authenticatable {
 
     public function StandReports() {
         return $this->hasMany(StandReports::class, 'user_id', 'id');
+    }
+
+    public function UsersPermissions() {
+        return $this->hasMany(UsersPermissions::class, 'user_id', 'id');
+    }
+
+    public function UsersGroups() {
+        return $this->hasMany(UsersGroups::class, 'user_id', 'id');
+    }
+
+    public function PersonalReport() {
+        return $this->hasMany(PersonalReport::class, 'user_id', 'id');
     }
 
 

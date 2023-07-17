@@ -10,6 +10,7 @@ use App\Models\StandTemplate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -41,16 +42,27 @@ class HomeController extends Controller
         else {
 
             $stand = Stand::where('congregation_id', $user->congregation_id)->get();
-            $active_day = StandTemplate::select('day')->distinct()->get();
+            $active_day = StandPublishers::select('day')->distinct()->get();
+
+            $start_date = date("Y-m-d", time() - (     date("N") - 1) * 24 * 60 * 60);
+            $end_date   = date("Y-m-d", time() - (-6 + date("N") - 1) * 24 * 60 * 60);
+
+
             $standPublishers = StandPublishers::with(
                 'standTemplates'
             )
+                ->whereBetween('date', [$start_date, $end_date])
                 ->where('user_1', $user->id)
                 ->orWhere('user_2', $user->id)
                 ->orderBy('date', 'asc')
                 ->get();
 
-            $standPublishersCount = StandPublishers::where('user_1', $user->id)
+
+
+
+            $standPublishersCount = StandPublishers::
+                whereBetween('date', [$start_date, $end_date])
+                ->where('user_1', $user->id)
                 ->orWhere('user_2', $user->id)
                 ->orderBy('date', 'asc')
                 ->count();
@@ -58,7 +70,7 @@ class HomeController extends Controller
             $user_congregation_id = $user->congregation_id;
             $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
 
-            return view('home')
+            return view('NavigationBar.Main.home')
                 ->with(['standPublishers' => $standPublishers])
                 ->with(['stand' => $stand])
                 ->with(['user_congregation_id' => $user_congregation_id])
@@ -77,11 +89,7 @@ class HomeController extends Controller
 
 
         return view('guest')
-            ->with([
-            'congregation' => $congregation
-            ])
-            ->with([
-                'congregationRequests' => $congregationRequests
-            ]);
+            ->with(['congregation' => $congregation])
+            ->with(['congregationRequests' => $congregationRequests]);
     }
 }

@@ -11,6 +11,9 @@ class StandReports extends Model
     use HasFactory;
 
     protected $fillable = [
+        'day',
+        'time',
+        'date',
         'user_id',
         'StandPublishers_id',
         'publications',

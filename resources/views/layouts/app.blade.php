@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <!-- разрешение экрана -->
@@ -20,16 +20,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" />
 
     <!-- Style css dist-assets -->
-    <link rel="stylesheet" href="../../dist-assets/css/themes/lite-purple.css" />
-    <link rel="stylesheet" href="../../dist-assets/css/plugins/perfect-scrollbar.css" />
-    <link rel="stylesheet" href="../../dist-assets/css/plugins/fontawesome-5.css" />
-    <link rel="stylesheet" href="../../dist-assets/css/plugins/metisMenu.min.css" />
-    <link rel="stylesheet" href="../../dist-assets/css/plugins/sweetalert2.min.css" />
-    <link rel="stylesheet" href="../../dist-assets/css/plugins/toastr.css" />
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist-assets/css/themes/lite-purple.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/perfect-scrollbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/fontawesome-5.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/metisMenu.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/toastr.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/datatables.min.css') }}">
 
-    <!-- Style css customization -->
-    {{--<link href="../public/css/style.css" rel="stylesheet">--}}
-    <link href="../public/css/app.css" rel="stylesheet">
+
 
     <!-- Scripts -->
     <script
@@ -45,6 +45,7 @@
     @inject('mobile_detect', 'Mobile_Detect')
     @if ($mobile_detect->isMobile())
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
+            @include('includes.header')
             <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
                 @if(Request::is(
                     'profile*',
@@ -55,14 +56,11 @@
                     'home*',
                     'congregation*',
                     'guest*',
-                    'roles*'
+                    'RolesPermissions*'
                     ))
-                    @include('includes.header')
                     @yield('content')
                     @include('includes.menuBarPhone')
                 @endif
-
-
             </div>
         </div>
     @elseif ($mobile_detect->isTablet())
@@ -98,8 +96,7 @@
                 'congregation',
                 'congregation/*',
                 'guest',
-                'roles',
-                'roles/*'
+                'RolesPermissions*',
                 ))
                 <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
                     @include('includes.sidebar')
@@ -128,16 +125,10 @@
     <script src="../../dist-assets/js/plugins/metisMenu.min.js"></script>
     <script src="../../dist-assets/js/scripts/layout-sidebar-vertical.min.js"></script>
     <script src="../../dist-assets/js/custom/actionbutton.js"></script>
-    <script src="../../dist-assets/js/plugins/datatables.min.js"></script>
-    <script src="../../dist-assets/js/scripts/contact-list-table.min.js"></script>
-    <script src="../../dist-assets/js/scripts/datatables.script.min.js"></script>
-    <script src="../../dist-assets/js/plugins/sweetalert2.min.js"></script>
-    <script src="../../dist-assets/js/scripts/sweetalert.script.min.js"></script>
-    <script src="../../dist-assets/js/plugins/toastr.min.js"></script>
-    <script src="../../dist-assets/js/scripts/toastr.script.min.js"></script>
-    <script src="../../dist-../../dist-assets/js/plugins/datatables.min.js"></script>
     <script src="../../dist-../../dist-assets/js/scripts/tooltip.script.min.js"></script>
-
+    <script src="../../dist-assets/js/custom/nav.js"></script>
+    <script src="../../dist-assets/js/plugins/datatables.min.js"></script>
+    <script src="../../dist-assets/js/scripts/datatables.script.min.js"></script>
 </body>
 
 </html>

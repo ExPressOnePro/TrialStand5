@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Congregation;
 use App\Models\CongregationRequests;
+use App\Models\Group;
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UsersGroups;
+use App\Models\UsersPermissions;
 use App\Models\UsersRoles;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
@@ -24,34 +29,112 @@ class CongregationsController extends Controller {
     }
 
     public function view($id) {
-        $congregation = Congregation::find($id);
-        $countUsers = User::where('congregation_id', $id)->count();
-        $manager = UsersRoles::where('role_id', 4)->get();
-        $user = User::where('congregation_id', $id)->get();
 
-        foreach ($manager as $man) {
-            $managerCongregation = User::where('id', $man->user_id)
-                ->where('congregation_id', $id)
-                ->get();
+        // Coutns
+        $countUsers = User::where('congregation_id', $id)->count();
+        $countGroups = Group::where('congregation_id', $id)->count();
+
+        $usersRoleOverseers = UsersRoles::where('role_id', 'Overseer')->get();
+
+        if ($usersRoleOverseers->isEmpty()) {
+            $countOverseers = '0';
+        }
+        else {
+            foreach ($usersRoleOverseers as $usersRoleOverseer) {
+                $countOverseers[] = User::where('congregation_id', $id)
+                    ->where('id', $usersRoleOverseers->user_id)
+                    ->count();
+            }
         }
 
-        $congregationRequests = CongregationRequests::with(
-            'user')
+
+
+        $congregation = Congregation::find($id);
+        $manager = Role::where('slug', '=', 'Manager')->first();
+        $Developer = Role::where('slug', '=', 'Developer')->first();
+        $managers_id = UsersRoles::where('role_id', $manager->id)->get();
+        $Developers_id = UsersRoles::where('role_id', $Developer->id)->get();
+        $permission_Overseers = Permission::where('name', 'like', 'Developer.User manager%')->get();
+
+
+        $groups = Group::with('responsibleUserId')
             ->where('congregation_id', $id)
             ->get();
 
-        return view('congregation.main')
-            ->with([
-                'congregation' => $congregation])
-            ->with([
-                'managerCongregation' => $managerCongregation])
-            ->with([
-                'congregationRequests' => $congregationRequests])
-            ->with([
-                'user' => $user])
-            ->with([
-                'countUsers' => $countUsers]);
+        foreach ($groups as $group) {
+            $users_groups[] = UsersGroups::with('User')->where('group_id', $group->id)->get();
+        }
 
+
+        if($permission_Overseers->isEmpty()) {
+            $permission_Overseer = '0';
+        }
+        else {
+            foreach ($permission_Overseers as $permission_Oversee) {
+                $permission_Overseer[] = UsersPermissions::with('User')
+                    ->where('permission_id', $permission_Oversee->id)
+                    ->get();
+            }
+        }
+
+
+        if($managers_id->isEmpty()) {
+            foreach ($Developers_id as $Developer_id) {
+                $managerCongregation = User::where('id', $Developer_id->user_id)
+                    ->where('congregation_id', $id)
+                    ->get();
+            }
+        }
+        else {
+            foreach ($managers_id as $manager_id) {
+                $managerCongregation = User::where('id', $manager_id->user_id)
+                    ->where('congregation_id', $id)
+                    ->get();
+            }
+        }
+
+        $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
+        $users = User::where('congregation_id', $id)->get();
+        $AuthUser = User::find(Auth::id());
+
+
+        $congregationRequests = CongregationRequests::with('user')
+            ->where('congregation_id', $id)
+            ->get();
+
+        $congregationRequestsCount = CongregationRequests::with('user')
+            ->where('congregation_id', $id)
+            ->count();
+
+        if ($AuthUser->hasRole('Developer')){
+            return view('congregation.main')
+                ->with(['congregation' => $congregation])
+                ->with(['managerCongregation' => $managerCongregation])
+                ->with(['congregationRequests' => $congregationRequests])
+                ->with(['congregationRequestsCount' => $congregationRequestsCount])
+                ->with(['users' => $users])
+                ->with(['permission_stands' => $permission_stands])
+                ->with(['permission_Overseer' => $permission_Overseer])
+                ->with(['groups' => $groups])
+                ->with(['users_groups' => $users_groups])
+                ->with(['countGroups' => $countGroups])
+                ->with(['countOverseers' => $countOverseers])
+                ->with(['countUsers' => $countUsers]);
+        }
+        else{
+            if($AuthUser->congregation_id == $congregation->id) {
+                return view('congregation.main')
+                    ->with(['congregation' => $congregation])
+                    ->with(['managerCongregation' => $managerCongregation])
+                    ->with(['congregationRequests' => $congregationRequests])
+                    ->with(['users' => $users])
+                    ->with(['permission_stands' => $permission_stands])
+                    ->with(['countUsers' => $countUsers]);
+            }
+            else{
+                return view('errors.423Locked');
+            }
+        }
     }
 
     public function allow($id, $user_id) {
@@ -61,7 +144,7 @@ class CongregationsController extends Controller {
             $user->congregation_id = $id;
             $user->save();
 
-            $roleUserID = Role::where('name', 'User')->first();
+            $roleUserID = Role::where('name', 'Publisher')->first();
 
             $UsersRoles = new UsersRoles();
             $UsersRoles->user_id = $user_id;

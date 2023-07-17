@@ -27,8 +27,8 @@ class updatePublishers extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
-    {
+    public function handle(){
+
         #•current ID переписать в StandPublishers Stand_template_ID
         $congr_id = Congregation::get();
         $stand_id = Stand::get();
@@ -80,10 +80,9 @@ class updatePublishers extends Command
                             ->get();
                         foreach ($stand_template_id_next as $stin) {
                             foreach ($stand_template_id_current as $stic) {
-                                $stand_publishers_id = StandPublishers::
-                                where('stand_template_id', $stin->id)
+                                $rertt = StandPublishers::where('stand_template_id', $stin->id)
                                     ->update([
-                                        'stand_template_id', $stic->id
+                                        'stand_template_id' => $stic->id
                                     ]);
                             }
                         }

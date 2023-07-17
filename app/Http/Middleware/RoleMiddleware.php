@@ -25,7 +25,7 @@ class RoleMiddleware
             return response()->view('errors.423Locked');
         }
         if($permission !== null && !auth()->user()->can($permission)) {
-        abort(404);
+            return response()->view('errors.423Locked');
         }
 
 

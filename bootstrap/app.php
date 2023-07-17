@@ -41,6 +41,15 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->register(OwenIt\Auditing\AuditingServiceProvider::class);
+
+$app->register(Irazasyed\Larasupport\Providers\ArtisanServiceProvider::class);
+
+/*
+$app->configure('audit');*/
+
+return $app;
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
@@ -51,5 +60,6 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
+/*$app->configure('audit');*/
 
 return $app;

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -53,9 +53,23 @@
         </div>
     @else
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
+            <div>
+            </div>
             @yield('content')
         </div>
     @endif
     </body>
+    <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+    <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+    <script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../../dist-assets/js/scripts/tooltip.script.min.js"></script>
+    <script src="../../dist-assets/js/scripts/script.min.js"></script>
+    <script src="../../dist-assets/js/scripts/script_2.min.js"></script>
+    <script src="../../dist-assets/js/scripts/sidebar.large.script.min.js"></script>
+    <script src="../../dist-assets/js/plugins/feather.min.js"></script>
+    <script src="../../dist-assets/js/plugins/metisMenu.min.js"></script>
+    <script src="../../dist-assets/js/scripts/layout-sidebar-vertical.min.js"></script>
+    <script src="../../dist-assets/js/custom/actionbutton.js"></script>
+    <script src="../../dist-../../dist-assets/js/scripts/tooltip.script.min.js"></script>
 </main>
 </html>

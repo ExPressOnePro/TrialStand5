@@ -409,7 +409,7 @@
 
             // regexp for attributes matching
             var attrRegexp = new RegExp('^[a-zA-Z-]+?::');
-			
+
 			var array_string = [];
             var stringKey;
             for (stringKey in stringsObj) {
@@ -418,7 +418,7 @@
 						var array_string = stringKey.split(':');
 						if($(array_string[3]).length > 0)
 						{
-							decompositionObj.attributeStrings.push(stringKey);	
+							decompositionObj.attributeStrings.push(stringKey);
 						}
 					}
                     else if (stringKey.indexOf('id:') === 0) {
@@ -1363,7 +1363,7 @@
     var __name__ = 'localizationTool';
 
     /**
-     * jQuery Localization Tool - a jQuery widget to translate web pages
+     * jQuery SetLocale Tool - a jQuery widget to translate web pages
      *
      * @memberOf jQuery.fn
      */

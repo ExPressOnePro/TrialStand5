@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Congregation;
+use App\Models\UsersPersonalData;
 use App\Models\UsersRoles;
+use App\Models\UsersSafety;
+use App\Models\UsersSecurity;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -46,7 +50,9 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'min:4', 'max:255'],
+
+            'first_name' => ['required', 'string'],
+            'last_name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'login' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
@@ -59,15 +65,16 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
-    {
+    protected function create(array $data) {
         return tap(User::create([
-            'name' => $data['name'],
             'email' => $data['email'],
             'login' => $data['login'],
-            'congregation_id' => '1',
-            'password' => Hash::make($data['password'])
-        ]), function ($user) {
+            'password' => Hash::make($data['password']),
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'congregation_id' => 1,
+            'registration_date' => Carbon::now(),
+        ]), function( $user) {
             UsersRoles::create([
                 'user_id' => $user->id,
                 'role_id' => 1,

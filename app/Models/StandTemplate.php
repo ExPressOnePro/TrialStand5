@@ -15,15 +15,14 @@ class StandTemplate extends Model
 
     protected $fillable = [
         'type',
-        'day',
-        'time',
-        'status',
+        'week_schedule',
+        'activation',
         'stand_id',
         'congregation_id',
     ];
 
     protected $casts = [
-        'times_range' => 'array'
+        'week_schedule' => 'array'
     ];
 
     /**
