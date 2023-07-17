@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Meeper'),
 
     /*
     |--------------------------------------------------------------------------
@@ -82,8 +82,14 @@ return [
     | to any of the locales which will be supported by the application.
     |
     */
+    'locale' => 'ru',
 
-    'locale' => 'en',
+
+    'locales' => [
+        'ru' => 'Русский',
+        'en' => 'English',
+        'ro' => 'Română',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +102,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'ru',
 
     /*
     |--------------------------------------------------------------------------
@@ -163,6 +169,7 @@ return [
         /*
          * Application Service Providers...
          */
+        OwenIt\Auditing\AuditingServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,

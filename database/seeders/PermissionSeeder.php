@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class PermissionSeeder extends Seeder
@@ -14,13 +15,41 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $manageUser = new Permission();
-        $manageUser->name = 'Manage users';
-        $manageUser->slug = 'manage-users';
-        $manageUser->save();
-        $createTasks = new Permission();
-        $createTasks->name = 'Create Tasks';
-        $createTasks->slug = 'create-tasks';
-        $createTasks->save();
+
+        $array = [
+            'name' => [
+                'Manager.User manager',
+                'Developer.User manager',
+                'User. Stand. Open table',
+                'Manager. Congregations. Open Congregation',
+                'Developer. Congregations. Open all Congregations',
+                'Manager. Stand. Open settings stand',
+                'Manager. Stand. Create new stand',
+                'User. Stand. Entry in table',
+                'Open Congregations',
+                'Publisher. Stand. Open table',
+                'Manager. Stand. Open history stand'
+                ],
+            'slug' => [
+                'Manager.User manager',
+                'Developer.User manager',
+                'User. Stand. Open table',
+                'Manager. Congregations. Open Congregation',
+                'Developer. Congregations. Open all Congregations',
+                'Manager. Stand. Open settings stand',
+                'Manager. Stand. Create new stand',
+                'User. Stand. Entry in table',
+                'Open Congregations',
+                'Publisher. Stand. Open table',
+                'Manager. Stand. Open history stand'
+                ]
+        ];
+
+        foreach($array['name'] as $key => $value){
+            $permission = new Permission();
+            $permission->name = $value;
+            $permission->slug = $array['slug'][$key];
+            $permission->save();
+        }
     }
 }

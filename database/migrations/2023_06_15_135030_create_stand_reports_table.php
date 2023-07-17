@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('stand_reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('day');
+            $table->unsignedBigInteger('time');
+            $table->date('date');
             $table->unsignedBigInteger('StandPublishers_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('publications');
             $table->unsignedBigInteger('videos');
             $table->unsignedBigInteger('return_visits');

@@ -15,10 +15,13 @@ class CreateStandsPublishersTable extends Migration
     {
         Schema::create('stands_publishers', function (Blueprint $table) {
             $table->id();
+            $table->integer('day');
+            $table->integer('time');
             $table->unsignedBigInteger('stand_template_id');
             $table->unsignedBigInteger('user_1')->nullable();
             $table->unsignedBigInteger('user_2')->nullable();
-            $table->date('date')->format('d.m.Y');;
+            $table->unsignedBigInteger('user_3')->nullable();
+            $table->date('date');
             $table->timestamps();
 
             $table->foreign('stand_template_id')->references('id')->on('stand_templates');

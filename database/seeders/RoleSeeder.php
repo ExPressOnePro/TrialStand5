@@ -12,24 +12,31 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $guest = new Role();
-        $guest->name = 'Guest';
-        $guest->slug = 'Guest';
-        $guest->save();
 
-        $user = new Role();
-        $user->name = 'User';
-        $user->slug = 'User';
-        $user->save();
+        $array = [
+            'name' => [
+                'Developer',
+                'Guest',
+                'Overseer',
+                'Ministerial servants',
+                'Regular pioneer',
+                'Publisher',
+            ],
+            'slug' => [
+                'Developer',
+                'Guest',
+                'Overseer',
+                'Ministerial servants',
+                'Regular pioneer',
+                'Publisher',
+            ]
+        ];
 
-        $developer = new Role();
-        $developer->name = 'Developer';
-        $developer->slug = 'Developer';
-        $developer->save();
-
-        $manager = new Role();
-        $manager->name = 'Manager';
-        $manager->slug = 'Manager';
-        $manager->save();
+        foreach($array['name'] as $key => $value){
+            $role = new Role();
+            $role->name = $value;
+            $role->slug = $array['slug'][$key];
+            $role->save();
+        }
     }
 }
