@@ -3,13 +3,6 @@
 @section('content')
 
     <div class="main-content pt-4">
-        <div class="breadcrumb">
-            <h1 class="mr-2">Управление пользователями</h1>
-            <ul>
-                <li><a href="">Dashboard</a></li>
-                <li>Version 4</li>
-            </ul>
-        </div>
         <div class="separator-breadcrumb border-top"></div>
         <div class="row">
             <div class="col-md-12">

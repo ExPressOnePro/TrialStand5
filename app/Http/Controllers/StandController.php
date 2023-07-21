@@ -20,8 +20,10 @@ use Symfony\Component\Routing\Loader\Configurator\Traits\AddTrait;
 use function Nette\Utils\removeChildren;
 use function Symfony\Component\Console\Style\table;
 
-class StandController extends Controller
-{
+class StandController extends Controller{
+
+
+
 
     public function allstands() {
 
@@ -66,6 +68,15 @@ class StandController extends Controller
             ->get();
 
         $active_day = StandTemplate::select('day')->distinct()->get();
+
+        $data = [
+            'key' => 'value',
+            'key1' => 'value1',
+            'key2' => 'value2',
+            'key3' => 'value3',
+            'key4' => 'value4',
+        ];
+
 
         return view('stand.table')
             ->with(['templates' => $templates])
@@ -385,7 +396,7 @@ class StandController extends Controller
         $StandReportsCount = StandReports::where('StandPublishers_id', $id)->count();
         $StandReports = StandReports::with('users')->where('StandPublishers_id', $id)->get();
 
-        if($StandReports->user_id == Auth::id()) {
+        if($StandPublishers->user_id == Auth::id()) {
             StandReports::where('StandPublishers_id', $id)
                 ->update([
                     'user_id' => Auth::id(),
@@ -665,38 +676,6 @@ class StandController extends Controller
         }*/
     }
 
-    public function test12() {
-        $test = StandTemplate::with(
-            'stand',
-            'standPublishers.user',
-            'standPublishers.user2',
-            'congregation'
-        );
-
-        $test2 = DB::table('stand_templates')
-            ->select('times_range')
-            ->get();
-
-
-        $stt = new StandTemplate();
-        $srtf = StandTemplate::where('type', 'current')->get();
-
-
-
-        foreach ($srtf as $stid) {
-
-            $test4 = $stid->times_range;
-
-            $test3 = "DB::insert(insert into stands_publishers (stand_template_id, time)
-            VALUES (
-            $stid->id,
-            $test4
-            )";
-
-            dd($test3);
-        }
-    }
-
     public function ExampleTestVersionOfAddingToPublishersNextWeek() {
 
         /*пример добавления в базу по основным критериям в таблицу Publishers*/
@@ -856,7 +835,7 @@ class StandController extends Controller
                 }
             }
         }
-
+        return redirect()->back();
 
     }
     public function ExampleTestVersionOfAddingToPublishersCurrentWeek() {
@@ -1020,7 +999,75 @@ class StandController extends Controller
                 }
             }
         }
+        return redirect()->back();
     }
+
+    public function ExampleTestVersionOfUpdatingPublishersCurrentWeek($id){
+
+        #•current ID переписать в StandPublishers Stand_template_ID
+        $congr_id = Congregation::get();
+        $stand_id = Stand::get();
+        $time_array = [
+            '00:00',
+            '01:00',
+            '02:00',
+            '03:00',
+            '04:00',
+            '05:00',
+            '06:00',
+            '07:00',
+            '08:00',
+            '09:00',
+            '10:00',
+            '11:00',
+            '12:00',
+            '13:00',
+            '14:00',
+            '15:00',
+            '16:00',
+            '17:00',
+            '18:00',
+            '19:00',
+            '20:00',
+            '21:00',
+            '22:00',
+            '23:00',
+        ];
+        $day_array = [1, 2, 3, 4, 5, 6, 7];
+
+        foreach ($congr_id as $cid) {
+            foreach ($stand_id as $sid) {
+                foreach ($day_array as $dar) {
+                    foreach ($time_array as $time_arr) {
+                        $stand_template_id_next = StandTemplate::
+                        where('type', '=', 'next')
+                            ->where('day', $dar)
+                            ->where('time', $time_arr)
+                            ->where('stand_id', $sid->id)
+                            ->where('congregation_id', $cid->id)
+                            ->get();
+                        $stand_template_id_current = StandTemplate::
+                        where('type', '=', 'current')
+                            ->where('day', $dar)
+                            ->where('time', $time_arr)
+                            ->where('stand_id', $sid->id)
+                            ->where('congregation_id', $cid->id)
+                            ->get();
+                        foreach ($stand_template_id_next as $stin) {
+                            foreach ($stand_template_id_current as $stic) {
+                                $rertt = StandPublishers::where('stand_template_id', $stin->id)
+                                    ->update([
+                                        'stand_template_id' => $stic->id
+                                    ]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $this->timeUpdateNextToCurrent($id);
+    }
+
 
     public function test() {
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\UsersInfos;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -58,6 +60,8 @@ class LoginController extends Controller
 
         return  filter_var($inputData, FILTER_VALIDATE_EMAIL) ? 'email' : 'login';
     }
+
+
 
     /**
      * Create a new controller instance.

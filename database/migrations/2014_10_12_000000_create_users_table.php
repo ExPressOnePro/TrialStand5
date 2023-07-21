@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('congregation_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->timestamp('last_login')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

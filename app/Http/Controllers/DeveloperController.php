@@ -2,17 +2,110 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Congregation;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\RolesPermissions;
+use App\Models\Stand;
+use App\Models\StandPublishers;
+use App\Models\StandTemplate;
+use App\Models\User;
 use App\Models\UsersRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use OwenIt\Auditing\Facades\Auditor;
 
 class DeveloperController extends Controller{
 
     public function rolesPermissionsPage() {
+        $roles = Role::get();
+        $permissions = Permission::get();
 
-        return view('Dev.RolesPermission');
+        return view('Dev.RolesPermission')
+            ->with(['roles' => $roles])
+            ->with(['permissions' => $permissions]);
+    }
+    public function rolesPermissionsChoiceRole($id) {
+
+        $role = Role::find($id);
+        $permissions = Permission::get();
+
+        $rolePermission = RolesPermissions::where('role_id', $id)->get();
+        /*$permissions = RolesPermissions::where('role_id', $id)->get();*/
+
+
+        return view('Dev.RolesPermissionChoiceRole')
+            ->with(['rolePermission' => $rolePermission])
+            ->with(['role' => $role])
+            ->with(['permissions' => $permissions]);
     }
 
+    /*Страница создания новой роли, нового права*/
+    public function createNewRolePage() {
+        /*$userAuditor = Auditor::audit(User::class);
+        $userChanges = $userAuditor->count();*/
+
+        $audits = StandPublishers::find(60231);
+
+        return view('Dev.newRole')->with(['audits'=> $audits]);
+    }
+    public function createNewPermissionPage() {
+        return view('Dev.newPermission');
+    }
+
+    /*POST отправка создания новой роли, права*/
+    public function createNewRole(Request $request) {
+
+        $this->validate($request, [
+            'name' => 'required',
+            'slug' => 'required'
+        ]);
+
+        $role = new Role();
+        $role->name = $request->input('name');
+        $role->slug = $request->input('slug');
+        $role->save();
+
+        return redirect()->route('rolesPermissionsChoiceRole', $role->id);
+
+    }
+    public function createNewPermission(Request $request) {
+
+        $this->validate($request, [
+            'name' => 'required',
+            'slug' => 'required'
+        ]);
+
+        $role = new Permission();
+        $role->name = $request->input('name');
+        $role->slug = $request->input('slug');
+        $role->save();
+
+        return redirect()->route('rolesPermissionsRole');
+
+    }
+
+    /*POST отправка изменения или удаления права для роли*/
+    public function rolePermissionAllow(Request $request, $id) {
+        $value = $request->input('allow_role_id');
+        $RolesPermissions = new RolesPermissions();
+        $RolesPermissions->role_id = $id;
+        $RolesPermissions->permission_id = $value;
+        $RolesPermissions->save();
+
+        return redirect()->route('rolesPermissionsChoiceRole', $id);
+    }
+    public function rolePermissionDelete(Request $request, $id) {
+        $value = $request->input('delete_role_id');
+        DB::table('roles_permissions')
+            ->where('role_id', $id)
+            ->where('permission_id', $value)
+            ->delete();
+
+        return redirect()->route('rolesPermissionsChoiceRole', $id);
+    }
+
+    /*POST отправка изменения или удаления Роли пользователя*/
     public function rolesPermissionsChange(Request $request, $id) {
         $value = $request->input('allow_role_id');
         $user = new UsersRoles();
@@ -20,9 +113,8 @@ class DeveloperController extends Controller{
         $user->role_id = $value;
         $user->save();
 
-        return redirect()->route('UCRUser', $id);
+        return redirect()->route('userCard', $id);
     }
-
     public function rolesPermissionsDelete(Request $request, $id) {
         $value = $request->input('delete_role_id');
         DB::table('users_roles')
@@ -30,6 +122,6 @@ class DeveloperController extends Controller{
             ->where('role_id', $value)
             ->delete();
 
-        return redirect()->route('UCRUser', $id);
+        return redirect()->route('userCard', $id);
     }
 }

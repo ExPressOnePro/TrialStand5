@@ -32,7 +32,6 @@ class UsersController extends Controller{
             'role' => $role,
         ]);
     }
-
     public function userCard($id) {
 
         $role = Role::get();
@@ -48,7 +47,6 @@ class UsersController extends Controller{
             ->with(['role' => $role])
             ->with(['citn' => $congregation_id_to_name]);
     }
-
     public function roleAllow(Request $request, $id) {
         $value = $request->input('allow_role_id');
         $user = new UsersRoles();
@@ -58,8 +56,17 @@ class UsersController extends Controller{
 
         return redirect()->route('userCard', $id);
     }
-
     public function roleDelete(Request $request, $id) {
+        $value = $request->input('delete_role_id');
+        DB::table('users_roles')
+            ->where('user_id', $id)
+            ->where('role_id', $value)
+            ->delete();
+
+        return redirect()->route('userCard', $id);
+    }
+
+    public function personalMonthlyReport(Request $request, $id) {
         $value = $request->input('delete_role_id');
         DB::table('users_roles')
             ->where('user_id', $id)

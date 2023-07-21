@@ -4,147 +4,169 @@
 
     @inject('mobile_detect', 'Mobile_Detect')
     @if ($mobile_detect->isMobile())
-        <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-        <h1 class="mb-3 text-36 text-center">Вход</h1>
+        <div class="dropdown-toggle dropleft text-right mt-4 mr-4">
+            <i class="fa-solid fa-language text-30" id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @foreach (Config::get('languages') as $lang => $language)
+                    @if ($lang != App::getLocale())
+                        <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}"> {{$language}}</a>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+        <div>
+            <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
+            <h1 class="mb-3 text-36 text-center">{{ __('text.signin') }}</h1>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-            <div class="form-group">
-                <label for="login">{{ __('Почта или логин') }}</label>
-                <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
-                <div class="col-md-6">
-                    @error('login')
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="form-group">
+                    <label for="login">{{ __('text.Email or Login') }}</label>
+                    <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
+                    <div class="col-md-6">
+                        @error('login')
                         <div class="alert alert-card alert-danger">Логин или Email введен неверно!</div>
-                    @enderror
+                        @enderror
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="password">{{ __('Пароль') }}</label>
-                <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                <div class="col-md-6">
-                    @error('password')
-                        <div class="alert alert-card alert-danger">Пароль введен неверно!</div>
-                    @enderror
+                <div class="form-group">
+                    <label for="password">{{ __('Пароль') }}</label>
+                    <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                    <div class="col-md-6">
+                        @error('password')
+                        <div class="alert alert-card alert-danger">{{ __('text.password incorrect') }}</div>
+                        @enderror
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('Войти') }}</button>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('text.Enter') }}</button>
 
-                    @if (Route::has('password.request'))
-                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                            {{ __('Забыли пароль?') }}
-                        </a>
-                    @endif
+                        @if (Route::has('password.request'))
+                            <a class="btn btn-link" href="{{ route('password.request') }}">
+                                {{ __('text.Forgot your password?') }}
+                            </a>
+                        @endif
+                    </div>
                 </div>
-            </div>
-        </form>
-        <a href="{{ '/registration' }}">
-            <button class="btn btn-rounded btn-primary btn-block mt-2">
-                {{ __('Регистрация') }}
-            </button>
-        </a>
+            </form>
+            <a href="{{ '/registration' }}">
+                <button class="btn btn-rounded btn-primary btn-block mt-2">
+                    {{ __('text.Registration') }}
+                </button>
+            </a>
+        </div>
     @elseif ($mobile_detect->isTablet())
-        <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-        <h1 class="mb-3 text-36 text-center">Вход</h1>
+        <div>
+            <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
+            <h1 class="mb-3 text-36 text-center">Вход</h1>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-            <div class="form-group">
-                <label for="login">{{ __('Почта или логин') }}</label>
-                <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
-                <div class="col-md-6">
-                    @error('login')
-                    <div class="alert alert-card alert-danger">Логин или Email введен неверно!</div>
-                    @enderror
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="form-group">
+                    <label for="login">{{ __('text.Email or Login') }}</label>
+                    <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
+                    <div class="col-md-6">
+                        @error('login')
+                        <div class="alert alert-card alert-danger">Логин или Email введен неверно!</div>
+                        @enderror
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="password">{{ __('Пароль') }}</label>
-                <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                <div class="col-md-6">
-                    @error('password')
-                    <div class="alert alert-card alert-danger">Пароль введен неверно!</div>
-                    @enderror
+                <div class="form-group">
+                    <label for="password">{{ __('text.Password') }}</label>
+                    <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                    <div class="col-md-6">
+                        @error('password')
+                        <div class="alert alert-card alert-danger">{{ __('text.password incorrect') }}</div>
+                        @enderror
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('Войти') }}</button>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('Войти') }}</button>
 
-                    @if (Route::has('password.request'))
-                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                            {{ __('Забыли пароль?') }}
-                        </a>
-                    @endif
+                        @if (Route::has('password.request'))
+                            <a class="btn btn-link" href="{{ route('password.request') }}">
+                                {{ __('Забыли пароль?') }}
+                            </a>
+                        @endif
+                    </div>
                 </div>
-            </div>
-        </form>
-        <a href="{{ '/registration' }}">
-            <button class="btn btn-rounded btn-primary btn-block mt-2">
-                {{ __('Регистрация') }}
-            </button>
-        </a>
+            </form>
+            <a href="{{ '/registration' }}">
+                <button class="btn btn-rounded btn-primary btn-block mt-2">
+                    {{ __('Регистрация') }}
+                </button>
+            </a>
+        </div>
     @else
+        <div class="dropdown-toggle dropleft text-right mt-4 mr-4">
+            <i class="fa-solid fa-language text-30" id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @foreach (Config::get('languages') as $lang => $language)
+                    @if ($lang != App::getLocale())
+                        <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}"> {{$language}}</a>
+                    @endif
+                @endforeach
+            </div>
+        </div>
         <div class="auth-layout-wrap">
             <div class="auth-content">
-                <div class="card o-hidden">
-                    <div class="row">
-                        <div class="col">
-                            <div class="p-4">
-                                <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-                                <h1 class="mb-3 text-36 text-center">Вход</h1>
+                <div class="row">
+                    <div class="col">
+                        <div class="p-4">
+                            <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
+                            <h1 class="mb-3 text-36 text-center">{{ __('constant.signin') }}</h1>
 
-                                <form method="POST" action="{{ route('login') }}">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label for="login">{{ __('Email or Username') }}</label>
-                                        <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
-                                        <div class="col-md-6">
-                                            @error('login')
-                                            <span class="invalid-feedback" role="alert">
+                            <form method="POST" action="{{ route('login') }}">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="login">{{ __('constant.Email or Login') }}</label>
+                                    <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
+                                    <div class="col-md-6">
+                                        @error('login')
+                                        <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                            @enderror
-                                        </div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label for="password">{{ __('Password') }}</label>
-                                        <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                                        <div class="col-md-6">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">{{ __('text.Password') }}</label>
+                                    <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                    <div class="col-md-6">
 
-                                            @error('password')
-                                            <span class="invalid-feedback" role="alert">
+                                        @error('password')
+                                        <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                            @enderror
-                                        </div>
+                                        @enderror
                                     </div>
+                                </div>
 
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('Войти') }}</button>
-
-                                            @if (Route::has('password.request'))
-                                                <a class="btn btn-link heading" href="{{ route('password.request') }}">
-                                                    {{ __('Забыли пароль?') }}
-                                                </a>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </form>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('constant.Enter') }}</button>
+
+                                        @if (Route::has('password.request'))
+                                            <a class="btn btn-link heading" href="{{ route('password.request') }}">
+                                                {{ __('text.Forgot your password?') }}
+                                            </a>
+                                        @endif
                                     </div>
-                                    <div class="col-md-6">
-                                        <a href="{{ '/registration' }}">
-                                            <button class="btn btn-rounded btn-primary btn-block mt-2">
-                                                {{ __('Регистрация') }}
-                                            </button>
-                                        </a>
-                                    </div>
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="{{ '/registration' }}">
+                                        <button class="btn btn-rounded btn-primary btn-block mt-2">
+                                            {{ __('Регистрация') }}
+                                        </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

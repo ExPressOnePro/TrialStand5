@@ -11,10 +11,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable {
+class User extends Authenticatable implements Auditable {
 
-    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions, \OwenIt\Auditing\Auditable;
 
 
     public const TABLE = 'users';
@@ -30,6 +31,7 @@ class User extends Authenticatable {
         'email',
         'password',
         'congregation_id',
+        'last_login',
     ];
 
     /**
@@ -68,6 +70,9 @@ class User extends Authenticatable {
         return $this->hasMany(StandReports::class, 'user_id', 'id');
     }
 
+    public function PersonalReport() {
+        return $this->hasMany(PersonalReport::class, 'user_id', 'id');
+    }
 
 
     /**

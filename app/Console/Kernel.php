@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void {
 
         $schedule->command('create:insertPublishersNextWeekDate')->weeklyOn(4, '08:00');
-        $schedule->command('app:update-templates')->weeklyOn(1, '00:00');
-        $schedule->command('app:update-publishers')->weeklyOn(1, '00:01');
+        $schedule->command('app:update-templates')->weeklyOn(7, '23:59');
+        $schedule->command('app:update-publishers')->weeklyOn(7, '23:59');
 
     }
 

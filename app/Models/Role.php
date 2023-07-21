@@ -15,6 +15,7 @@ class Role extends Model {
         'slug',
     ];
 
+
     public function permissions() {
         return $this->belongsToMany(Permission::class,'roles_permissions');
     }
@@ -23,4 +24,7 @@ class Role extends Model {
         return $this->belongsTo(UsersRoles::class, 'id', 'role_id');
     }
 
+    public function rolesPermission() {
+        return $this->belongsToMany(RolesPermissions::class,'id', 'role_id');
+    }
 }

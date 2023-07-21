@@ -11,7 +11,7 @@
      padding: 3px; /* Some top and bottom padding */
      transition: all 0.3s ease; /* Add transition for hover effects */
      color: white; /* White text color */
-     font-size: 25px; /* Increased font size */
+     font-size: 20px; /* Increased font size */
  }
 .icon-bar-bottom p {
     font-size: 12px; /* Increased font size */
@@ -19,9 +19,5 @@
 
 .icon-bar-bottom a:hover {
     background-color: #000; /* Add a hover color */
-}
-
-.choice {
-    color: #9f34ff; /* Add an active/current color */
 }
 

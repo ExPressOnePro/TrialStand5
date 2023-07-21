@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <!-- разрешение экрана -->
@@ -26,10 +26,11 @@
     <link rel="stylesheet" href="../../dist-assets/css/plugins/metisMenu.min.css" />
     <link rel="stylesheet" href="../../dist-assets/css/plugins/sweetalert2.min.css" />
     <link rel="stylesheet" href="../../dist-assets/css/plugins/toastr.css" />
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     <!-- Style css customization -->
     {{--<link href="../public/css/style.css" rel="stylesheet">--}}
-    <link href="../public/css/app.css" rel="stylesheet">
+    {{--<link href="../public/css/app.css" rel="stylesheet">--}}
 
     <!-- Scripts -->
     <script
@@ -45,6 +46,7 @@
     @inject('mobile_detect', 'Mobile_Detect')
     @if ($mobile_detect->isMobile())
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
+            @include('includes.header')
             <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
                 @if(Request::is(
                     'profile*',
@@ -55,14 +57,11 @@
                     'home*',
                     'congregation*',
                     'guest*',
-                    'roles*'
+                    'RolesPermissions*'
                     ))
-                    @include('includes.header')
                     @yield('content')
                     @include('includes.menuBarPhone')
                 @endif
-
-
             </div>
         </div>
     @elseif ($mobile_detect->isTablet())
@@ -98,8 +97,7 @@
                 'congregation',
                 'congregation/*',
                 'guest',
-                'roles',
-                'roles/*'
+                'RolesPermissions*',
                 ))
                 <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
                     @include('includes.sidebar')
@@ -128,15 +126,8 @@
     <script src="../../dist-assets/js/plugins/metisMenu.min.js"></script>
     <script src="../../dist-assets/js/scripts/layout-sidebar-vertical.min.js"></script>
     <script src="../../dist-assets/js/custom/actionbutton.js"></script>
-    <script src="../../dist-assets/js/plugins/datatables.min.js"></script>
-    <script src="../../dist-assets/js/scripts/contact-list-table.min.js"></script>
-    <script src="../../dist-assets/js/scripts/datatables.script.min.js"></script>
-    <script src="../../dist-assets/js/plugins/sweetalert2.min.js"></script>
-    <script src="../../dist-assets/js/scripts/sweetalert.script.min.js"></script>
-    <script src="../../dist-assets/js/plugins/toastr.min.js"></script>
-    <script src="../../dist-assets/js/scripts/toastr.script.min.js"></script>
-    <script src="../../dist-../../dist-assets/js/plugins/datatables.min.js"></script>
     <script src="../../dist-../../dist-assets/js/scripts/tooltip.script.min.js"></script>
+    <script src="../../dist-assets/js/custom/nav.js"></script>
 
 </body>
 

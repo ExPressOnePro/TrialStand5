@@ -6,10 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class StandPublishers extends Model
-{
-    use HasFactory;
+class StandPublishers extends Model implements Auditable {
+    use HasFactory, \OwenIt\Auditing\Auditable;
+
+
+/*    protected $guard_name = 'web';*/
+   /* protected $fillable = [
+        'user_1', 'user_2', 'stand_template_id',
+    ];*/
 
     public const TABLE = 'stands_publishers';
 
@@ -31,6 +37,7 @@ class StandPublishers extends Model
     {
         return $this->hasMany(StandTemplate::class, 'id', 'stand_template_id');
     }
+
 
 
     /**

@@ -22,14 +22,14 @@
                                 <span class="item-name text-15 heading">Пользователи</span>
                             </a>
                             <ul class="mm-collapse">
-                                <li class="item-name mb-2 mt-2 mb-2">
+                                {{--<li class="item-name mb-2 mt-2 mb-2">
                                     <a href="{{ route('pageUserControl') }}">
                                         <span class="t-font-bolder">Все пользователи 1</span>
                                     </a>
-                                </li>
+                                </li>--}}
                                 <li class="item-name mb-2 mt-2">
                                     <a href="{{ route('users') }}">
-                                        <span class="t-font-bolder">Все пользователи 2</span>
+                                        <span class="t-font-bolder">Все пользователи</span>
                                     </a>
                                 </li>
                             </ul>
@@ -90,6 +90,18 @@
                                     <a href="{{ route('rolesPermissionsPage') }}">
                                         <i class="text-20 mr-2 text-muted"></i>
                                         <span class="heading">Главная</span>
+                                    </a>
+                                </li>
+                                <li class="item-name">
+                                    <a href="{{ route('createNewRolePage') }}">
+                                        <i class="text-20 mr-2 text-muted"></i>
+                                        <span class="heading">Создать роль</span>
+                                    </a>
+                                </li>
+                                <li class="item-name">
+                                    <a href="{{ route('createNewPermissionPage') }}">
+                                        <i class="text-20 mr-2 text-muted"></i>
+                                        <span class="heading">Создать право</span>
                                     </a>
                                 </li>
                             </ul>
