@@ -26,13 +26,8 @@
             обновить пароль
         </a>
         @endrole--}}
-        asd
         <div class="separator-breadcrumb border-top"></div>
 
-
-        <div>
-            <h1>Я полезный код</h1>
-        </div>
 
         <!-- Stand section-->
         @if($standPublishersCount > 0)
