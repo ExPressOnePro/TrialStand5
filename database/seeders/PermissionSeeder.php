@@ -18,30 +18,26 @@ class PermissionSeeder extends Seeder
 
         $array = [
             'name' => [
-                'Manager.User manager',
-                'Developer.User manager',
-                'User. Stand. Open table',
-                'Manager. Congregations. Open Congregation',
-                'Developer. Congregations. Open all Congregations',
-                'Manager. Stand. Open settings stand',
-                'Manager. Stand. Create new stand',
-                'User. Stand. Entry in table',
-                'Open Congregations',
-                'Publisher. Stand. Open table',
-                'Manager. Stand. Open history stand'
+                'Users-Open congregation users',
+                'Users-Open all users',
+                'Congregations-Open Congregation',
+                'Congregations-Open all Congregations',
+                'Stand-Open settings stand',
+                'Stand-Open history stand',
+                'Stand-Create new stand',
+                'Stand-Open stand table',
+                'Stand-Entry in table',
                 ],
             'slug' => [
-                'Manager.User manager',
-                'Developer.User manager',
-                'User. Stand. Open table',
-                'Manager. Congregations. Open Congregation',
-                'Developer. Congregations. Open all Congregations',
-                'Manager. Stand. Open settings stand',
-                'Manager. Stand. Create new stand',
-                'User. Stand. Entry in table',
-                'Open Congregations',
-                'Publisher. Stand. Open table',
-                'Manager. Stand. Open history stand'
+                'Users-Open congregation users',
+                'Users-Open all users',
+                'Congregations-Open Congregation',
+                'Congregations-Open all Congregations',
+                'Stand-Open settings stand',
+                'Stand-Open history stand',
+                'Stand-Create new stand',
+                'Stand-Open stand table',
+                'Stand-Entry in table',
                 ]
         ];
 

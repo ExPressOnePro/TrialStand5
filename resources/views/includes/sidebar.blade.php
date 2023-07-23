@@ -14,89 +14,61 @@
             <div class="side-nav">
                 <div class="main-menu">
                     <ul class="metismenu" id="menu">
-                        @can('User. Stand. Open table')
+
+                        {{--Stands--}}
+                        @can('Stand-Open stand table')
                             <li class="Ul_li--hover">
-                                <a class="has-arrow" href="#">
+                                <a href="{{ route('stand') }}">
                                     <i class="text-20 mr-2 text-muted"></i>
                                     <span class="item-name text-15 heading">Стенды</span>
                                 </a>
-                                <ul class="mm-collapse">
-                                    <li class="item-name mb-2 mt-2">
-                                        <a href="{{ route('stand') }}">
-                                            <i class="i-Big-Data mr-2 text-muted"></i>
-                                            <span class="t-font-bolder">Выбрать</span>
-                                        </a>
-                                    </li>
+                            </li>
+                        @endcan
 
-                                </ul>
-                            </li>
-                        @endcan
-                        @can('Manager.User manager')
-                            <li class="Ul_li--hover">
-                                <a href="{{ route('users') }}">
-                                    <i class="text-20 mr-2 text-muted"></i>
-                                    <span class="item-name text-15 heading">Возвещатели</span>
-                                </a>
-                            </li>
-                        @endcan
-                            @can('Developer.User manager')
+                        {{--Users--}}
+                        @if(auth()->user()->hasRole('Developer'))
+                            @can('Users-Open all userss')
                                 <li class="Ul_li--hover">
-                                    <a class="has-arrow" href="#">
+                                    <a href="{{ route('users') }}">
+                                        <i class="text-20 mr-2 text-muted"></i>
+                                        <span class="item-name text-15 heading">Все Возвещатели</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        @else
+                            @can('Users-Open congregation users')
+                                <li class="Ul_li--hover">
+                                    <a href="{{ route('users') }}">
                                         <i class="text-20 mr-2 text-muted"></i>
                                         <span class="item-name text-15 heading">Возвещатели</span>
                                     </a>
-                                    <ul class="mm-collapse">
-                                        <li class="item-name mb-2 mt-2">
-                                            <a href="{{ route('users') }}">
-                                                <span class="t-font-bolder">Все возвещатели</span>
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </li>
                             @endcan
-                        {{--Stands--}}
-                        @can('User. Stand. Open table')
-                        <li class="Ul_li--hover">
-                            <a class="has-arrow" href="#">
-                                <i class="text-20 mr-2 text-muted"></i>
-                                <span class="item-name text-15 heading">Стенды</span>
-                            </a>
-                            <ul class="mm-collapse">
-                                <li class="item-name mb-2 mt-2">
-                                    <a href="{{ route('stand') }}">
-                                        <i class="i-Big-Data mr-2 text-muted"></i>
-                                        <span class="t-font-bolder">Выбрать</span>
+                        @endif
+
+                        {{--Congregations--}}
+                        @if(auth()->user()->hasRole('Developer'))
+                            @can('Congregations-Open all congregations')
+                                <li class="Ul_li--hover">
+                                    <a href="{{ route('congregationSelect') }}">
+                                        <i class="text-20 mr-2 text-muted"></i>
+                                        <span class="item-name text-15 heading">Все собрания</span>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                        @endcan
-                            @if(auth()->user()->hasRole('Developer'))
-                                @can('Developer. Congregations. Open all Congregations')
-                                    <li class="Ul_li--hover">
-                                        <a class="has-arrow">
-                                            <i class="text-20 mr-2 text-muted"></i>
-                                            <span class="item-name text-15 heading">Все собрания</span>
-                                        </a>
-                                        <ul class="mm-collapse">
-                                            <li class="item-name">
-                                                <a href="{{ route('congregationSelect') }}">
-                                                    <i class="text-20 mr-2 text-muted"></i>
-                                                    <span class="heading">Выбрать</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                @endcan
-                            @else
-                                @can('Manager. Congregations. Open Congregation')
-                                    <li class="Ul_li--hover">
-                                        <a href="{{ route('congregationView', Auth::user()->congregation_id) }}">
-                                            <i class="text-20 mr-2 text-muted"></i>
-                                            <span class="item-name text-15 heading">Мое собрание</span>
-                                        </a>
-                                    </li>
-                                @endcan
-                            @endif
+                            @endcan
+                        @else
+                            @can('Congregations-Open congregation')
+                                <li class="Ul_li--hover">
+                                    <a href="{{ route('congregationView', Auth::user()->congregation_id) }}">
+                                        <i class="text-20 mr-2 text-muted"></i>
+                                        <span class="item-name text-15 heading">Мое собрание</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        @endif
+
+
+
                         @role('Developer')
                         {{--Next--}}
                         <li class="Ul_li--hover">
