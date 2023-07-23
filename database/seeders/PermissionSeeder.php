@@ -20,8 +20,8 @@ class PermissionSeeder extends Seeder
             'name' => [
                 'Users-Open congregation users',
                 'Users-Open all users',
-                'Congregations-Open Congregation',
-                'Congregations-Open all Congregations',
+                'Congregations-Open congregation',
+                'Congregations-Open all congregations',
                 'Stand-Open settings stand',
                 'Stand-Open history stand',
                 'Stand-Create new stand',

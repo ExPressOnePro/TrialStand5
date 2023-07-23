@@ -77,7 +77,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 
     Route::group([
-        'middleware' => 'can:Developer. Congregations. Open all Congregations',
+        'middleware' => 'can:Congregations-Open all congregations',
         'prefix' => 'congregation',
     ], function () {
         Route::get('/', [CongregationsController::class, 'select'])->name('congregationSelect');
@@ -85,7 +85,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 
         Route::group([
-            'middleware' => 'can:Manager. Congregations. Open Congregation',
+            'middleware' => 'can:Congregations-Open congregation',
             'prefix' => 'congregation',
         ], function () {
         Route::get('/{id}', [CongregationsController::class, 'view'])->name('congregationView');

@@ -6,6 +6,7 @@ use App\Http\Requests\StandReportRequest;
 use App\Models\Congregation;
 use App\Models\Stand;
 use App\Models\StandPublishers;
+use App\Models\StandPublishersHistory;
 use App\Models\StandReports;
 use App\Models\StandTemplate;
 use App\Models\User;
@@ -191,16 +192,27 @@ class StandController extends Controller{
         $day = $request->input('day');
         $time = $request->input('time');
         $stand_template_id = $request->input('stand_template_id');
-
-
         $new = StandPublishers::firstOrCreate([
             'user_1' => $user_1,
             'user_2' => null,
+            'user_3' => null,
+            'user_4' => null,
             'date' => $date,
             'day' => $day,
             'time' => $time,
             'stand_template_id' => $stand_template_id,
         ]);
+
+        $StandPublishersHistory = new StandPublishersHistory();
+        $StandPublishersHistory->user_1 = $user_1;
+        $StandPublishersHistory->user_2 = null;
+        $StandPublishersHistory->user_3 = null;
+        $StandPublishersHistory->user_4 = null;
+        $StandPublishersHistory->date = $date;
+        $StandPublishersHistory->day = $day;
+        $StandPublishersHistory->time = $time;
+        $StandPublishersHistory->stand_publishers_id = $new->id;
+        $StandPublishersHistory->save();
 
         return redirect()->back()->with('success','Вы успешно записаны');
     }
@@ -211,16 +223,27 @@ class StandController extends Controller{
         $day = $request->input('day');
         $time = $request->input('time');
         $stand_template_id = $request->input('stand_template_id');
-
-
         $new = StandPublishers::firstOrCreate([
             'user_1' => null,
             'user_2' => $user_2,
+            'user_3' => null,
+            'user_4' => null,
             'date' => $date,
             'day' => $day,
             'time' => $time,
             'stand_template_id' => $stand_template_id,
         ]);
+
+        $StandPublishersHistory = new StandPublishersHistory();
+        $StandPublishersHistory->user_1 = null;
+        $StandPublishersHistory->user_2 = $user_2;
+        $StandPublishersHistory->user_3 = null;
+        $StandPublishersHistory->user_4 = null;
+        $StandPublishersHistory->date = $date;
+        $StandPublishersHistory->day = $day;
+        $StandPublishersHistory->time = $time;
+        $StandPublishersHistory->stand_publishers_id = $new->id;
+        $StandPublishersHistory->save();
 
         return redirect()->back()->with('success','Вы успешно записаны');
     }
@@ -229,10 +252,14 @@ class StandController extends Controller{
     public function AddPublisherToStand1(Request $request, $id) {
         $user_id = $request->input('user_1');
         $StandPublishers = StandPublishers::find($id);
+        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
         $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
         if($StandPublishers->user_2 != $user_id) {
 
+
+            $StandPublishersHistory->user_1 = $user_id;
+            $StandPublishersHistory->save();
             $StandPublishers->user_1 = $user_id;
             $StandPublishers->save();
 
@@ -253,13 +280,16 @@ class StandController extends Controller{
         }
     }
     public function AddPublisherToStand2(Request $request, $id) {
-        $value = $request->input('user_2');
+        $user_id = $request->input('user_2');
         $StandPublishers = StandPublishers::find($id);
+        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
         $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
-        if($StandPublishers->user_1 != $value) {
+        if($StandPublishers->user_1 != $user_id) {
 
-            $StandPublishers->user_2 = $value;
+            $StandPublishersHistory->user_2 = $user_id;
+            $StandPublishersHistory->save();
+            $StandPublishers->user_2 = $user_id;
             $StandPublishers->save();
 
             if($stand_full->type == 'next') {
@@ -283,6 +313,9 @@ class StandController extends Controller{
     public function recordRedactionDelete1($id, $stand) {
 
         $StandPublishers = StandPublishers::findOrFail($id);
+        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
+        $StandPublishersHistory->user_1 = null;
+        $StandPublishersHistory->save();
         $StandPublishers->user_1 = null;
         $StandPublishers->save();
 
@@ -301,6 +334,9 @@ class StandController extends Controller{
     public function recordRedactionDelete2($id, $stand) {
 
         $StandPublishers = StandPublishers::findOrFail($id);
+        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
+        $StandPublishersHistory->user_2 = null;
+        $StandPublishersHistory->save();
         $StandPublishers->user_2 = null;
         $StandPublishers->save();
 
@@ -320,58 +356,62 @@ class StandController extends Controller{
     public function recordRedactionChange1(Request $request, $id, $stand) {
         $value = $request->input('1_user_id');
         $StandPublishers = StandPublishers::find($id);
+        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
         $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
         if($StandPublishers->user_2 != $value) {
+            
+            $StandPublishersHistory->user_1 = $value;
+            $StandPublishersHistory->save();
             $StandPublishers->user_1 = $value;
             $StandPublishers->save();
 
             if($stand_full->type == 'next') {
                 return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id]);
-            }
-            else {
+            } else {
                 return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id]);
             }
-        }
-        else {
+        } else {
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            }
-            else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])
+                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            } else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])
+                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             }
         }
     }
     public function recordRedactionChange2(Request $request, $id, $stand) {
         $value = $request->input('2_user_id');
         $StandPublishers = StandPublishers::find($id);
+        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
         $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
         if($StandPublishers->user_2 != $value) {
 
-            $StandPublishers->user_1 = $value;
+            $StandPublishersHistory->user_2 = $value;
+            $StandPublishersHistory->save();
+            $StandPublishers->user_2 = $value;
             $StandPublishers->save();
 
             if($stand_full->type == 'next') {
                 return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id]);
-            }
-            else {
+            } else {
                 return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id]);
             }
-        }
-        else {
+        } else {
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            }
-            else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])->with('error', 'Пользователь уже записан в выбраное время и дату!');
+                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])
+                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
+            } else {
+                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])
+                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             }
         }
     }
 
     /*POST отправка отчета стенда*/
-    public function standReportSend(StandReportRequest $request, $id)
-    {
+    public function standReportSend(StandReportRequest $request, $id){
 
         $day = $request->input('day');
         $time = $request->input('time');
@@ -414,18 +454,20 @@ class StandController extends Controller{
                     ]);
             }
             if ($StandTemplate->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])->with('success', 'Отчет успешно отправлен');
+                return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])
+                    ->with('success', 'Отчет успешно отправлен');
             } else {
-                return redirect()->route('currentWeekTable', ['id' => $StandTemplate->stand_id])->with('success', 'Отчет успешно отправлен');
+                return redirect()->route('currentWeekTable', ['id' => $StandTemplate->stand_id])
+                    ->with('success', 'Отчет успешно отправлен');
             }
-        }
-        else {
+        } else {
 
             if($StandTemplate->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])->with('error', 'Отчет уже был отправлен!');
-            }
-            else {
-                return redirect()->route('currentWeekTable',  ['id' => $StandTemplate->stand_id])->with('error', 'Отчет уже был отправлен!');
+                return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])
+                    ->with('error', 'Отчет уже был отправлен!');
+            } else {
+                return redirect()->route('currentWeekTable',  ['id' => $StandTemplate->stand_id])
+                    ->with('error', 'Отчет уже был отправлен!');
             }
         }
     }

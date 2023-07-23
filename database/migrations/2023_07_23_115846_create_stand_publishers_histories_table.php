@@ -4,40 +4,32 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStandsPublishersTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('stands_publishers', function (Blueprint $table) {
+        Schema::create('stand_publishers_histories', function (Blueprint $table) {
             $table->id();
             $table->integer('day');
             $table->integer('time');
             $table->date('date');
-            $table->unsignedBigInteger('stand_template_id');
+            $table->unsignedBigInteger('stand_publishers_id');
             $table->unsignedBigInteger('user_1')->nullable();
             $table->unsignedBigInteger('user_2')->nullable();
             $table->unsignedBigInteger('user_3')->nullable();
             $table->unsignedBigInteger('user_4')->nullable();
             $table->timestamps();
-
-            $table->foreign('stand_template_id')->references('id')->on('stand_templates');
-            $table->foreign('user_1')->nullable()->references('id')->on('users');
-            $table->foreign('user_2')->nullable()->references('id')->on('users');
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('stands_publishers');
+        Schema::dropIfExists('stand_publishers_histories');
     }
-}
+};

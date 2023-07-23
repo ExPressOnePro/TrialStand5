@@ -3,7 +3,7 @@
 @section('content')
     @inject('mobile_detect', 'Mobile_Detect')
     @if ($mobile_detect->isMobile())
-        @can('User. Stand. Open table')
+        @can('Stand-Open stand table')
             <div>
                 {{--<div class="main-content pt-4">--}}
                 <h1 class="heading text-center font-weight-bold">{{ $stand->name }}</h1>
@@ -56,7 +56,7 @@
                                                 <th class='not-sortable'>Время</th>
                                                 <th>Возвещатель</th>
                                                 <th >Возвещатель</th>
-                                                @if(auth()->user()->can('User. can be recorded on stand'))
+                                                @if(auth()->user()->can('Stand-Entry in table'))
                                                     <th>Изменения</th>
                                                 @endif
                                                 <th class='sortable'>Отчет</th>
@@ -81,7 +81,7 @@
 
                                                     <th class="value2">
                                                         @empty($standPublisher){{--если не создана запись--}}
-                                                        @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                        @if(auth()->user()->can('Stand-Entry in table'))
                                                             @empty($standPublisher->user)
                                                                 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#NewRecordStand1{{$time}}{{$gwe}}{{$day}}{{$StandTemplate->id}}" data-id="new">
                                                                     Записаться
@@ -92,7 +92,7 @@
                                                         @endif
                                                         @else
                                                             @empty(($standPublisher->user)){{--если создана но нет 1 пользователя запись--}}
-                                                            @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                            @if(auth()->user()->can('Stand-Entry in table'))
                                                                 @empty($standPublisher->user)
                                                                     <button class="btn btn-success" type="button" data-toggle="modal" data-target="#record1{{$standPublisher->id }}" data-id="new">
                                                                         Записаться
@@ -162,7 +162,7 @@
                                                     <th class="value3">
                                                         <div class="align-items-center">
                                                             @empty($standPublisher){{--если не создана запись--}}
-                                                            @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                            @if(auth()->user()->can('Stand-Entry in table'))
                                                                 @empty($standPublisher->user)
                                                                     <button class="btn btn-success" type="button" data-toggle="modal" data-target="#NewRecordStand2{{$time}}{{$gwe}}{{$day}}{{$StandTemplate->id}}" data-id="new">
                                                                         Записаться
@@ -173,7 +173,7 @@
                                                             @endif
                                                             @else
                                                                 @empty(($standPublisher->user2)){{--если создана но нет 2 пользователя запись--}}
-                                                                @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                                @if(auth()->user()->can('Stand-Entry in table'))
                                                                     @empty($standPublisher->user2)
                                                                         <button class="btn btn-success" type="button" data-toggle="modal" data-target="#record2{{$standPublisher->id }}" data-id="new">
                                                                             Записаться
@@ -243,7 +243,7 @@
                                                     <th class="value4">
                                                         @if(empty($standPublisher) || is_null($standPublisher->user) && is_null($standPublisher->user2)){{--если не создана запись--}}
                                                         @else
-                                                            @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                            @if(auth()->user()->can('Stand-Entry in table'))
                                                                 <div class="align-items-center">
                                                                     <button class="btn btn-primary m-1" type="button" data-toggle="modal" data-target="#redaction{{$standPublisher->id }}" data-id="new">
                                                                         Изменить
@@ -362,7 +362,7 @@
                                                     <th class="value5">
                                                         @if(empty($standPublisher) || is_null($standPublisher->user) && is_null($standPublisher->user2)){{--если не создана запись--}}
                                                         @else
-                                                            @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                            @if(auth()->user()->can('Stand-Entry in table'))
                                                                 @if(empty($standPublisher) || is_null($standPublisher->user) && is_null($standPublisher->user2)
                                                                 || is_null($standPublisher->user) && $standPublisher->user2->id != auth()->id()
                                                                 || is_null($standPublisher->user2) && $standPublisher->user->id != auth()->id())
@@ -558,7 +558,7 @@
             </div>
         @endcan
     @else
-        @can('User. Stand. Open table')
+        @can('Stand-Open stand table')
             <div class="main-content pt-4">
             @role('Developer')
             <div>
@@ -617,7 +617,7 @@
                                             <th>Время</th>
                                             <th>Возвещатель</th>
                                             <th>Возвещатель</th>
-                                            @if(auth()->user()->can('User. Stand. Entry in table'))
+                                            @if(auth()->user()->can('Stand-Entry in table'))
                                                 <th>Изменения</th>
                                             @endif
                                             <th>Отчет</th>
@@ -640,7 +640,7 @@
 
                                             <th class="value2">
                                                 @empty($standPublisher){{--если не создана запись--}}
-                                                @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                @if(auth()->user()->can('Stand-Entry in table'))
                                                     @empty($standPublisher->user)
                                                         <button class="btn btn-success m-1" type="button" data-toggle="modal" data-target="#NewRecordStand1{{$time}}{{$gwe}}{{$day}}{{$StandTemplate->id}}" data-id="new">
                                                             Записаться
@@ -651,7 +651,7 @@
                                                 @endif
                                                 @else
                                                     @empty(($standPublisher->user)){{--если создана но нет 1 пользователя запись--}}
-                                                    @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                    @if(auth()->user()->can('Stand-Entry in table'))
                                                         @empty($standPublisher->user)
                                                             <button class="btn btn-success m-1" type="button" data-toggle="modal" data-target="#record1{{$standPublisher->id }}" data-id="new">
                                                                 Записаться
@@ -721,7 +721,7 @@
 
                                             <th class="value3">
                                                 @empty($standPublisher){{--если не создана запись--}}
-                                                @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                @if(auth()->user()->can('Stand-Entry in table'))
                                                     @empty($standPublisher->user)
 
                                                         <button class="btn btn-success m-1" type="button" data-toggle="modal" data-target="#NewRecordStand2{{$time}}{{$gwe}}{{$day}}{{$StandTemplate->id}}" data-id="new">
@@ -734,7 +734,7 @@
                                                 @endif
                                                 @else
                                                     @empty(($standPublisher->user2)){{--если создана но нет 2 пользователя запись--}}
-                                                    @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                    @if(auth()->user()->can('Stand-Entry in table'))
                                                         @empty($standPublisher->user2)
                                                             <button class="btn btn-success m-1" type="button" data-toggle="modal" data-target="#record2{{$standPublisher->id }}" data-id="new">
                                                                 Записаться
@@ -810,7 +810,7 @@
                                             <th class="value4">
                                                 @if(empty($standPublisher) || is_null($standPublisher->user) && is_null($standPublisher->user2)){{--если не создана запись--}}
                                                 @else
-                                                    @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                    @if(auth()->user()->can('Stand-Entry in table'))
                                                         <div class="align-items-center">
                                                             <button class="btn btn-primary m-1" type="button" data-toggle="modal" data-target="#redaction{{$standPublisher->id }}" data-id="new">
                                                                 Изменить
@@ -830,11 +830,12 @@
                                                                         <div class="card  mb-3">
                                                                             <div class="card-body">
                                                                                 <h5 class="heading">Первый возвещатель</h5>
-                                                                                @if (is_null($standPublisher->user_1))
+                                                                                @if(is_null($standPublisher->user_1))
                                                                                     <h6 class="heading">Нет записи чтобы изменить</h6>
-                                                                                @else                                                                  <div class="row mb-3 mb-sm-0">
+                                                                                @else
+                                                                                    <div class="row mb-3 mb-sm-0">
                                                                                     <div class="col-md-12">
-                                                                                        <form id="changeForm" method="post" action="{{ route('recordRedactionChange1', ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
+                                                                                        <form id="changeForm{{$standPublisher->id }}" method="post" action="{{ route('recordRedactionChange1', ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
                                                                                             @csrf
                                                                                             <select class="form-control form-control-rounded heading mb-4" name="1_user_id" id="1_user_id">
                                                                                                 @foreach ($users as $user)
@@ -858,7 +859,7 @@
                                                                                             </div>
                                                                                             <div class="col text-right mb-3 mb-sm-0">
                                                                                                 <a href="{{ route('recordRedactionChange1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}"      onclick="event.preventDefault();
-                                                            document.getElementById('changeForm').submit();">
+                                                            document.getElementById('changeForm{{$standPublisher->id }}').submit();">
                                                                                                     <button class="btn btn-success m-1" type="button" >
                                                                                                         Изменить запись
                                                                                                     </button>
@@ -878,7 +879,7 @@
                                                                                 @else
                                                                                     <div class="row mb-3 mb-sm-0">
                                                                                         <div class="col-md-12">
-                                                                                            <form id="changeForm2" method="post" action="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
+                                                                                            <form id="changeForm2{{$standPublisher->id }}" method="post" action="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
                                                                                                 @csrf
                                                                                                 <select class="form-control form-control-rounded heading mb-4" name="2_user_id" id="2_user_id">
                                                                                                     @foreach ($users as $user)
@@ -902,7 +903,7 @@
                                                                                                 </div>
                                                                                                 <div class="col text-right mb-3 mb-sm-0">
                                                                                                     <a href="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}" onclick="event.preventDefault();
-                                       document.getElementById('changeForm2').submit();">
+                                       document.getElementById('changeForm2{{$standPublisher->id }}').submit();">
                                                                                                         <button class="btn btn-success m-1" type="button" >
                                                                                                             Изменить запись
                                                                                                         </button>
@@ -929,7 +930,7 @@
                                             <th class="value5">
                                                 @if(empty($standPublisher) || is_null($standPublisher->user) && is_null($standPublisher->user2)){{--если не создана запись--}}
                                                 @else
-                                                    @if(auth()->user()->can('User. Stand. Entry in table'))
+                                                    @if(auth()->user()->can('Stand-Entry in table'))
                                                         @if(empty($standPublisher) || is_null($standPublisher->user) && is_null($standPublisher->user2)
                                                         || is_null($standPublisher->user) && $standPublisher->user2->id != auth()->id()
                                                         || is_null($standPublisher->user2) && $standPublisher->user->id != auth()->id())

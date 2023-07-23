@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="main-content pt-4">
-        @can('Manager. Stand. Create new stand')
+        @can('Stand-Create new stand')
             <div class="row">
                 <div class="col-md-3 mb-4 heading text-center mt-0">
                     <button class="btn btn-success btn-block" type="button" data-toggle="modal" data-target="#createNewStand">
@@ -13,8 +13,8 @@
             </div>
         @endcan
         <div class="separator-breadcrumb border-top"></div>
-        <div class="row">
-            @can('Publisher. Stand. Open table')
+        @can('Stand-Open stand table')
+            <div class="row">
                 @foreach($accessible_stands_for_the_user as $asfu)
                     <div class="col-md-3">
                         <div class="card card-body mb-4">
@@ -27,7 +27,7 @@
                                         {{ __('text.Open') }}</button>
                                 </a>
                             </div>
-                            @can('Manager. Stand. Open settings stand')
+                            @can('Stand-Open settings stand')
                                 <div class="text-right mb-2">
                                     <a href="{{ route('StandSettings', $asfu->id) }} ">
                                         <button class="btn btn-block btn-light text-20">
@@ -36,7 +36,7 @@
                                     </a>
                                 </div>
                             @endcan
-                            @can('Manager. Stand. Open history stand')
+                            @can('Stand-Open history stand')
                                 <div class="text-right mb-2">
                                     <a href="{{ route('history', $asfu->id) }} ">
                                         <button class="btn btn-block btn-light text-20">
@@ -48,10 +48,12 @@
                         </div>
                     </div>
                 @endforeach
-            @endcan
-        </div>
+
+            </div>
+        @endcan
     </div>
 
+    @can('Stand-Create new stand')
     <div class="modal fade" id="createNewStand" tabindex="-1" role="dialog" aria-labelledby="createNewStand-2" style="display: none;" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -110,5 +112,5 @@
             </div>
         </div>
     </div>
-
+    @endcan
 @endsection

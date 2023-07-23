@@ -24,10 +24,13 @@ class StandPublishers extends Model implements Auditable {
     protected $fillable = [
     'day',
     'time',
+    'date',
     'stand_template_id',
     'user_1',
     'user_2',
-    'date',
+    'user_3',
+    'user_4',
+
 ];
 
     /**
