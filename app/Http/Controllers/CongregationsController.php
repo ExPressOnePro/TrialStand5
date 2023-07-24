@@ -47,12 +47,8 @@ class CongregationsController extends Controller {
             }
         }
 
-
-
         $congregation = Congregation::find($id);
-        $manager = Role::where('slug', '=', 'Manager')->first();
         $Developer = Role::where('slug', '=', 'Developer')->first();
-        $managers_id = UsersRoles::where('role_id', $manager->id)->get();
         $Developers_id = UsersRoles::where('role_id', $Developer->id)->get();
         $permission_Overseers = Permission::where('name', 'like', 'Developer.User manager%')->get();
 
@@ -77,22 +73,6 @@ class CongregationsController extends Controller {
             }
         }
 
-
-        if($managers_id->isEmpty()) {
-            foreach ($Developers_id as $Developer_id) {
-                $managerCongregation = User::where('id', $Developer_id->user_id)
-                    ->where('congregation_id', $id)
-                    ->get();
-            }
-        }
-        else {
-            foreach ($managers_id as $manager_id) {
-                $managerCongregation = User::where('id', $manager_id->user_id)
-                    ->where('congregation_id', $id)
-                    ->get();
-            }
-        }
-
         $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
         $users = User::where('congregation_id', $id)->get();
         $AuthUser = User::find(Auth::id());
@@ -109,7 +89,6 @@ class CongregationsController extends Controller {
         if ($AuthUser->hasRole('Developer')){
             return view('congregation.main')
                 ->with(['congregation' => $congregation])
-                ->with(['managerCongregation' => $managerCongregation])
                 ->with(['congregationRequests' => $congregationRequests])
                 ->with(['congregationRequestsCount' => $congregationRequestsCount])
                 ->with(['users' => $users])
@@ -125,7 +104,6 @@ class CongregationsController extends Controller {
             if($AuthUser->congregation_id == $congregation->id) {
                 return view('congregation.main')
                     ->with(['congregation' => $congregation])
-                    ->with(['managerCongregation' => $managerCongregation])
                     ->with(['congregationRequests' => $congregationRequests])
                     ->with(['users' => $users])
                     ->with(['permission_stands' => $permission_stands])
@@ -137,6 +115,96 @@ class CongregationsController extends Controller {
         }
     }
 
+    public function groupView($congregation_id, $group_id) {
+
+        // Coutns
+        $countUsers = User::where('congregation_id', $congregation_id)->count();
+        $countGroups = Group::where('congregation_id', $congregation_id)->count();
+
+        $usersRoleOverseers = UsersRoles::where('role_id', 'Overseer')->get();
+
+        if ($usersRoleOverseers->isEmpty()) {
+            $countOverseers = '0';
+        }
+        else {
+            foreach ($usersRoleOverseers as $usersRoleOverseer) {
+                $countOverseers[] = User::where('congregation_id', $congregation_id)
+                    ->where('id', $usersRoleOverseers->user_id)
+                    ->count();
+            }
+        }
+
+        $congregation = Congregation::find($congregation_id);
+        $Developer = Role::where('slug', '=', 'Developer')->first();
+        $Developers_id = UsersRoles::where('role_id', $Developer->id)->get();
+        $permission_Overseers = Permission::where('name', 'like', 'Developer.User manager%')->get();
+
+
+        $group = Group::find($group_id);
+
+        /*foreach ($groups as $group) {
+            $users_groups[] = UsersGroups::with('User')->where('group_id', $group->id)->get();
+        }*/
+        $users_groups = UsersGroups::with('User')->where('group_id', $group_id)->get();
+
+        if($permission_Overseers->isEmpty()) {
+            $permission_Overseer = '0';
+        }
+        else {
+            foreach ($permission_Overseers as $permission_Oversee) {
+                $permission_Overseer[] = UsersPermissions::with('User')
+                    ->where('permission_id', $permission_Oversee->id)
+                    ->get();
+            }
+        }
+
+        $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
+        foreach ($users_groups as $user_group) {
+            $users[] = User::with('personalReport.user')->where('id', $user_group->user_id)->get();
+        }
+        $AuthUser = User::find(Auth::id());
+
+
+        $congregationRequests = CongregationRequests::with('user')
+            ->where('congregation_id', $congregation_id)
+            ->get();
+
+        $congregationRequestsCount = CongregationRequests::with('user')
+            ->where('congregation_id', $congregation_id)
+            ->count();
+
+        if ($AuthUser->hasRole('Developer')){
+            return view('congregation.group')
+                ->with(['congregation' => $congregation])
+                ->with(['congregationRequests' => $congregationRequests])
+                ->with(['congregationRequestsCount' => $congregationRequestsCount])
+                ->with(['users' => $users])
+                ->with(['permission_stands' => $permission_stands])
+                ->with(['permission_Overseer' => $permission_Overseer])
+                ->with(['group' => $group])
+                ->with(['countGroups' => $countGroups])
+                ->with(['countOverseers' => $countOverseers])
+                ->with(['countUsers' => $countUsers]);
+        }
+        else{
+            if($AuthUser->congregation_id == $congregation->id) {
+                return view('congregation.group')
+                    ->with(['congregation' => $congregation])
+                    ->with(['congregationRequests' => $congregationRequests])
+                    ->with(['congregationRequestsCount' => $congregationRequestsCount])
+                    ->with(['users' => $users])
+                    ->with(['permission_stands' => $permission_stands])
+                    ->with(['permission_Overseer' => $permission_Overseer])
+                    ->with(['group' => $group])
+                    ->with(['countGroups' => $countGroups])
+                    ->with(['countOverseers' => $countOverseers])
+                    ->with(['countUsers' => $countUsers]);
+            }
+            else{
+                return view('errors.423Locked');
+            }
+        }
+    }
     public function allow($id, $user_id) {
 
        /* Gate::define('menage-users', function ($id, $user_id) {*/

@@ -48,8 +48,11 @@
                                     <h4 class="m-0">{{$group->name}}</h4>
                                         <p class="m-0 text-small text-muted">Ответственный: {{$group->responsibleUserId->first_name }} {{$group->responsibleUserId->last_name }}</p>
                                 </div>
+
                                 <div>
-                                    <button class="btn btn-outline-primary">Просмотреть детальнее</button>
+                                    <a href="{{ route('groupView', ['congregation_id' => $congregation->id, 'group_id' => $group->id]) }}">
+                                        <button class="btn btn-outline-primary">Просмотреть детальнее</button>
+                                    </a>
                                 </div>
                             </div>
                         @endforeach

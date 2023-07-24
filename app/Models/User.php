@@ -91,7 +91,7 @@ class User extends Authenticatable implements Auditable {
         return $this->hasMany(UsersGroups::class, 'user_id', 'id');
     }
 
-    public function PersonalReport() {
+    public function personalReport() {
         return $this->hasMany(PersonalReport::class, 'user_id', 'id');
     }
 
