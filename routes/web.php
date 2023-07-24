@@ -48,7 +48,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/nextWeek/{id}', [StandController::class, 'nextWeekTable'])->name('nextWeekTable');
         Route::post('/report/{id}', [StandController::class, 'standReportSend'])->name('standReportSend');
 
-
         Route::get('/', [StandController::class, 'allstands'])->name('stand');
         Route::get('/history/{id}', [StandController::class, 'history'])->name('history');
         Route::post('/NewRecordStand1', [StandController::class, 'NewRecordStand1'])->name('NewRecordStand1');
@@ -89,8 +88,9 @@ Route::group(['middleware' => 'auth'], function() {
             'prefix' => 'congregation',
         ], function () {
         Route::get('/{id}', [CongregationsController::class, 'view'])->name('congregationView');
-        Route::get('/{id}/{user_id}', [CongregationsController::class, 'allow'])->name('congregationAllow');
-        Route::get('/{id}/{conReq}', [CongregationsController::class, 'reject'])->name('congregationReject');
+        Route::get('/congregation{id}/User{user_id}', [CongregationsController::class, 'allow'])->name('congregationAllow');
+        Route::get('/congregation{id}/congregationRequest{conReq}', [CongregationsController::class, 'reject'])->name('congregationReject');
+        Route::get('/{congregation_id}/group{group_id}', [CongregationsController::class, 'groupView'])->name('groupView');
     });
 
 
@@ -121,7 +121,7 @@ Route::group([
     Route::get('/', [UsersController::class, 'allUsersPage'])->name('users');
     Route::get('/card/{id}', [UsersController::class, 'userCard'])->name('userCard');
     Route::post('/card/{id}', [UsersController::class, 'roleAllow'])->name('roleAllow');
-    Route::post('/card/{id}/delete', [UsersController::class, 'roleDelete'])->name('roleDelete');
+    Route::post('/card/{id}/roledelete', [UsersController::class, 'roleDelete'])->name('roleDelete');
 });
 
 Route::group([

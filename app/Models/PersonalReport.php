@@ -20,7 +20,7 @@ class PersonalReport extends Model
         'bible_studies',
     ];
 
-    public function User() {
-        return $this->belongsTo(User::class, 'id', 'user_id');
+    public function user() {
+        return $this->hasMany(User::class, 'id', 'user_id');
     }
 }
