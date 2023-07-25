@@ -48,12 +48,15 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/nextWeek/{id}', [StandController::class, 'nextWeekTable'])->name('nextWeekTable');
         Route::post('/report/{id}', [StandController::class, 'standReportSend'])->name('standReportSend');
 
+        Route::get('/stand/redaction/{id}', 'App\Http\Controllers\StandController@recordRedactionPage')->name('recordRedactionPage');
+
+        Route::get('/redaction/{id}/{stand}', [StandController::class, 'recordRedactionDelete2'])->name('recordRedactionDelete2');
         Route::get('/', [StandController::class, 'allstands'])->name('stand');
         Route::get('/history/{id}', [StandController::class, 'history'])->name('history');
         Route::post('/NewRecordStand1', [StandController::class, 'NewRecordStand1'])->name('NewRecordStand1');
         Route::post('/NewRecordStand2', [StandController::class, 'NewRecordStand2'])->name('NewRecordStand2');
-        Route::post('/record1/{id}', [StandController::class, 'AddPublisherToStand1'])->name('AddPublisherToStand1');
-        Route::post('/record2/{id}', [StandController::class, 'AddPublisherToStand2'])->name('AddPublisherToStand2');
+        Route::post('/record1', [StandController::class, 'AddPublisherToStand1'])->name('AddPublisherToStand1');
+        Route::post('/record2', [StandController::class, 'AddPublisherToStand2'])->name('AddPublisherToStand2');
     });
 
 
@@ -125,7 +128,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'can:Manager. Stand. Create new stand',
+    'middleware' => 'can:Stand-Create new stand',
     'prefix' => 'stand',
 ], function () {
     Route::post('/timeActivation/{id}', [StandController::class, 'timeActivation'])->name('timeActivation');

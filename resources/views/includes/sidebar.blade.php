@@ -27,7 +27,7 @@
 
                         {{--Users--}}
                         @if(auth()->user()->hasRole('Developer'))
-                            @can('Users-Open all userss')
+                            @can('Users-Open all users')
                                 <li class="Ul_li--hover">
                                     <a href="{{ route('users') }}">
                                         <i class="text-20 mr-2 text-muted"></i>

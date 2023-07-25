@@ -27,12 +27,7 @@
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/metisMenu.min.css') }}">
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/toastr.css') }}">
-    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/datatables.min.css') }}">
 
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.3/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.3/js/bootstrap.min.js"></script>
 
     <!-- Scripts -->
     <script
@@ -47,9 +42,8 @@
     <body class="text-left">
     @inject('mobile_detect', 'Mobile_Detect')
     @if ($mobile_detect->isMobile())
-        <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
-            @include('includes.header')
-            <div class="main-content-wrap mobile-menu-content bg-off-white m-0">
+        {{--<div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
+            <div class="main-content-wrap mobile-menu-content bg-off-white m-0">--}}
                 @if(Request::is(
                     'profile*',
                     'UserControl*',
@@ -58,14 +52,12 @@
                     'stand*',
                     'home*',
                     'congregation*',
-                    'guest*',
-                    'RolesPermissions*'
+                    'guest*'
                     ))
                     @yield('content')
-                    @include('includes.menuBarPhone')
                 @endif
-            </div>
-        </div>
+            {{--</div>
+        </div>--}}
     @elseif ($mobile_detect->isTablet())
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             @if(Request::is(
@@ -111,27 +103,25 @@
         </div>
     @endif
     </body>
-    @include('includes.footer')
 </main>
-    <!--Scripts-->
+<!--Scripts-->
 
 
-    <!-- Required vendors -->
-    <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
-    <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
-    <script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="../../dist-assets/js/scripts/tooltip.script.min.js"></script>
-    <script src="../../dist-assets/js/scripts/script.min.js"></script>
-    <script src="../../dist-assets/js/scripts/script_2.min.js"></script>
-    <script src="../../dist-assets/js/scripts/sidebar.large.script.min.js"></script>
-    <script src="../../dist-assets/js/plugins/feather.min.js"></script>
-    <script src="../../dist-assets/js/plugins/metisMenu.min.js"></script>
-    <script src="../../dist-assets/js/scripts/layout-sidebar-vertical.min.js"></script>
-    <script src="../../dist-assets/js/custom/actionbutton.js"></script>
-    <script src="../../dist-../../dist-assets/js/scripts/tooltip.script.min.js"></script>
-    <script src="../../dist-assets/js/custom/nav.js"></script>
-    <script src="../../dist-assets/js/plugins/datatables.min.js"></script>
-    <script src="../../dist-assets/js/scripts/datatables.script.min.js"></script>
+<!-- Required vendors -->
+<script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+<script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+<script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../../dist-assets/js/scripts/tooltip.script.min.js"></script>
+<script src="../../dist-assets/js/scripts/script.min.js"></script>
+<script src="../../dist-assets/js/scripts/script_2.min.js"></script>
+<script src="../../dist-assets/js/scripts/sidebar.large.script.min.js"></script>
+<script src="../../dist-assets/js/plugins/feather.min.js"></script>
+<script src="../../dist-assets/js/plugins/metisMenu.min.js"></script>
+<script src="../../dist-assets/js/scripts/layout-sidebar-vertical.min.js"></script>
+<script src="../../dist-assets/js/custom/actionbutton.js"></script>
+<script src="../../dist-../../dist-assets/js/scripts/tooltip.script.min.js"></script>
+<script src="../../dist-assets/js/custom/nav.js"></script>
+
 </body>
 
 </html>

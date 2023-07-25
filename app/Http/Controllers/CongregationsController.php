@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\UsersGroups;
 use App\Models\UsersPermissions;
 use App\Models\UsersRoles;
+use Detection\MobileDetect;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,9 +24,14 @@ class CongregationsController extends Controller {
     public function select() {
         $congregation = Congregation::where('id', '>', 1)->get();
 
-        return view('congregation.select')->with([
-            'congregation' => $congregation,
-        ]);
+        $mobile_detect = new MobileDetect();
+        if ($mobile_detect->isMobile()) {
+            return view('Mobile.congregation.select')
+                ->with(['congregation' => $congregation,]);
+        } else {
+            return view('Desktop.congregation.select')
+                ->with(['congregation' => $congregation,]);
+        }
     }
 
     public function view($id) {
@@ -86,32 +92,53 @@ class CongregationsController extends Controller {
             ->where('congregation_id', $id)
             ->count();
 
-        if ($AuthUser->hasRole('Developer')){
-            return view('congregation.main')
-                ->with(['congregation' => $congregation])
-                ->with(['congregationRequests' => $congregationRequests])
-                ->with(['congregationRequestsCount' => $congregationRequestsCount])
-                ->with(['users' => $users])
-                ->with(['permission_stands' => $permission_stands])
-                ->with(['permission_Overseer' => $permission_Overseer])
-                ->with(['groups' => $groups])
-                ->with(['users_groups' => $users_groups])
-                ->with(['countGroups' => $countGroups])
-                ->with(['countOverseers' => $countOverseers])
-                ->with(['countUsers' => $countUsers]);
-        }
-        else{
-            if($AuthUser->congregation_id == $congregation->id) {
-                return view('congregation.main')
+        $mobile_detect = new MobileDetect();
+        if ($AuthUser->hasRole('Developer')) {
+            if ($mobile_detect->isMobile()) {
+                return view('Mobile.congregation.main')
+                    ->with(['congregation' => $congregation])
+                    ->with(['congregationRequests' => $congregationRequests])
+                    ->with(['congregationRequestsCount' => $congregationRequestsCount])
+                    ->with(['users' => $users])
+                    ->with(['permission_stands' => $permission_stands])
+                    ->with(['permission_Overseer' => $permission_Overseer])
+                    ->with(['groups' => $groups])
+                    ->with(['users_groups' => $users_groups])
+                    ->with(['countGroups' => $countGroups])
+                    ->with(['countOverseers' => $countOverseers])
+                    ->with(['countUsers' => $countUsers]);
+            } else {
+                return view('Desktop.congregation.main')
+                    ->with(['congregation' => $congregation])
+                    ->with(['congregationRequests' => $congregationRequests])
+                    ->with(['congregationRequestsCount' => $congregationRequestsCount])
+                    ->with(['users' => $users])
+                    ->with(['permission_stands' => $permission_stands])
+                    ->with(['permission_Overseer' => $permission_Overseer])
+                    ->with(['groups' => $groups])
+                    ->with(['users_groups' => $users_groups])
+                    ->with(['countGroups' => $countGroups])
+                    ->with(['countOverseers' => $countOverseers])
+                    ->with(['countUsers' => $countUsers]);
+            }
+        } elseif ($AuthUser->congregation_id == $congregation->id) {
+            if ($mobile_detect->isMobile()) {
+                return view('Mobile.congregation.main')
+                    ->with(['congregation' => $congregation])
+                    ->with(['congregationRequests' => $congregationRequests])
+                    ->with(['users' => $users])
+                    ->with(['permission_stands' => $permission_stands])
+                    ->with(['countUsers' => $countUsers]);
+            } else {
+                return view('Desktop.congregation.main')
                     ->with(['congregation' => $congregation])
                     ->with(['congregationRequests' => $congregationRequests])
                     ->with(['users' => $users])
                     ->with(['permission_stands' => $permission_stands])
                     ->with(['countUsers' => $countUsers]);
             }
-            else{
-                return view('errors.423Locked');
-            }
+        } else {
+            return view('errors.423Locked');
         }
     }
 
@@ -142,9 +169,6 @@ class CongregationsController extends Controller {
 
         $group = Group::find($group_id);
 
-        /*foreach ($groups as $group) {
-            $users_groups[] = UsersGroups::with('User')->where('group_id', $group->id)->get();
-        }*/
         $users_groups = UsersGroups::with('User')->where('group_id', $group_id)->get();
 
         if($permission_Overseers->isEmpty()) {
@@ -158,7 +182,7 @@ class CongregationsController extends Controller {
             }
         }
 
-        $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
+        $permission_stands = Permission::where('name','like', 'Stand%')->get();
         foreach ($users_groups as $user_group) {
             $users[] = User::with('personalReport.user')->where('id', $user_group->user_id)->get();
         }
@@ -173,8 +197,10 @@ class CongregationsController extends Controller {
             ->where('congregation_id', $congregation_id)
             ->count();
 
+        $mobile_detect = new MobileDetect();
         if ($AuthUser->hasRole('Developer')){
-            return view('congregation.group')
+            if ($mobile_detect->isMobile()) {
+                return view('Mobile.congregation.group')
                 ->with(['congregation' => $congregation])
                 ->with(['congregationRequests' => $congregationRequests])
                 ->with(['congregationRequestsCount' => $congregationRequestsCount])
@@ -185,6 +211,19 @@ class CongregationsController extends Controller {
                 ->with(['countGroups' => $countGroups])
                 ->with(['countOverseers' => $countOverseers])
                 ->with(['countUsers' => $countUsers]);
+            }else {
+                return view('Desktop.congregation.group')
+                    ->with(['congregation' => $congregation])
+                    ->with(['congregationRequests' => $congregationRequests])
+                    ->with(['congregationRequestsCount' => $congregationRequestsCount])
+                    ->with(['users' => $users])
+                    ->with(['permission_stands' => $permission_stands])
+                    ->with(['permission_Overseer' => $permission_Overseer])
+                    ->with(['group' => $group])
+                    ->with(['countGroups' => $countGroups])
+                    ->with(['countOverseers' => $countOverseers])
+                    ->with(['countUsers' => $countUsers]);
+            }
         }
         else{
             if($AuthUser->congregation_id == $congregation->id) {
