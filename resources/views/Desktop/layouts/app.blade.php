@@ -30,9 +30,6 @@
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/datatables.min.css') }}">
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.3/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.3/js/bootstrap.min.js"></script>
 
     <!-- Scripts -->
     <script

@@ -32,11 +32,32 @@
 </head>
 <main>
     <body class="text-left" style="overflow: hidden">
+    @inject('mobile_detect', 'Mobile_Detect')
+    @if ($mobile_detect->isMobile())
+        <div class="app-admin-wrap">
+            <div class="main-content-wrap">
+                <div id="install-app" style="display: none;"></div>
+                @include('register-sw')
+                @if(Request::is(
+                        '/',
+                        'login',
+                        'registration'
+                        ))
+                    @yield('content')
+                @endif
+            </div>
+        </div>
+    @elseif ($mobile_detect->isTablet())
+        <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
+            @yield('content')
+        </div>
+    @else
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             <div>
             </div>
             @yield('content')
         </div>
+    @endif
     </body>
     <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
     <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>

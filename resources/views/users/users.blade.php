@@ -1,34 +1,7 @@
 @extends('layouts.app')
 @section('title')Stand | @endsection
 @section('content')
-    @can('Manager.User manager')
-        {{--@foreach($users as $user)
-            <tr role="row" class="odd">
-                <td class="sorting_1">
-                    <a href="{{ route('userCard', $user->id) }}">
-                        <div class="ul-widget-app__profile-pic">{{ $user->first_name }} {{ $user->last_name }}</div>
-                    </a>
-                </td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->mobile_phone }}</td>
-                <td>
-                    @foreach($user->usersroles as $userRole)
-                        @if($userRole->role->name === 'Developer')
-                            <a class="badge badge-danger" href="#">{{ $userRole->role->name }}</a>
-                        @else
-                            <a class="badge badge-light" href="#">{{ $userRole->role->name }}</a>
-                        @endif
-                    @endforeach
-                </td>
-                <td>{{ $user->address }}</td>
-                <td>{{ $user->groups }}</td>
-
-                <td>
-                    <a class="ul-link-action text-success" href="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="i-Edit"></i></a>
-                    <a class="ul-link-action text-danger mr-1" href="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Want To Delete !!!"><i class="i-Eraser-2"></i></a>
-                </td>
-            </tr>
-        @endforeach--}}
+    @can('Users-Open congregation users')
         <div class="main-content pt-4">
             <div class="row mb-4">
                 <div class="col-md-12 mb-4">
