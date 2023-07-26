@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('Mobile.layouts.app')
 @section('title') Meeper | Таблица @endsection
 @section('content')
     @can('Stand-Open stand table')
@@ -51,15 +51,15 @@
                                 <div class="table-responsive">
                                     <table class='table table-sm'>
                                         <thead class="align-items-center text-center">
-                                        <tr>
-                                            <th class='not-sortable'>Время</th>
-                                            <th>Возвещатель</th>
-                                            <th >Возвещатель</th>
-                                            @if(auth()->user()->can('Stand-Entry in table'))
-                                                <th>Изменения</th>
-                                            @endif
-                                            <th class='sortable'>Отчет</th>
-                                        </tr>
+                                            <tr>
+                                                <th class='not-sortable'>Время</th>
+                                                <th>Возвещатель</th>
+                                                <th >Возвещатель</th>
+                                                @if(auth()->user()->can('Stand-Entry in table'))
+                                                    <th>Изменения</th>
+                                                @endif
+                                                <th class='sortable'>Отчет</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                         @foreach ($times as $time)
@@ -172,122 +172,14 @@
                                                     </div>
                                                 </th>
 
-
                                                 <th class="value4">
-                                                    @if(empty($standPublisher) || is_null($standPublisher->user) && is_null($standPublisher->user2)){{--если не создана запись--}}
+                                                    @if(empty($standPublisher) || is_null( $standPublisher->user) && is_null( $standPublisher->user2)){{--если не создана запись--}}
                                                     @else
                                                         @if(auth()->user()->can('Stand-Entry in table'))
                                                             <a href="{{ route('recordRedactionPage',['id' => $standPublisher->id]) }}">
-                                                                <button class="btn btn-primary m-1" type="button">
+                                                                <button class="btn btn-primary" type="button">
                                                                     Изменить</button>
                                                             </a>
-
-                                                            <div class="modal fade" id="redaction{{$standPublisher->id }}" tabindex="-1" role="dialog" aria-labelledby="record1" style="display: none;" aria-hidden="true">
-                                                                <div class="modal-dialog" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="record1">Запись для стенда {{ $stand->name }} № {{$standPublisher->id }}</h5>
-                                                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">×</span>
-                                                                            </button>
-                                                                        </div>
-
-                                                                        <div class="modal-body">
-                                                                            <div class="card  mb-3">
-                                                                                <div class="card-body">
-                                                                                    <h5 class="heading">Первый возвещатель</h5>
-                                                                                    @if (is_null($standPublisher->user_1))
-                                                                                        <h6 class="heading">Нет записи чтобы изменить</h6>
-                                                                                    @else                                                                 <div class="row mb-3 mb-sm-0">
-                                                                                        <div class="col-md-12">
-                                                                                            <form id="changeForm" method="post" action="{{ route('recordRedactionChange1', ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
-                                                                                                @csrf
-                                                                                                <select class="form-control form-control-rounded heading mb-4" name="1_user_id" id="1_user_id">
-                                                                                                    @foreach ($users as $user)
-                                                                                                        @if ($standPublisher->user_1 == $user->id)
-                                                                                                            <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>
-                                                                                                        @else
-                                                                                                            <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
-                                                                                                        @endif
-                                                                                                    @endforeach
-                                                                                                </select>
-                                                                                            </form>
-                                                                                        </div>
-                                                                                        <div class="col-md-12">
-                                                                                            <div class="row">
-                                                                                                <div class="col text-left mb-3 mb-sm-0">
-                                                                                                    <a href="{{ route('recordRedactionDelete1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
-                                                                                                        <button class="btn btn-danger m-1" type="button" >
-                                                                                                            Выписать(ся)
-                                                                                                        </button>
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                                <div class="col text-right mb-3 mb-sm-0">
-                                                                                                    <a href="{{ route('recordRedactionChange1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
-                                                                                                       onclick="event.preventDefault();
-                                                                                                       document.getElementById('changeForm').submit();">
-                                                                                                        <button class="btn btn-success m-1" type="button" >
-                                                                                                            Изменить запись
-                                                                                                        </button>
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    @endif
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="card  mb-3">
-                                                                                <div class="card-body">
-                                                                                    <h5 class="heading">Второй возвещатель</h5>
-                                                                                    @if (is_null($standPublisher->user_2))
-                                                                                        <h6 class="heading">Нет записи чтобы изменить</h6>
-                                                                                    @else
-                                                                                        <div class="row mb-3 mb-sm-0">
-                                                                                            <div class="col-md-12">
-                                                                                                <form id="changeForm2" method="post" action="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
-                                                                                                    @csrf
-                                                                                                    <select class="form-control form-control-rounded heading mb-4" name="2_user_id" id="2_user_id">
-                                                                                                        @foreach ($users as $user)
-                                                                                                            @if ($standPublisher->user_2 == $user->id)
-                                                                                                                <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>
-                                                                                                            @else
-                                                                                                                <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
-                                                                                                            @endif
-                                                                                                        @endforeach
-                                                                                                    </select>
-                                                                                                </form>
-                                                                                            </div>
-                                                                                            <div class="col-md-12">
-                                                                                                <div class="row">
-                                                                                                    <div class="col text-left mb-3 mb-sm-0">
-                                                                                                        <a href="{{ route('recordRedactionDelete2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
-                                                                                                            <button class="btn btn-danger m-1" type="button" >
-                                                                                                                Выписать(ся)
-                                                                                                            </button>
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                    <div class="col text-right mb-3 mb-sm-0">
-                                                                                                        <a href="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}" onclick="event.preventDefault();
-                                                                                                        document.getElementById('changeForm2').submit();">
-                                                                                                            <button class="btn btn-success m-1" type="button" >
-                                                                                                                Изменить запись
-                                                                                                            </button>
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    @endif
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button class="btn btn-secondary" type="submit" data-dismiss="modal">Закрыть</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div
                                                         @else
                                                         @endif
                                                     @endif
@@ -446,6 +338,53 @@
                 </div>
             </div>
         </div>
+        <div class="modal" id="updateModal1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="record1">Запись для стенда {{ $stand->name }} № <span id="updateModal_1_standPublishers_id"></span></h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="form_update_record_1" method="post" action="{{ route('AddPublisherToStand1') }}">
+                            @csrf
+                            <input type="hidden" id="updateModal_1_Value_standPublishers_id" name="updateModal_1_Value_standPublishers_id">
+
+                            <p class="text-20 text-success text-left font-weight-bold line-height-1 mb-5">
+                                Дата: <span id="updateModal_1_gwe"></span><br>
+                                Время: <span id="updateModal_1_time"></span>
+                            </p>
+                            <small class="text-muted"></small>
+                            <div class="row mb-5">
+                                <div class="col-md-12 mb-3 mb-sm-0">
+                                    <h5 class="font-weight-bold text-center">Первый возвещатель</h5>
+                                    <select class="form-control form-control-rounded" name="user_1" id="user_1">
+                                        @foreach ($users as $user)
+                                            @if (auth()->user()->id == $user->id)
+                                                <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>
+                                            @else
+                                                <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="submit" data-dismiss="modal">Закрыть</button>
+                        <a class="btn btn-success" type="button" href="{{ route('AddPublisherToStand1') }}"
+                           onclick="event.preventDefault();
+                           document.getElementById('form_update_record_1').submit();">
+                            Записать
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal" id="createModal2">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -490,53 +429,6 @@
                         <a class="btn btn-success" type="button" href="{{ route('NewRecordStand2') }}"
                            onclick="event.preventDefault();
                            document.getElementById('NewRecordStand2').submit();">
-                            Записать
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal" id="updateModal1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="record1">Запись для стенда {{ $stand->name }} № <span id="updateModal_1_standPublishers_id"></span></h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <form id="form_update_record_1" method="post" action="{{ route('AddPublisherToStand1') }}">
-                            @csrf
-                            <input type="hidden" id="updateModal_1_Value_standPublishers_id" name="updateModal_1_Value_standPublishers_id">
-
-                            <p class="text-20 text-success text-left font-weight-bold line-height-1 mb-5">
-                                Дата: <span id="updateModal_1_gwe"></span><br>
-                                Время: <span id="updateModal_1_time"></span>
-                            </p>
-                            <small class="text-muted"></small>
-                            <div class="row mb-5">
-                                <div class="col-md-12 mb-3 mb-sm-0">
-                                    <h5 class="font-weight-bold text-center">Первый возвещатель</h5>
-                                    <select class="form-control form-control-rounded" name="user_1" id="user_1">
-                                        @foreach ($users as $user)
-                                            @if (auth()->user()->id == $user->id)
-                                                <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>
-                                            @else
-                                                <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="submit" data-dismiss="modal">Закрыть</button>
-                        <a class="btn btn-success" type="button" href="{{ route('AddPublisherToStand1') }}"
-                           onclick="event.preventDefault();
-                           document.getElementById('form_update_record_1').submit();">
                             Записать
                         </a>
                     </div>
@@ -590,7 +482,120 @@
                 </div>
             </div>
         </div>
+
+{{--        <div class="modal" id="redactModal{{ $stPublId }}">--}}
+{{--            <div class="modal-dialog">--}}
+{{--                <div class="modal-content">--}}
+{{--                    <div class="modal-header">--}}
+{{--                        <h5 class="modal-title" id="record1">Запись для стенда {{ $stand->name }} № <span id="redactModal_stand_publisher_id"></span></h5>--}}
+{{--                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">--}}
+{{--                            <span aria-hidden="true">×</span>--}}
+{{--                        </button>--}}
+{{--                    </div>--}}
+
+{{--                    <div class="modal-body">--}}
+{{--                        <div class="card  mb-3">--}}
+{{--                            <div class="card-body">--}}
+{{--                                <h5 class="heading">Первый возвещатель</h5>--}}
+{{--                                @if(is_null($velf1))--}}
+{{--                                    <h6 class="heading">Нет записи чтобы изменить</h6>--}}
+{{--                                @else--}}
+{{--                                    <div class="row mb-3 mb-sm-0">--}}
+{{--                                        <div class="col-md-12">--}}
+{{--                                            <form id="changeForm" method="post" action="">--}}
+{{--                                                @csrf--}}
+{{--                                                <select class="form-control form-control-rounded heading mb-4" name="1_user_id" id="1_user_id">--}}
+{{--                                                    @foreach ($users as $user)--}}
+{{--                                                        @if ( $velf1 == $user->id)--}}
+{{--                                                            <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>--}}
+{{--                                                        @else--}}
+{{--                                                            <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>--}}
+{{--                                                        @endif--}}
+{{--                                                    @endforeach--}}
+{{--                                                </select>--}}
+{{--                                            </form>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-12">--}}
+{{--                                            --}}{{--                                            <div class="row">--}}
+{{--                                            --}}{{--                                                <div class="col text-left mb-3 mb-sm-0">--}}
+{{--                                            --}}{{--                                                    <a href="{{ route('recordRedactionDelete1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">--}}
+{{--                                            --}}{{--                                                        <button class="btn btn-danger m-1" type="button" >--}}
+{{--                                            --}}{{--                                                            Выписать(ся)--}}
+{{--                                            --}}{{--                                                        </button>--}}
+{{--                                            --}}{{--                                                    </a>--}}
+{{--                                            --}}{{--                                                </div>--}}
+{{--                                            --}}{{--                                                <div class="col text-right mb-3 mb-sm-0">--}}
+{{--                                            --}}{{--                                                    <a href="{{ route('recordRedactionChange1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}"      onclick="event.preventDefault();--}}
+{{--                                            --}}{{--                                                                                                                            document.getElementById('changeForm{{$standPublisher->id }}').submit();">--}}
+{{--                                            --}}{{--                                                        <button class="btn btn-success m-1" type="button" >--}}
+{{--                                            --}}{{--                                                            Изменить запись--}}
+{{--                                            --}}{{--                                                        </button>--}}
+{{--                                            --}}{{--                                                    </a>--}}
+{{--                                            --}}{{--                                                </div>--}}
+{{--                                            --}}{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                @endif--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="card  mb-3">--}}
+{{--                            <div class="card-body">--}}
+{{--                                <h5 class="heading">Второй возвещатель</h5>--}}
+{{--                                @if (is_null($velf2))--}}
+{{--                                    <h6 class="heading">Нет записи чтобы изменить</h6>--}}
+{{--                                @else--}}
+{{--                                    <div class="row mb-3 mb-sm-0">--}}
+{{--                                        <div class="col-md-12">--}}
+{{--                                            <form id="changeForm2" method="post" action="">--}}
+{{--                                                @csrf--}}
+{{--                                                <select class="form-control form-control-rounded heading mb-4" name="2_user_id" id="2_user_id">--}}
+{{--                                                    @foreach ($users as $user)--}}
+{{--                                                        @if ($velf2 == $user->id)--}}
+{{--                                                            <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>--}}
+{{--                                                        @else--}}
+{{--                                                            <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>--}}
+{{--                                                        @endif--}}
+{{--                                                    @endforeach--}}
+{{--                                                </select>--}}
+{{--                                            </form>--}}
+{{--                                        </div>--}}
+{{--                                        --}}{{--                                        <div class="col-md-12">--}}
+{{--                                        --}}{{--                                            <div class="row">--}}
+{{--                                        --}}{{--                                                <div class="col text-left mb-3 mb-sm-0">--}}
+{{--                                        --}}{{--                                                    <a href="{{ route('recordRedactionDelete2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">--}}
+{{--                                        --}}{{--                                                        <button class="btn btn-danger m-1" type="button" >--}}
+{{--                                        --}}{{--                                                            Выписать(ся)--}}
+{{--                                        --}}{{--                                                        </button>--}}
+{{--                                        --}}{{--                                                    </a>--}}
+{{--                                        --}}{{--                                                </div>--}}
+{{--                                        --}}{{--                                                <div class="col text-right mb-3 mb-sm-0">--}}
+{{--                                        --}}{{--                                                    <a href="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}" onclick="event.preventDefault();--}}
+{{--                                        --}}{{--                                                                                                                            document.getElementById('changeForm2{{$standPublisher->id }}').submit();">--}}
+{{--                                        --}}{{--                                                        <button class="btn btn-success m-1" type="button" >--}}
+{{--                                        --}}{{--                                                            Изменить запись--}}
+{{--                                        --}}{{--                                                        </button>--}}
+{{--                                        --}}{{--                                                    </a>--}}
+{{--                                        --}}{{--                                                </div>--}}
+{{--                                        --}}{{--                                            </div>--}}
+{{--                                        --}}{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                @endif--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+{{--                    </div>--}}
+{{--                    <div class="modal-footer">--}}
+{{--                        <button class="btn btn-secondary" type="submit" data-dismiss="modal">Закрыть</button>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+
         <script>
+            function callNumber(phoneNumber) {
+                window.location.href = 'tel:' + phoneNumber;
+            }
+
             $(document).ready(function() {
                 $('.create_record1').click(function(event) {
                     event.preventDefault();
@@ -615,36 +620,7 @@
                     $('#createModal1').modal('show');
                 });
             });
-        </script>
 
-        <script>
-            $(document).ready(function() {
-                $('.create_record2').click(function(event) {
-                    event.preventDefault();
-                    // Получение данных из атрибутов кнопки
-                    var id = $(this).data('id');
-                    var time = $(this).data('time');
-                    var gwe = $(this).data('gwe');
-                    var day = $(this).data('day');
-
-                    // Отображение данных в модальном окне
-                    $('#stand_template_id2').text(id);
-                    $('#time2').text(time);
-                    $('#gwe2').text(gwe);
-                    $('#day2').text(day);
-
-                    $('#Valuestand_template_id2').val(id);
-                    $('#Valuetime2').val(time);
-                    $('#Valuegwe2').val(gwe);
-                    $('#Valueday2').val(day);
-
-                    // Открытие модального окна
-                    $('#createModal2').modal('show');
-                });
-            });
-        </script>
-
-        <script>
             $(document).ready(function() {
                 $('.update_record1').click(function(event) {
                     event.preventDefault();
@@ -674,9 +650,32 @@
                     $('#updateModal1').modal('show');
                 });
             });
-        </script>
 
-        <script>
+            $(document).ready(function() {
+                $('.create_record2').click(function(event) {
+                    event.preventDefault();
+                    // Получение данных из атрибутов кнопки
+                    var id = $(this).data('id');
+                    var time = $(this).data('time');
+                    var gwe = $(this).data('gwe');
+                    var day = $(this).data('day');
+
+                    // Отображение данных в модальном окне
+                    $('#stand_template_id2').text(id);
+                    $('#time2').text(time);
+                    $('#gwe2').text(gwe);
+                    $('#day2').text(day);
+
+                    $('#Valuestand_template_id2').val(id);
+                    $('#Valuetime2').val(time);
+                    $('#Valuegwe2').val(gwe);
+                    $('#Valueday2').val(day);
+
+                    // Открытие модального окна
+                    $('#createModal2').modal('show');
+                });
+            });
+
             $(document).ready(function() {
                 $('.update_record2').click(function(event) {
                     event.preventDefault();
@@ -706,7 +705,42 @@
                     $('#updateModal2').modal('show');
                 });
             });
+
+            /*$(document).ready(function() {
+                $('.redact_record').click(function(event) {
+                    event.preventDefault();
+                    // Получение данных из атрибутов кнопки
+                    var id = $(this).data('id');
+                    var template = $(this).data('template');
+                    var publishers = $(this).data('publishers');
+                    var time = $(this).data('time');
+                    var gwe = $(this).data('gwe');
+                    var day = $(this).data('day');
+
+
+                    // Отображение данных в модальном окне
+                    $('#redactModal_stand_publisher_id').text(id);
+                    $('#redactModal_standTemplate_id').text(template);
+                    $('#redactModal_standPublishers_id').text(publishers);
+                    $('#redactModal_time').text(time);
+                    $('#redactModal_gwe').text(gwe);
+                    $('#redactModal_day').text(day);
+
+                    $('#redactModal_Value_standTemplate_id').val(template);
+                    $('#redactModal_Value_standPublishers_id').val(publishers);
+                    $('#redactModal_Value_time').val(time);
+                    $('#redactModal_Value_gwe').val(gwe);
+                    $('#redactModal_Value_day').val(day);
+
+
+                    // Открытие модального окна
+                    $('#redactModal').modal('show');
+                });
+            });*/
+
         </script>
+
+
 
 
     @endcan

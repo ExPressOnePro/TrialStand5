@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('Mobile.layouts.app')
 @section('title') Meeper | Редактирование @endsection
 @section('content')
 

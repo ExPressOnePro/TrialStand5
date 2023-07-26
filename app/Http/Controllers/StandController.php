@@ -243,6 +243,20 @@ class StandController extends Controller{
                 ->with(['standPublishers' => $standPublishers]);
         }
     }
+    public function recordRedactionPage($id){
+
+        $standPublisher = StandPublishers::find($id);
+        $standTemplate = StandTemplate::find($standPublisher->stand_template_id);
+        $stand = Stand::find($standTemplate->stand_id);
+        $congregation = Congregation::find($stand->congregation_id);
+        $users = User::where('congregation_id', $congregation->id)->get();
+
+
+        return view ('Mobile.stand.redaction')
+            ->with(['standPublisher' => $standPublisher])
+            ->with(['users' => $users])
+            ->with(['stand' => $stand]);
+    }
     //views end
 
 
@@ -310,7 +324,6 @@ class StandController extends Controller{
 
         return redirect()->back()->with('success','Вы успешно записаны');
     }
-
     /*Записать первого пользователя в таблицу с созданным пользователем (1,2)*/
     public function AddPublisherToStand1(Request $request) {
 
@@ -374,7 +387,6 @@ class StandController extends Controller{
             }
         }
     }
-
     /*выписаться со стенда*/
     public function recordRedactionDelete1($id, $stand) {
 
@@ -396,21 +408,6 @@ class StandController extends Controller{
 
         /*return redirect()->route('StandTable',  $id);*/
     }
-
-    public function recordRedactionPage($id){
-
-        $standPublisher = StandPublishers::find($id);
-        $standTemplate = StandTemplate::find($standPublisher->stand_template_id);
-        $stand = Stand::find($standTemplate->stand_id);
-        $congregation = Congregation::find($stand->congregation_id);
-        $users = User::where('congregation_id', $congregation->id)->get();
-
-
-        return view ('Mobile.stand.redaction')
-            ->with(['standPublisher' => $standPublisher])
-            ->with(['users' => $users])
-            ->with(['stand' => $stand]);
-    }
     public function recordRedactionDelete2($id, $stand) {
 
         $StandPublishers = StandPublishers::findOrFail($id);
@@ -431,7 +428,6 @@ class StandController extends Controller{
 
         /*return redirect()->route('StandTable',  $id);*/
     }
-
     /*Перезаписать пользователя на стенд*/
     public function recordRedactionChange1(Request $request, $id, $stand) {
         $value = $request->input('1_user_id');
@@ -489,6 +485,8 @@ class StandController extends Controller{
             }
         }
     }
+
+
 
     /*POST отправка отчета стенда*/
     public function standReportSend(StandReportRequest $request, $id){
@@ -721,7 +719,6 @@ class StandController extends Controller{
     public function ExampleTestVersionOfUpdatingPublishersCurrentWeek($id){
 
         #•current ID переписать в StandPublishers Stand_template_ID
-
         $congregations_id = Congregation::get();
         $stand = Stand::find($id);
 
@@ -741,8 +738,7 @@ class StandController extends Controller{
             ->update([
                 'stand_template_id' => $stand_template_id_current->id
             ]);
-
-        return $this->timeUpdateNextToCurrent($id);
+        return redirect()->back();
     }
 
 }

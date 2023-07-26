@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/guest', [HomeController::class, 'guest'])->name('guest');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/welcome', [HomeController::class, 'welcome'])->name('welcome');
     Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
 
 
@@ -85,8 +86,17 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/', [CongregationsController::class, 'select'])->name('congregationSelect');
     });
 
+    Route::group([
+        'middleware' => 'role:Developer',
+        'prefix' => 'DevTools',
+    ], function () {
+        Route::get('/', [DeveloperController::class, 'DevTools'])->name('DevTools');
+        Route::get('/devRoleUserUpdate', [DeveloperController::class, 'devRoleUserUpdate'])->name('devRoleUserUpdate');
+    });
 
-        Route::group([
+
+
+    Route::group([
             'middleware' => 'can:Congregations-Open congregation',
             'prefix' => 'congregation',
         ], function () {

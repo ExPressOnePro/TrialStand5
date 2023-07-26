@@ -80,8 +80,7 @@
                     <!-- Full screen toggle-->
                     <i class="i-Full-Screen header-icon d-none d-sm-inline-block" data-fullscreen=""></i>
 
-                    <!-- Grid menu Dropdown-->
-                    @role('User')
+                    <!-- Grid menu Language-->
                     <div class="dropdown dropleft">
                         <i class="fa-solid fa-language header-icon" id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -94,7 +93,6 @@
                             </div>
                         </div>
                     </div>
-                    @endrole
 
                     <div class="user col align-self-end">
                         <div class="dropdown dropdown">
@@ -103,8 +101,6 @@
                 </div>
             </header>
         @endif
-    @elseif ($mobile_detect->isTablet())
-        Это планшет
     @else
         <header class="main-header bg-white d-flex justify-content-between p-2">
             <div class="header-toggle">

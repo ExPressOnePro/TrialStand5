@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\UsersPermissions;
 use App\Models\UsersRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +25,12 @@ class UsersController extends Controller{
             ->with(['role' => $role,]);
     }
     public function userCard($id) {
-
-        $role = Role::get();
+        $user = User::find(Auth::id());
+        if($user->hasRole('Developer')) {
+            $role = Permission::get();
+        } else{
+            $role = Permission::where('name', 'LIKE', 'Stand%')->get();
+        }
         $user = User::find($id);
 
         $congregation_id_to_name = DB::table('users')
@@ -39,18 +45,18 @@ class UsersController extends Controller{
     }
     public function roleAllow(Request $request, $id) {
         $value = $request->input('allow_role_id');
-        $user = new UsersRoles();
+        $user = new UsersPermissions();
         $user->user_id = $id;
-        $user->role_id = $value;
+        $user->permission_id = $value;
         $user->save();
 
         return redirect()->route('userCard', $id);
     }
     public function roleDelete(Request $request, $id) {
         $value = $request->input('delete_role_id');
-        DB::table('users_roles')
+        DB::table('users_permissions')
             ->where('user_id', $id)
-            ->where('role_id', $value)
+            ->where('permission_id', $value)
             ->delete();
 
         return redirect()->route('userCard', $id);

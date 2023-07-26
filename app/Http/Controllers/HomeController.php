@@ -38,8 +38,7 @@ class HomeController extends Controller
             return view('guest')
                 ->with(['congregation' => $congregation])
                 ->with(['congregationRequests' => $congregationRequests]);
-        }
-        else {
+        } else {
 
             $stand = Stand::where('congregation_id', $user->congregation_id)->get();
             $active_day = StandPublishers::select('day')->distinct()->get();
@@ -48,17 +47,12 @@ class HomeController extends Controller
             $end_date   = date("Y-m-d", time() - (-6 + date("N") - 1) * 24 * 60 * 60);
 
 
-            $standPublishers = StandPublishers::with(
-                'standTemplates'
-            )
+            $standPublishers = StandPublishers::with('standTemplates')
                 ->whereBetween('date', [$start_date, $end_date])
                 ->where('user_1', $user->id)
                 ->orWhere('user_2', $user->id)
                 ->orderBy('date', 'asc')
                 ->get();
-
-
-
 
             $standPublishersCount = StandPublishers::
                 whereBetween('date', [$start_date, $end_date])
@@ -91,5 +85,9 @@ class HomeController extends Controller
         return view('guest')
             ->with(['congregation' => $congregation])
             ->with(['congregationRequests' => $congregationRequests]);
+    }
+    public function welcome() {
+
+        return view('welcome');
     }
 }

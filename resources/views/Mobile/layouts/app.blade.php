@@ -45,8 +45,9 @@
 </head>
 <body>
 <main>
+    <button id="btnAdd" style="display:none;" disabled>Установить</button>
     <body class="text-left">
-    {{--@inject('mobile_detect', 'Mobile_Detect')
+    @inject('mobile_detect', 'Mobile_Detect')
     @if ($mobile_detect->isMobile())
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             @include('includes.header')
@@ -68,7 +69,7 @@
                 @endif
             </div>
         </div>
-    @else--}}
+    @else
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             @if(Request::is(
                 'profile*',
@@ -94,7 +95,7 @@
                     @include('includes.footer')
                 </div>
         </div>
-    {{--@endif--}}
+    @endif
     </body>
     @include('includes.footer')
 </main>

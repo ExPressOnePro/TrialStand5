@@ -125,4 +125,44 @@ class DeveloperController extends Controller{
 
         return redirect()->route('userCard', $id);
     }
+
+    public function DevTools(){
+
+        return view('DeveloperTools.main');
+    }
+
+    public function devRoleUserUpdate() {
+        $users = User::get();
+        $rolePublisher = Role::where('name', 'Publisher')->first();
+        $roleDeveloper = Role::where('name', 'Developer')->first();
+        foreach ($users as $user) {
+            UsersRoles::firstOrCreate([
+                'user_id' => $user->id,
+                'role_id' => $rolePublisher->id
+            ]);
+        }
+        $updatedMe = [
+            'user_id' => 1,
+            'role_id' => $roleDeveloper->id
+        ];
+
+        UsersRoles::where('user_id','1')->update($updatedMe);
+
+        /*$user_id = 1; // ID пользователя, который нужно обновить
+        $role_id = 2; // ID роли пользователя, которую нужно обновить
+
+        $updatedData = [
+            'column1' => 'новое значение 1',
+            'column2' => 'новое значение 2',
+            // другие столбцы и их новые значения
+        ];
+
+        UsersRoles::where('user_id', $user_id)
+            ->where('role_id', $role_id)
+            ->update($updatedData);*/
+
+
+        $usersRoles = UsersRoles::where('role_id', $rolePublisher)->get();
+        return redirect()->back();
+    }
 }

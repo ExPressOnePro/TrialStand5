@@ -8,7 +8,7 @@
     <!-- Icon -->
     <link rel="icon" href="{{ asset('public/favicon.ico') }}" sizes="any"><!-- 32×32 -->
     <link rel="apple-touch-icon" href="{{ asset('public/apple-touch-icon.png') }}"><!-- 180×180 -->
-    <link rel="manifest" href="{{ asset('public/manifest.webmanifest') }}"> <!--Manifest -->
+    <link rel="manifest" href="{{ asset('public/manifest.json') }}"> <!--Manifest -->
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">

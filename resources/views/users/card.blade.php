@@ -41,7 +41,7 @@
                 <div class="card card-icon mb-4">
                     <div class="card-body text-center">
                         <div class="text-center ">
-                            <h5 class="card-title heading mb-4">Роли пользователя</h5>
+                            <h5 class="card-title heading mb-4">Права пользователя</h5>
                             <div class="separator border-top mb-2"></div>
                         </div>
                         @foreach($role as $rol)
@@ -49,9 +49,9 @@
                                 <div class="col mb-3">
                                     <h4 class="heading text-left">{{$rol->name}}</h4>
                                 </div>
-                                @if(DB::table('users_roles')
+                                @if(DB::table('users_permissions')
                                 ->where('user_id', '=', $user->id)
-                                ->where('role_id', '=', $rol->id)
+                                ->where('permission_id', '=', $rol->id)
                                 ->count() > 0)
                                     <div class="col mb-3">
                                         <span class="text-success heading text-left">
