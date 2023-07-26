@@ -135,6 +135,8 @@ Route::group([
     Route::get('/card/{id}', [UsersController::class, 'userCard'])->name('userCard');
     Route::post('/card/{id}', [UsersController::class, 'roleAllow'])->name('roleAllow');
     Route::post('/card/{id}/roledelete', [UsersController::class, 'roleDelete'])->name('roleDelete');
+    Route::post('/card/{id}/permissionAllow', [UsersController::class, 'permissionAllow'])->name('permissionAllow');
+    Route::post('/card/{id}/permissionDelete', [UsersController::class, 'permissionDelete'])->name('permissionDelete');
 });
 
 Route::group([
