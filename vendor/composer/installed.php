@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '640778981885fe2a1e240259dffcebd7eb75da43',
+        'reference' => 'b2e0e5ba52a57355e82fcaacd97a5b88de4f05e9',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -397,6 +397,15 @@
                 0 => '*',
             ),
         ),
+        'ladumor/laravel-pwa' => array(
+            'pretty_version' => 'v0.0.3',
+            'version' => '0.0.3.0',
+            'reference' => '8256db4b88554e69d8c0691ea8880efe29845411',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ladumor/laravel-pwa',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'laravel/framework' => array(
             'pretty_version' => 'v10.15.0',
             'version' => '10.15.0.0',
@@ -409,7 +418,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '640778981885fe2a1e240259dffcebd7eb75da43',
+            'reference' => 'b2e0e5ba52a57355e82fcaacd97a5b88de4f05e9',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -805,8 +814,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '3.0.0',
+                0 => '3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache' => array(

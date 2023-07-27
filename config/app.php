@@ -169,6 +169,7 @@ return [
         /*
          * Application Service Providers...
          */
+        Ladumor\LaravelPwa\PWAServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
@@ -191,6 +192,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'LaravelPwa' => \Ladumor\LaravelPwa\LaravelPwa::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

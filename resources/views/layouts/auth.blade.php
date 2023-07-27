@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" href="{{ asset('public/favicon.ico') }}" sizes="any"><!-- 32×32 -->
-    <link rel="apple-touch-icon" href="{{ asset('public/apple-touch-icon.png') }}"><!-- 180×180 -->
-    <link rel="manifest" href="{{ asset('public/manifest.webmanifest') }}"> <!--Manifest -->
+    <link rel="icon" href="{{ asset('/favicon.ico') }}" sizes="any"><!-- 32×32 -->
+    <link rel="apple-touch-icon" href="{{ asset('/apple-touch-icon.png') }}"><!-- 180×180 -->
+    <link rel="manifest" href="{{ asset('/manifest.json') }}"> <!--Manifest -->
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -21,12 +21,13 @@
 
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/d19fab2cf2.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('/sw.js') }}"></script>
     <script>
-        const swJsFiles = "/js/sw.js";
-        const installAppIcons = {
-            "192x192": "{{ asset('/images/icons/icon-192x192.png') }}",
-            "512x512": "{{ asset('/images/icons/icon-512x512.png') }}"
-        };
+        if (!navigator.serviceWorker.controller) {
+            navigator.serviceWorker.register("/sw.js").then(function (reg) {
+                console.log("Service worker has been registered for scope: " + reg.scope);
+            });
+        }
     </script>
 
 </head>

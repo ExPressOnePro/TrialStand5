@@ -137,6 +137,7 @@ class ComposerStaticInit5374d93a010f1d39d7110ef4658a4b43
             'Laravel\\SerializableClosure\\' => 28,
             'Laravel\\Sanctum\\' => 16,
             'Laravel\\Sail\\' => 13,
+            'Ladumor\\LaravelPwa\\' => 19,
         ),
         'J' => 
         array (
@@ -372,8 +373,8 @@ class ComposerStaticInit5374d93a010f1d39d7110ef4658a4b43
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -454,6 +455,10 @@ class ComposerStaticInit5374d93a010f1d39d7110ef4658a4b43
         'Laravel\\Sail\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/sail/src',
+        ),
+        'Ladumor\\LaravelPwa\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ladumor/laravel-pwa/src',
         ),
         'Jenssegers\\Agent\\' => 
         array (
@@ -643,6 +648,7 @@ class ComposerStaticInit5374d93a010f1d39d7110ef4658a4b43
         'App\\Models\\RolesPermissions' => __DIR__ . '/../..' . '/app/Models/RolesPermissions.php',
         'App\\Models\\Stand' => __DIR__ . '/../..' . '/app/Models/Stand.php',
         'App\\Models\\StandPublishers' => __DIR__ . '/../..' . '/app/Models/StandPublishers.php',
+        'App\\Models\\StandPublishersHistory' => __DIR__ . '/../..' . '/app/Models/StandPublishersHistory.php',
         'App\\Models\\StandReports' => __DIR__ . '/../..' . '/app/Models/StandReports.php',
         'App\\Models\\StandTemplate' => __DIR__ . '/../..' . '/app/Models/StandTemplate.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
@@ -2872,6 +2878,9 @@ class ComposerStaticInit5374d93a010f1d39d7110ef4658a4b43
         'Jenssegers\\Agent\\Agent' => __DIR__ . '/..' . '/jenssegers/agent/src/Agent.php',
         'Jenssegers\\Agent\\AgentServiceProvider' => __DIR__ . '/..' . '/jenssegers/agent/src/AgentServiceProvider.php',
         'Jenssegers\\Agent\\Facades\\Agent' => __DIR__ . '/..' . '/jenssegers/agent/src/Facades/Agent.php',
+        'Ladumor\\LaravelPwa\\LaravelPwa' => __DIR__ . '/..' . '/ladumor/laravel-pwa/src/LaravelPwa.php',
+        'Ladumor\\LaravelPwa\\PWAServiceProvider' => __DIR__ . '/..' . '/ladumor/laravel-pwa/src/PWAServiceProvider.php',
+        'Ladumor\\LaravelPwa\\commands\\PublishPWA' => __DIR__ . '/..' . '/ladumor/laravel-pwa/src/commands/PublishPWA.php',
         'Laravel\\Sail\\Console\\AddCommand' => __DIR__ . '/..' . '/laravel/sail/src/Console/AddCommand.php',
         'Laravel\\Sail\\Console\\Concerns\\InteractsWithDockerComposeServices' => __DIR__ . '/..' . '/laravel/sail/src/Console/Concerns/InteractsWithDockerComposeServices.php',
         'Laravel\\Sail\\Console\\InstallCommand' => __DIR__ . '/..' . '/laravel/sail/src/Console/InstallCommand.php',
