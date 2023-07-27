@@ -4,6 +4,7 @@
 
     @inject('mobile_detect', 'Mobile_Detect')
     @if ($mobile_detect->isMobile())
+
         <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
         <h1 class="mb-3 text-36 text-center">Регистрация</h1>
         <p class="heading mb-30 text-center">Создайте новый аккаунт чтобы пользоваться возможностями Meeper</p>
@@ -56,7 +57,10 @@
             <!--Password-->
             <div class="form-row">
                 <div class="form-group col-md-12">
-                    <input class="form-control form-control-rounded @error('password') is-invalid @enderror"  name="password" placeholder="Пароль (минимум 6 символов)" type="password">
+                    <div class="input-group mb-3">
+                        <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" placeholder="Пароль (минимум 6 символов)" required autocomplete="current-password" aria-describedby="basic-addon1">
+                        <div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa-regular fa-eye-slash" id="show-password"></i></span></div>
+                    </div>
                     <div class="col-md-6">
                         @error('password')
                         <div class="alert alert-card alert-danger">Пароль некорректно введен (минимум 6 символов)</div>
@@ -215,6 +219,17 @@
             </div>
         </div>
     @endif
+    <script>
+        document.getElementById('show-password').addEventListener('click', () => {
+            const passwordInput = document.getElementById('password');
+
+            if (passwordInput.getAttribute('type') === 'password') {
+                passwordInput.setAttribute('type', 'text');
+            } else {
+                passwordInput.setAttribute('type', 'password');
+            }
+        });
+    </script>
 
     {{--<div class="auth-layout-wrap" style="background-image: url(../../dist-assets/images/log2.jpg)">
     <div class="auth-content">
@@ -284,5 +299,6 @@
             </div>
         </div>
     </div>--}}
+
 
 @endsection
