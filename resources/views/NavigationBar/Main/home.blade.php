@@ -21,6 +21,7 @@
             </div>
         @endif
         @endrole
+        @include('Desktop.stand.part')
        {{-- @role('Developer')
         <a class="btn btn-danger btn-block text-right" href="{{ route('ref') }}" >
             обновить пароль
