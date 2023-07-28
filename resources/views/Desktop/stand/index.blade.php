@@ -53,6 +53,7 @@
         @endcan
     </div>
 
+
     @can('Stand-Create new stand')
     <div class="modal fade" id="createNewStand" tabindex="-1" role="dialog" aria-labelledby="createNewStand-2" style="display: none;" aria-hidden="true">
         <div class="modal-dialog" role="document">

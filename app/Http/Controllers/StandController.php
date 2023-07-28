@@ -43,21 +43,21 @@ class StandController extends Controller{
         $mobile_detect = new MobileDetect();
         if ($user->hasRole('Developer')){
             if ($mobile_detect->isMobile()) {
-                return view('Desktop.stand.index',
+                return view('Mobile.stand.index',
                     ['accessible_stands_for_the_user' => $accessible_stands_for_dev],
                     ['congregations' => $congregations]);
             } else {
-                return view('Mobile.stand.index',
+                return view('Desktop.stand.index',
                     ['accessible_stands_for_the_user' => $accessible_stands_for_dev],
                     ['congregations' => $congregations]);
             }
         } else {
             if ($mobile_detect->isMobile()) {
-                return view('Desktop.stand.index',
+                return view('Mobile.stand.index',
                     ['accessible_stands_for_the_user' => $accessible_stands_for_the_user],
                     ['congregations' => $congregations]);
             } else {
-                return view('Mobile.stand.index',
+                return view('Desktop.stand.index',
                     ['accessible_stands_for_the_user' => $accessible_stands_for_the_user],
                     ['congregations' => $congregations]);
             }
