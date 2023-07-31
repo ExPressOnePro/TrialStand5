@@ -14,6 +14,7 @@
                         </div>
                         <div class="card-body">
                                 <form id="timeActivation" action="{{ route('timeActivation', ['id' => $stand_id->id]) }}" method="post">
+
                                     <div class="row">
                                     <div class="col-6">
                                         <select class="form-control text-left" id="day" name="day">
@@ -40,7 +41,25 @@
                                     </div>
                                     </div>
                                 </form>
+                            @foreach($activation_value as $selectedDay => $selectedTime)
+                                <select name="day">
+                                    @for($i = 1; $i <= 7; $i++)
+                                        <option value="{{ $i }}" {{ $selectedDay == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                    @endfor
+                                </select>
 
+                                <select name="time">
+                                    @for($hour = 6; $hour <= 18; $hour++)
+                                        @for($minute = 0; $minute < 60; $minute += 15)
+                                            @php
+                                                $time = str_pad($hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($minute, 2, '0', STR_PAD_LEFT);
+                                            @endphp
+
+                                            <option value="{{ $time }}" {{ $selectedTime == $time ? 'selected' : '' }}>{{ $time }}</option>
+                                        @endfor
+                                    @endfor
+                                </select>
+                            @endforeach
                         </div>
                         <div class="card-footer text-right">
                             <a href="{{ route('timeActivation',['id' => $stand_id->id] ) }}"
@@ -154,7 +173,39 @@
                                     </div>
                                     </div>
                                 </form>
+                            {{$activation_value}}
+                            @foreach($activation_value as $key => $value)
+
+                                {{$value}}
+
+                            @endforeach
                         </div>
+
+{{--                        <select name="day">--}}
+{{--                            @php--}}
+{{--                                $selectedDay = '4';--}}
+{{--                            @endphp--}}
+
+{{--                            @for($i = 1; $i <= 7; $i++)--}}
+{{--                                <option value="{{ $i }}" {{ $selectedDay == $i ? 'selected' : '' }}>{{ $i }}</option>--}}
+{{--                            @endfor--}}
+{{--                        </select>--}}
+
+{{--                        <select name="time">--}}
+{{--                            @php--}}
+{{--                                $selectedTime = '08:00';--}}
+{{--                            @endphp--}}
+
+{{--                            @for($hour = 6; $hour <= 18; $hour++)--}}
+{{--                                @for($minute = 0; $minute < 60; $minute += 15)--}}
+{{--                                    @php--}}
+{{--                                        $time = str_pad($hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($minute, 2, '0', STR_PAD_LEFT);--}}
+{{--                                    @endphp--}}
+
+{{--                                    <option value="{{ $time }}" {{ $selectedTime == $time ? 'selected' : '' }}>{{ $time }}</option>--}}
+{{--                                @endfor--}}
+{{--                            @endfor--}}
+{{--                        </select>--}}
                         <div class="card-footer text-right">
                             <a href="{{ route('timeActivation',['id' => $stand_id->id] ) }}"
                                onclick="event.preventDefault();

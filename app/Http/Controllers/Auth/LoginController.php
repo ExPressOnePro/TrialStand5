@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-
+use Detection\MobileDetect;
 
 class LoginController extends Controller
 {
@@ -54,19 +54,21 @@ class LoginController extends Controller
             ]);
     }
 
-    protected function  checkLoginInput()
+    protected function checkLoginInput()
     {
         $inputData = request()->get('login');
 
         return  filter_var($inputData, FILTER_VALIDATE_EMAIL) ? 'email' : 'login';
     }
 
+    public function view( ) {
 
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            return view('Desktop.auth.login');
+        } else {
+            return view('Mobile.auth.login');
+        }
+    }
 
 }

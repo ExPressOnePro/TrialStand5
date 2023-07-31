@@ -16,6 +16,9 @@ class CreateCongregationsTable extends Migration
         Schema::create('congregations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('address');
+            $table->string('weekday_meeting');
+            $table->string('weekend_meeting');
             $table->timestamps();
         });
     }

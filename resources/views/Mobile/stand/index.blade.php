@@ -1,7 +1,6 @@
 @extends('Mobile.layouts.app')
 @section('title') Meeper | Стенды @endsection
 @section('content')
-
     <div class="main-content pt-4">
         @can('Stand-Create new stand')
             <div class="row">
