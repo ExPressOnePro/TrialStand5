@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('Desktop.layouts.app')
 @section('title') Meeper | Стенды @endsection
 @section('content')
 
@@ -16,7 +16,7 @@
                     <th>Инфо о записи</th>
                     <th>Старое значение</th>
                     <th>Новое значение</th>
-                    <th >Время изменения</th>
+                    <th>Время изменения</th>
                 </tr>
                 </thead>
                 <tbody>

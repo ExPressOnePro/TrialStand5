@@ -20,6 +20,7 @@ class CreateStandTemplatesTable extends Migration
             $table->string('activation')->default('4-08:00');
             $table->unsignedBigInteger('stand_id');
             $table->unsignedBigInteger('congregation_id');
+            $table->unsignedBigInteger('allowed_entries');
             $table->timestamps();
 
             $table->foreign('stand_id')->on('stands')->references('id');

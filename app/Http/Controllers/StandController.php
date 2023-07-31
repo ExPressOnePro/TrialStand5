@@ -110,29 +110,24 @@ class StandController extends Controller{
             ->groupBy(['stand_id', 'congregation_id'])
             ->first();
         $activation = $StandTemplate->activation; // трехзначное число
-        $activation_value = explode("-", $activation);
+        $activation_values = explode("-", $activation);
+        foreach ($activation_values as $activation_value) {
+        }
+
 
         $mobile_detect = new MobileDetect();
-        if(empty($audits_update)){
-            if ($mobile_detect->isMobile()) {
-                return view('Mobile.stand.history');
-            } else {
-                return view('Desktop.stand.history');
-            }
+        if ($mobile_detect->isMobile()) {
+            return view('Mobile.stand.settings')
+                ->with(['stand_id' => $stand_id])
+                ->with(['template' => $template])
+                ->with(['activation_value' => $activation_value]);
+        } else {
+            return view('Desktop.stand.settings')
+                ->with(['stand_id' => $stand_id])
+                ->with(['template' => $template])
+                ->with(['activation_value' => $activation_value]);
         }
-        else{
-            if ($mobile_detect->isMobile()) {
-                return view('Mobile.stand.settings')
-                    ->with(['stand_id' => $stand_id])
-                    ->with(['template' => $template])
-                    ->with(['activation_value' => $activation_value]);
-            } else {
-                return view('Desktop.stand.settings')
-                    ->with(['stand_id' => $stand_id])
-                    ->with(['template' => $template])
-                    ->with(['activation_value' => $activation_value]);
-            }
-        }
+
     }
     /*Страницы текущей и следующей недели стенда*/
     public function currentWeekTable($id) {
@@ -213,8 +208,6 @@ class StandController extends Controller{
             ->where('type', '=','next')
             ->groupBy(['stand_id', 'congregation_id'])
             ->get(); // `->get()` because model doesn't have `->map()` method
-
-
 
         $templates = $templates->map(static function ($relations) {
             $relations->standPublishers = $relations->standPublishers->keyBy(static function($standPublishers) {

@@ -34,7 +34,8 @@
             </div>
 
             <div class="separator-breadcrumb border-top"></div>
-            <!-- Таблица текущей недели -->
+            <!-- Таблица Следующей недели -->
+            @if(date('N') . '-'. date('H:i') >= $StandTemplate->activation)
             <div class="row">
                 @foreach ($week_schedule as $day => $times)
                     <div class="col-md-12 mb-4">
@@ -391,6 +392,27 @@
                     </div>
                 @endforeach
             </div>
+            @else
+                <div class="not-found-wrap text-center">
+                    <h1 class="heading">Следующая неделя будет доступна в </h1>
+                    @if($activation_value[0] == 1)
+                        <p class="mb-5 text-muted text-20"><h1>Понедельник {{$activation_value[1]}}</h1>
+                    @elseif($activation_value[0] == 2)
+                        <p class="mb-5 text-muted text-20"><h1>Вторник {{$activation_value[1]}}</h1>
+                    @elseif($activation_value[0] == 3)
+                        <p class="mb-5 text-muted text-20"><h1>Среду {{$activation_value[1]}}</h1>
+                    @elseif($activation_value[0] == 4)
+                        <p class="mb-5 text-muted text-20"><h1>Четверг {{$activation_value[1]}}</h1>
+                    @elseif($activation_value[0] == 5)
+                        <p class="mb-5 text-muted text-20"><h1>Пятницу {{$activation_value[1]}}</h1>
+                    @elseif($activation_value[0] == 6)
+                        <p class="mb-5 text-muted text-20"><h1>Субботу {{$activation_value[1]}}</h1>
+                    @elseif($activation_value[0] == 7)
+                        <p class="mb-5 text-muted text-20"><h1>Воскресенье {{$activation_value[1]}}</h1>
+                    @endif
+
+                </div>
+            @endif
         </div>
     @endcan
 

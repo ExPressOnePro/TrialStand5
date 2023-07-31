@@ -42,10 +42,6 @@ $app->singleton(
 );
 
 $app->register(OwenIt\Auditing\AuditingServiceProvider::class);
-
-$app->register(Irazasyed\Larasupport\Providers\ArtisanServiceProvider::class);
-
-$app->register(Irazasyed\Larasupport\Providers\ArtisanServiceProvider::class);
 /*
 $app->configure('audit');*/
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CongregationRequestsController;
 use App\Http\Controllers\CongregationsController;
@@ -19,9 +20,7 @@ Route::get('lang/{lang}', ['as' => 'lang.switch', 'uses' => 'App\Http\Controller
 
 Auth::routes();
 
-Route::get('/', function() {
-    return view('auth.login');
-});
+Route::get('/', [LoginController::class, 'view'])->name('auth.login');
 
 Route::get('/registration', function () {
     return view('auth.register');
@@ -58,6 +57,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/NewRecordStand2', [StandController::class, 'NewRecordStand2'])->name('NewRecordStand2');
         Route::post('/record1', [StandController::class, 'AddPublisherToStand1'])->name('AddPublisherToStand1');
         Route::post('/record2', [StandController::class, 'AddPublisherToStand2'])->name('AddPublisherToStand2');
+        Route::get('/settings/{id}', [StandController::class, 'settings'])->name('StandSettings');
+        Route::post('/settings/{id}', [StandController::class, 'timeUpdateNext'])->name('StandTimeNext');
+        Route::post('/settingsNTC/{id}', [StandController::class, 'StandTimeNextToCurrent'])->name('StandTimeNextToCurrent');
     });
 
 
@@ -146,9 +148,6 @@ Route::group([
     Route::post('/timeActivation/{id}', [StandController::class, 'timeActivation'])->name('timeActivation');
     Route::get('/create', [StandController::class, 'createNewStandPage'])->name('createNewStandPage');
     Route::post('/create', [StandController::class, 'createNewStand'])->name('createNewStand');
-    Route::get('/settings/{id}', [StandController::class, 'settings'])->name('StandSettings');
-    Route::post('/settings/{id}', [StandController::class, 'timeUpdateNext'])->name('StandTimeNext');
-    Route::post('/settingsNTC/{id}', [StandController::class, 'StandTimeNextToCurrent'])->name('StandTimeNextToCurrent');
 
 
     Route::get('/ExampleNext/{stand_id}/{congregation_id}', [StandController::class, 'ExampleTestVersionOfAddingToPublishersNextWeek'])->name('ExampleNext');

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('Desktop.layouts.app')
 @section('title') Meeper | Стенды @endsection
 @section('content')
 
