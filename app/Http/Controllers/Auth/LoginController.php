@@ -61,13 +61,13 @@ class LoginController extends Controller
         return  filter_var($inputData, FILTER_VALIDATE_EMAIL) ? 'email' : 'login';
     }
 
-    public function view( ) {
+    public function view() {
 
         $detect = new MobileDetect;
         if ($detect->isMobile()) {
-            return view('Desktop.auth.login');
-        } else {
             return view('Mobile.auth.login');
+        } else {
+            return view('Desktop.auth.login');
         }
     }
 

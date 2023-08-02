@@ -19,7 +19,7 @@
                     'RolesPermissions*',
                     'DevTools*'
                     ))
-{{--                    @yield('content')--}}
+                    @yield('content')
                     @include('includes.menuBarPhone')
                 @endif
             </div>

@@ -23,13 +23,13 @@
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/perfect-scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/fontawesome-5.css') }}">
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/metisMenu.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/sweetalert2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/datatables.min.css') }}">
+
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/d19fab2cf2.js" crossorigin="anonymous"></script>
+
 
     <!-- PWA  -->
     <meta name="theme-color" content="#6777ef"/>

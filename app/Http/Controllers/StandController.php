@@ -185,6 +185,53 @@ class StandController extends Controller{
                 ->with(['standPublishers' => $standPublishers]);
         }
     }
+    public function test($id) {
+        $stand = Stand::find($id);
+
+        $users = User::where('congregation_id', $stand->congregation_id)->get();
+
+        $StandTemplate = StandTemplate::where('stand_id', $id)
+            ->where('type', '=','current')
+            ->groupBy(['stand_id', 'congregation_id'])
+            ->first();
+
+        $week_schedule = $StandTemplate->week_schedule;
+
+        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)
+            ->get();
+
+
+        $templates = StandTemplate::with([
+            'stand',
+            'standPublishers.user',
+            'standPublishers.user2',
+            'congregation',
+        ])
+
+            ->where('stand_id', $id)
+            ->where('type', '=','current')
+            ->groupBy(['stand_id', 'congregation_id'])
+            ->get(); // `->get()` because model doesn't have `->map()` method
+
+
+
+        $templates = $templates->map(static function ($relations) {
+            $relations->standPublishers = $relations->standPublishers->keyBy(static function($standPublishers) {
+                return $standPublishers->day . '_' . $standPublishers->time;
+            });
+
+            return $relations;
+        });
+
+
+            return view('Mobile.stand.test')
+                ->with(['StandTemplate' => $StandTemplate])
+                ->with(['week_schedule' => $week_schedule])
+                ->with(['users' => $users])
+                ->with(['stand' => $stand])
+                ->with(['standPublishers' => $standPublishers]);
+    }
+
     public function nextWeekTable($id) {
         $stand = Stand::find($id);
         $users = User::where('congregation_id', $stand->congregation_id)->get();
@@ -617,24 +664,23 @@ class StandController extends Controller{
 
         return redirect()->back();
     }
-    public function StandTimeNextToCurrent(Request $request, $id) {
+    public function StandTimeNextToCurrent($id) {
 
-        $stand_id = Stand::find($id);
-        $congregation_id = $stand_id->congregation_id;
+        $stand = Stand::find($id);
+        $congregation_id = $stand->congregation_id;
 
         $week_schedule_next = StandTemplate::where('type', 'next')
             ->where('stand_id', $id)
             ->where('congregation_id', $congregation_id)
             ->first();
 
-        dd($week_schedule_next);
 
-        /*StandTemplate::where('type', 'current')
+        StandTemplate::where('type', 'current')
             ->where('stand_id', $id)
             ->where('congregation_id', $congregation_id)
             ->update([
                 'week_schedule' => $week_schedule_next->week_schedule,
-            ]);*/
+            ]);
 
         return redirect()->back();
     }

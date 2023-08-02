@@ -9,6 +9,8 @@
                 <div class="card mb-4">
                     <div class="card-header">
                         <h1 class="heading float-left card-title m-0">Время в которое отображается таблица</h1>
+                        <span>по умолчанию четверг 8:00
+                        </span>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('timeActivation', ['id' => $stand_id->id]) }}" method="post" id="timeActivation">
@@ -87,14 +89,11 @@
                                     {{ __('Изменения со следующей недели') }}</button>
                             </div>
                         </form>
-                        <form method="post" href="{{ route('StandTimeNextToCurrent', ['id' => $stand_id->id]) }}">
-                            @csrf
                             <div class="text-right">
                                 <a href="{{ route('StandTimeNextToCurrent', ['id' => $stand_id->id]) }}">
                                     <button class="btn btn-danger mb-3" type="submit">{{ __('Изменения с текущей недели') }}</button>
                                 </a>
                             </div>
-                        </form>
                     </div>
                 </div>
 

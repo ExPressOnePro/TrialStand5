@@ -56,7 +56,8 @@
                                                 <h7 class="heading text-right">
                                                     {{ $publisher->date }}
                                                     <br>
-                                                    Время: {{ $publisher->time }}
+                                                    Время: {{ date('H:i', strtotime($publisher->time . ':00')) }}
+                                                    {{ $publisher->time }}
                                                 </h7>
                                             </div>
                                         @endforeach

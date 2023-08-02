@@ -1,8 +1,8 @@
 @extends('Desktop.layouts.auth')
 @section('title') Meeper | Авторизация @endsection
 @section('content')
-
     @include('includes.guest.header')
+
         <div class="auth-layout-wrap">
             <div class="auth-content">
                 <div class="card o-hidden">
@@ -64,7 +64,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 @endsection

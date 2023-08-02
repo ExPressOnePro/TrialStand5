@@ -48,6 +48,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/nextWeek/{id}', [StandController::class, 'nextWeekTable'])->name('nextWeekTable');
         Route::post('/report/{id}', [StandController::class, 'standReportSend'])->name('standReportSend');
 
+        Route::get('/test/{id}', [StandController::class, 'test'])->name('test');
+
         Route::get('/stand/redaction/{id}', 'App\Http\Controllers\StandController@recordRedactionPage')->name('recordRedactionPage');
 
         Route::get('/redaction/{id}/{stand}', [StandController::class, 'recordRedactionDelete2'])->name('recordRedactionDelete2');
@@ -59,7 +61,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/record2', [StandController::class, 'AddPublisherToStand2'])->name('AddPublisherToStand2');
         Route::get('/settings/{id}', [StandController::class, 'settings'])->name('StandSettings');
         Route::post('/settings/{id}', [StandController::class, 'timeUpdateNext'])->name('StandTimeNext');
-        Route::post('/settingsNTC/{id}', [StandController::class, 'StandTimeNextToCurrent'])->name('StandTimeNextToCurrent');
+        Route::get('/settingsNTC/{id}', [StandController::class, 'StandTimeNextToCurrent'])->name('StandTimeNextToCurrent');
     });
 
 
