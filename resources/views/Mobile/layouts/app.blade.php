@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 @include('Mobile.layouts.components.head')
+
 <body>
 <main>
     <body class="text-left">
@@ -20,8 +22,8 @@
                     'DevTools*'
                     ))
                     @yield('content')
-                    @include('includes.menuBarPhone')
                 @endif
+                    @include('includes.menuBarPhone')
             </div>
         </div>
     </body>

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\UsersPermissions;
 use App\Models\UsersRoles;
+use Detection\MobileDetect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,9 +21,16 @@ class UsersController extends Controller{
         $role = UsersRoles::with('role')->get();
 
 
-        return view('users.users')
-            ->with(['users' => $users,])
-            ->with(['role' => $role,]);
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            return view('Mobile.users.users')
+                ->with(['users' => $users,])
+                ->with(['role' => $role,]);
+        } else {
+            return view('Desktop.users.users')
+                ->with(['users' => $users,])
+                ->with(['role' => $role,]);
+        }
     }
     public function userCard($id) {
         $user = User::find(Auth::id());
@@ -40,20 +48,37 @@ class UsersController extends Controller{
             ->where('congregations.id', $id)
             ->get();
 
-        if($user->hasRole('Developer')) {
-            return view('users.card')
-                ->with(['user' => $user])
-                ->with(['roles' => $roles])
-                ->with(['permissions' => $permissions])
-                ->with(['citn' => $congregation_id_to_name]);
-        } else{
-            return view('users.card')
-                ->with(['user' => $user])
-                ->with(['roles' => $roles])
-                ->with(['permissions' => $permissions])
-                ->with(['citn' => $congregation_id_to_name]);
-
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            if($user->hasRole('Developer')) {
+                return view('Mobile.users.card')
+                    ->with(['user' => $user])
+                    ->with(['roles' => $roles])
+                    ->with(['permissions' => $permissions])
+                    ->with(['citn' => $congregation_id_to_name]);
+            } else{
+                return view('Mobile.users.card')
+                    ->with(['user' => $user])
+                    ->with(['roles' => $roles])
+                    ->with(['permissions' => $permissions])
+                    ->with(['citn' => $congregation_id_to_name]);
+            }
+        } else {
+            if($user->hasRole('Developer')) {
+                return view('Desktop.users.card')
+                    ->with(['user' => $user])
+                    ->with(['roles' => $roles])
+                    ->with(['permissions' => $permissions])
+                    ->with(['citn' => $congregation_id_to_name]);
+            } else{
+                return view('Desktop.users.card')
+                    ->with(['user' => $user])
+                    ->with(['roles' => $roles])
+                    ->with(['permissions' => $permissions])
+                    ->with(['citn' => $congregation_id_to_name]);
+            }
         }
+
     }
     public function permissionAllow(Request $request, $id) {
         $value = $request->input('allow_permission_id');

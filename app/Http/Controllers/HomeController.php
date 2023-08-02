@@ -63,7 +63,7 @@ class HomeController extends Controller
                 $user_congregation_id = $user->congregation_id;
                 $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
 
-                return view('Desktop.home.main')
+                return view('Mobile.home.main')
                     ->with(['standPublishers' => $standPublishers])
                     ->with(['stand' => $stand])
                     ->with(['user_congregation_id' => $user_congregation_id])

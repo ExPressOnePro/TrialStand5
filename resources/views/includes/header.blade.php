@@ -60,6 +60,7 @@
                             <a class="dropdown-item" href="{{ route('users') }}"><i class="fa-solid fa-users"></i> Пользователи </a>
                             <a class="dropdown-item" href="{{ route('congregationSelect') }}"><i class="fa-solid fa-handshake"></i> Собрания </a>
                             <a class="dropdown-item" href="{{ route('rolesPermissionsPage') }}"><i class="fa-solid fa-key"></i> Роли и права </a>
+                            <a class="dropdown-item" href="/stand/test/1"><i class="fa-solid fa-key"></i> TEST </a>
                         </div>
                     </div>
                     @endrole
