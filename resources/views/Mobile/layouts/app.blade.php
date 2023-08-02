@@ -22,6 +22,7 @@
                     'DevTools*'
                     ))
                     @yield('content')
+                    @include('includes.footer')
                 @endif
                     @include('includes.menuBarPhone')
             </div>

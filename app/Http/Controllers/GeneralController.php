@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PersonalReportRequest;
 use App\Models\PersonalReport;
 use App\Models\User;
+use Detection\MobileDetect;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
@@ -24,10 +25,16 @@ class GeneralController extends Controller {
         $user = User::find($id);
         $personalReports = PersonalReport::where('user_id', $id)->where('year', Carbon::now()->year)->orderBy('month', 'desc')->get();
 
-        return view('NavigationBar.profile.profile',
-            ['user' => $user],
-            ['personalReports' => $personalReports]);
-
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            return view('Mobile.profile.profile',
+                ['user' => $user],
+                ['personalReports' => $personalReports]);
+        } else {
+            return view('Desktop.profile.profile',
+                ['user' => $user],
+                ['personalReports' => $personalReports]);
+        }
     }
     public function profileBriefSave(Request $request, $id) {
 
