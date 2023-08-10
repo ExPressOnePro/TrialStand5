@@ -55,20 +55,28 @@
                                             ->where('stand_template_id', $StandTemplate->id)
                                             ->first();
                                     @endphp
-                            @empty($standPublisher)
-                                    <div class="card m-1">
+                                @if(isset($standPublisher->user) && isset($standPublisher->user2))
+                                    <div class="card m-1" style="background: rgba(136,167,149,0.38)">
                                         <div class="m-2">
                                             <div class="d-flex justify-content-between text-center align-items-center">
                                                 <div class="flex-grow text-left mr-2">
-                                                    <h5 class="heading">
-                                                        {{ date('H:i', strtotime($time . ':00')) }}
+                                                    <h5 class="heading text-center">
+                                                        {{ date('H:i', strtotime($time . ':00')) }}<br>
+
                                                     </h5>
                                                 </div>
                                                 <div class="flex-fill text-left">
                                                     @empty($standPublisher){{--если не создана запись--}}
                                                     @if(auth()->user()->can('Stand-Entry in table'))
                                                         @empty($standPublisher->user)
-
+                                                            <a id="create_record1" href="#"
+                                                               class="create_record1"
+                                                               data-id="{{ $StandTemplate->id }}"
+                                                               data-time="{{ $time }}"
+                                                               data-gwe="{{ $gwe }}"
+                                                               data-day="{{ $day }}">
+                                                                <button class="btn btn-success btn-block">Записаться</button>
+                                                            </a>
                                                         @endempty
                                                     @else
                                                         <p class="text-danger heading">Нет записи</p>
@@ -77,6 +85,15 @@
                                                         @empty($standPublisher->user){{--если создана но нет 1 пользователя запись--}}
                                                         @if(auth()->user()->can('Stand-Entry in table'))
                                                             @empty($standPublisher->user)
+                                                                <a id="update_record1" href="#"
+                                                                   class="update_record1"
+                                                                   data-template="{{ $StandTemplate->id }}"
+                                                                   data-publishers="{{ $standPublisher->id }}"
+                                                                   data-time="{{ $time }}"
+                                                                   data-gwe="{{ $gwe }}"
+                                                                   data-day="{{ $day }}">
+                                                                    <button class="btn btn-block">Записаться</button>
+                                                                </a>
                                                             @endempty
                                                         @else
                                                             <p class="text-danger heading">Нет записи</p>
@@ -96,7 +113,14 @@
                                                     @empty($standPublisher){{--если не создана запись--}}
                                                     @if(auth()->user()->can('Stand-Entry in table'))
                                                         @empty($standPublisher->user)
-
+                                                            <a id="create_record1" href="#"
+                                                               class="create_record1"
+                                                               data-id="{{ $StandTemplate->id }}"
+                                                               data-time="{{ $time }}"
+                                                               data-gwe="{{ $gwe }}"
+                                                               data-day="{{ $day }}">
+                                                                <button class="btn btn-success btn-block">Записаться</button>
+                                                            </a>
                                                         @endempty
                                                     @else
                                                         <p class="text-danger heading">Нет записи</p>
@@ -105,6 +129,15 @@
                                                         @empty($standPublisher->user2){{--если создана но нет 2 пользователя запись--}}
                                                         @if(auth()->user()->can('Stand-Entry in table'))
                                                             @empty($standPublisher->user2)
+                                                                <a id="update_record2" href="#"
+                                                                   class="update_record2"
+                                                                   data-template="{{ $StandTemplate->id }}"
+                                                                   data-publishers="{{ $standPublisher->id }}"
+                                                                   data-time="{{ $time }}"
+                                                                   data-gwe="{{ $gwe }}"
+                                                                   data-day="{{ $day }}">
+                                                                    <button class="btn btn-success btn-block">Записаться</button>
+                                                                </a>
                                                             @endempty
                                                         @else
                                                             <p class="text-danger heading">Нет записи</p>
@@ -122,38 +155,35 @@
                                                     @endempty
                                                 </div>
                                                 <div class="flex-grow text-right text-30 ml-2">
-                                                    <a id="panel" href="#"
-                                                       class="panel"
-                                                       data-template="{{ $StandTemplate->id }}"
-                                                       @empty($standPublisher)
-                                                       @else
-                                                           data-publisher="{{ $standPublisher->id }}"
-                                                       @endif
-                                                       data-time="{{ $time }}"
-                                                       data-gwe="{{ $gwe }}"
-                                                       data-day="{{ $day }}">
+                                                    <a href="{{ route('recordRedactionPage',['id' => $standPublisher->id]) }}">
                                                         <i class="fa-solid fa-pen text-dark"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                @elseif ($standPublisher)
-
-                            @endif
-                                        <div class="card m-1">
+                                @else
+                                    <div class="card m-1">
                                             <div class="m-2">
                                                 <div class="d-flex justify-content-between text-center align-items-center">
                                                     <div class="flex-grow text-left mr-2">
-                                                        <h5 class="heading">
-                                                            {{ date('H:i', strtotime($time . ':00')) }}
+                                                        <h5 class="heading text-center">
+                                                            {{ date('H:i', strtotime($time . ':00')) }}<br>
+
                                                         </h5>
                                                     </div>
                                                     <div class="flex-fill text-left">
                                                         @empty($standPublisher){{--если не создана запись--}}
                                                         @if(auth()->user()->can('Stand-Entry in table'))
                                                             @empty($standPublisher->user)
-
+                                                                <a id="create_record1" href="#"
+                                                                   class="create_record1"
+                                                                   data-id="{{ $StandTemplate->id }}"
+                                                                   data-time="{{ $time }}"
+                                                                   data-gwe="{{ $gwe }}"
+                                                                   data-day="{{ $day }}">
+                                                                    <button class="btn btn-success btn-block">Записаться</button>
+                                                                </a>
                                                             @endempty
                                                         @else
                                                             <p class="text-danger heading">Нет записи</p>
@@ -162,6 +192,15 @@
                                                             @empty($standPublisher->user){{--если создана но нет 1 пользователя запись--}}
                                                             @if(auth()->user()->can('Stand-Entry in table'))
                                                                 @empty($standPublisher->user)
+                                                                    <a id="update_record1" href="#"
+                                                                       class="update_record1"
+                                                                       data-template="{{ $StandTemplate->id }}"
+                                                                       data-publishers="{{ $standPublisher->id }}"
+                                                                       data-time="{{ $time }}"
+                                                                       data-gwe="{{ $gwe }}"
+                                                                       data-day="{{ $day }}">
+                                                                        <button class="btn btn-block" style="background: rgba(55,116,91,0.4)">Записаться</button>
+                                                                    </a>
                                                                 @endempty
                                                             @else
                                                                 <p class="text-danger heading">Нет записи</p>
@@ -178,52 +217,64 @@
                                                             @endempty
                                                         @endempty
                                                         <div class="border-bottom mt-1 mb-1"></div>
-                                                            @empty($standPublisher){{--если не создана запись--}}
+                                                        @empty($standPublisher){{--если не создана запись--}}
+                                                        @if(auth()->user()->can('Stand-Entry in table'))
+                                                            @empty($standPublisher->user)
+                                                                <a id="create_record1" href="#"
+                                                                   class="create_record1"
+                                                                   data-id="{{ $StandTemplate->id }}"
+                                                                   data-time="{{ $time }}"
+                                                                   data-gwe="{{ $gwe }}"
+                                                                   data-day="{{ $day }}">
+                                                                    <button class="btn btn-success btn-block">Записаться</button>
+                                                                </a>
+                                                            @endempty
+                                                        @else
+                                                            <p class="text-danger heading">Нет записи</p>
+                                                        @endif
+                                                        @else
+                                                            @empty($standPublisher->user2){{--если создана но нет 2 пользователя запись--}}
                                                             @if(auth()->user()->can('Stand-Entry in table'))
-                                                                @empty($standPublisher->user)
-
+                                                                @empty($standPublisher->user2)
+                                                                    <a id="update_record2" href="#"
+                                                                       class="update_record2"
+                                                                       data-template="{{ $StandTemplate->id }}"
+                                                                       data-publishers="{{ $standPublisher->id }}"
+                                                                       data-time="{{ $time }}"
+                                                                       data-gwe="{{ $gwe }}"
+                                                                       data-day="{{ $day }}">
+                                                                        <button class="btn btn-success btn-block">Записаться</button>
+                                                                    </a>
                                                                 @endempty
                                                             @else
                                                                 <p class="text-danger heading">Нет записи</p>
                                                             @endif
+                                                            @else{{--если создана есть 2 пользователь--}}
+                                                            @empty($standPublisher->user2->mobile_phone)
+                                                                {{$standPublisher->user2->first_name}} {{$standPublisher->user2->last_name}}
                                                             @else
-                                                                @empty($standPublisher->user2){{--если создана но нет 2 пользователя запись--}}
-                                                                @if(auth()->user()->can('Stand-Entry in table'))
-                                                                    @empty($standPublisher->user2)
-                                                                    @endempty
-                                                                @else
-                                                                    <p class="text-danger heading">Нет записи</p>
-                                                                @endif
-                                                                @else{{--если создана есть 2 пользователь--}}
-                                                                @empty($standPublisher->user2->mobile_phone)
-                                                                    {{$standPublisher->user2->first_name}} {{$standPublisher->user2->last_name}}
-                                                                @else
-                                                                    <button class="btn btn-sm btn-outline-secondary ml-1" onclick="callNumber({{$standPublisher->user2->mobile_phone}})">
-                                                                        <i class="fa-solid fa-phone"></i>
-                                                                    </button>
-                                                                    {{$standPublisher->user2->first_name}} {{$standPublisher->user2 ->last_name}}
-                                                                @endempty
-                                                                @endempty
+                                                                <button class="btn btn-sm btn-outline-secondary ml-1" onclick="callNumber({{$standPublisher->user2->mobile_phone}})">
+                                                                    <i class="fa-solid fa-phone"></i>
+                                                                </button>
+                                                                {{$standPublisher->user2->first_name}} {{$standPublisher->user2 ->last_name}}
                                                             @endempty
+                                                            @endempty
+                                                        @endempty
                                                     </div>
                                                     <div class="flex-grow text-right text-30 ml-2">
-                                                        <a id="panel" href="#"
-                                                           class="panel"
-                                                           data-template="{{ $StandTemplate->id }}"
-                                                           @empty($standPublisher)
-                                                           @else
-                                                               data-publisher="{{ $standPublisher->id }}"
-                                                           @endif
-                                                           data-time="{{ $time }}"
-                                                           data-gwe="{{ $gwe }}"
-                                                           data-day="{{ $day }}">
+                                                        @isset($standPublisher)
+                                                        <a href="{{ route('recordRedactionPage',['id' => $standPublisher->id]) }}">
                                                             <i class="fa-solid fa-pen text-dark"></i>
                                                         </a>
+                                                        @else
+                                                        @endisset
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                @endisset
                                 @endforeach
+
                         </div>
                     </div>
                 @endforeach
@@ -234,143 +285,6 @@
         </div>
 
         @can('Stand-Entry in table')
-
-
-
-            <div class="modal" id="panel">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title"> Новая запись для стенда {{ $stand->name }}</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-lg-10 col-md-10 col-xl-10 mb-4 mt-4 offset-md-1">
-                                    <div class="card mb-4">
-                                        <div class="card-header">
-
-                                            @empty($standPublisher)
-                                                <p class="text-20 text-success text-left font-weight-bold line-height-1 mb-5">
-                                                    Дата: <span id="gwe"></span><br>
-                                                    Время: <span id="time"></span>
-                                                </p>
-                                            @else
-                                                <h4 class="font-weight-bold">Запись <span class="text-mute text-12">
-                                                    {{ $standPublisher->id }}</span> для стенда {{ $stand->name }}
-                                                </h4>
-                                                <p class="text-20 text-success font-weight-bold line-height-1 mb-5">
-                                                    Дата записи: </strong>{{ $standPublisher->date }}
-                                                    Время записи: </strong>{{ $standPublisher->time }}
-                                                </p>
-                                            @endempty
-                                            <small class="text-muted"></small>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-
-                                        {{-- Первый возвещатель --}}
-                                        {{--                                        <div class="col-md-6 mb-3 mb-sm-0">--}}
-                                        {{--                                            <div class="card">--}}
-                                        {{--                                                <div class="card-body">--}}
-                                        {{--                                                    <h5 class="heading">Первый возвещатель</h5>--}}
-
-                                        {{--                                                        <div class="row mb-3 mb-sm-0">--}}
-                                        {{--                                                            <div class="col-md-12">--}}
-                                        {{--                                                                <form id="changeForm" method="post" action="{{ route('recordRedactionChange1', ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">--}}
-                                        {{--                                                                    @csrf--}}
-                                        {{--                                                                    <select class="form-control form-control heading mb-4" name="1_user_id" id="1_user_id">--}}
-                                        {{--                                                                        @foreach ($users as $user)--}}
-                                        {{--                                                                            @if ($standPublisher->user_1 == $user->id)--}}
-                                        {{--                                                                                <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>--}}
-                                        {{--                                                                            @else--}}
-                                        {{--                                                                                <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>--}}
-                                        {{--                                                                            @endif--}}
-                                        {{--                                                                        @endforeach--}}
-                                        {{--                                                                    </select>--}}
-                                        {{--                                                                </form>--}}
-                                        {{--                                                            </div>--}}
-                                        {{--                                                            <div class="col-md-12">--}}
-                                        {{--                                                                <div class="row">--}}
-                                        {{--                                                                    <div class="col text-left mb-3 mb-sm-0">--}}
-                                        {{--                                                                        <a href="{{ route('recordRedactionDelete1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">--}}
-                                        {{--                                                                            <button class="btn btn-danger m-1" type="button" >--}}
-                                        {{--                                                                                Выписать(ся)--}}
-                                        {{--                                                                            </button>--}}
-                                        {{--                                                                        </a>--}}
-                                        {{--                                                                    </div>--}}
-                                        {{--                                                                    <div class="col text-right mb-3 mb-sm-0">--}}
-                                        {{--                                                                        <a href="{{ route('recordRedactionChange1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}"      onclick="event.preventDefault();--}}
-                                        {{--                                                        document.getElementById('changeForm').submit();">--}}
-                                        {{--                                                                            <button class="btn btn-success m-1" type="button" >--}}
-                                        {{--                                                                                Изменить запись--}}
-                                        {{--                                                                            </button>--}}
-                                        {{--                                                                        </a>--}}
-                                        {{--                                                                    </div>--}}
-                                        {{--                                                                </div>--}}
-                                        {{--                                                            </div>--}}
-                                        {{--                                                        </div>--}}
-                                        {{--                                                    --}}
-                                        {{--                                                </div>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-
-                                        {{--                                        --}}{{-- Второй возвещатель --}}
-                                        {{--                                        <div class="col-md-6 mb-3 mb-sm-0">--}}
-                                        {{--                                            <div class="card">--}}
-                                        {{--                                                <div class="card-body">--}}
-                                        {{--                                                    <h5 class="heading">Второй возвещатель</h5>--}}
-                                        {{--                                                    @if (is_null($standPublisher->user_2))--}}
-                                        {{--                                                        <h6 class="heading">Нет записи чтобы изменить</h6>--}}
-                                        {{--                                                    @else--}}
-                                        {{--                                                        <div class="row mb-3 mb-sm-0">--}}
-                                        {{--                                                            <div class="col-md-12">--}}
-                                        {{--                                                                <form id="changeForm2" method="post" action="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">--}}
-                                        {{--                                                                    @csrf--}}
-                                        {{--                                                                    <select class="form-control form-control-rounded heading mb-4" name="2_user_id" id="2_user_id">--}}
-                                        {{--                                                                        @foreach ($users as $user)--}}
-                                        {{--                                                                            @if ($standPublisher->user_2 == $user->id)--}}
-                                        {{--                                                                                <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>--}}
-                                        {{--                                                                            @else--}}
-                                        {{--                                                                                <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>--}}
-                                        {{--                                                                            @endif--}}
-                                        {{--                                                                        @endforeach--}}
-                                        {{--                                                                    </select>--}}
-                                        {{--                                                                </form>--}}
-                                        {{--                                                            </div>--}}
-                                        {{--                                                            <div class="col-md-12">--}}
-                                        {{--                                                                <div class="row">--}}
-                                        {{--                                                                    <div class="col text-left mb-3 mb-sm-0">--}}
-                                        {{--                                                                        <a href="{{ route('recordRedactionDelete2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">--}}
-                                        {{--                                                                            <button class="btn btn-danger m-1" type="button" >--}}
-                                        {{--                                                                                Выписать(ся)--}}
-                                        {{--                                                                            </button>--}}
-                                        {{--                                                                        </a>--}}
-                                        {{--                                                                    </div>--}}
-                                        {{--                                                                    <div class="col text-right mb-3 mb-sm-0">--}}
-                                        {{--                                                                        <a href="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}" onclick="event.preventDefault();--}}
-                                        {{--                                   document.getElementById('changeForm2').submit();">--}}
-                                        {{--                                                                            <button class="btn btn-success m-1" type="button" >--}}
-                                        {{--                                                                                Изменить запись--}}
-                                        {{--                                                                            </button>--}}
-                                        {{--                                                                        </a>--}}
-                                        {{--                                                                    </div>--}}
-                                        {{--                                                                </div>--}}
-                                        {{--                                                            </div>--}}
-                                        {{--                                                        </div>--}}
-                                        {{--                                                    @endif--}}
-                                        {{--                                                </div>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="modal" id="createModal1">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -414,53 +328,6 @@
                             <a class="btn btn-success" type="button" href="{{ route('NewRecordStand1') }}"
                                onclick="event.preventDefault();
                            document.getElementById('NewRecordStand1').submit();">
-                                Записать
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal" id="updateModal1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="record1">Запись для стенда {{ $stand->name }} № <span id="updateModal_1_standPublishers_id"></span></h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body">
-                            <form id="form_update_record_1" method="post" action="{{ route('AddPublisherToStand1') }}">
-                                @csrf
-                                <input type="hidden" id="updateModal_1_Value_standPublishers_id" name="updateModal_1_Value_standPublishers_id">
-
-                                <p class="text-20 text-success text-left font-weight-bold line-height-1 mb-5">
-                                    Дата: <span id="updateModal_1_gwe"></span><br>
-                                    Время: <span id="updateModal_1_time"></span>
-                                </p>
-                                <small class="text-muted"></small>
-                                <div class="row mb-5">
-                                    <div class="col-md-12 mb-3 mb-sm-0">
-                                        <h5 class="font-weight-bold text-center">Первый возвещатель</h5>
-                                        <select class="form-control form-control-rounded" name="user_1" id="user_1">
-                                            @foreach ($users as $user)
-                                                @if (auth()->user()->id == $user->id)
-                                                    <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>
-                                                @else
-                                                    <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="submit" data-dismiss="modal">Закрыть</button>
-                            <a class="btn btn-success" type="button" href="{{ route('AddPublisherToStand1') }}"
-                               onclick="event.preventDefault();
-                           document.getElementById('form_update_record_1').submit();">
                                 Записать
                             </a>
                         </div>
@@ -517,6 +384,53 @@
                     </div>
                 </div>
             </div>
+            <div class="modal" id="updateModal1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="record1">Запись для стенда {{ $stand->name }} № <span id="updateModal_1_standPublishers_id"></span></h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form id="form_update_record_1" method="post" action="{{ route('AddPublisherToStand1') }}">
+                                @csrf
+                                <input type="hidden" id="updateModal_1_Value_standPublishers_id" name="updateModal_1_Value_standPublishers_id">
+
+                                <p class="text-20 text-success text-left font-weight-bold line-height-1 mb-5">
+                                    Дата: <span id="updateModal_1_gwe"></span><br>
+                                    Время: <span id="updateModal_1_time"></span>
+                                </p>
+                                <small class="text-muted"></small>
+                                <div class="row mb-5">
+                                    <div class="col-md-12 mb-3 mb-sm-0">
+                                        <h5 class="font-weight-bold text-center">Первый возвещатель</h5>
+                                        <select class="form-control form-control-rounded" name="user_1" id="user_1">
+                                            @foreach ($users as $user)
+                                                @if (auth()->user()->id == $user->id)
+                                                    <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>
+                                                @else
+                                                    <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="submit" data-dismiss="modal">Закрыть</button>
+                            <a class="btn btn-success" type="button" href="{{ route('AddPublisherToStand1') }}"
+                               onclick="event.preventDefault();
+                           document.getElementById('form_update_record_1').submit();">
+                                Записать
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="modal" id="updateModal2">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -565,40 +479,6 @@
                 </div>
             </div>
             <script>
-                function callNumber(phoneNumber) {
-                    window.location.href = 'tel:' + phoneNumber;
-                }
-
-                $(document).ready(function() {
-                    $('.panel').click(function(event) {
-                        event.preventDefault();
-                        // Получение данных из атрибутов кнопки
-                        var id = $(this).data('id');
-                        var template = $(this).data('template');
-
-                        var time = $(this).data('time');
-                        var gwe = $(this).data('gwe');
-                        var day = $(this).data('day');
-
-                        // Отображение данных в модальном окне
-                        $('#updateModal_2_stand_publisher_id1').text(id);
-                        $('#updateModal_2_standTemplate_id1').text(template);
-                        ;
-                        $('#updateModal_2_time1').text(time);
-                        $('#updateModal_2_gwe1').text(gwe);
-                        $('#updateModal_2_day1').text(day);
-
-                        $('#updateModal_2_Value_standTemplate_id1').val(template);
-
-                        $('#updateModal_2_Value_time1').val(time);
-                        $('#updateModal_2_Value_gwe1').val(gwe);
-                        $('#updateModal_2_Value_day1').val(day);
-
-                        // Открытие модального окна
-                        $('#panelModal').modal('show');
-                    });
-                });
-
                 $(document).ready(function() {
                     $('.create_record1').click(function(event) {
                         event.preventDefault();
@@ -621,6 +501,31 @@
 
                         // Открытие модального окна
                         $('#createModal1').modal('show');
+                    });
+                });
+
+                $(document).ready(function() {
+                    $('.create_record2').click(function(event) {
+                        event.preventDefault();
+                        // Получение данных из атрибутов кнопки
+                        var id = $(this).data('id');
+                        var time = $(this).data('time');
+                        var gwe = $(this).data('gwe');
+                        var day = $(this).data('day');
+
+                        // Отображение данных в модальном окне
+                        $('#stand_template_id2').text(id);
+                        $('#time2').text(time);
+                        $('#gwe2').text(gwe);
+                        $('#day2').text(day);
+
+                        $('#Valuestand_template_id2').val(id);
+                        $('#Valuetime2').val(time);
+                        $('#Valuegwe2').val(gwe);
+                        $('#Valueday2').val(day);
+
+                        // Открытие модального окна
+                        $('#createModal2').modal('show');
                     });
                 });
 
@@ -655,31 +560,6 @@
                 });
 
                 $(document).ready(function() {
-                    $('.create_record2').click(function(event) {
-                        event.preventDefault();
-                        // Получение данных из атрибутов кнопки
-                        var id = $(this).data('id');
-                        var time = $(this).data('time');
-                        var gwe = $(this).data('gwe');
-                        var day = $(this).data('day');
-
-                        // Отображение данных в модальном окне
-                        $('#stand_template_id2').text(id);
-                        $('#time2').text(time);
-                        $('#gwe2').text(gwe);
-                        $('#day2').text(day);
-
-                        $('#Valuestand_template_id2').val(id);
-                        $('#Valuetime2').val(time);
-                        $('#Valuegwe2').val(gwe);
-                        $('#Valueday2').val(day);
-
-                        // Открытие модального окна
-                        $('#createModal2').modal('show');
-                    });
-                });
-
-                $(document).ready(function() {
                     $('.update_record2').click(function(event) {
                         event.preventDefault();
                         // Получение данных из атрибутов кнопки
@@ -708,38 +588,6 @@
                         $('#updateModal2').modal('show');
                     });
                 });
-
-                /*$(document).ready(function() {
-                    $('.redact_record').click(function(event) {
-                        event.preventDefault();
-                        // Получение данных из атрибутов кнопки
-                        var id = $(this).data('id');
-                        var template = $(this).data('template');
-                        var publishers = $(this).data('publishers');
-                        var time = $(this).data('time');
-                        var gwe = $(this).data('gwe');
-                        var day = $(this).data('day');
-
-
-                        // Отображение данных в модальном окне
-                        $('#redactModal_stand_publisher_id').text(id);
-                        $('#redactModal_standTemplate_id').text(template);
-                        $('#redactModal_standPublishers_id').text(publishers);
-                        $('#redactModal_time').text(time);
-                        $('#redactModal_gwe').text(gwe);
-                        $('#redactModal_day').text(day);
-
-                        $('#redactModal_Value_standTemplate_id').val(template);
-                        $('#redactModal_Value_standPublishers_id').val(publishers);
-                        $('#redactModal_Value_time').val(time);
-                        $('#redactModal_Value_gwe').val(gwe);
-                        $('#redactModal_Value_day').val(day);
-
-
-                        // Открытие модального окна
-                        $('#redactModal').modal('show');
-                    });
-                });*/
 
             </script>
         @endcan

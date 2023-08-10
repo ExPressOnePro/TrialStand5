@@ -3,6 +3,17 @@
 @section('content')
     @include('includes.guest.header')
 
+    @if (session('error'))
+        <div class="alert alert-card alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-card alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
         <div class="auth-layout-wrap">
             <div class="auth-content">
                 <div class="card o-hidden">
@@ -41,12 +52,13 @@
                                         <div class="col-md-12">
                                             <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('constant.Enter') }}</button>
 
-                                            @if (Route::has('password.request'))
-                                                <a class="btn btn-link heading" href="{{ route('password.request') }}">
+{{--                                            @if (Route::has('password.reset'))--}}
+                                                <a class="btn btn-link heading" href="{{ route('password.selectLogin') }}">
                                                     {{ __('text.Forgot your password?') }}
                                                 </a>
-                                            @endif
+{{--                                            @endif--}}
                                         </div>
+
                                     </div>
                                 </form>
                                 <div class="row">

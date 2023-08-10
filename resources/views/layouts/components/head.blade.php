@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" />
 
     <!-- Style css dist-assets -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/aspp.css') }}">
     <link rel="stylesheet" href="{{ asset('dist-assets/css/themes/lite-purple.css') }}">
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/perfect-scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('dist-assets/css/plugins/fontawesome-5.css') }}">

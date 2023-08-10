@@ -13,13 +13,16 @@
                                 <table class="display table table-striped table-bordered" id="zero_configuration_table" style="width:100%">
                                     <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Office</th>
-                                        <th>Age</th>
-                                        <th>Start date</th>
-                                        <th>Salary</th>
-                                        <th>Salary</th>
+                                        <th>Фамилия Имя</th>
+                                        <th>Почта</th>
+                                        <th>номер телефона</th>
+                                        <th>Роль</th>
+                                        <th>Адресс</th>
+                                        <th>Группа</th>
+                                        @role('Developer')
+                                            <th>Login</th>
+                                            <th>Последний вход</th>
+                                        @endrole
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -43,23 +46,15 @@
                                             </td>
                                             <td>{{ $user->address }}</td>
                                             <td>{{ $user->groups }}</td>
-                                            <td>
-                                                <a class="ul-link-action text-success" href="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="i-Edit"></i></a>
-                                                <a class="ul-link-action text-danger mr-1" href="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Want To Delete !!!"><i class="i-Eraser-2"></i></a>
-                                            </td>
+                                            @role('Developer')
+                                            <td>{{ $user->login }}</td>
+                                            <td>{{ $user->last_login }}</td>
+
+                                            @endrole
+
                                         </tr>
                                     @endforeach
                                     </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Office</th>
-                                        <th>Age</th>
-                                        <th>Start date</th>
-                                        <th>Salary</th>
-                                    </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>

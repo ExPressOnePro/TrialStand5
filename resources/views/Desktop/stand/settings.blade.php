@@ -49,7 +49,6 @@
                             <button class="btn btn-success btn-block mb-3" type="submit">
                                 {{ __('Применить') }}</button>
                         </a>
-
                     </div>
                 </div>
             </div>

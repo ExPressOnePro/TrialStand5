@@ -19,7 +19,7 @@
                     'congregation*',
                     'guest*',
                     'RolesPermissions*',
-                    'DevTools*'
+                    'DevTools*',
                     ))
                     @yield('content')
                     @include('includes.footer')

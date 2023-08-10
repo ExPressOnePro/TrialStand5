@@ -20,6 +20,8 @@ class PermissionSeeder extends Seeder
             'name' => [
                 'Users-Open congregation users',
                 'Users-Open all users',
+                'Users-Change role',
+                'Users-Change permissions',
                 'Congregations-Open congregation',
                 'Congregations-Open all congregations',
                 'Stand-Open settings stand',
@@ -31,6 +33,8 @@ class PermissionSeeder extends Seeder
             'slug' => [
                 'Users-Open congregation users',
                 'Users-Open all users',
+                'Users-Change role',
+                'Users-Change permissions',
                 'Congregations-Open Congregation',
                 'Congregations-Open all Congregations',
                 'Stand-Open settings stand',

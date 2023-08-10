@@ -17,6 +17,9 @@ class CreateCongregationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('address');
+            $table->string('city');
+            $table->string('district');
+            $table->string('country');
             $table->string('weekday_meeting');
             $table->string('weekend_meeting');
             $table->timestamps();

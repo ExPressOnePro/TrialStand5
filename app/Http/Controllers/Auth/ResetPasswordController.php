@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class ResetPasswordController extends Controller
+class  ResetPasswordController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -26,6 +26,8 @@ class ResetPasswordController extends Controller
     */
 
     use ResetsPasswords;
+
+
     public function emailLink(Request $request, MailerService $mailer): JsonResponse
     {
         try {

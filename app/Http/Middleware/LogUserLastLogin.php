@@ -21,12 +21,14 @@ class LogUserLastLogin
     {
         $response = $next($request);
         $userAgent = $request->header('User-Agent');
+        $ip = $request->ip();
 
         if (Auth::check()) {
             $user = Auth::user();
             User::find($user->id)->update(
                 ['last_login' => Carbon::now()],
-                ['user_agent' => $userAgent]
+                ['user_agent' => $userAgent],
+                ['ip' => $ip]
             );
         }
         return $response;

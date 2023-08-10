@@ -78,11 +78,15 @@
                     @endrole--}}
                 </div>
                 <div class="header-part-right">
+
                     <!-- Full screen toggle-->
                     <i class="i-Full-Screen header-icon d-none d-sm-inline-block" data-fullscreen=""></i>
-
+                    <a href="{{ route('settings.view') }}">
+                        <i class="fa-solid fa-gear header-icon" href="{{ route('settings.view') }}"></i>
+                    </a>
                     <!-- Grid menu Language-->
                     <div class="dropdown dropleft">
+
                         <i class="fa-solid fa-language header-icon" id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <div class="menu-icon-grid">
@@ -176,5 +180,4 @@
                 </div>
             </div>
         </header>
-
     @endif

@@ -52,7 +52,8 @@
                     'stand*',
                     'home*',
                     'congregation*',
-                    'guest*'
+                    'guest*',
+                    'settings*'
                     ))
                     @yield('content')
                 @endif

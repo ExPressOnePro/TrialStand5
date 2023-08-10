@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CongregationRequestsController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RolesAndPermissionsController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StandController;
 use App\Http\Controllers\UsersController;
 use App\Models\Role;
@@ -26,7 +28,20 @@ Route::get('/registration', function () {
     return view('auth.register');
 });
 
-Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
+//Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+//Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+//Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+
+Route::get('/password/select', [ForgotPasswordController::class, 'showSelectLogin'])->name('password.selectLogin');
+Route::post('/password/select', [ForgotPasswordController::class, 'SelectLogin'])->name('password.selectLoginPass');
+Route::get('/password/update/{login}', [ForgotPasswordController::class, 'showReset'])->name('password.forgot');
+Route::post('/password/update/{login}', [ForgotPasswordController::class, 'updatePassword'])->name('password.update');
+
+
+
+//Route::post('/password/reset', [ForgotPasswordController::class, 'showReset'])->name('password.reset');
+
+
 
 Route::group(['middleware' => 'auth'], function() {
 
@@ -34,6 +49,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/welcome', [HomeController::class, 'welcome'])->name('welcome');
     Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
+    Route::get('/settings', [SettingsController::class, 'settings'])->name('settings.view');
 
 
     Route::group([

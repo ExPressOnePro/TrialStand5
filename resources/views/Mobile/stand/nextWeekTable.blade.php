@@ -637,9 +637,7 @@
                     $('#createModal1').modal('show');
                 });
             });
-        </script>
 
-        <script>
             $(document).ready(function() {
                 $('.create_record2').click(function(event) {
                     event.preventDefault();
@@ -664,9 +662,7 @@
                     $('#createModal2').modal('show');
                 });
             });
-        </script>
 
-        <script>
             $(document).ready(function() {
                 $('.update_record1').click(function(event) {
                     event.preventDefault();
@@ -696,9 +692,7 @@
                     $('#updateModal1').modal('show');
                 });
             });
-        </script>
 
-        <script>
             $(document).ready(function() {
                 $('.update_record2').click(function(event) {
                     event.preventDefault();
@@ -728,9 +722,8 @@
                     $('#updateModal2').modal('show');
                 });
             });
+
         </script>
-
-
     @endcan
 
 

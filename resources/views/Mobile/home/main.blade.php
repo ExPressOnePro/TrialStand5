@@ -5,7 +5,6 @@
     <div class="main-content pt-4">
         <!-- Welcome-->
         <h3 class="card-header-pills heading text-center text-primary">{{__('constant.Welcome') }}</h3>
-        <p class="card-text heading text-center">{{__('constant.Main info') }}</p>
 
         <!-- Manager section where allow or denied new user -->
         @role('Developer')
@@ -37,7 +36,7 @@
                         <div class="text-center">
                             <h5 class="card-title heading text-center">В текущей неделе вы записаны на стенд <strong class="text-capitalize">{{ $standPublishersCount }}</strong> раз</h5>
                             <p class="mb-3 text-muted">Чтобы просмотреть записи - нажмите нопку</p>
-                            <a class="btn btn-primary collapsed" data-toggle="collapse" href="#collapse-link-collapsed" aria-expanded="false">
+                            <a class="btn btn-primary btn-block collapsed" data-toggle="collapse" href="#collapse-link-collapsed" aria-expanded="false">
                                 Детальнее
                             </a>
                         </div>
@@ -56,11 +55,12 @@
                                                 <h7 class="heading text-right">
                                                     {{ $publisher->date }}
                                                     <br>
-                                                    Время: {{ $publisher->time }}
+                                                    Время: {{ date('H:i', strtotime($publisher->time . ':00')) }}
+
                                                 </h7>
                                             </div>
                                         @endforeach
-                                    </li>
+                                    <
                                 @endforeach
                             </ul>
                         </div>
