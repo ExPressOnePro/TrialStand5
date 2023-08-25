@@ -44,53 +44,43 @@ class GeneralController extends Controller {
 
         return redirect( route('profile'))->with('success', 'Изменения применены');
     }
-    public function personalReport(PersonalReportRequest $request) {
 
-        $user_id = Auth()->id();
-        $year = Carbon::now()->year;
+    public function personalReport(Request $request) {
+        $user = Auth::user();
+        $year = $request->input('year');
         $month = $request->input('month');
-        $hours = $request->input('hours');
-        $publications = $request->input('publications');
-        $videos = $request->input('videos');
-        $return_visits = $request->input('return_visits');
-        $bible_studies = $request->input('bible_studies');
 
-
-        $personalReportUser = PersonalReport::where('user_id', Auth::id())
-            ->where('year', $year)
-            ->where('month', $month)
+        $existingReport = PersonalReport::where('user_id', $user->id)
+            ->where('info->year', $year)
+            ->where('info->month', $month)
             ->first();
 
-        if (is_null($personalReportUser)) {
-            $eee = PersonalReport::firstOrCreate([
-                'user_id' => Auth()->id(),
-                'year' => Carbon::now()->year,
-                'month' => $request->input('month'),
-                'hours' => $request->input('hours'),
-                'publications' => $request->input('publications'),
-                'videos' => $request->input('videos'),
-                'return_visits' => $request->input('return_visits'),
-                'bible_studies' => $request->input('bible_studies'),
-            ]);
-            return redirect()->back()->with('success', 'Отчет отправлен');
-        }
-        elseif ($personalReportUser->month . $personalReportUser->year == $month . $year) {
-            $personalReportUser->update([
-                'user_id' => $user_id,
-                'year' => $year,
-                'month' => $month,
-                'hours' => $hours,
-                'publications' => $publications,
-                'videos' => $videos,
-                'return_visits' => $return_visits,
-                'bible_studies' => $bible_studies,
-            ]);
-            return redirect()->back()->with('success', 'Отчет обновлен');
-        }
-        else {
-            return redirect()->back()->with('error', 'Отчет за выбранный месяц уже отправлен');
+        if ($existingReport) {
+            return redirect()->back()->with('error', 'Отчет за выбранный месяц уже создан');
         }
 
+        $hours = $request->input('hours') ?: 0;
+        $publications = $request->input('publications') ?: 0;
+        $videos = $request->input('videos') ?: 0;
+        $return_visits = $request->input('return_visits') ?: 0;
+        $bible_studies = $request->input('bible_studies') ?: 0;
+
+        $reportData = json_encode([
+            'year' => $year,
+            'month' => $month,
+            'hours' => $hours,
+            'publications' => $publications,
+            'videos' => $videos,
+            'return_visits' => $return_visits,
+            'bible_studies' => $bible_studies,
+        ]);
+
+        $user->personalReports()->create([
+            'user_id' => $user->id,
+            'info' => $reportData,
+        ]);
+
+        return redirect()->back()->with('success', 'Отчет отправлен');
     }
 
     public function profileEdit($id) {

@@ -17,10 +17,9 @@ class CreateStandTemplatesTable extends Migration
             $table->id();
             $table->enum('type', ['current', 'next'])->default('current');
             $table->json('week_schedule');
-            $table->string('activation')->default('4-08:00');
+            $table->json('settings');
             $table->unsignedBigInteger('stand_id');
             $table->unsignedBigInteger('congregation_id');
-            $table->unsignedBigInteger('allowed_entries');
             $table->timestamps();
 
             $table->foreign('stand_id')->on('stands')->references('id');

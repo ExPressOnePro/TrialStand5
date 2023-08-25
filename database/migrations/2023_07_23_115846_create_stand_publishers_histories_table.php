@@ -18,10 +18,8 @@ return new class extends Migration
             $table->date('date');
             $table->unsignedBigInteger('stand_publishers_id');
             $table->unsignedBigInteger('stand_id')->nullable();
-            $table->unsignedBigInteger('user_1')->nullable();
-            $table->unsignedBigInteger('user_2')->nullable();
-            $table->unsignedBigInteger('user_3')->nullable();
-            $table->unsignedBigInteger('user_4')->nullable();
+            $table->json('publishers')->nullable();
+
             $table->timestamps();
         });
     }

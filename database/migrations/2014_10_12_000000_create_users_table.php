@@ -28,20 +28,9 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->unsignedBigInteger('congregation_id');
-            $table->unsignedBigInteger('groups_id');
-            $table->text('mobile_phone');
-            $table->text('additional_phone');
-            $table->text('brief_information');
-            $table->string('gender');
-            $table->string('hometown');
-            $table->string('languages');
-            $table->string('city');
-            $table->string('address');
-            $table->date('birthday');
-            $table->date('christening_day');
-            $table->timestamp('last_login');
-            $table->timestamp('registration_date');
+            $table->json('info');
             $table->text('user_agent');
+            $table->string('ip');
             $table->timestamp('email_verified_at');
             $table->rememberToken();
             $table->timestamps();
@@ -53,8 +42,7 @@ class CreateUsersTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('users');
     }
 }

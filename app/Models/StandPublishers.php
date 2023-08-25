@@ -12,24 +12,33 @@ class StandPublishers extends Model implements Auditable {
     use HasFactory, \OwenIt\Auditing\Auditable;
 
 
-/*    protected $guard_name = 'web';*/
-   /* protected $fillable = [
-        'user_1', 'user_2', 'stand_template_id',
-    ];*/
+
+    protected $auditInclude = [
+        'day',
+        'time',
+        'date',
+        'stand_template_id',
+        'publishers'
+//        'user_1',
+//        'user_2',
+//        'user_3',
+//        'user_4',
+    ];
 
     public const TABLE = 'stands_publishers';
 
     protected $table = self::TABLE;
 
     protected $fillable = [
-    'day',
-    'time',
-    'date',
-    'stand_template_id',
-    'user_1',
-    'user_2',
-    'user_3',
-    'user_4',
+        'day',
+        'time',
+        'date',
+        'stand_template_id',
+        'publishers',
+//    'user_1',
+//    'user_2',
+//    'user_3',
+//    'user_4',
 
 ];
 
@@ -38,36 +47,40 @@ class StandPublishers extends Model implements Auditable {
      *
      * @return HasMany
      */
+
+//    public function user(): HasOne {
+//        return $this->hasOne(User::class, 'id', 'publishers');
+//    }
+
     public function standTemplates(): HasMany
     {
         return $this->hasMany(StandTemplate::class, 'id', 'stand_template_id');
     }
 
 
-
     /**
      * Get the user associated with the StandPublishers
      *
      * @return HasOne
      */
-    public function user(): HasOne {
-        return $this->hasOne(User::class, 'id', 'user_1');
-    }
-
-    /**
-     * Get the user associated with the StandPublishers
-     *
-     * @return HasOne
-     */
-    public function user2(): HasOne
-    {
-        return $this->hasOne(User::class, 'id', 'user_2');
-    }
-
-    public function user3(): HasOne
-    {
-        return $this->hasOne(User::class, 'id', 'user_3');
-    }
+//    public function user(): HasOne {
+//        return $this->hasOne(User::class, 'id', 'user_1');
+//    }
+//
+//    /**
+//     * Get the user associated with the StandPublishers
+//     *
+//     * @return HasOne
+//     */
+//    public function user2(): HasOne
+//    {
+//        return $this->hasOne(User::class, 'id', 'user_2');
+//    }
+//
+//    public function user3(): HasOne
+//    {
+//        return $this->hasOne(User::class, 'id', 'user_3');
+//    }
     /**
      * Get the user associated with the StandPublishers
      */

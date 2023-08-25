@@ -21,4 +21,9 @@ class Audit extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function standPublishers()
+    {
+        return $this->belongsTo(StandPublishers::class);
+    }
 }

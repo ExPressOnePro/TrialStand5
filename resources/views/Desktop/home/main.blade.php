@@ -2,6 +2,7 @@
 @section('title') Meeper | Главная @endsection
 @section('content')
 
+
     <div class="main-content pt-4">
         <!-- Welcome-->
         <h3 class="card-header-pills heading text-center text-primary">{{__('constant.Welcome') }}</h3>

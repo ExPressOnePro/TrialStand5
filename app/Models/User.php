@@ -20,6 +20,19 @@ class User extends Authenticatable implements Auditable {
 
     public const TABLE = 'users';
 
+    protected $auditInclude = [
+        'first_name',
+        'last_name',
+        'login',
+        'email',
+        'password',
+        'congregation_id',
+        'info',
+        'user_agent',
+        'ip',
+        'email_verified_at',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -32,19 +45,9 @@ class User extends Authenticatable implements Auditable {
         'email',
         'password',
         'congregation_id',
-        'groups_id',
-        'mobile_phone',
-        'additional_phone',
-        'brief_information',
-        'gender',
-        'hometown',
-        'languages',
-        'city',
-        'address',
-        'birthday',
-        'christening_day',
-        'last_login',
+        'info',
         'user_agent',
+        'ip',
         'email_verified_at',
     ];
 
@@ -58,6 +61,8 @@ class User extends Authenticatable implements Auditable {
         'remember_token',
     ];
 
+    protected $appends = ['audit_history'];
+
     /**
      * The attributes that should be cast.
      *
@@ -66,6 +71,10 @@ class User extends Authenticatable implements Auditable {
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function personalReports() {
+        return $this->hasMany(PersonalReport::class);
+    }
 
     public function congregation(): BelongsTo {
         return $this->belongsTo(Congregation::class);
@@ -87,7 +96,7 @@ class User extends Authenticatable implements Auditable {
         return $this->hasMany(UsersPermissions::class, 'user_id', 'id');
     }
 
-    public function UsersGroups() {
+    public function usersGroups() {
         return $this->hasMany(UsersGroups::class, 'user_id', 'id');
     }
 
@@ -95,6 +104,9 @@ class User extends Authenticatable implements Auditable {
         return $this->hasMany(PersonalReport::class, 'user_id', 'id');
     }
 
+    public function apiTokens() {
+        return $this->hasMany(ApiTokens::class, 'user_id', 'id');
+    }
 
 
     /**

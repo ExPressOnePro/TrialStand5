@@ -26,6 +26,11 @@
                                         <i class="fa-solid fa-eye"></i>
                                         {{ __('text.Open') }}</button>
                                 </a>
+                                <a href="{{ route('currentWeekTableFront', $asfu->id) }}">
+                                    <button class="btn btn-block btn-info text-20">
+                                        <i class="fa-solid fa-eye"></i>
+                                        {{ __('text.Open') }}</button>
+                                </a>
                             </div>
                             @can('Stand-Open settings stand')
                                 <div class="text-right mb-2">

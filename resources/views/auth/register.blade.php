@@ -4,7 +4,7 @@
 
     @inject('mobile_detect', 'Mobile_Detect')
     @if ($mobile_detect->isMobile())
-
+asdas
         <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
         <h1 class="mb-3 text-36 text-center">Регистрация</h1>
         <p class="heading mb-30 text-center">Создайте новый аккаунт чтобы пользоваться возможностями Meeper</p>

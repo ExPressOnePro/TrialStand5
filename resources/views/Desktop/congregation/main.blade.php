@@ -1,40 +1,141 @@
-@extends('layouts.app')
+@extends('Desktop.layouts.front.app')
 @section('title') Meeper | Собрание @endsection
 @section('content')
 
-    <div class="main-content pt-4">
-        <h1 class="heading text-center font-weight-bold">{{ $congregation->name }}</h1>
-        <!-- Информация-->
-        <div class="row">
-            <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-body p-0">
-                            <div class="d-flex border-bottom justify-content-between p-3">
-                                <div class="flex-grow-1">
-                                    <span class="text-small text-muted">Количество возвещателей</span>
-                                    <h5 class="m-0">{{ $countUsers }}</h5>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <span class="text-small text-muted">Количество групп</span>
-                                    <h5 class="m-0">{{ $countGroups}}</h5>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <span class="text-small text-muted">Количество Старейшин</span>
-                                    <h5 class="m-0">{{ $countOverseers }}</h5>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <span class="text-small text-muted">Количество служебных помошников</span>
-                                    <h5 class="m-0"></h5>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <span class="text-small text-muted">Количество общих пионеров</span>
-                                    <h5 class="m-0"></h5>
+    <script src="{{asset('front/vendor/appear/dist/appear.min.js')}}"></script>
+    <script src="{{asset('front//vendor/circles.js/circles.js')}}"></script>
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="d-flex mb-3">
+                <!-- Avatar -->
+                <div class="flex-shrink-0">
+                    <div class="avatar avatar-lg avatar-4x3">
+                        <img class="avatar-img" src="{{asset('front/svg/brands/guideline-icon.svg')}}" alt="Image Description">
+                    </div>
+                </div>
+                <!-- End Avatar -->
+
+                <div class="flex-grow-1 ms-4">
+                    <div class="row">
+                        <div class="col-lg mb-3 mb-lg-0">
+                            <h1 class="page-header-title">{{ $congregation->name }}</h1>
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span>Client:</span>
+                                    <a href="#"></a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            <!-- Группы собрания-->
+            </div>
+
+
+            <div class="js-nav-scroller hs-nav-scroller-horizontal">
+          <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+              <i class="bi-chevron-left"></i>
+            </a>
+          </span>
+
+                <span class="hs-nav-scroller-arrow-next" style="display: none;">
+            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+              <i class="bi-chevron-right"></i>
+            </a>
+          </span>
+
+                <ul class="nav nav-tabs page-header-tabs" id="projectsTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active"
+                           id="nav-one-eg1-tab" href="#nav-one-eg1" data-bs-toggle="pill"
+                           data-bs-target="#nav-one-eg1" role="tab" aria-controls="nav-one-eg1"
+                           aria-selected="true">Обзор</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           id="nav-4-eg1-tab" href="#nav-4-eg1" data-bs-toggle="pill"
+                           data-bs-target="#nav-4-eg1" role="tab" aria-controls="nav-4-eg1"
+                           aria-selected="false" tabindex="-1">Запросы
+                            <span class="badge bg-soft-danger text-danger rounded-circle ms-1">{{$congregationRequestsCount}}</span></a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link"
+                           id="nav-two-eg1-tab" href="#nav-two-eg1" data-bs-toggle="pill"
+                           data-bs-target="#nav-two-eg1" role="tab" aria-controls="nav-two-eg1"
+                           aria-selected="false" tabindex="-1">Возвещатели</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link"
+                           id="nav-three-eg1-tab" href="#nav-three-eg1" data-bs-toggle="pill"
+                           data-bs-target="#nav-three-eg1" role="tab" aria-controls="nav-three-eg1"
+                           aria-selected="false" tabindex="-1">Отчеты</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link"
+                           id="nav-5-eg1-tab" href="#nav-5-eg1" data-bs-toggle="pill"
+                           data-bs-target="#nav-5-eg1" role="tab" aria-controls="nav-5-eg1"
+                           aria-selected="false" tabindex="-1">Модули</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- End Nav -->
+        </div>
+        <!-- End Page Header -->
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="nav-one-eg1" role="tabpanel" aria-labelledby="nav-one-eg1-tab">
+                @include('Desktop.congregation.components.overview')
+            </div>
+            <div class="tab-pane fade" id="nav-two-eg1" role="tabpanel" aria-labelledby="nav-two-eg1-tab">
+                @include('Desktop.congregation.components.publishers')
+            </div>
+            <div class="tab-pane fade" id="nav-three-eg1" role="tabpanel" aria-labelledby="nav-three-eg1-tab">
+                @include('Desktop.congregation.components.reports')
+            </div>
+            <div class="tab-pane fade" id="nav-4-eg1" role="tabpanel" aria-labelledby="nav-4-eg1-tab">
+                @include('Desktop.congregation.components.requests')
+            </div>
+            <div class="tab-pane fade" id="nav-5-eg1" role="tabpanel" aria-labelledby="nav-5-eg1-tab">
+                @include('Desktop.congregation.components.modules')
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="row justify-content-between align-items-center">
+                <div class="col">
+                    <p class="fs-6 mb-0">&copy; Meeper. <span class="d-none d-sm-inline-block">2023</span></p>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex justify-content-end">
+                        <!-- List Separator -->
+                        <ul class="list-inline list-separator">
+                            <li class="list-inline-item">
+                                <a class="list-separator-link" href="#">FAQ</a>
+                            </li>
+
+                            <li class="list-inline-item">
+                                <a class="list-separator-link" href="#">License</a>
+                            </li>
+
+                            <li class="list-inline-item">
+                                <!-- Keyboard Shortcuts Toggle -->
+                                <button class="btn btn-ghost-secondary btn btn-icon btn-ghost-secondary rounded-circle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasKeyboardShortcuts" aria-controls="offcanvasKeyboardShortcuts">
+                                    <i class="bi-command"></i>
+                                </button>
+                                <!-- End Keyboard Shortcuts Toggle -->
+                            </li>
+                        </ul>
+                        <!-- End List Separator -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!--    <div class="main-content pt-4">
+        <div class="row">
+            &lt;!&ndash; Группы собрания&ndash;&gt;
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-title border-bottom d-flex align-items-center m-0 p-3">
@@ -56,218 +157,22 @@
                                 </div>
                             </div>
                         @endforeach
-
-                        {{--@foreach($permission_Overseer as $permission_Oversee)
-                            @foreach($permission_Overseer as $permission_Overse)
-                                @foreach($permission_Overse as $permission_Overs)
-                                <div class="d-flex align-items-center border-bottom-dotted-dim">
-                                    <div class="flex-grow-1">
-                                        <h6 class="m-0">{{$permission_Overs->User->first_name}} {{$permission_Overs->User->last_name}}</h6>
-                                        <p class="m-0 text-small text-muted"></p>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-outline-primary">Follow</button>
-                                    </div>
-                                </div>
-                                @endforeach
-                            @endforeach
-                        @endforeach--}}
                     </div>
                 </div>
             </div>
-            @if($congregationRequestsCount > 0)
-            <div class="col-md-4">
-                    <div class="card o-hidden mb-4">
-                        <div class="card-header d-flex align-items-center border-0">
-                            <h3 class="w-50 card-title m-0">Запросы на добавление к собранию</h3>
-
-                        </div>
-                        <div>
-                            <div class="table-responsive">
-                                <table class="table text-center" id="user_table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Действие</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($congregationRequests as $conReq)
-                                        <tr>
-                                            <th scope="row">{{ $conReq->user_id }}</th>
-                                            <th scope="row">{{ $conReq->user->first_name }} {{ $conReq->user->last_name }}</th>
-                                            <th scope="row">{{ $conReq->user->email }}</th>
-                                            <th>
-                                                <a class="text-success mr-2" href="{{ route('congregationAllow', [ 'id' => $congregation->id, 'user_id' => $conReq->user_id, 'conReq' => $conReq->id]) }}">
-                                                    <button class="btn btn-success">Разрешить</button>
-                                                </a>
-                                                <a class="text-success mr-2" href="#">
-                                                    <button class="btn btn-danger" href="{{ route('congregationReject', [ 'id' => $congregation->id, 'conReq' => $conReq->id]) }}">Запретить</button>
-                                                </a>
-                                            </th>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @else
-            @endif
-            <div class="col-md-4">
-                    <div class="card mb-4">
-                        <div class="card-body p-0">
-                            <div class="card-title border-bottom d-flex align-items-center m-0 p-3">
-                                <span class="flex-grow-1">Разрешения пользователей для стенда</span>
-                                <span class="flex-grow-1"></span>
-                            </div>
-                            @foreach($permission_stands as $permission_stand)
-                                <div class="d-flex border-bottom justify-content-between p-3">
-                                    <div class="flex-grow-1 text-left">
-                                        <span class="text-left text-muted">Количество участников</span>
-                                        <h5 class="m-0">{{ $permission_stand->name}}</h5>
-                                    </div>
-                                    <div class="flex-grow-1 text-right">
-                                        <span class="text-right text-muted">Количество групп</span>
-                                        <h5 class="m-0">...</h5>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            {{--<div class="col-4">
-                    @foreach($managerCongregation as $manCon)
-                        <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4 text-center">
-                            <div class="card-body text-center mb-2">
-                                <p class="heading">
-                                    {{ $manCon->first_name }} {{ $manCon->last_name }}
-                                </p>
-                                <div class="content">
-                                    <a href="{{ route('userCard', $manCon->id) }}">
-                                        <button class="btn btn-outline-success">Открыть аккаунт</button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>--}}
-        </div>
-
-        <!---->
+    </div>-->
 
 
-        <!-- Информация-->
-        {{--<div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="card mb-4">
-                    <div class="card-body p-0">
-                        <div class="card-title border-bottom d-flex align-items-center m-0 p-3">
-                            <span class="flex-grow-1">Разрешения пользователей для стенда</span>
-                            <span class="flex-grow-1"></span>
-                        </div>
-                        @foreach($permission_stands as $permission_stand)
-                        <div class="d-flex border-bottom justify-content-between p-3">
-                            <div class="flex-grow-1 text-left">
-                                <span class="text-left text-muted">Количество участников</span>
-                                <h5 class="m-0">{{ $permission_stand->name}}</h5>
-                            </div>
-                            <div class="flex-grow-1 text-right">
-                                <span class="text-right text-muted">Количество групп</span>
-                                <h5 class="m-0">...</h5>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>--}}
-        <!---->
-        <!-- Управляющие-->
-        {{--<div class="row">
-
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                @foreach($managerCongregation as $manCon)
-                <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4 text-center">
-                    <div class="card-body text-center mb-2">
-                        <p class="heading">
-                            {{ $manCon->first_name }} {{ $manCon->last_name }}
-                        </p>
-                        <div class="content">
-                            <a href="{{ route('userCard', $manCon->id) }}">
-                                <button class="btn btn-outline-success">Открыть аккаунт</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>--}}
-        <!---->
-
-        <!-- Members-->
-        {{--<div id="preferencesSection" class="row">
-            <div class="col-lg-12 col-md-12">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card o-hidden mb-4">
-                            <div class="card-header d-flex align-items-center border-0">
-                                <h3 class="w-50 float-left card-title m-0">Участники </h3>
-                                <div class="dropdown dropleft text-right w-50 float-right">
-                                    <button class="btn bg-gray-100" id="dropdownMenuButton1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="nav-icon i-Gear-2"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <a class="dropdown-item" href="#">Add new user</a>
-                                        <a class="dropdown-item" href="#">View All users</a><a class="dropdown-item" href="#">Something else here</a></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="table-responsive">
-                                    <table class="table text-center" id="user_table">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Номер телефона</th>
-                                            <th scope="col">Группа</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Больше</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($users as $user)
-                                        <tr>
-                                            <th scope="row">{{ $user->id }}</th>
-                                            <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->mobile_phone }}</td>
-                                            <td>
-                                                <a class="text-success mr-2" href="#">
-                                                    <i class="nav-icon i-Pen-2 font-weight-bold"></i>
-                                                </a>
-                                                <a class="text-danger mr-2" href="#">
-                                                    <i class="nav-icon i-Close-Window font-weight-bold"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>--}}
-
-        <!---->
-
-    </div>
+        <script>
+            (function() {
+                // INITIALIZATION OF CIRCLES
+                // =======================================================
+                setTimeout(() => {
+                    document.querySelectorAll('.js-circle').forEach(item => {
+                        HSCore.components.HSCircles.init(item)
+                    })
+                })
+            })();
+        </script>
 
 @endsection

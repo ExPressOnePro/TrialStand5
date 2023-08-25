@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Congregation;
+use App\Models\CongregationsPermissions;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\RolesPermissions;
@@ -10,6 +11,7 @@ use App\Models\Stand;
 use App\Models\StandPublishers;
 use App\Models\StandTemplate;
 use App\Models\User;
+use App\Models\UsersPermissions;
 use App\Models\UsersRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +20,73 @@ use OwenIt\Auditing\Facades\Auditor;
 
 class DeveloperController extends Controller{
 
+    public function testViewButtons() {
+
+        $roleDeveloper = Role::where('name', 'Developer')->first();
+        $usersDeveloper = UsersRoles::where('role_id', $roleDeveloper->id)->get();
+        $permissionModule = Permission::where('name', 'module.schedule')->first();
+
+        $usersPermissionModule = UsersPermissions::
+            whereIn('user_id', User::where('congregation_id', '2')->pluck('id'))
+            ->where('permission_id', $permissionModule->id)->get();
+
+
+
+//        foreach ($usersDeveloper as $userDeveloper) {
+//            $usersCongregation = User::where('congregation_id', '2')
+//                ->where('id', '!=', $userDeveloper->user_id)
+//                ->get();
+//
+//        }
+//        foreach($usersCongregation as $userCongregation) {
+//            $userPermissionModule = UsersPermissions::where('user_id', $userCongregation->id)
+//                ->where('permission_id', $permissionModule->id)->first();
+//            if($userPermissionModule) {
+//                $usersPermissionModule[] = $userPermissionModule;
+//            }
+//        }
+
+//        foreach($usersCongregation as $userCongregation) {
+//
+//            $RolesPermissions = new UsersPermissions();
+//            $RolesPermissions->user_id = $userCongregation->id;
+//            $RolesPermissions->permission_id = $permissionModule->id;
+//            $RolesPermissions->save();
+//
+//        }
+
+        return view ('Mobile.testViewButtons', compact('usersPermissionModule'));
+
+
+    }
+
+    public function test1button() {
+
+        $roleDeveloper = Role::where('name', 'Developer')->first();
+        $permissionModule = Permission::where('name', 'module.stand')->first();
+        $congregation = '2';
+        $usersCongregation = User::where('congregation_id', $congregation)->get();
+
+        $usersPermissionModule = UsersPermissions::
+        whereIn('user_id', User::where('congregation_id', '2')->pluck('id'))
+            ->where('permission_id', $permissionModule->id)->get();
+
+
+        foreach($usersCongregation as $userCongregation) {
+            $RolesPermissions = new UsersPermissions();
+            $RolesPermissions->user_id = $userCongregation->id;
+            $RolesPermissions->permission_id = $permissionModule->id;
+            $RolesPermissions->save();
+        }
+
+        $congregationPermission = new CongregationsPermissions();
+        $congregationPermission->congregation_id = $congregation;
+        $congregationPermission->permission_id = $permissionModule->id;
+        $congregationPermission->save();
+
+        return redirect()->route('testViewButtons');
+
+    }
     public function rolesPermissionsPage() {
         $roles = Role::get();
         $permissions = Permission::get();

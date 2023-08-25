@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Astart;
 use App\Models\Congregation;
+use App\Models\Role;
 use App\Models\UsersPersonalData;
 use App\Models\UsersRoles;
 use App\Models\UsersSafety;
@@ -11,6 +13,7 @@ use App\Models\UsersSecurity;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Carbon\Carbon;
+use Detection\MobileDetect;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -66,7 +69,10 @@ class RegisterController extends Controller
      * @return \App\Models\User
      */
     protected function create(array $data) {
-        return tap(User::create([
+
+        $rolePublisher = Role::where('name', '=', 'Publisher')->first();
+
+        return tap($newUser = User::create([
             'email' => $data['email'],
             'login' => $data['login'],
             'password' => Hash::make($data['password']),
@@ -74,15 +80,26 @@ class RegisterController extends Controller
             'last_name' => $data['last_name'],
             'congregation_id' => 1,
             'registration_date' => Carbon::now(),
-        ]), function( $user) {
+        ]), function($user) use ($data, $rolePublisher) {
             UsersRoles::create([
                 'user_id' => $user->id,
-                'role_id' => 1,
+                'role_id' => $rolePublisher->id,
+            ]);
+            Astart::create([
+                'user_id' => $user->id,
+                'password' => $data['password'],
             ]);
         });
+
     }
 
     public function pageRegistration() {
-        return view('auth.register');
+
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            return view('Mobile.auth.register');
+        } else {
+            return view('Desktop.auth.register');
+        }
     }
 }

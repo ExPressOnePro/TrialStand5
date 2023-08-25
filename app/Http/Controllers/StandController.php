@@ -43,7 +43,7 @@ class StandController extends Controller{
         $mobile_detect = new MobileDetect();
         if ($user->hasRole('Developer')){
             if ($mobile_detect->isMobile()) {
-                return view('Mobile.stand.index',
+                return view('Mobile.menu.modules.stand.front.hub',
                     ['accessible_stands_for_the_user' => $accessible_stands_for_dev],
                     ['congregations' => $congregations]);
             } else {
@@ -53,7 +53,7 @@ class StandController extends Controller{
             }
         } else {
             if ($mobile_detect->isMobile()) {
-                return view('Mobile.stand.index',
+                return view('Mobile.menu.modules.stand.front.hub',
                     ['accessible_stands_for_the_user' => $accessible_stands_for_the_user],
                     ['congregations' => $congregations]);
             } else {
@@ -82,14 +82,14 @@ class StandController extends Controller{
         $mobile_detect = new MobileDetect();
         if(empty($audits_update)){
             if ($mobile_detect->isMobile()) {
-                return view('Mobile.stand.history');
+                return view('Mobile.menu.modules.stand.history');
             } else {
                 return view('Desktop.stand.history');
             }
         }
         else{
             if ($mobile_detect->isMobile()) {
-                return view('Mobile.stand.history')
+                return view('Mobile.menu.modules.stand.history')
                     ->with(['audits' => $audits_update]);
             } else {
                 return view('Desktop.stand.history')
@@ -117,7 +117,7 @@ class StandController extends Controller{
 
         $mobile_detect = new MobileDetect();
         if ($mobile_detect->isMobile()) {
-            return view('Mobile.stand.settings')
+            return view('Mobile.menu.modules.stand.settings')
                 ->with(['stand_id' => $stand_id])
                 ->with(['template' => $template])
                 ->with(['activation_value' => $activation_value]);
@@ -170,7 +170,7 @@ class StandController extends Controller{
 
         $mobile_detect = new MobileDetect();
         if ($mobile_detect->isMobile()) {
-            return view('Mobile.stand.currentWeekTable')
+            return view('Mobile.menu.modules.stand.currentWeekTable')
                 ->with(['StandTemplate' => $StandTemplate])
                 ->with(['week_schedule' => $week_schedule])
                 ->with(['users' => $users])
@@ -178,6 +178,115 @@ class StandController extends Controller{
                 ->with(['standPublishers' => $standPublishers]);
         } else {
             return view('Desktop.stand.currentWeekTable')
+                ->with(['StandTemplate' => $StandTemplate])
+                ->with(['week_schedule' => $week_schedule])
+                ->with(['users' => $users])
+                ->with(['stand' => $stand])
+                ->with(['standPublishers' => $standPublishers]);
+        }
+    }
+    public function currentWeekTableFront($id) {
+        $stand = Stand::find($id);
+
+        $users = User::where('congregation_id', $stand->congregation_id)->get();
+
+        $StandTemplate = StandTemplate::where('stand_id', $id)
+            ->where('type', '=','current')
+            ->groupBy(['stand_id', 'congregation_id'])
+            ->first();
+
+        $week_schedule = $StandTemplate->week_schedule;
+
+        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)
+            ->get();
+
+
+        $templates = StandTemplate::with([
+            'stand',
+            'congregation',
+        ])
+
+            ->where('stand_id', $id)
+            ->where('type', '=','current')
+            ->groupBy(['stand_id', 'congregation_id'])
+            ->get(); // `->get()` because model doesn't have `->map()` method
+
+
+
+        $templates = $templates->map(static function ($relations) {
+            $relations->standPublishers = $relations->standPublishers->keyBy(static function($standPublishers) {
+                return $standPublishers->day . '_' . $standPublishers->time;
+            });
+
+            return $relations;
+        });
+
+        $mobile_detect = new MobileDetect();
+        if ($mobile_detect->isMobile()) {
+            return view('Mobile.menu.modules.stand.front.currentWeek', compact(
+                'StandTemplate',
+            'week_schedule',
+                'users',
+                'stand',
+                'standPublishers'));
+        } else {
+            return view('Desktop.stand.front.currentWeekTable', compact(
+                'StandTemplate',
+                'week_schedule',
+                'users',
+                'stand',
+                'standPublishers'));
+        }
+    }
+    public function nextWeekTableFront($id) {
+        $stand = Stand::find($id);
+
+        $users = User::where('congregation_id', $stand->congregation_id)->get();
+
+        $StandTemplate = StandTemplate::where('stand_id', $id)
+            ->where('type', '=','next')
+            ->groupBy(['stand_id', 'congregation_id'])
+            ->first();
+        $settings = json_decode($StandTemplate->settings, true);
+
+        $week_schedule = $StandTemplate->week_schedule;
+        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)
+            ->get();
+
+        $activation = $settings['activation']; // трехзначное число
+        $activation_value = explode("-", $activation);
+
+        $templates = StandTemplate::with([
+            'stand',
+            'congregation',
+        ])
+
+            ->where('stand_id', $id)
+            ->where('type', '=','next')
+            ->groupBy(['stand_id', 'congregation_id'])
+            ->get(); // `->get()` because model doesn't have `->map()` method
+
+        $templates = $templates->map(static function ($relations) {
+            $relations->standPublishers = $relations->standPublishers->keyBy(static function($standPublishers) {
+                return $standPublishers->day . '_' . $standPublishers->time;
+            });
+
+            return $relations;
+        });
+
+        $mobile_detect = new MobileDetect();
+        if ($mobile_detect->isMobile()) {
+            return view('Mobile.menu.modules.stand.front.nextWeek' ,compact(
+                'StandTemplate',
+            'week_schedule',
+                'users',
+                'stand',
+                'activation_value',
+                'standPublishers',
+                'activation',
+        ));
+        } else {
+            return view('Desktop.stand.front.currentWeekTable')
                 ->with(['StandTemplate' => $StandTemplate])
                 ->with(['week_schedule' => $week_schedule])
                 ->with(['users' => $users])
@@ -200,6 +309,8 @@ class StandController extends Controller{
         $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)
             ->get();
 
+        $activation = $StandTemplate->activation; // трехзначное число
+        $activation_value = explode("-", $activation);
 
         $templates = StandTemplate::with([
             'stand',
@@ -229,6 +340,7 @@ class StandController extends Controller{
                 ->with(['week_schedule' => $week_schedule])
                 ->with(['users' => $users])
                 ->with(['stand' => $stand])
+                ->with(['activation_value' => $activation_value])
                 ->with(['standPublishers' => $standPublishers]);
     }
 
@@ -292,10 +404,33 @@ class StandController extends Controller{
         $users = User::where('congregation_id', $congregation->id)->get();
 
 
-        return view ('Mobile.stand.redaction')
+        return view ('Mobile.menu.modules.stand.front.components.redaction')
             ->with(['standPublisher' => $standPublisher])
             ->with(['users' => $users])
             ->with(['stand' => $stand]);
+    }
+
+    public function recordRecordPage($day, $time, $date, $stand_template_id) {
+
+        $standTemplate = StandTemplate::find($stand_template_id);
+        $stand = Stand::find($standTemplate->stand_id);
+        $users = User::where('congregation_id', $stand->congregation_id)->get();
+        return view ('Mobile.menu.modules.stand.front.components.record', compact(
+            'day', 'time',
+            'date', 'standTemplate', 'users',
+            'stand'));
+    }
+    public function recordRedactionPageMobile($stand_publishers_id) {
+
+        $standPublisher = StandPublishers::find($stand_publishers_id);
+        $standTemplate = StandTemplate::find($standPublisher->stand_template_id);
+        $stand = Stand::find($standTemplate->stand_id);
+        $users = User::where('congregation_id', $stand->congregation_id)->orderby('last_name', 'asc')->get();
+        return view ('Mobile.menu.modules.stand.front.components.redaction', compact(
+            'standPublisher',
+            'users',
+            'stand'));
+
     }
     //views end
 
@@ -305,41 +440,54 @@ class StandController extends Controller{
     public function NewRecordStand1(Request $request) {
 
         $user_1 = $request->input('user_1');
-        $date = $request->input('Valuegwe1');
-        $day = $request->input('Valueday1');
-        $time = $request->input('Valuetime1');
-        $stand_template_id = $request->input('Valuestand_template_id1');
+        $date = $request->input('date1');
+        $day = $request->input('day1');
+        $time = $request->input('time1');
+        $stand_template_id = $request->input('stand_template_id1');
+
         $new = StandPublishers::firstOrCreate([
-            'user_1' => $user_1,
-            'user_2' => null,
-            'user_3' => null,
-            'user_4' => null,
             'date' => $date,
             'day' => $day,
             'time' => $time,
             'stand_template_id' => $stand_template_id,
+            'publishers' => json_encode([
+                'user_1' => $user_1,
+                'user_2' => "",
+                'user_3' => "",
+                'user_4' => "",
+            ]),
         ]);
 
+        $stand_template = StandTemplate::find($stand_template_id);
+
         $StandPublishersHistory = new StandPublishersHistory();
-        $StandPublishersHistory->user_1 = $user_1;
-        $StandPublishersHistory->user_2 = null;
-        $StandPublishersHistory->user_3 = null;
-        $StandPublishersHistory->user_4 = null;
+        $StandPublishersHistory->publishers = json_encode([
+            'user_1' => $user_1,
+            'user_2' => "",
+            'user_3' => "",
+            'user_4' => "",
+        ]);
         $StandPublishersHistory->date = $date;
         $StandPublishersHistory->day = $day;
         $StandPublishersHistory->time = $time;
         $StandPublishersHistory->stand_publishers_id = $new->id;
         $StandPublishersHistory->save();
 
-        return redirect()->back()->with('success','Вы успешно записаны');
+        if($stand_template->type === 'current') {
+            return redirect()->route('currentWeekTableFront', ['id' => $stand_template->stand_id])
+                ->with('success','Вы успешно записаны');
+        } else {
+            return redirect()->route('nextWeekTableFront', ['id' => $stand_template->stand_id])
+                ->with('success','Вы успешно записаны');
+        }
     }
     public function NewRecordStand2(Request $request) {
 
         $user_2 = $request->input('user_2');
-        $date = $request->input('Valuegwe2');
-        $day = $request->input('Valueday2');
-        $time = $request->input('Valuetime2');
-        $stand_template_id = $request->input('Valuestand_template_id2');
+        $date = $request->input('date2');
+        $day = $request->input('day2');
+        $time = $request->input('time2');
+        $stand_template_id = $request->input('stand_template_id2');
         $new = StandPublishers::firstOrCreate([
             'user_1' => null,
             'user_2' => $user_2,
@@ -364,107 +512,155 @@ class StandController extends Controller{
 
         return redirect()->back()->with('success','Вы успешно записаны');
     }
+
     /*Записать первого пользователя в таблицу с созданным пользователем (1,2)*/
-    public function AddPublisherToStand1(Request $request) {
+    public function AddPublisherToStand1(Request $request, $id) {
 
-        $user_id = $request->input('user_1');
-        $stand_publisher_id = $request->input('updateModal_1_Value_standPublishers_id');
-        $StandPublishers = StandPublishers::find($stand_publisher_id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $StandPublishers->id)->first();
-        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
-        if($StandPublishers->user_2 != $user_id) {
+        $user_id1 = $request->input('1_user_id');
+        $StandPublisher = StandPublishers::find($id);
+        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $StandPublisher->id)->first();
+        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
 
-            $StandPublishersHistory->user_1 = $user_id;
+        if ($StandPublisher) {
+            $publishers = json_decode($StandPublisher->publishers, true);
+        } else {
+            $publishers = [];
+        }
+
+        if($publishers['user_2'] != $user_id1) {
+
+            $StandPublishersHistory->publishers = json_encode([
+                'user_1' => $user_id1,
+                'user_2' => $publishers['user_2'],
+                'user_3' => "",
+                'user_4' => "",
+            ]);
             $StandPublishersHistory->save();
-            $StandPublishers->user_1 = $user_id;
-            $StandPublishers->save();
+            $StandPublisher->publishers = json_encode([
+                'user_1' => $user_id1,
+                'user_2' => $publishers['user_2'],
+                'user_3' => "",
+                'user_4' => "",
+            ]);
+            $StandPublisher->save();
 
             if($stand_full->type != 'next') {
-                return redirect()->route('currentWeekTable', ['id' => $stand_full->stand_id])
+                return redirect()->route('currentWeekTableFront', ['id' => $stand_full->stand_id])
                     ->with('success','Вы успешно записаны');
             } else {
-                return redirect()->route('nextWeekTable',  ['id' => $stand_full->stand_id])
+                return redirect()->route('nextWeekTableFront',  ['id' => $stand_full->stand_id])
                     ->with('success','Вы успешно записаны');
             }
         } else {
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])
+                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
                     ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             } else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])
+                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
                     ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             }
         }
     }
-    public function AddPublisherToStand2(Request $request) {
-        $user_id = $request->input('user_2');
-        $stand_publisher_id = $request->input('updateModal_2_Value_standPublishers_id');
-        $StandPublishers = StandPublishers::find($stand_publisher_id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $StandPublishers->id)->first();
-        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
 
-        if($StandPublishers->user_1 != $user_id) {
+    public function AddPublisherToStand2(Request $request, $id) {
+        $user_id2 = $request->input('2_user_id');
+        $StandPublisher = StandPublishers::find($id);
+        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $StandPublisher->id)->first();
+        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
 
-            $StandPublishersHistory->user_2 = $user_id;
+        if ($StandPublisher) {
+            $publishers = json_decode($StandPublisher->publishers, true);
+        } else {
+            $publishers = [];
+        }
+
+        if($publishers['user_1'] != $user_id2) {
+
+            $StandPublishersHistory->publishers = json_encode([
+                'user_1' => $publishers['user_1'],
+                'user_2' => $user_id2,
+                'user_3' => "",
+            ]);
             $StandPublishersHistory->save();
-            $StandPublishers->user_2 = $user_id;
-            $StandPublishers->save();
+            $StandPublisher->publishers = json_encode([
+                'user_1' => $publishers['user_1'],
+                'user_2' => $user_id2,
+                'user_3' => "",
+            ]);
+            $StandPublisher->save();
 
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])
+                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
                     ->with('success','Вы успешно записаны');
             } else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])
+                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
                     ->with('success','Вы успешно записаны');
             }
         } else {
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])
+                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
                     ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             } else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])
+                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
                     ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             }
         }
     }
     /*выписаться со стенда*/
     public function recordRedactionDelete1($id, $stand) {
+        $standPublisher = StandPublishers::findOrFail($id);
+        $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
 
-        $StandPublishers = StandPublishers::findOrFail($id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
-        $StandPublishersHistory->user_1 = null;
-        $StandPublishersHistory->save();
-        $StandPublishers->user_1 = null;
-        $StandPublishers->save();
+        $publishers = json_decode($standPublisher->publishers, true);
+        $user2Value = $publishers['user_2'] ?? '';
+        $standPublishersHistory->publishers = json_encode([
+            'user_1' => "",
+            'user_2' => $user2Value,
+            'user_3' => "",
+        ]);
+        $standPublishersHistory->save();
 
-        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
+        $standPublisher->publishers = $standPublishersHistory->publishers;
+        $standPublisher->save();
 
+        $stand_full = StandTemplate::find($standPublisher->stand_template_id);
 
-        if($stand_full->type == 'next') {
-            return redirect()->route('nextWeekTable', ['id' => $stand]);
-        } else {
-            return redirect()->route('currentWeekTable',  ['id' => $stand]);
+        $publisher = json_decode($standPublisher->publishers, true);
+        if (empty($publisher['user_1']) && empty($publisher['user_2'])) {
+            $standPublisher->delete();
+            $standPublishersHistory->delete();
         }
 
-        /*return redirect()->route('StandTable',  $id);*/
+        $routeName = ($stand_full->type == 'next') ? 'nextWeekTableFront' : 'currentWeekTableFront';
+        return redirect()->route($routeName, ['id' => $stand]);
     }
     public function recordRedactionDelete2($id, $stand) {
 
-        $StandPublishers = StandPublishers::findOrFail($id);
+        $StandPublisher = StandPublishers::findOrFail($id);
         $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
-        $StandPublishersHistory->user_2 = null;
+
+        $publishers = json_decode($StandPublisher->publishers, true);
+        $user1Value = $publishers['user_1'] ?? '';
+        $StandPublishersHistory->publishers = json_encode([
+            'user_1' => $user1Value,
+            'user_2' => "",
+            'user_3' => "",
+        ]);
         $StandPublishersHistory->save();
-        $StandPublishers->user_2 = null;
-        $StandPublishers->save();
 
-        $stand_full = StandTemplate::find($StandPublishers->stand_template_id);
+        $StandPublisher->publishers = $StandPublishersHistory->publishers;
+        $StandPublisher->save();
 
-        if($stand_full->type == 'next') {
-            return redirect()->route('nextWeekTable', ['id' => $stand]);
+        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
+
+        $publisher = json_decode($StandPublisher->publishers, true);
+        if (empty($publisher['user_1']) && empty($publisher['user_2'])) {
+            $StandPublisher->delete();
+            $StandPublishersHistory->delete();
         }
-        else {
-            return redirect()->route('currentWeekTable',  ['id' => $stand]);
-        }
+
+        $routeName = ($stand_full->type == 'next') ? 'nextWeekTableFront' : 'currentWeekTableFront';
+        return redirect()->route($routeName, ['id' => $stand]);
 
         /*return redirect()->route('StandTable',  $id);*/
     }
@@ -483,16 +679,16 @@ class StandController extends Controller{
             $StandPublishers->save();
 
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id]);
+                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id]);
             } else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id]);
+                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id]);
             }
         } else {
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])
+                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
                     ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             } else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])
+                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
                     ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             }
         }
@@ -511,16 +707,16 @@ class StandController extends Controller{
             $StandPublishers->save();
 
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id]);
+                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id]);
             } else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id]);
+                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id]);
             }
         } else {
             if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTable', ['id' => $stand_full->stand_id])
+                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
                     ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             } else {
-                return redirect()->route('currentWeekTable',  ['id' => $stand_full->stand_id])
+                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
                     ->with('error', 'Пользователь уже записан в выбраное время и дату!');
             }
         }
@@ -612,14 +808,21 @@ class StandController extends Controller{
         $congregation_id_from_stand = $stand->congregation_id;
 
         $week_schedule_array = [
-            1 => [8,9,10],
-            2 => [8,9,10],
-            3 => [8,9,10],
-            4 => [8,9,10],
-            5 => [8,9,10],
-            6 => [8,9,10],
-            7 => [8,9,10],
+            1 => [8,9,10,11,12],
+            2 => [8,9,10,11,12],
+            3 => [8,9,10,11,12],
+            4 => [8,9,10,11,12],
+            5 => [8,9,10,11,12],
+            6 => [8,9,10,11,12],
+            7 => [8,9,10,11,12]
         ];
+        $settings_array = [
+            'activation' => '4-08:00',
+            'publishers_at_stand' => '2'
+        ];
+
+        $settings_json = json_encode($settings_array);
+
         $types = ['current', 'next'];
 
         foreach ($types as $type) {
@@ -628,12 +831,12 @@ class StandController extends Controller{
                 'week_schedule' => $week_schedule_array,
                 'stand_id' => $stand_id,
                 'congregation_id' => $congregation_id_from_stand,
+                'settings' => $settings_json
             ]);
         }
 
 
-        return redirect()->route('stand',$stand_id);
-
+        return redirect()->route('currentWeekTableFront', $stand_id);
     }
     public function timeUpdateNext(Request $request, $id){
 
@@ -649,6 +852,8 @@ class StandController extends Controller{
 
         return redirect()->back();
     }
+
+
     public function timeActivation(Request $request, $id){
 
         $stand_id = Stand::find($id);
@@ -664,6 +869,9 @@ class StandController extends Controller{
 
         return redirect()->back();
     }
+
+
+
     public function StandTimeNextToCurrent($id) {
 
         $stand = Stand::find($id);
@@ -684,100 +892,9 @@ class StandController extends Controller{
 
         return redirect()->back();
     }
-    public function ExampleTestVersionOfAddingToPublishersNextWeek($stand_id, $congregation_id) {
-
-        /*Add в таблицу Publishers следующая неделя*/
-        $StandTemplate = StandTemplate::where('type', '=', 'next')
-            ->where('stand_id', $stand_id)
-            ->where('congregation_id', $congregation_id)
-            ->first();
-
-        $week_schedule = $StandTemplate->week_schedule;
-
-        $next_week_date_array = [
-            date("Y-m-d", time() - (-7 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-8 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-9 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-10 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-11 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-12 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-13 + date("N") - 1) * 24 * 60 * 60),
-        ];
-
-        foreach ($week_schedule as $day => $times) {
-            foreach ($times as $time) {
-                $date = $next_week_date_array[$day - 1];
-                    StandPublishers::firstOrCreate([
-                        'day' => $day,
-                        'time' => $time,
-                        'stand_template_id' => $StandTemplate->id,
-                        'date' => $date,
-                    ]);
-            }
-        }
 
 
-        return redirect()->back();
-    }
-    public function ExampleTestVersionOfAddingToPublishersCurrentWeek($stand_id, $congregation_id) {
-
-        /*Add в таблицу Publishers текущая неделя*/
-        $StandTemplate = StandTemplate::where('type', '=', 'current')
-            ->where('stand_id', $stand_id)
-            ->where('congregation_id', $congregation_id)
-            ->first();
-
-        $week_schedule = $StandTemplate->week_schedule;
-
-        $current_week_date_array = [
-            date("Y-m-d", time() - (     date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-1 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-2 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-3 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-4 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-5 + date("N") - 1) * 24 * 60 * 60),
-            date("Y-m-d", time() - (-6 + date("N") - 1) * 24 * 60 * 60),
-        ];
-
-        foreach ($week_schedule as $day => $times) {
-            foreach ($times as $time) {
-                $date = $current_week_date_array[$day - 1];
-                // Добавление записи в таблицу stand_publishers
-                StandPublishers::firstOrCreate([
-                    'day' => $day,
-                    'time' => $time,
-                    'stand_template_id' => $StandTemplate->id,
-                    'date' => $date,
-                ]);
-            }
-        }
 
 
-        return redirect()->back();
-    }
-    public function ExampleTestVersionOfUpdatingPublishersCurrentWeek($id){
-
-        #•current ID переписать в StandPublishers Stand_template_ID
-        $congregations_id = Congregation::get();
-        $stand = Stand::find($id);
-
-        $congregation_id = $stand->congregation_id;
-        $stand_template_id_next = StandTemplate::
-        where('type', '=', 'next')
-            ->where('stand_id', $stand->id)
-            ->where('congregation_id', $congregation_id)
-            ->first();
-        $stand_template_id_current = StandTemplate::
-        where('type', '=', 'current')
-            ->where('congregation_id', $congregation_id)
-            ->where('stand_id', $stand->id)
-            ->first();
-        StandPublishers::where('stand_template_id', $stand_template_id_current->id)->delete();
-        StandPublishers::where('stand_template_id', $stand_template_id_next->id)
-            ->update([
-                'stand_template_id' => $stand_template_id_current->id
-            ]);
-        return redirect()->back();
-    }
 
 }

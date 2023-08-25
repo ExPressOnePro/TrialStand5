@@ -67,7 +67,7 @@ class LoginController extends Controller
         if ($detect->isMobile()) {
             return view('Mobile.auth.login');
         } else {
-            return view('Desktop.auth.login');
+            return view('Mobile.auth.login');
         }
     }
 

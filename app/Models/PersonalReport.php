@@ -11,13 +11,7 @@ class PersonalReport extends Model
 
     protected $fillable = [
         'user_id',
-        'year',
-        'month',
-        'hours',
-        'publications',
-        'videos',
-        'return_visits',
-        'bible_studies',
+        'info'
     ];
 
     public function user() {

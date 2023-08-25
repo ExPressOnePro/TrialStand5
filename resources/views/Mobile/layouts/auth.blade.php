@@ -18,7 +18,6 @@
     <!-- Style css -->
     <link href="../public/css/app.css" rel="stylesheet">
 
-
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/d19fab2cf2.js" crossorigin="anonymous"></script>
     <script>

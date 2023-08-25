@@ -17,6 +17,14 @@
     <!-- CSS Implementing Plugins -->
     <link rel="stylesheet" href="{{ asset('front/vendor/bootstrap-icons/font/bootstrap-icons.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('front/vendor/daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('front/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/vendor/datatables.net.extensions/fixedColumns.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/vendor/datatables.net.extensions/dataTables.scroller.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/vendor/quill/dist/quill.snow.css') }}">
+
+
     <!-- CSS Front Template -->
     <link rel="preload" href="{{ asset('front/css/theme.min.css') }}" data-hs-appearance="default" as="style">
     <link rel="preload" href="{{ asset('front/css/theme-dark.min.css') }}" data-hs-appearance="dark" as="style">

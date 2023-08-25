@@ -509,7 +509,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="modal fade" id="NewRecordStand2{{$time}}{{$gwe}}{{$day}}{{$StandTemplate->id}}" tabindex="-1" role="dialog" aria-labelledby="record2" style="display: none;" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">

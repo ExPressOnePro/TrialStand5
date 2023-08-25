@@ -117,11 +117,11 @@
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('constant.Enter') }}</button>
 
-{{--                                        @if (Route::has('password.reset'))--}}
-                                            <a class="btn btn-link heading" href="{{ route('password.reset') }}">
+                                        @if (Route::has('password.request'))
+                                            <a class="btn btn-link heading" href="{{ route('password.request') }}">
                                                 {{ __('text.Forgot your password?') }}
                                             </a>
-{{--                                        @endif--}}
+                                        @endif
                                     </div>
                                 </div>
                             </form>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\StandPublishers;
 use App\Models\User;
 use Carbon\Carbon;
 use Closure;
@@ -23,13 +24,21 @@ class LogUserLastLogin
         $userAgent = $request->header('User-Agent');
         $ip = $request->ip();
 
+//        $currentDate = Carbon::now();
+//        $startOfWeek = Carbon::now()->startOfWeek(); // Понедельник текущей недели
+//        $endOfWeek = Carbon::now()->endOfWeek(); // Воскресенье текущей недел
+//
+//        $weekData = StandPublishers::whereBetween('created_at', [$startOfWeek, $endOfWeek])->get();
+//
+
+
         if (Auth::check()) {
-            $user = Auth::user();
-            User::find($user->id)->update(
-                ['last_login' => Carbon::now()],
-                ['user_agent' => $userAgent],
-                ['ip' => $ip]
-            );
+
+            $user = User::find(Auth::id());
+            $user->user_agent = $userAgent;
+            $user->ip = $ip;
+            $user->save();
+
         }
         return $response;
     }

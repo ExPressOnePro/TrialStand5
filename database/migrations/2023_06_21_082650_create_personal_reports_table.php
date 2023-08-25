@@ -14,13 +14,7 @@ return new class extends Migration
         Schema::create('personal_reports', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('year');
-            $table->unsignedBigInteger('month');
-            $table->unsignedBigInteger('hours');
-            $table->unsignedBigInteger('publications');
-            $table->unsignedBigInteger('videos');
-            $table->unsignedBigInteger('return_visits');
-            $table->unsignedBigInteger('bible_studies');
+            $table->json('info');
             $table->timestamps();
         });
     }
