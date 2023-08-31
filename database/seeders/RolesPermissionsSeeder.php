@@ -29,51 +29,51 @@ class RolesPermissionsSeeder extends Seeder
 
         $rolePublishers = Role::where('name', '=', 'Publisher')->first();
 
-        foreach($users_pamanteni as $user_pamanteni){
-            UsersPermissions::create([
-                'user_id' => $user_pamanteni,
-                'permission_id' => $permission1,
-            ]);
-            UsersPermissions::create([
-                'user_id' => $user_pamanteni,
-                'permission_id' => $permission2,
-            ]);
-            UsersPermissions::create([
-                'user_id' => $user_pamanteni,
-                'permission_id' => $permission3,
-            ]);
-            UsersPermissions::create([
-                'user_id' => $user_pamanteni,
-                'permission_id' => $permission4,
-            ]);
-            UsersRoles::create([
-                'user_id' => $user_pamanteni,
-                'role_id' => $rolePublishers,
-            ]);
-        }
-
-        foreach($users_dacia as $user_dacia){
-            UsersPermissions::create([
-                'user_id' => $user_dacia,
-                'permission_id' => $permission1,
-            ]);
-            UsersPermissions::create([
-                'user_id' => $user_dacia,
-                'permission_id' => $permission2,
-            ]);
-            UsersPermissions::create([
-                'user_id' => $user_dacia,
-                'permission_id' => $permission3,
-            ]);
-            UsersPermissions::create([
-                'user_id' => $user_dacia,
-                'permission_id' => $permission4,
-            ]);
-            UsersRoles::create([
-                'user_id' => $user_dacia,
-                'role_id' => $rolePublishers,
-            ]);
-        }
+//        foreach($users_pamanteni as $user_pamanteni){
+//            UsersPermissions::create([
+//                'user_id' => $user_pamanteni,
+//                'permission_id' => $permission1,
+//            ]);
+//            UsersPermissions::create([
+//                'user_id' => $user_pamanteni,
+//                'permission_id' => $permission2,
+//            ]);
+//            UsersPermissions::create([
+//                'user_id' => $user_pamanteni,
+//                'permission_id' => $permission3,
+//            ]);
+//            UsersPermissions::create([
+//                'user_id' => $user_pamanteni,
+//                'permission_id' => $permission4,
+//            ]);
+//            UsersRoles::create([
+//                'user_id' => $user_pamanteni,
+//                'role_id' => $rolePublishers,
+//            ]);
+//        }
+//
+//        foreach($users_dacia as $user_dacia){
+//            UsersPermissions::create([
+//                'user_id' => $user_dacia,
+//                'permission_id' => $permission1,
+//            ]);
+//            UsersPermissions::create([
+//                'user_id' => $user_dacia,
+//                'permission_id' => $permission2,
+//            ]);
+//            UsersPermissions::create([
+//                'user_id' => $user_dacia,
+//                'permission_id' => $permission3,
+//            ]);
+//            UsersPermissions::create([
+//                'user_id' => $user_dacia,
+//                'permission_id' => $permission4,
+//            ]);
+//            UsersRoles::create([
+//                'user_id' => $user_dacia,
+//                'role_id' => $rolePublishers,
+//            ]);
+//        }
 
 
         $roleId = 1; // Идентификатор роли, для которой выполняется присвоение разрешений
