@@ -15,25 +15,12 @@
                     <div class="card-body">
                         <form action="{{ route('timeActivation', ['id' => $stand_id->id]) }}" method="post" id="timeActivation">
                             @csrf
-                            @php
-                                $activation = $template->activation;
-                                list($dayOfWeek, $time) = explode('-', $activation);
-                                $daysOfWeek = [
-                                    1 => 'Понедельник',
-                                    2 => 'Вторник',
-                                    3 => 'Среда',
-                                    4 => 'Четверг',
-                                    5 => 'Пятница',
-                                    6 => 'Суббота',
-                                    7 => 'Воскресенье',
-                                ];
-                            @endphp
 
                             <div class="row">
                                 <div class="col-6">
-                                    <select class="form-control text-left" id="day" name="day">
-                                        @foreach ($daysOfWeek as $dayValue => $dayName)
-                                            <option value="{{ $dayValue }}" {{ $dayValue == $dayOfWeek ? 'selected' : '' }}>
+                                    <select class="form-control text-left" name="dayOfWeek">
+                                        @foreach($daysOfWeek as $dayNumber => $dayName)
+                                            <option value="{{ $dayNumber }}" {{ $dayNumber == $activation_values[0] ? 'selected' : '' }}>
                                                 {{ $dayName }}
                                             </option>
                                         @endforeach
@@ -41,21 +28,16 @@
                                 </div>
                                 <div class="col-6">
                                     <select class="form-control text-center" id="time" name="time">
-                                        @for ($hour = 0; $hour < 24; $hour++)
-                                            @for ($minute = 0; $minute < 60; $minute += 15)
-                                                @php
-                                                    $formattedTime = sprintf("%02d:%02d", $hour, $minute);
-                                                @endphp
-                                                <option value="{{ $formattedTime }}" {{ $formattedTime == $time ? 'selected' : '' }}>
-                                                    {{ $formattedTime }}
+                                        @for($hour = 0; $hour < 24; $hour++)
+                                            @for($minute = 0; $minute < 60; $minute += 60)
+                                                <option value="{{ sprintf('%02d:%02d', $hour, $minute) }}" {{ $activation_values[1] == sprintf('%02d:%02d', $hour, $minute) ? 'selected' : '' }}>
+                                                    {{ sprintf('%02d:%02d', $hour, $minute) }}
                                                 </option>
                                             @endfor
                                         @endfor
                                     </select>
                                 </div>
                             </div>
-
-
                         </form>
                     </div>
                     <div class="card-footer text-right">
@@ -114,7 +96,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

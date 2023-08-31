@@ -8,7 +8,7 @@
                 <div class="navbar ms-auto"></div>
             @else
                 <div class="navbar">
-                    <a class="text-center text-dark h1" href="{{ URL::previous() }}">
+                    <a class="text-center text-dark h1" onclick="goBack()">
                         <div class="rounded">
 
                         </div>
@@ -24,6 +24,11 @@
         </div>
     </div>
 </header>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 
 
 

@@ -8,6 +8,7 @@ use App\Models\Stand;
 use App\Models\StandPublishers;
 use App\Models\StandTemplate;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,57 +33,63 @@ class HomeController extends Controller
     public function index() {
 
         $user = User::find(Auth::id());
-        $congregation = Congregation::where('id', '>', 1)->get();
+        $congregations = Congregation::where('id', '>', 1)->get();
         $congregationRequests = CongregationRequests::get();
         $stand = Stand::where('congregation_id', $user->congregation_id)->get();
         $active_day = StandPublishers::select('day')->distinct()->get();
-        $start_date = date("Y-m-d", time() - (     date("N") - 1) * 24 * 60 * 60);
-        $end_date   = date("Y-m-d", time() - (-6 + date("N") - 1) * 24 * 60 * 60);
+        $startOfWeek = now()->format('Y-m-d');
+        $endOfWeek = now()->endOfWeek()->format('Y-m-d');
+        $nextWeekEnd = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
 
-//        $standPublishers = StandPublishers::with('standTemplates')
-//            ->whereBetween('date', [$start_date, $end_date])
-//            ->where('user_1', $user->id)
-//            ->orWhere('user_2', $user->id)
-//            ->orderBy('date', 'asc')
-//            ->get();
-//
-//        $standPublishersCount = StandPublishers::
-//        whereBetween('date', [$start_date, $end_date])
-//            ->where('user_1', $user->id)
-//            ->orWhere('user_2', $user->id)
-//            ->orderBy('date', 'asc')
-//            ->count();
+        $standPublishersCount = StandPublishers::
+        whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->count();
+
+        $standPublishersCountAll = StandPublishers::
+        whereBetween('date', [$startOfWeek, $nextWeekEnd])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->count();
 
         $user_congregation_id = $user->congregation_id;
         $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
         $congregationRequestsCountAll = CongregationRequests::count();
 
+        $compact = compact(
+            'standPublishersCountAll',
+                    'stand',
+                    'user_congregation_id',
+                    'congregationRequestsCount',
+                    'standPublishersCount',
+                    'congregationRequestsCountAll',
+                    'congregationRequests',
+                    'active_day'
+        );
+
         $detect = new MobileDetect;
         if ($detect->isMobile()) { //Mobile
             if( $user->congregation_id === 1) {
-                return view('Mobile.guest', ['congregation' => $congregation], ['congregationRequests' => $congregationRequests]);
+                return view('Mobile.guest', ['congregations' => $congregations], ['congregationRequests' => $congregationRequests]);
             } else {
-                return view('Mobile.home.home', compact(
-//                    'standPublishers',
-                    'stand',
-                    'user_congregation_id',
-//                    'standPublishersCount',
-                    'congregationRequestsCount',
-                    'congregationRequestsCountAll',
-                    'congregationRequests',
-                    'active_day'));
+                return view('Mobile.home.home', $compact);
             }
         } else { //Desktop
             if ($user->congregation_id === 1) {
                 return view('Desktop.guest', ['congregation' => $congregation], ['congregationRequests' => $congregationRequests]);
             } else {
-                return view('Desktop.home.home', compact(
-//                    'standPublishers',
-                    'stand',
-                    'user_congregation_id',
-//                    'standPublishersCount',
-                    'congregationRequestsCount',
-                    'active_day'));
+                return view('Desktop.home.home',  $compact);
             }
         }
     }
@@ -95,17 +102,15 @@ class HomeController extends Controller
     public function guest() {
 
         $user = User::find(Auth::id());
-        $congregation = Congregation::where('id', '>', 1)->get();
+        $congregations = Congregation::where('id', '>', 1)->get();
         $congregationRequests = CongregationRequests::get();
 
         $detect = new MobileDetect;
         if ($detect->isMobile()) { //Mobile
-            return view('Mobile.guest')
-                ->with(['congregation' => $congregation])
-                ->with(['congregationRequests' => $congregationRequests]);
+            return view('Mobile.guest', compact('congregations', 'congregationRequests'));
         } else { //Desktop
             return view('Desktop.guest')
-                ->with(['congregation' => $congregation])
+                ->with(['congregations' => $congregations])
                 ->with(['congregationRequests' => $congregationRequests]);
         }
 
@@ -126,30 +131,67 @@ class HomeController extends Controller
 
         $startOfWeek = now()->format('Y-m-d');
         $endOfWeek = now()->endOfWeek()->format('Y-m-d');
+        $startOfWeek = now()->format('Y-m-d');
+        $endOfWeek = now()->endOfWeek()->format('Y-m-d');
+
+        $nextWeekStart = Carbon::now()->addWeek()->startOfWeek()->format('Y-m-d');
+        $nextWeekEnd = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
 
 
         $standPublishers = StandPublishers::with('standTemplates')
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->where('user_1', $user->id)
-            ->orWhere('user_2', $user->id)
-            ->where('date', '>=', $startOfWeek)
-            ->where('date', '<=', $endOfWeek)
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
             ->orderBy('date', 'asc')
             ->get();
 
+        $standPublishersNextWeek = StandPublishers::with('standTemplates')
+            ->whereBetween('date', [$nextWeekStart, $nextWeekEnd])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->get();
+
+
         $standPublishersCount = StandPublishers::
-        whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->where('date', '>=', $startOfWeek)
-            ->where('date', '<=', $endOfWeek)
-            ->where('user_1', $user->id)
-            ->orWhere('user_2', $user->id)
+            whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
             ->orderBy('date', 'asc')
             ->count();
 
-        return view ('Mobile.home.records-with-stand')
-            ->with(['standPublishers' => $standPublishers])
-            ->with(['stand' => $stand])
-            ->with(['standPublishersCount' => $standPublishersCount])
-            ->with(['active_day' => $active_day]);
+        $standPublishersCountNextWeek = StandPublishers::
+        whereBetween('date', [$nextWeekStart, $nextWeekEnd])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->count();
+
+        $compact = compact(
+            'standPublishersCountNextWeek',
+            'standPublishersNextWeek',
+            'standPublishers',
+            'stand',
+            'standPublishersCount',
+            'active_day',
+        );
+
+        return view ('Mobile.home.records-with-stand', $compact);
     }
 }

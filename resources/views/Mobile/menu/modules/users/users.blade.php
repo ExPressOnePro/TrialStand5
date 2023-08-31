@@ -54,9 +54,6 @@
                             <tr>
                                 <td>
                                     <a class="d-flex align-items-center" href="{{ route('userCard', $user->id) }}">
-                                        <div class="avatar avatar-circle">
-                                            <img class="avatar-img" src="{{ asset('front/img/160x160/img1.jpg') }}" alt="Image Description">
-                                        </div>
                                         <div class="ms-3">
                                             <span class="d-block h5 text-inherit mb-0"> {{ $user->first_name }} {{ $user->last_name }}
                                                 @foreach($user->usersroles as $userRole)

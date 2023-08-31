@@ -2,13 +2,6 @@
 @section('title') Meeper | детали @endsection
 @section('content')
 
-    @php
-        if ($standPublisher) {
-            $publishers = json_decode($standPublisher->publishers, true);
-        } else {
-            $publishers = [];
-        }
-    @endphp
     <div class="content container-fluid">
         <div class="alert alert-soft-dark mb-5 mb-lg-7" role="alert">
             <div class="d-flex align-items-center">
@@ -20,135 +13,85 @@
             </div>
         </div>
 
-        {{-- Первый возвещатель --}}
-        <div class="card card-hover-shadow mt-4">
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="flex-grow-1">
-                        <h3 class="text-inherit mb-1">Первый возвещатель
-                            @empty($publishers['user_1'])
-                                <span class="badge bg-secondary">Пусто</span>
-                            @else
-                                <span class="badge bg-info">Записан</span>
-                            @endempty
-                        </h3>
+        @for($i = 1; $i <= $settings['publishers_at_stand']; $i++)
+            @php
+                $userKey = "user_$i";
+                $isUserEmpty = empty($publishers[$userKey]);
+                $currentUser = auth()->id();
+                $isCurrentUser = ($currentUser == $publishers[$userKey] && !$publishers[$userKey]);
+                $userLabel = $isUserEmpty ? 'Пусто' : 'Записан';
+            @endphp
 
-                        <form id="changeForm" method="post" action="{{ route('AddPublisherToStand1', ['id' => $standPublisher->id]) }}">
-                            @csrf
-                            <div class="tom-select-custom">
-                                <select class="js-select form-select" autocomplete="off" name="1_user_id" id="1_user_id">
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}"
-                                            {{ ($publishers['user_1'] == $user->id
-                                            || (auth()->id() == $user->id
-                                            && $publishers['user_1'] == null)) ? 'selected' : '' }}>
-                                            {{ $user->last_name }} {{ $user->first_name }}
+            <div class="card card-hover-shadow mt-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="flex-grow-1">
+                            <h3 class="text-inherit mb-1">{{ $i === 1 ? 'Первый' : ($i === 2 ? 'Второй' : ($i === 3 ? 'Третий' : 'Четвертый')) }} возвещатель
+                                @if($isUserEmpty)
+                                    <span class="badge bg-secondary">{{ $userLabel }}</span>
+                                @else
+                                    <span class="badge bg-info">{{ $userLabel }}</span>
+                                @endif
+                            </h3>
+
+                            <form id="changeForm{{ $i }}" method="post" action="{{ route('AddPublisherToStand' . $i, ['id' => $standPublisher->id]) }}">
+                                @csrf
+                                <div class="tom-select-custom">
+                                    <select class="js-select form-select" autocomplete="off" name="{{ $i }}_user_id" id="{{ $i }}_user_id">
+                                        @php
+                                            $currentUser = auth()->user();
+                                        @endphp
+
+                                        <option value="{{ $currentUser->id }}" {{ ($publishers[$userKey] == $currentUser->id || $isCurrentUser) ? 'selected' : '' }}>
+                                            {{ $currentUser->last_name }} {{ $currentUser->first_name }}
                                         </option>
-                                    @endforeach
-                            </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                @empty($publishers['user_1'])
-                    <div class="col-12">
-                        <div class="d-grid gap-2">
-                            <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
-                               onclick="event.preventDefault();
-                                                        document.getElementById('changeForm').submit();">
-                                Записать(ся)
-                            </a>
-                        </div>
-                    </div>
-                @else
-                <div class="row">
-                    <div class="col-6">
-                        <div class="d-grid">
-                            <a class="btn btn-danger m-1" type="button" href="{{ route('recordRedactionDelete1', ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
-                                Выписать(ся)
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="d-grid gap-2">
-                            <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange1',['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
-                               onclick="event.preventDefault();
-                                                        document.getElementById('changeForm').submit();">
-                                Изменить
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @endempty
-            </div>
-        </div>
 
-        {{-- Второй возвещатель --}}
-        <div class="card card-hover-shadow mt-4">
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="flex-grow-1">
-                        <h3 class="text-inherit mb-1">Второй возвещатель
-                            @empty($publishers['user_2'])
-                                <span class="badge bg-secondary">Пусто</span>
-                            @else
-                                <span class="badge bg-info">Записан</span>
-                            @endempty</h3>
-
-                        <form id="changeForm2" method="post" action="{{ route('AddPublisherToStand2',['id' => $standPublisher->id]) }}">
-                            @csrf
-                            <div class="tom-select-custom">
-                                <select class="js-select form-select" autocomplete="off" name="2_user_id" id="2_user_id">
-                                    @foreach ($users as $user)
-                                        @if($user->id != $publishers['user_2'])
-                                            <option value="{{ $user->id }}"
-                                                {{ ($publishers['user_2'] == $user->id
-                                                || (auth()->id() == $user->id
-                                                && $publishers['user_2'] == null)) ? 'selected' : '' }}>
-                                                {{ $user->last_name }} {{ $user->first_name }}
-                                            </option>
-                                        @else
-                                            <option value="{{ $user->id }}" selected>
-                                                {{ $user->last_name }} {{ $user->first_name }}
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                        </form>
+                                        @foreach ($users as $user)
+                                            @if ($user->id != $currentUser->id)
+                                                <option value="{{ $user->id }}" {{ ($publishers[$userKey] == $user->id) ? 'selected' : '' }}>
+                                                    {{ $user->last_name }} {{ $user->first_name }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-                @empty($publishers['user_2'])
-                    <div class="row">
+
+                    @if($isUserEmpty)
                         <div class="col-12">
-                            <div class="d-grid">
-                                <a class="btn btn-success m-1" type="button"  href="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}" onclick="event.preventDefault();
-                                   document.getElementById('changeForm2').submit();">
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
+                                   onclick="event.preventDefault();
+                                        document.getElementById('changeForm{{ $i }}').submit();">
                                     Записать(ся)
                                 </a>
                             </div>
                         </div>
-                    </div>
-                @else
-                <div class="row">
-                    <div class="col-6">
-                        <div class="d-grid">
-                            <a class="btn btn-danger m-1" type="button"  href="{{ route('recordRedactionDelete2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
-                                Выписать(ся)
-                            </a>
+                    @else
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="d-grid">
+                                    <a class="btn btn-danger m-1" type="button" href="{{ route('recordRedactionDelete' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
+                                        Выписать(ся)
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-grid gap-2">
+                                    <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
+                                       onclick="event.preventDefault();
+                                            document.getElementById('changeForm{{ $i }}').submit();">
+                                        Изменить
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="d-grid">
-                            <a class="btn btn-success m-1" type="button"  href="{{ route('recordRedactionChange2',['id' => $standPublisher->id, 'stand' => $stand->id]) }}" onclick="event.preventDefault();
-                                   document.getElementById('changeForm2').submit();">
-                                Изменить
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @endempty
-            </div>
-        </div>
+                    @endif
 
+                </div>
+            </div>
+        @endfor
+    </div>
 @endsection

@@ -30,7 +30,7 @@ class PermissionSeeder extends Seeder
                 'Stand-Open stand table',
                 'Stand-Entry in table',
                 'module.stand',
-                'module.congregation',
+                'module.contacts',
                 'module.report',
                 'module.schedule',
                 ],
@@ -47,7 +47,7 @@ class PermissionSeeder extends Seeder
                 'Stand-Open stand table',
                 'Stand-Entry in table',
                 'module.stand',
-                'module.congregation',
+                'module.contacts',
                 'module.report',
                 'module.schedule',
                 ]

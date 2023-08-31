@@ -24,7 +24,10 @@
 <script src="{{ asset('front/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js')}}"></script>
 <script src="{{ asset('front/vendor/hs-sticky-block/dist/hs-sticky-block.min.js')}}"></script>
 <script src="{{ asset('front/vendor/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
-
+<script src="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.js')}}"></script>
+<script src="{{ asset('front/vendor/hs-go-to/dist/hs-go-to.min.js')}}"></script>
+<script src="{{ asset('front/vendor/clipboard/dist/clipboard.min.js')}}"></script>
+<script src="{{ asset('front/vendor/hs-toggle-password/dist/js/hs-toggle-password.js')}}"></script>
 
 <!-- JS Front -->
 <script src="{{ asset('front/js/theme.min.js')}}"></script>
@@ -32,6 +35,13 @@
 
 <!-- JS Front -->
 
+<script>
+    (function() {
+        // INITIALIZATION OF TOGGLE PASSWORD
+        // =======================================================
+        new HSTogglePassword('.js-toggle-password')
+    })();
+</script>
 <script>
     $(document).on('ready', function () {
         // INITIALIZATION OF DATATABLES
@@ -216,3 +226,21 @@
 </script>
 
 <!-- End Style Switcher JS -->
+
+<script>
+    (function() {
+        // INITIALIZATION OF CLIPBOARD
+        // =======================================================
+        HSCore.components.HSClipboard.init('.js-clipboard')
+    })();
+</script>
+
+<script>
+    (function() {
+        // INITIALIZATION OF GO TO
+        // =======================================================
+        document.querySelectorAll('.js-go-to').forEach(item => {
+            new HSGoTo(item).init()
+        })
+    })();
+</script>

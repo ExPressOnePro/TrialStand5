@@ -7,17 +7,10 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{{ request()->is('menu*') ? ' active bg-primary' : '' }}" href="{{ route('menu.overview') }}">
+            <a class="nav-link{{ request()->is('api/menu*') ? ' active bg-primary' : '' }}" href="{{ route('menu.overview') }}">
                 <h4>Меню</h4>
             </a>
         </li>
-        @can('module.scheduleы')
-            <li class="nav-item">
-                <a class="nav-link{{ request()->is('module*') ? ' active bg-primary' : '' }}" href="{{ route('example.schedule') }}">
-                    <h4>Графики</h4>
-                </a>
-            </li>
-        @endcan
         <li class="nav-item">
             <a class="nav-link{{ request()->is('profile*') ? ' active bg-primary' : '' }}"
                href="{{ route('profile.overview', Auth::id()) }}">

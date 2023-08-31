@@ -27,4 +27,13 @@ class Stand extends Model
         return $this->belongsTo(Congregation::class);
     }
 
+    public function standTemplate(): BelongsTo
+    {
+        return $this->belongsTo(StandTemplate::class, 'id','stand_id');
+    }
+    public function users()
+    {
+        return $this->hasMany(User::class, 'congregation_id', 'congregation_id');
+    }
+
 }

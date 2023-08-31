@@ -15,11 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('congregation_id');
-            $table->unsignedBigInteger('responsible_user_id');
-            $table->unsignedBigInteger('assistant_user_id');
-            $table->string('meeting_place');
-            $table->unsignedBigInteger('meeting_day');
-            $table->string('meeting_time');
+            $table->json('info');
             $table->timestamps();
         });
     }

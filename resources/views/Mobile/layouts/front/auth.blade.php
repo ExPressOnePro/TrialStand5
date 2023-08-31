@@ -10,11 +10,7 @@
 
 @include('Mobile.includes.headers.header-auth')
 <main id="content" role="main" class="main mb-5">
-
-
     @yield('content')
-
-
     @include('Mobile.layouts.components.front-scripts')
 </main>
 </body>

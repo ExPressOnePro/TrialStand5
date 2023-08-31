@@ -16,7 +16,7 @@
                                         }
     @endphp
 
-    @can('module.reports')
+    @can('module.report')
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -87,7 +87,7 @@
     @endcan
 
     <div class="content container-fluid">
-        @can('module.reports')
+        @can('module.report')
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="d-grid gap-2">
@@ -112,23 +112,9 @@
                                 </select>
                             </li>
                         </div>
-                        <div class="card-body" id="monthsContainer">
-                            <ul class="list-group">
-                                <div class="col-sm-auto align-self-sm-end">
-                                    <div class="row d-flex justify-content-between align-items-center border-bottom">
-                                        <div class="col d-flex justify-content-start mb-1 mt-1">
-                                            <h5 class="text-inherit mb-0 me-3">${title}</h5>
-                                        </div>
-                                        <div class="col-auto d-flex justify-content-end mb-1 mt-1">
-                                            <dd class="text-body mb-0">
-                                                ${value}
-                                            </dd>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Здесь будут отображаться месяцы и данные -->
-                            </ul>
-                        </div>
+                    </div>
+                    <div id="monthsContainer">
+                            <!-- Здесь будут отображаться месяцы и данные -->
                     </div>
                 </div>
             </div>
@@ -146,7 +132,7 @@
             function createDataItem(title, value) {
                 return `
                 <div class="col-sm-auto align-self-sm-end">
-                    <div class="row d-flex justify-content-between align-items-center border-bottom">
+                    <div class="row d-flex justify-content-between align-items-center">
                         <div class="col d-flex justify-content-start mb-1 mt-1">
                             <h5 class="text-inherit mb-0 me-3">${title}</h5>
                         </div>
@@ -160,42 +146,171 @@
             `;
             }
 
+            reportDataCollection = reportDataCollection.filter(function(reportData) {
+                return reportData.year === selectedYear;
+            });
+
+            reportDataCollection.sort(function(a, b) {
+                return b.month.localeCompare(a.month);
+            });
+
+            var months = [
+                "Январь", "Февраль", "Март", "Апрель",
+                "Май", "Июнь", "Июль", "Август",
+                "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+            ];
+
             reportDataCollection.forEach(function(reportData) {
-                if (reportData.year === selectedYear) {
-                    var selectedMonths = reportData.month.split(',');
+                var selectedMonths = reportData.month.split(',');
 
-                    var months = [
-                        "Январь", "Февраль", "Март", "Апрель",
-                        "Май", "Июнь", "Июль", "Август",
-                        "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-                    ];
+                selectedMonths.forEach(function(month) {
+                    var monthIndex = parseInt(month) - 1;
 
-                    selectedMonths.forEach(function(month) {
-                        var monthIndex = parseInt(month) - 1;
+                    var card = document.createElement('div');
+                    card.className = 'card mb-4';
+                    card.innerHTML = `
+                    <div class="card-header">${months[monthIndex]}</div>
+                    <div class="card-body">
+                        <div class="row">
+                            ${createDataItem('Часы', reportData.hours)}
+                            ${createDataItem('Публикации', reportData.publications)}
+                            ${createDataItem('Видео', reportData.videos)}
+                            ${createDataItem('Повторные посещения', reportData.return_visits)}
+                            ${createDataItem('Изучения', reportData.bible_studies)}
+                        </div>
+                    </div>
+                `;
 
-                        var listItem = document.createElement('li');
-                        listItem.className = 'list-group-item';
-                        listItem.innerHTML = `
-                        <a class="list-group-item-action border-primary" href="">
-                            <div class="row">
-                                <div class="col-sm m b-2 mb-sm-0">
-                                    <h2 class="fw-normal mb-1">${months[monthIndex]}</h2>
-                                </div>
-                                ${createDataItem('Часы', reportData.hours)}
-                                ${createDataItem('Публикации', reportData.publications)}
-                                ${createDataItem('Видео', reportData.videos)}
-                                ${createDataItem('Повторные посещения', reportData.return_visits)}
-                                ${createDataItem('Изучения', reportData.bible_studies)}
-                            </div>
-                        </a>
-                    `;
-
-                        monthsContainer.appendChild(listItem);
-                    });
-                }
+                    monthsContainer.appendChild(card);
+                });
             });
         });
     </script>
+
+
+
+    {{--    <script>--}}
+{{--        document.getElementById('yearSelect').addEventListener('change', function() {--}}
+{{--            var selectedYear = this.value;--}}
+{{--            var reportDataCollection = @json($reportData);--}}
+
+{{--            var monthsContainer = document.getElementById('monthsContainer');--}}
+{{--            monthsContainer.innerHTML = '';--}}
+
+{{--            function createDataItem(title, value) {--}}
+{{--                return `--}}
+{{--                <div class="col-sm-auto align-self-sm-end">--}}
+{{--                    <div class="row d-flex justify-content-between align-items-center">--}}
+{{--                        <div class="col d-flex justify-content-start mb-1 mt-1">--}}
+{{--                            <h5 class="text-inherit mb-0 me-3">${title}</h5>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-auto d-flex justify-content-end mb-1 mt-1">--}}
+{{--                            <dd class="text-body mb-0">--}}
+{{--                                ${value}--}}
+{{--                            </dd>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            `;--}}
+{{--            }--}}
+
+{{--            reportDataCollection.forEach(function(reportData) {--}}
+{{--                if (reportData.year === selectedYear) {--}}
+{{--                    var selectedMonths = reportData.month.split(',');--}}
+
+{{--                    var months = [--}}
+{{--                        "Январь", "Февраль", "Март", "Апрель",--}}
+{{--                        "Май", "Июнь", "Июль", "Август",--}}
+{{--                        "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"--}}
+{{--                    ];--}}
+
+{{--                    selectedMonths.forEach(function(month) {--}}
+{{--                        var monthIndex = parseInt(month) - 1;--}}
+
+{{--                        var card = document.createElement('div');--}}
+{{--                        card.className = 'card mb-4';--}}
+{{--                        card.innerHTML = `--}}
+{{--                        <div class="card-header">${months[monthIndex]}</div>--}}
+{{--                        <div class="card-body">--}}
+{{--                            <div class="row">--}}
+{{--                                ${createDataItem('Часы', reportData.hours)}--}}
+{{--                                ${createDataItem('Публикации', reportData.publications)}--}}
+{{--                                ${createDataItem('Видео', reportData.videos)}--}}
+{{--                                ${createDataItem('Повторные посещения', reportData.return_visits)}--}}
+{{--                                ${createDataItem('Изучения', reportData.bible_studies)}--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    `;--}}
+
+{{--                        monthsContainer.appendChild(card);--}}
+{{--                    });--}}
+{{--                }--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
+
+
+    {{--    <script>--}}
+{{--        document.getElementById('yearSelect').addEventListener('change', function() {--}}
+{{--            var selectedYear = this.value;--}}
+{{--            var reportDataCollection = @json($reportData);--}}
+
+{{--            var monthsContainer = document.getElementById('monthsContainer');--}}
+{{--            monthsContainer.innerHTML = '';--}}
+
+{{--            function createDataItem(title, value) {--}}
+{{--                return `--}}
+{{--                <div class="col-sm-auto align-self-sm-end">--}}
+{{--                    <div class="row d-flex justify-content-between align-items-center">--}}
+{{--                        <div class="col d-flex justify-content-start mb-1 mt-1">--}}
+{{--                            <h5 class="text-inherit mb-0 me-3">${title}</h5>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-auto d-flex justify-content-end mb-1 mt-1">--}}
+{{--                            <dd class="text-body mb-0">--}}
+{{--                                ${value}--}}
+{{--                            </dd>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            `;--}}
+{{--            }--}}
+
+{{--            reportDataCollection.forEach(function(reportData) {--}}
+{{--                if (reportData.year === selectedYear) {--}}
+{{--                    var selectedMonths = reportData.month.split(',');--}}
+
+{{--                    var months = [--}}
+{{--                        "Январь", "Февраль", "Март", "Апрель",--}}
+{{--                        "Май", "Июнь", "Июль", "Август",--}}
+{{--                        "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"--}}
+{{--                    ];--}}
+
+{{--                    selectedMonths.forEach(function(month) {--}}
+{{--                        var monthIndex = parseInt(month) - 1;--}}
+
+{{--                        var listItem = document.createElement('li');--}}
+{{--                        listItem.className = 'list-group-item';--}}
+{{--                        listItem.innerHTML = `--}}
+{{--                        <div class="list-group-item-action border-primary mb-4">--}}
+{{--                            <div class="row">--}}
+{{--                                <div class="col-sm m b-2 mb-sm-0">--}}
+{{--                                    <h2 class="fw-normal mb-1">${months[monthIndex]}</h2>--}}
+{{--                                </div>--}}
+{{--                                ${createDataItem('Часы', reportData.hours)}--}}
+{{--                                ${createDataItem('Публикации', reportData.publications)}--}}
+{{--                                ${createDataItem('Видео', reportData.videos)}--}}
+{{--                                ${createDataItem('Повторные посещения', reportData.return_visits)}--}}
+{{--                                ${createDataItem('Изучения', reportData.bible_studies)}--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    `;--}}
+
+{{--                        monthsContainer.appendChild(listItem);--}}
+{{--                    });--}}
+{{--                }--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
 
 {{--        <div class="row">--}}
 {{--            <div class="col-md-6 mb-3 mb-lg-5">--}}

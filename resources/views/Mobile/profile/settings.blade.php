@@ -2,10 +2,11 @@
 @section('title') Meeper | Мой аккаунт @endsection
 @section('content')
     @include('Mobile.includes.headers.header-profile')
-    @include('Mobile.includes.alerts.alerts')
 
-    <div class="content container-fluid">
+    <div class="content container-fluid mt-7">
         <!-- Page Header -->
+        @include('Mobile.includes.alerts.alerts')
+
         <div class="page-header">
             <div class="row align-items-end">
                 <div class="col-sm mb-2 mb-sm-0">
@@ -31,7 +32,7 @@
                     <!-- Navbar Toggle -->
                     <!-- Navbar Toggle -->
                     <div class="d-grid">
-                        <button type="button" class="navbar-toggler btn btn-white mb-3 collapsed" data-bs-toggle="collapse" data-bs-target="#navbarVerticalNavMenu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarVerticalNavMenu">
+                        <button type="button" class="navbar-toggler btn btn-white mb-3 collapsed rounded-2 border-primary" data-bs-toggle="collapse" data-bs-target="#navbarVerticalNavMenu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarVerticalNavMenu">
                 <span class="d-flex justify-content-between align-items-center">
                   <span class="text-dark">Menu</span>
 
@@ -49,8 +50,8 @@
                     <!-- End Navbar Toggle -->
 
                     <!-- Navbar Collapse -->
-                    <div id="navbarVerticalNavMenu" class="navbar-collapse collapse" style="">
-                        <ul id="navbarSettings" class="js-sticky-block js-scrollspy card card-navbar-nav nav nav-tabs nav-lg nav-vertical hs-kill-sticky" data-hs-sticky-block-options="{
+                    <div id="navbarVerticalNavMenu" class="navbar-collapse collapse border-primary" style="">
+                        <ul id="navbarSettings" class="js-sticky-block js-scrollspy card card-navbar-nav nav nav-tabs nav-lg nav-vertical hs-kill-sticky border-primary" data-hs-sticky-block-options="{
                      &quot;parentSelector&quot;: &quot;#navbarVerticalNavMenu&quot;,
                      &quot;targetSelector&quot;: &quot;#header&quot;,
                      &quot;breakpoint&quot;: &quot;lg&quot;,
@@ -64,18 +65,23 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="#contactsSection">
+                                    <i class="bi bi-link-45deg nav-icon"></i> Контакты
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="#emailSection">
                                     <i class="bi-at nav-icon"></i> Email
                                 </a>
                             </li>
-{{--                            <li class="nav-item">--}}
-{{--                                <a class="nav-link" href="#passwordSection">--}}
-{{--                                    <i class="bi-key nav-icon"></i> Password--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#passwordSection">
+                                    <i class="bi-key nav-icon"></i> Смена пароля
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#themeAccountsSection">
-                                    <i class="bi-instagram nav-icon"></i> Тема приложения
+                                    <i class="bi bi-droplet nav-icon"></i> Тема приложения
                                 </a>
                             </li>
 {{--                            <li class="nav-item">--}}
@@ -98,18 +104,23 @@
                         @include('Mobile.profile.settings.basicInformation')
                     </div>
 
+
+                    <div id="contactsSection" class="card">
+                        @include('Mobile.profile.settings.contactsSection')
+                    </div>
+
                     <div id="emailSection" class="card">
                         @include('Mobile.profile.settings.emailSection')
                     </div>
-
-{{--                    <div id="passwordSection" class="card">--}}
-{{--                        @include('Mobile.profile.settings.passwordSection')--}}
-{{--                    </div>--}}
+                    <div id="passwordSection" class="card">
+                        @include('Mobile.profile.settings.passwordSection')
+                    </div>
 
                     <!-- Card -->
                     <div id="themeAccountsSection" class="card">
                         @include('Mobile.profile.settings.themeAccountsSection')
                     </div>
+
                     <!-- End Card -->
 
 {{--                    <!-- Card -->--}}

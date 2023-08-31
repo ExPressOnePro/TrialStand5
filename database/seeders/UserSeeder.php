@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
         $user1->permissions()->attach($createTasks);*/
 
 
-        $array = [
+        $array_Pamanteni = [
             'first_name' => [
                 'Владислав',
                 'Сергей',
@@ -669,16 +669,35 @@ class UserSeeder extends Seeder
             ],
         ];
 
+        $array = [
+            'first_name' => ['first', 'second'],
+            'last_name' => ['deo', 'feo'],
+            'info' => [
+                json_encode(['mobile_phone' => '4567987', 'city' => 'mycity']),
+                json_encode(['mobile_phone' => '4567987', 'city' => 'mycity'])],
+        ];
+
+        $er = ["city": "Бельцы",
+            "gender": "male",
+            "country": "Moldova",
+            "last_login": "2023-08-31 17:49:53",
+            "mobile_phone": "068484866",
+            "additional_phone": "068484866",
+            "address",
+            "birth_day",
+            "christening_day",
+            'registration_date'
+        ];
 
 
-        foreach($array['first_name'] as $key => $value){
+        foreach($array_Pamanteni['first_name'] as $key => $value){
             $user = new User();
             $user->first_name = $value;
-            $user->last_name = $array['last_name'][$key];
-            $user->login = $array['login'][$key];
-            $user->email = $array['email'][$key];
-            $user->congregation_id = $array['congregation_id'][$key];
-            $user->password = $array['password'][$key];
+            $user->last_name = $array_Pamanteni['last_name'][$key];
+            $user->login = $array_Pamanteni['login'][$key];
+            $user->email = $array_Pamanteni['email'][$key];
+            $user->congregation_id = $array_Pamanteni['congregation_id'][$key];
+            $user->password = $array_Pamanteni['password'][$key];
             $user->save();
             $user->roles()->attach($publisher);
         }

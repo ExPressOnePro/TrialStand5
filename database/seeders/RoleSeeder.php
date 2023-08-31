@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 use App\Models\Role;
+use App\Models\UsersRoles;
 use Illuminate\Database\Seeder;
 class RoleSeeder extends Seeder
 {
@@ -38,5 +39,14 @@ class RoleSeeder extends Seeder
             $role->slug = $array['slug'][$key];
             $role->save();
         }
+
+        UsersRoles::create([
+            'role_id' => 1,
+            'user_id' => 1,
+        ]);
+        UsersRoles::create([
+            'role_id' => 2,
+            'user_id' => 2,
+        ]);
     }
 }

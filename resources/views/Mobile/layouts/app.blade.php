@@ -5,7 +5,7 @@
 
 <body>
 <main>
-    <body class="text-left">
+    <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset navbar-vertical-aside-mini-mode">
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             @include('includes.header')
             <div class="main-content-wrap mobile-menu-content bg-off-white m-0">

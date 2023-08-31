@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="{{ asset('front/vendor/datatables.net.extensions/fixedColumns.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('front/vendor/datatables.net.extensions/dataTables.scroller.min.css') }}">
     <link rel="stylesheet" href="{{ asset('front/vendor/quill/dist/quill.snow.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.css') }}">
 
 
     <!-- CSS Front Template -->

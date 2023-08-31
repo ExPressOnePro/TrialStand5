@@ -1,5 +1,7 @@
 <div class="col-lg-4">
-
+    @php
+        $info = json_decode($user->info, true);
+    @endphp
     <!-- Sticky Block Start Point -->
     <div id="accountSidebarNav"></div>
 
@@ -15,7 +17,7 @@
         <div class="card-header">
             <h4 class="card-header-title">Профиль</h4>
             @role('Developer')
-            <i class="fa-solid fa-history"></i> Последний вход {{ $user->last_login }}
+            <span class="text-info"><i class="fa-solid fa-history"></i>@if(isset($info['last_login'])) {{ $info['last_login'] }}@endif</span>
             @endrole
         </div>
         <!-- End Header -->
@@ -50,7 +52,13 @@
 
                 <li class="pt-4 pb-0"><span class="card-subtitle">Контакты</span></li>
                 <li><i class="bi-at dropdown-item-icon"></i> {{ $user->email }}</li>
-                <li><i class="bi-phone dropdown-item-icon"></i> {{ $user->mobile_phone }}</li>
+
+
+                @if(isset($info['mobile_phone']))
+                    <li><i class="bi-phone dropdown-item-icon"></i> {{ $info['mobile_phone'] }}</li>
+                @else
+                    <li><i class="bi-phone dropdown-item-icon"></i> Номер телефона отсутствует</li>
+                @endif
                 @role('Developer')
                 <li><i class="fa-solid fa-right-to-bracket dropdown-item-icon"></i> {{ $user->login }}</li>
                 @endrole

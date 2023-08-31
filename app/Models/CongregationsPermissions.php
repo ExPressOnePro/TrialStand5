@@ -19,7 +19,7 @@ class CongregationsPermissions extends Model
     ];
 
     public function congregation() {
-        return $this->belongsTo(Congregation::class);
+        return $this->belongsTo(Congregation::class, 'id', 'congregation_id');
     }
 
     public function permission() {

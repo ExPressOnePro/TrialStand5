@@ -38,7 +38,7 @@
                                         <a>
                                             @if($permission->name == 'module.stand')
                                                 Стенд
-                                            @elseif($permission->name == 'module.reports')
+                                            @elseif($permission->name == 'module.report')
                                                 Отчеты
                                             @elseif($permission->name == 'module.schedule')
                                                 Графики
@@ -103,7 +103,7 @@
 
     <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
         <div class="row row-cols-1">
-            @foreach($permissions as $permission)
+            @foreach ($permissions as $permission)
                 <div class="col mb-3">
                     <!-- Card -->
                     <div class="card card-body">
@@ -112,28 +112,28 @@
                                 <div class="row align-items-md-center">
                                     <div class="col-8">
                                         <h4 class="mb-1">
-                                            <a class="text-dark">{{$permission->name}}</a>
+                                            <a class="text-dark">{{ $permission->name }}</a>
                                         </h4>
                                     </div>
 
                                     <div class="col-4">
                                         <!-- Form Check -->
-                                        @if(DB::table('congregations_permissions')
-->where('congregation_id', '=', $congregation->id)
-->where('permission_id', '=', $permission->id)
-->count() > 0)
-                                            <form method="post" action="">
+                                        @if ($permission->has_permission)
+                                        <form method="post" action="{{ route('module.disconnect', ['congregation' => $congregation->id, 'permission' => $permission->id]) }}">
+                                            @csrf
+                                            <input type="hidden" name="permission_id" value="{{ $permission->id }}">
+                                            <input type="hidden" name="congregation_id" value="{{ $congregation->id }}">
+                                            <button class="btn btn-primary btn-sm">Отключить модуль</button>
+                                        </form>
+                                            @else
+                                            <form method="post" action="{{ route('module.connect', ['congregation' => $congregation->id, 'permission' => $permission->id]) }}">
                                                 @csrf
-                                                <input type="hidden" name="delete_permission_id" value="{{ $permission->id }}">
-                                                <button class="btn btn-primary btn-sm">Разрешено</button>
+                                                <input type="hidden" name="permission_id" value="{{ $permission->id }}">
+                                                <input type="hidden" name="congregation_id" value="{{ $congregation->id }}">
+                                                <button class="btn btn-outline-primary btn-sm">Добавить модуль</button>
                                             </form>
-                                        @else
-                                            <form method="post" action="">
-                                                @csrf
-                                                <input type="hidden" name="allow_permission_id" value="{{ $permission->id }}">
-                                                <button class="btn btn-outline-primary btn-sm">Разрешить</button>
-                                            </form>
-                                        @endif
+                                            @endif
+                                        </form>
                                     </div>
                                 </div>
                             </div>

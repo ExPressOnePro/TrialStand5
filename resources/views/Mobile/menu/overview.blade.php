@@ -1,72 +1,64 @@
-@extends('Mobile.layouts.front.menu')
+@extends('Mobile.layouts.front.app')
 @section('title') Meeper | Меню @endsection
 @section('content')
-    @include('Mobile.includes.headers.header-home')
+
     @include('Mobile.includes.alerts.alerts')
 
 
     <div class="content container-fluid">
-        <div class="page-header page-header-reset">
-            <div class="row align-items-center">
-                <div class="col-sm">
-                    <h2 class="page-header-title"></h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
+        <div class="row row-cols-1">
             @can('module.stand')
-                <div class="col-6 col-sm-4 col-sm-3 mb-5">
-                    <a class="card card-hover-shadow card-bordered h-100 text-center" href="{{ route('stand.hub') }}">
-                        <div class="card-body">
-                            <img class="card-img" src="{{ asset('front/img/stand_2.svg') }}">
-                        </div>
-
-
-                        <div class="card-footer">
-                            <h3 class="card-title text-inherit">Стенд</h3>
-                            <p class="card-text text-inherit fs-6">Cлужениe со стендом</p>
-                        </div>
-                    </a>
-                </div>
-            @endcan
-            @can('module.schedule')
-                <div class="col-6 col-sm-4 col-sm-3 mb-5">
-                    <a class="card card-hover-shadow card-bordered h-100 text-center" href="">
-                        <div class="card-body">
-                            <img class="card-img" src="{{ asset('front/img/stand_2.svg') }}" alt="Image Description" data-hs-theme-appearance="default" style="max-width: 15rem;">
-                            <img class="card-img" src="{{ asset('front/img/stand_2.svg') }}" alt="Image Description" data-hs-theme-appearance="dark" style="max-width: 15rem;">
-                        </div>
-                        <div class="card-footer">
-                            <h3 class="card-title text-inherit">Графики</h3>
-                            <p class="card-text text-inherit fs-6">Расписания встреч собрания</p>
+                <div class="col mb-3 mb-lg-5">
+                    <div class="list-group d-flex align-items-center">
+                        <a class="list-group-item list-group-item-action border border-success" href="{{ route('stand.hub') }}">
+                        <div class="d-flex align-items-center m-2">
+                            <div class="avatar">
+                                <img class="card-img" src="{{ asset('front/img/ss.svg') }}">
+                            </div>
+                            <div class="ms-3">
+                                <span class="d-block h1 text-inherit mb-0">Стенд</span>
+                                <span class="d-block h3 text-inherit text-body mb-0">Служение со стендом</span>
+                            </div>
                         </div>
                     </a>
+                    </div>
                 </div>
             @endcan
-{{--            <div class="col-6 col-sm-4 col-sm-3 mb-5">--}}
-{{--                <a class="card card-hover-shadow card-bordered h-100 text-center" href="">--}}
-{{--                    <div class="card-body">--}}
-{{--                        <img class="card-img" src="{{ asset('front/img/stand_2.svg') }}" alt="Image Description" data-hs-theme-appearance="default" style="max-width: 15rem;">--}}
-{{--                        <img class="card-img" src="{{ asset('front/img/stand_2.svg') }}" alt="Image Description" data-hs-theme-appearance="dark" style="max-width: 15rem;">--}}
-{{--                    </div>--}}
-{{--                    <div class="card-footer">--}}
-{{--                        <h3 class="card-title text-inherit">Расписания</h3>--}}
-{{--                        <p class="card-text text-inherit fs-6">Расписание ответственных</p>--}}
-{{--                    </div>--}}
-{{--                </a>--}}
-{{--            </div>--}}
-                {{--            <div class="col-6 col-sm-4 col-sm-3 mb-5">--}}
-{{--                <a class="card card-hover-shadow card-bordered h-100 text-center" href="">--}}
-{{--                    <div class="card-body">--}}
-{{--                        <img class="card-img" src="{{ asset('front/img/stand_2.svg') }}" alt="Image Description" data-hs-theme-appearance="default" style="max-width: 15rem;">--}}
-{{--                        <img class="card-img" src="{{ asset('front/img/stand_2.svg') }}" alt="Image Description" data-hs-theme-appearance="dark" style="max-width: 15rem;">--}}
-{{--                    </div>--}}
-{{--                    <div class="card-footer">--}}
-{{--                        <h3 class="card-title text-inherit">Отчеты</h3>--}}
-{{--                        <p class="card-text text-inherit fs-6">Мои ежемесячные отчеты</p>--}}
-{{--                    </div>--}}
-{{--                </a>--}}
-{{--            </div>--}}
+                @can('module.contacts')
+                    <div class="col mb-3 mb-lg-5">
+                        <div class="list-group d-flex align-items-center">
+                            <a class="list-group-item list-group-item-action border border-success" href="{{ route('contacts.hub', ['congregation_id' => Auth()->user()->congregation_id]) }}">
+                                <div class="d-flex align-items-center m-2">
+                                    <div class="avatar">
+                                        <img class="card-img" src="{{ asset('front/img/contacts.svg') }}">
+                                    </div>
+                                    <div class="ms-3">
+                                        <span class="d-block h1 text-inherit mb-0">Контакты</span>
+                                        <span class="d-block h4 text-inherit text-body mb-0">Контактная книга собрания</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endcan
+                @can('congregation.open_congregation')
+                    <div class="col mb-3 mb-lg-5">
+                        <div class="list-group d-flex align-items-center">
+                            <a class="list-group-item list-group-item-action border border-2 border-warning" href="{{ route('congregationView', ['id' =>auth()->user()->congregation_id ]) }}">
+                                <div class="d-flex align-items-center m-2">
+                                    <div class="avatar">
+                                        <img class="card-img" src="{{ asset('front/img/meeting.svg') }}">
+                                    </div>
+                                    <div class="ms-3">
+                                        <span class="d-block h1 text-inherit mb-0">Собрание</span>
+                                        <span class="d-block h4 text-inherit text-body mb-0">Управляйте собранием</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endcan
+
         </div>
     </div>
 

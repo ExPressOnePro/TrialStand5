@@ -1,3 +1,29 @@
+@extends('Mobile.layouts.front.app')
+@section('title') Meeper | Собрание @endsection
+@section('content')
+
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="d-flex mb-3">
+                <div class="flex-grow-1">
+                    <div class="row">
+                        <div class="col-lg mb-3 mb-lg-0">
+                            <h1 class="page-header-title">{{ $congregation->name }}</h1>
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span>Client:</span>
+                                    <a href="#"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @include('Mobile.menu.modules.congregation.components.navMenu')
+
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
 @if($congregationRequestsCount > 0)
     @foreach($congregationRequests as $conReq)
     <div class="col mb-3 mb-lg-5">
@@ -48,3 +74,5 @@
     @endforeach
 @else
 @endif
+        </div>
+    </div>

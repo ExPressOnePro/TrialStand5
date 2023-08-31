@@ -34,7 +34,7 @@ class UsersController extends Controller{
 
         $detect = new MobileDetect;
         if ($detect->isMobile()) {
-            return view('Mobile.users.users')
+            return view('Mobile.menu.modules.users.users')
                 ->with(['users' => $users]);
         } else {
             return view('Desktop.users.users')
@@ -88,9 +88,9 @@ class UsersController extends Controller{
 
         if ($detect->isMobile() && $user->hasRole('Developer')) {
             $viewData['standPublishers'] = $standPublishers;
-            return view('Mobile.users.card', $viewData);
+            return view('Mobile.menu.modules.users.card', $viewData);
         } elseif ($detect->isMobile()) {
-            return view('Mobile.users.card', $viewData);
+            return view('Mobile.menu.modules.users.card', $viewData);
         } elseif ($user->hasRole('Developer')) {
             return view('Desktop.users.card', $viewData);
         } else {
@@ -127,8 +127,7 @@ class UsersController extends Controller{
     }
     public function roleDelete(Request $request, $id) {
         $value = $request->input('delete_role_id');
-        DB::table('users_roles')
-            ->where('user_id', $id)
+        UsersRoles::where('user_id', $id)
             ->where('role_id', $value)
             ->delete();
 

@@ -14,7 +14,8 @@ class Congregation extends Model
     public const TABLE = 'congregations';
 
     protected $fillable = [
-        'name'
+        'name',
+        'info'
     ];
 
     /**
@@ -24,7 +25,7 @@ class Congregation extends Model
      */
     public function stand(): HasMany
     {
-        return $this->hasMany(Stand::class, 'stand_id', 'id');
+        return $this->hasMany(Stand::class, 'id');
     }
 
     public function users(): HasMany

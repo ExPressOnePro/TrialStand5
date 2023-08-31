@@ -23,29 +23,45 @@
             <!-- текущая следующая неделя кнопки -->
             @include('Mobile.menu.modules.stand.front.components.switchWeek')
 
-            @if(date('N') . '-'. date('H:i') >= $activation['activation'])
+            @if(date('N') . '-'. date('H:i') >= $activation)
                 <div class="row">
                     @foreach ($week_schedule as $day => $times)
-                        @php
-                            $themes = [
-                                'default' => [
-                                    'background' => '#ebdd9b',
-                                ],
-                                'dark' => [
-                                    'background' => '#8E9B97',
-                                ],
-                            ];
-                        @endphp
                         <div class="col-12 mb-4">
                             <div class="card">
-                                @foreach ($themes as $themeName => $theme)
-                                    <div class="card card-header d-flex align-items-center text-center" data-hs-theme-appearance="{{ $themeName }}" style="background: {{ $theme['background'] }}">
-                                        <h1>
-                                            {{ \App\Enums\WeekDaysEnum::getWeekDay($day) }}
-                                            {{ $gwe = \App\Enums\WeekDaysEnum::getWeekDayDate($day) }}
-                                        </h1>
-                                    </div>
-                                @endforeach
+                                <div class="card card-header card-header-content-between text-center"style="background: {{ $theme['background'] }}">
+                                    <h2 class="card-header-title">
+                                        {{ \App\Enums\WeekDaysEnum::getWeekDay($day) }}
+                                        {{ $gwe = \App\Enums\WeekDaysEnum::getNextWeekDayDate($day) }}
+                                    </h2>
+                                    @php
+                                        $standPublishers = App\Models\StandPublishers::where('day', $day)
+                                            ->where('date', $gwe)
+                                            ->where('stand_template_id', $StandTemplate->id)
+                                            ->get();
+
+                                        $canEdit = auth()->user()->can('Stand-Entry in table');
+                                        $hasUserIcon = false; // Флаг для отслеживания, был ли уже выведен значок
+                                    @endphp
+
+                                    @foreach ($standPublishers as $standPublisher)
+                                        @php
+                                            $publishers = json_decode($standPublisher->publishers, true);
+
+                                            foreach (['user_1', 'user_2', 'user_3', 'user_4'] as $userKey) {
+                                                if (isset($publishers[$userKey]) && $publishers[$userKey] == auth()->user()->id) {
+                                                    $hasUserIcon = true; // Устанавливаем флаг в true
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
+                                    @endforeach
+
+                                    @if ($hasUserIcon)
+                                        {{--                                        <a class="btn btn-ghost-secondary btn btn-icon btn-ghost-secondary rounded-circle text-black" type="button" href="{{ route('stand.reportPage', $standPublisher->id) }}">--}}
+                                        {{--                                            <span class="display-4"><i class="fa-solid fa-pen"></i></span>--}}
+                                        {{--                                        </a>--}}
+                                    @endif
+                                </div>
                                 @foreach ($times as $time)
                                     @php
                                         $standPublisher = App\Models\StandPublishers::where('day', $day)
@@ -62,51 +78,45 @@
                                     @endphp
 
                                     <div class="col-12 mt-1">
-                                        <a class="card card-hover-shadow h-100
-                            @if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'])
-                                @if(!$standPublisher || $canEdit) is-editable @endif
-                            @endif"
+                                        <a class="card card-hover-shadow h-100 @if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2']) @if(!$standPublisher || $canEdit) is-editable @endif @endif"
                                            @if($standPublisher && $canEdit)
                                                href="{{ route('recordRedactionPageMobile', ['stand_publishers_id'=> $standPublisher->id]) }}"
                                            @elseif(!$standPublisher && $canEdit)
                                                href="{{ route('recordRecordPage', ['day' => $day, 'time' => $time, 'date' => $gwe, 'stand_template_id'=> $StandTemplate->id]) }}"
                                            @endif
-                                           style="background-color: @if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2']) #128277 @endif;">
+                                           style="background-color: @if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'])
+                                        {{ $theme['background-color'] }} @endif;">
                                             <div class="row align-items-center">
                                                 <!-- time -->
                                                 <div class="col-3 text-center">
-                                                    <div class="avatar avatar-soft-info avatar-circle">
+                                                    <div class="avatar avatar-soft-info avatar rounded-2">
                                                         <span class="avatar-initials text-dark">{{ date('H:i', strtotime($time . ':00')) }}</span>
                                                     </div>
                                                 </div>
                                                 <!-- publishers -->
                                                 <div class="col-9">
                                                     <div class="mt-1 mb-0">
-                                                        @if(isset($publishers['user_1']))
-                                                            <h3>
-                                                                @if ($publishers['user_1'])
-                                                                    {{ $users->where('id', $publishers['user_1'])->pluck('first_name')->first() }}
-                                                                    {{ $users->where('id', $publishers['user_1'])->pluck('last_name')->first() }}
+                                                        @for($i = 1; $i <= $valuePublishers_at_stand; $i++)
+                                                            @php
+                                                                $userKey = 'user_' . $i;
+                                                                $user = $publishers[$userKey] ?? null;
+                                                            @endphp
+                                                            @if ($user)
+                                                                @if ($user == Auth()->user()->id)
+                                                                    <h3 class="" style="color: #ECC4AB">
+                                                                        {{ $users->where('id', $user)->pluck('first_name')->first() }}
+                                                                        {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                                    </h3>
                                                                 @else
-                                                                    <span class="badge bg-success">Свободно</span>
+                                                                    <h3>
+                                                                        {{ $users->where('id', $user)->pluck('first_name')->first() }}
+                                                                        {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                                    </h3>
                                                                 @endif
-                                                            </h3>
-                                                        @else
-                                                            <h3><span class="badge bg-success">Свободно</span></h3>
-                                                        @endif
-
-                                                        @if(isset($publishers['user_2']))
-                                                            <h3>
-                                                                @if ($publishers['user_2'] )
-                                                                    {{ $users->where('id', $publishers['user_2'])->pluck('first_name')->first() }}
-                                                                    {{ $users->where('id', $publishers['user_2'])->pluck('last_name')->first() }}
-                                                                @else
-                                                                    <span class="badge bg-success">Свободно</span>
-                                                                @endif
-                                                            </h3>
-                                                        @else
-                                                            <h3><span class="badge bg-success">Свободно</span></h3>
-                                                        @endif
+                                                            @else
+                                                                <h3><span class="badge bg-success">Свободно</span></h3>
+                                                            @endif
+                                                        @endfor
                                                     </div>
                                                 </div>
                                             </div>
@@ -118,30 +128,13 @@
                     @endforeach
                 </div>
             @else
-                @php
-                    $daysOfWeek = [
-                        1 => 'Понедельник',
-                        2 => 'Вторник',
-                        3 => 'Среда',
-                        4 => 'Четверг',
-                        5 => 'Пятница',
-                        6 => 'Суббота',
-                        7 => 'Воскресенье',
-                    ];
-                    $dayNumber = $activation_value[0];
-                    $dayName = $daysOfWeek[$dayNumber];
-                    $currentDateTime = date('N-H:i');
-                    $activationDateTime = $StandTemplate->activation;
-                @endphp
 
-                @unless($currentDateTime >= $activationDateTime)
+                @if($currentDateTime >= $activationDateTime)
                     <div class="not-found-wrap text-center">
                         <h1 class="heading">Следующая неделя будет доступна</h1>
-                        <p class="mb-5 text-muted text-20">
-                        <h1>{{ $dayName }} {{ $activation_value[1] }}</h1>
-                        </p>
+                        <h1 class="mb-5 text-muted text-20">{{ $dayName }} {{ $activation_value[1] }}</h1>
                     </div>
-                @endunless
+                @endif
             @endif
         </div>
     @endcan

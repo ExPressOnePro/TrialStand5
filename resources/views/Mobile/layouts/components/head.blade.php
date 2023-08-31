@@ -31,6 +31,7 @@
     <script src="https://kit.fontawesome.com/d19fab2cf2.js" crossorigin="anonymous"></script>
 
 
+
     <!-- PWA  -->
     <meta name="theme-color" content="#6777ef"/>
     <link rel="apple-touch-icon" href="{{ asset('logo.PNG') }}">

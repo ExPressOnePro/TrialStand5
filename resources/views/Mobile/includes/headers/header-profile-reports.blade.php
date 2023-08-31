@@ -2,7 +2,7 @@
     <div class="container">
         <div class="navbar-nav-wrap mt-2">
             <div class="navbar">
-                <a class="text-center text-dark h1" href="{{ URL::previous() }}">
+                <a class="text-center text-dark h1" onclick="goBack()">
                     <div class="rounded">
 
                     </div>
@@ -19,4 +19,8 @@
     </div>
 </header>
 
-
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>

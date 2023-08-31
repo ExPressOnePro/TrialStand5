@@ -1,55 +1,71 @@
 <div class="card-header">
-    <h4 class="card-title">Change your password</h4>
+    <h4 class="card-title">Измените ваш пароль</h4>
 </div>
 
 <div class="card-body">
     <!-- Form -->
-    <form id="changePasswordForm">
+    <form id="changePasswordForm" method="post" action="{{route('profile.settings.changePassword')}}">
+        @csrf
         <!-- Form -->
         <div class="row mb-4">
-            <label for="currentPasswordLabel" class="col-sm-3 col-form-label form-label">Current password</label>
+            <label for="currentPasswordLabel" class="col-sm-3 col-form-label form-label">Текущий пароль</label>
 
             <div class="col-sm-9">
-                <input type="password" class="form-control" name="currentPassword" id="currentPasswordLabel" placeholder="Enter current password" aria-label="Enter current password">
-            </div>
-        </div>
-        <!-- End Form -->
-
-        <!-- Form -->
-        <div class="row mb-4">
-            <label for="newPassword" class="col-sm-3 col-form-label form-label">New password</label>
-
-            <div class="col-sm-9">
-                <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="Enter new password" aria-label="Enter new password">
-            </div>
-        </div>
-        <!-- End Form -->
-
-        <!-- Form -->
-        <div class="row mb-4">
-            <label for="confirmNewPasswordLabel" class="col-sm-3 col-form-label form-label">Confirm new password</label>
-
-            <div class="col-sm-9">
-                <div class="mb-3">
-                    <input type="password" class="form-control" name="confirmNewPassword" id="confirmNewPasswordLabel" placeholder="Confirm your new password" aria-label="Confirm your new password">
+                <div class="input-group input-group-merge" data-hs-validation-validate-class>
+                    <input type="password" class="js-toggle-password form-control form-control-lg" name="currentPassword" id="currentPassword" placeholder="Введите текущий пароль" aria-label="Введите текущий пароль" required minlength="6"
+                           data-hs-toggle-password-options='{
+                 "target": "#changePassTargetcurrentPassword",
+                 "defaultClass": "bi-eye-slash",
+                 "showClass": "bi-eye",
+                 "classChangeTarget": "#changePassIconcurrentPassword"
+               }'>
+                    <a id="changePassTargetcurrentPassword" class="input-group-append input-group-text" href="javascript:;">
+                        <i id="changePassIconcurrentPassword" class="bi-eye"></i>
+                    </a>
+                    <span class="invalid-feedback">Введите </span>
                 </div>
+            </div>
+        </div>
+        <!-- End Form -->
 
-                <h5>Password requirements:</h5>
+        <!-- Form -->
+        <div class="row mb-4">
+            <label for="newPassword" class="col-sm-3 col-form-label form-label">Новый пароль</label>
 
-                <p class="fs-6 mb-2">Ensure that these requirements are met:</p>
+            <div class="col-sm-9">
+                <div class="input-group input-group-merge" data-hs-validation-validate-class>
+                    <input type="password" class="js-toggle-password form-control form-control-lg" name="newPassword" id="newPassword" placeholder="6+ символов" aria-label="8+ characters required" required minlength="6"
+                           data-hs-toggle-password-options='{
+             "target": "#changePassTargetnewPassword",
+             "defaultClass": "bi-eye-slash",
+             "showClass": "bi-eye",
+             "classChangeTarget": "#changePassIconnewPassword"
+           }'>
+                    <a id="changePassTargetnewPassword" class="input-group-append input-group-text" href="javascript:;">
+                        <i id="changePassIconnewPassword" class="bi-eye"></i>
+                    </a>
+                    <span class="invalid-feedback">Введите </span>
+                </div>
+            </div>
+        </div>
+        <!-- End Form -->
+
+        <!-- Form -->
+        <div class="row mb-4">
+            <div class="col-sm-9">
+
+                <h5>Требования к паролю:</h5>
+
 
                 <ul class="fs-6">
-                    <li>Minimum 8 characters long - the more, the better</li>
-                    <li>At least one lowercase character</li>
-                    <li>At least one uppercase character</li>
-                    <li>At least one number, symbol, or whitespace character</li>
+                    <li>Минимум 6 символов - чем больше, тем лучше</li>
                 </ul>
             </div>
         </div>
         <!-- End Form -->
 
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="submit" class="btn btn-primary">Сохранить настройки</button>
         </div>
     </form>
     <!-- End Form -->

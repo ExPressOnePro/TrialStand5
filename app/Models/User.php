@@ -80,6 +80,11 @@ class User extends Authenticatable implements Auditable {
         return $this->belongsTo(Congregation::class);
     }
 
+    public function stands()
+    {
+        return $this->hasMany(Stand::class, 'congregation_id', 'congregation_id');
+    }
+
     public function usersroles() {
         return $this->hasMany(UsersRoles::class, 'user_id', 'id');
     }

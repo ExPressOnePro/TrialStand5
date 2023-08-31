@@ -79,7 +79,7 @@ class RegisterController extends Controller
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'congregation_id' => 1,
-            'registration_date' => Carbon::now(),
+            'info' => json_encode(['registration_date' =>  Carbon::now(), 'account_type' => 'personal']),
         ]), function($user) use ($data, $rolePublisher) {
             UsersRoles::create([
                 'user_id' => $user->id,
