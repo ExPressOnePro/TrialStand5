@@ -149,7 +149,6 @@
                 <p class="fs-6 mb-0">© Front. <span class="d-none d-sm-inline-block">2022 Htmlstream.</span></p>
             </div>
             <!-- End Col -->
-
             <div class="col-auto">
                 <div class="d-flex justify-content-end">
                     <!-- List Separator -->

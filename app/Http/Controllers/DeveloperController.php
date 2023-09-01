@@ -20,6 +20,24 @@ use OwenIt\Auditing\Facades\Auditor;
 
 class DeveloperController extends Controller{
 
+    public function hub() {
+
+        $roleDeveloper = Role::where('name', 'Developer')->first();
+        $usersDeveloper = UsersRoles::where('role_id', $roleDeveloper->id)->get();
+        $permissionModule = Permission::where('name', 'module.schedule')->first();
+
+        $usersCount = User::count();
+
+        $compact = compact(
+            'usersCount'
+        );
+
+        return view ('Mobile.menu.modules.developer.hub', $compact);
+
+    }
+
+
+
     public function testViewButtons() {
 
         $roleDeveloper = Role::where('name', 'Developer')->first();
