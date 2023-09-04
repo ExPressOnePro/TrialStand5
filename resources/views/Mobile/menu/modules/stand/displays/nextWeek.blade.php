@@ -1,4 +1,4 @@
-@extends('Mobile.layouts.front.stand')
+@extends('Mobile.layouts.front.app')
 @section('title')
     Meeper | Таблица
 @endsection
@@ -21,14 +21,13 @@
             @endif
 
             <!-- текущая следующая неделя кнопки -->
-            @include('Mobile.menu.modules.stand.front.components.switchWeek')
+            @include('Mobile.menu.modules.stand.components.switchWeek')
 
             @if(date('N') . '-'. date('H:i') >= $activation)
                 <div class="row">
                     @foreach ($week_schedule as $day => $times)
                         <div class="col-12 mb-4">
-                            <div class="card">
-                                <div class="card card-header card-header-content-between text-center"style="background: {{ $theme['background'] }}">
+                                <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
                                     <h2 class="card-header-title">
                                         {{ \App\Enums\WeekDaysEnum::getWeekDay($day) }}
                                         {{ $gwe = \App\Enums\WeekDaysEnum::getNextWeekDayDate($day) }}
@@ -77,21 +76,18 @@
                                         $canEdit = auth()->user()->can('Stand-Entry in table');
                                     @endphp
 
-                                    <div class="col-12 mt-1">
-                                        <a class="card card-hover-shadow h-100 @if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2']) @if(!$standPublisher || $canEdit) is-editable @endif @endif"
+                                    <div class="col-sm-12 mt-1">
+                                        <a class="card card-hover-shadow border border-secondary h-100 {{ isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'] && (!$standPublisher || $canEdit) ? 'is-editable' : '' }}"
                                            @if($standPublisher && $canEdit)
                                                href="{{ route('recordRedactionPageMobile', ['stand_publishers_id'=> $standPublisher->id]) }}"
                                            @elseif(!$standPublisher && $canEdit)
                                                href="{{ route('recordRecordPage', ['day' => $day, 'time' => $time, 'date' => $gwe, 'stand_template_id'=> $StandTemplate->id]) }}"
                                            @endif
-                                           style="background-color: @if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'])
-                                        {{ $theme['background-color'] }} @endif;">
+                                           style="background-color: @if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2']) #5BB5A9 @elseif($standPublisher && $canEdit) #D5976B @endif;">
                                             <div class="row align-items-center">
                                                 <!-- time -->
                                                 <div class="col-3 text-center">
-                                                    <div class="avatar avatar-soft-info avatar rounded-2">
-                                                        <span class="avatar-initials text-dark">{{ date('H:i', strtotime($time . ':00')) }}</span>
-                                                    </div>
+                                                    <span class="text-dark h2">{{ date('H:i', strtotime($time . ':00')) }}</span>
                                                 </div>
                                                 <!-- publishers -->
                                                 <div class="col-9">
@@ -101,9 +97,10 @@
                                                                 $userKey = 'user_' . $i;
                                                                 $user = $publishers[$userKey] ?? null;
                                                             @endphp
+
                                                             @if ($user)
                                                                 @if ($user == Auth()->user()->id)
-                                                                    <h3 class="" style="color: #ECC4AB">
+                                                                    <h3 class="text-primary">
                                                                         {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                         {{ $users->where('id', $user)->pluck('last_name')->first() }}
                                                                     </h3>
@@ -124,7 +121,6 @@
                                     </div>
                                 @endforeach
                             </div>
-                        </div>
                     @endforeach
                 </div>
             @else
@@ -138,10 +134,4 @@
             @endif
         </div>
     @endcan
-
-    <script>
-        function callNumber(phoneNumber) {
-            window.location.href = 'tel:' + phoneNumber;
-        }
-    </script>
 @endsection

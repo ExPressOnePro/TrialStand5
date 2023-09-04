@@ -84,15 +84,15 @@
 
 
                     <div id="content" class="card">
-                        @include('Mobile.menu.modules.stand.front.components.publishersAtStandSection')
+                        @include('Mobile.menu.modules.stand.components.publishersAtStandSection')
                     </div>
 
                     <div id="emailSection" class="card">
-                        @include('Mobile.menu.modules.stand.front.components.activationNextWeekSection')
+                        @include('Mobile.menu.modules.stand.components.activationNextWeekSection')
                     </div>
 
                     <div id="themeAccountsSection" class="card">
-                        @include('Mobile.menu.modules.stand.front.components.recordingTimeSection')
+                        @include('Mobile.menu.modules.stand.components.recordingTimeSection')
                     </div>
                 </div>
 

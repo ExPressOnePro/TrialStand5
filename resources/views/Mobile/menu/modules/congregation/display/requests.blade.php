@@ -11,8 +11,6 @@
                             <h1 class="page-header-title">{{ $congregation->name }}</h1>
                             <div class="row align-items-center">
                                 <div class="col-auto">
-                                    <span>Client:</span>
-                                    <a href="#"></a>
                                 </div>
                             </div>
                         </div>

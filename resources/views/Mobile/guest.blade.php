@@ -9,7 +9,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             @foreach($congregations as $congregation)
-            <div class="card card-body mt-2">
+            <div class="card card-body border-secondary mt-2">
                 <div class="row justify-content-between align-items-center">
                     <div class="col-6 py-1">
                         <span class="d-block h2 text-inherit mb-0">{{$congregation->name}}</span>

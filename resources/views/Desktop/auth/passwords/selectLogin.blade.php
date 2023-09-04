@@ -1,4 +1,4 @@
-@extends('Desktop.layouts.auth')
+@extends('Mobile.layouts.front.app')
 
 @section('content')
     @if (session('error'))
@@ -12,8 +12,7 @@
             {{ session('success') }}
         </div>
     @endif
-    <div class="container">
-        <div class="row justify-content-center">
+    <div class="content container-fluid">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">{{ __('Reset Password') }}</div>
@@ -24,7 +23,7 @@
                                 @csrf
 
                                 <div class="row mb-3">
-                                    <label for="value" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+                                    <label for="value" class="col-md-4 col-form-label text-md-end">Введите ваш Логин</label>
 
                                     <div class="col-md-6">
                                         <input id="value" type="value" class="form-control @error('value') is-invalid @enderror"
@@ -53,6 +52,5 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 @endsection

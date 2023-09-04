@@ -53,7 +53,6 @@
                 <li class="pt-4 pb-0"><span class="card-subtitle">Контакты</span></li>
                 <li><i class="bi-at dropdown-item-icon"></i> {{ $user->email }}</li>
 
-
                 @if(isset($info['mobile_phone']))
                     <li><i class="bi-phone dropdown-item-icon"></i> {{ $info['mobile_phone'] }}</li>
                 @else

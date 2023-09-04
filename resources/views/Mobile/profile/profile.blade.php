@@ -62,7 +62,9 @@
 
                         <li class="list-inline-item">
                             <i class="bi-geo-alt me-1"></i>
-                            <a>{{ $info['city'] }}</a>
+                            @if (isset($info['city']))
+                                <a>{{ $info['city'] }}</a>
+                            @endif
                         </li>
                     </ul>
                     <!-- End List -->
@@ -126,7 +128,11 @@
                                     <li><i class="bi-at dropdown-item-icon"></i> {{ $user->email }}</li>
                                     @if (empty($info))
                                     @else
-                                        <li><i class="bi-phone dropdown-item-icon"></i> {{ $info['mobile_phone'] }}</li>
+                                        <li><i class="bi-phone dropdown-item-icon"></i>
+                                            @if (isset($info['mobile_phone']))
+                                                {{ $info['mobile_phone'] }}
+                                            @endif
+                                        </li>
                                     @endif
 
 

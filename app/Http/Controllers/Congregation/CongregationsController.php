@@ -25,16 +25,18 @@ use Illuminate\Support\Facades\Response;
 
 class CongregationsController extends Controller {
 
-    public function select() {
+    public function hub() {
         $congregation = Congregation::where('id', '>', 1)->get();
 
         $mobile_detect = new MobileDetect();
         if ($mobile_detect->isMobile()) {
-            return view('Mobile.menu.modules.select')
+            return view('Mobile.menu.modules.congregation.hub')
                 ->with(['congregation' => $congregation,]);
         } else {
-            return view('Desktop.congregation.select')
+            return view('Mobile.menu.modules.congregation.hub')
                 ->with(['congregation' => $congregation,]);
+//            return view('Desktop.congregation.select')
+//                ->with(['congregation' => $congregation,]);
         }
     }
     public function view($id) {
@@ -45,9 +47,19 @@ class CongregationsController extends Controller {
         $usersRoleOverseers = UsersRoles::where('role_id', 'Overseer')->get();
 
         $lastWeek = Carbon::now()->subWeek();
-        $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->count();
+        $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->where('congregation_id', $id)->count();
         $usersCongregationCount = User::where('congregation_id', $id)->count();
-        $usersActiveCountPercent = ($usersActiveCount / $usersCongregationCount) * 100;
+
+// Проверка на пустые значения и присвоение 0
+        $usersActiveCount = !empty($usersActiveCount) ? $usersActiveCount : 0;
+        $usersCongregationCount = !empty($usersCongregationCount) ? $usersCongregationCount : 0;
+
+        // Проверка на ноль перед делением
+        if ($usersCongregationCount !== 0) {
+            $usersActiveCountPercent = ($usersActiveCount / $usersCongregationCount) * 100;
+        } else {
+            $usersActiveCountPercent = 0; // Если $usersCongregationCount равно нулю
+        }
 
         if ($usersRoleOverseers->isEmpty()) {
             $countOverseers = '0';
@@ -58,7 +70,7 @@ class CongregationsController extends Controller {
                     ->count();
             }
         }
-
+        $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($id);
         $Developer = Role::where('slug', '=', 'Developer')->first();
         $Developers_id = UsersRoles::where('role_id', $Developer->id)->get();
@@ -85,8 +97,6 @@ class CongregationsController extends Controller {
         $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
 
         $users = User::where('congregation_id', $id)->get();
-
-        $AuthUser = User::find(Auth::id());
 
         $congregationModules = CongregationsPermissions::where('congregation_id', $id)->get();
         $permissions = Permission::where('name', 'LIKE', 'module%')->get();
@@ -127,9 +137,7 @@ class CongregationsController extends Controller {
         $mobile_detect = new MobileDetect();
 
         if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
-            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.congregation.main' : 'Desktop.congregation.main';
-
-
+            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.congregation.main' : 'Mobile.menu.modules.congregation.main';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');
@@ -304,6 +312,7 @@ class CongregationsController extends Controller {
 
 
     public function displayModules($congregation_id) {
+        $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($congregation_id);
         $congregationRequestsCount = CongregationRequests::with('user')
             ->where('congregation_id', $congregation_id)
@@ -318,12 +327,25 @@ class CongregationsController extends Controller {
                 ->exists();
         }
 
-        return view('Mobile.menu.modules.congregation.display.modules',compact(
+        $compact = compact(
             'congregation',
-            'permissions','congregationRequestsCount'));
+            'permissions',
+            'congregationRequestsCount'
+        );
+        $mobile_detect = new MobileDetect();
+        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
+            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.congregation.display.modules' : 'Mobile.menu.modules.congregation.display.modules';
+            return view($view, $compact);
+        } else {
+            return view('errors.423Locked');
+        }
     }
     public function displayRequests($congregation_id) {
+        $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($congregation_id);
+        $congregationRequests = CongregationRequests::with('user')
+            ->where('congregation_id', $congregation_id)
+            ->get();
         $congregationRequestsCount = CongregationRequests::with('user')
             ->where('congregation_id', $congregation_id)
             ->count();
@@ -337,9 +359,20 @@ class CongregationsController extends Controller {
                 ->exists();
         }
 
-        return view('Mobile.menu.modules.congregation.display.requests',compact(
+        $compact = compact(
             'congregation',
-            'permissions','congregationRequestsCount'));
+            'permissions',
+            'congregationRequests',
+            'congregationRequestsCount'
+        );
+
+        $mobile_detect = new MobileDetect();
+        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
+            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.congregation.display.requests' : 'Mobile.menu.modules.congregation.display.requests';
+            return view($view, $compact);
+        } else {
+            return view('errors.423Locked');
+        }
     }
     public function displayPublishers($congregation_id) {
         $congregation = Congregation::find($congregation_id);
@@ -359,6 +392,28 @@ class CongregationsController extends Controller {
         }
 
         return view('Mobile.menu.modules.congregation.display.publishers',compact(
+            'congregation',
+            'users',
+            'permissions','congregationRequestsCount'));
+    }
+    public function displayAppointed($congregation_id) {
+        $congregation = Congregation::find($congregation_id);
+        $congregationRequestsCount = CongregationRequests::with('user')
+            ->where('congregation_id', $congregation_id)
+            ->count();
+
+        $users = User::where('congregation_id', $congregation_id)->get();
+
+        $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
+        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
+        foreach ($permissions as $permission) {
+            $permission->has_permission = DB::table('congregations_permissions')
+                ->where('congregation_id', $congregation_id)
+                ->where('permission_id', $permission->id)
+                ->exists();
+        }
+
+        return view('Mobile.menu.modules.congregation.display.appointed',compact(
             'congregation',
             'users',
             'permissions','congregationRequestsCount'));
@@ -402,17 +457,21 @@ class CongregationsController extends Controller {
 
         $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
         $permissions = Permission::where('name', 'LIKE', 'module%')->get();
+
         foreach ($permissions as $permission) {
             $permission->has_permission = DB::table('congregations_permissions')
                 ->where('congregation_id', $congregation_id)
                 ->where('permission_id', $permission->id)
                 ->exists();
         }
-
-        return view('Mobile.menu.modules.congregation.display.stands',compact(
+        $compact = compact(
             'congregation',
             'accessible_stands_for_the_user',
-            'permissions','congregationRequestsCount'));
+            'permissions',
+            'congregationRequestsCount'
+        );
+
+        return view('Mobile.menu.modules.congregation.display.stands', $compact);
     }
 
     public function infoSave($congregation_id) {

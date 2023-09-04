@@ -8,32 +8,31 @@
 <script src="{{ asset('front/vendor/hs-form-search/dist/hs-form-search.min.js')}}"></script>
 
 <script src="{{ asset('front/vendor/chart.js/dist/Chart.min.js') }}"></script>
-<script src="{{ asset('front/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js') }}"></script>
-<script src="{{ asset('front/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js') }}"></script>
-<script src="{{ asset('front/vendor/daterangepicker/moment.min.js') }}"></script>
-<script src="{{ asset('front/vendor/daterangepicker/daterangepicker.js') }}"></script>
 <script src="{{ asset('front/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
 
 <script src="{{ asset('front/vendor/clipboard/dist/clipboard.min.js') }}"></script>
 <script src="{{ asset('front/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('front/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
-<script src=".{{ asset('front/vendor/datatables.net.extensions/dataTables.fixedColumns.min.js') }}"></script>
+<script src="{{ asset('front/vendor/datatables.net.extensions/dataTables.fixedColumns.min.js') }}"></script>
 <script src="{{ asset('front/datatables/media/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('front/vendor/appear/dist/appear.min.js') }}"></script>
-<script src="{{ asset('front/vendor/circles.js/circles.min.js') }}"></script>
+
 <script src="{{ asset('front/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js')}}"></script>
 <script src="{{ asset('front/vendor/hs-sticky-block/dist/hs-sticky-block.min.js')}}"></script>
 <script src="{{ asset('front/vendor/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
 <script src="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.js')}}"></script>
-<script src="{{ asset('front/vendor/hs-go-to/dist/hs-go-to.min.js')}}"></script>
+
 <script src="{{ asset('front/vendor/clipboard/dist/clipboard.min.js')}}"></script>
 <script src="{{ asset('front/vendor/hs-toggle-password/dist/js/hs-toggle-password.js')}}"></script>
+<script src="{{ asset('front/vendor/fslightbox/index.js')}}"></script>
+<script src="{{ asset('front/vendor/tom-select/dist/js/tom-select.complete.min.js')}}"></script>
 
 <!-- JS Front -->
-<script src="{{ asset('front/js/theme.min.js')}}"></script>
+<script src="{{ asset('front/js/theme.min.js') }}"></script>
 <script src="{{ asset('front/js/hs.theme-appearance-charts.js')}}"></script>
 
 <!-- JS Front -->
+
 
 <script>
     (function() {

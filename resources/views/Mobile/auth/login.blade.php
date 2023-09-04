@@ -24,16 +24,16 @@
                                     @enderror
                                 </div>
                             </div>
-                            @role('Developer')
+
                             <label class="form-label w-100" for="signupSrPassword" tabindex="0">
                                 <span class="d-flex justify-content-between align-items-center">
                                     <span></span>
-                                     @if (Route::has('password.request'))
-                                    <a class="form-label-link mb-0" href="{{ route('password.request') }}">{{ __('text.Forgot your password?') }}</a>
+                                     @if (Route::has('password.selectLogin'))
+                                    <a class="form-label-link mb-0" href="{{ route('password.selectLogin') }}">{{ __('text.Forgot your password?') }}</a>
                                     @endif
                                 </span>
                             </label>
-                            @endrole
+
                             <div class="form-group">
                                 <div class="input-group mb-3">
                                     <input id="password" type="password" class="form-control form-control

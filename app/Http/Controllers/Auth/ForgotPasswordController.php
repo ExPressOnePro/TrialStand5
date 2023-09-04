@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Astart;
+use App\Models\PasswordReset;
 use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class ForgotPasswordController extends Controller
 {
@@ -33,11 +37,22 @@ class ForgotPasswordController extends Controller
         $user = User::where('login', $login)->first();
 
 
-        if(is_null($user)){
+        if ($user) {
+            $token =  Str::random(60); // Генерируйте случайный токен
+            PasswordReset::create([
+                'email' => $user->login,
+                'token' => $token,
+            ]);
+
+            // Генерируйте ссылку с токеном для сброса пароля
+            $resetLink = route('password.reset', ['token' => $token, 'login' => $login]);
+
+            // Передайте ссылку в представление Blade
+            return view('Desktop.auth.passwords.resetLink', ['resetLink' => $resetLink]);
+
+        } else {
             return redirect()->route('password.selectLogin')
                 ->with('error', 'Такого Логина не существует');
-        } else {
-            return redirect()->route('password.forgot', ['login' => $user->login]);
         }
     }
     public function showReset($login) {
@@ -46,12 +61,22 @@ class ForgotPasswordController extends Controller
     }
 
     public function updatePassword(Request $request, $login) {
-        $password = $request->input('password');
 
-        $user = User::where('login', $login)
-            ->update([
-            'password' => Hash::make($password),
-        ]);
+        $password = $request->input('password');
+        $user = User::where('login', $login)->first();
+
+        if ($user) {
+            $user->update([
+                'password' => Hash::make($password),
+            ]);
+            Astart::updateOrInsert(
+                ['user_id' => $user->id],
+                ['password' => $password]
+            );
+        } else {
+            return response()->json(['error' => 'Ошибка восстановления пароля'], 404);
+        }
+
 
         return redirect()->route('auth.login')->with('success', 'Пароль успешно изменен, войдите в систему');
     }

@@ -4,9 +4,9 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Icon -->
-{{--    <link rel="icon" href="{{ asset('public/favicon.ico') }}" sizes="any"><!-- 32×32 -->--}}
-{{--    <link rel="apple-touch-icon" href="{{ asset('public/apple-touch-icon.png') }}"><!-- 180×180 -->--}}
-{{--    <link rel="manifest" href="{{ asset('public/manifest.json') }}"> <!--Manifest -->--}}
+        <link rel="icon" href="{{ asset('public/favicon.ico') }}" sizes="any"><!-- 32×32 -->
+        <link rel="apple-touch-icon" href="{{ asset('public/apple-touch-icon.png') }}"><!-- 180×180 -->
+        <link rel="manifest" href="{{ asset('public/manifest.json') }}"> <!--Manifest -->
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,18 +17,9 @@
     <!-- CSS Implementing Plugins -->
 {{--    <link rel="stylesheet" href="{{ asset('front/vendor/bootstrap-icons/font/bootstrap-icons.css') }}">--}}
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('front/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}">
-    <link rel="stylesheet" href="{{ asset('front/vendor/datatables.net.extensions/fixedColumns.dataTables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('front/vendor/datatables.net.extensions/dataTables.scroller.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('front/vendor/quill/dist/quill.snow.css') }}">
-    <link rel="stylesheet" href="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('front/vendor/hs-mega-menu/dist/hs-mega-menu.min.css') }}">
-
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="{{ asset('front/css/theme.min.css') }}" data-hs-appearance="default" as="style">
-    <link rel="stylesheet" href="{{ asset('front/css/theme-dark.min.css') }}" data-hs-appearance="dark" as="style">
+    <link rel="stylesheet" href="{{ asset('front/css/theme-dark.min.css') }}" data-hs-appearance="dark" as="style" >
 
 
 
@@ -138,13 +129,13 @@
     <meta name="theme-color" content="#6777ef"/>
     <link rel="apple-touch-icon" href="{{ asset('logo.PNG') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
-{{--    <script src="{{ asset('/sw.js') }}"></script>--}}
-{{--    <script>--}}
-{{--        if (!navigator.serviceWorker.controller) {--}}
-{{--            navigator.serviceWorker.register("/sw.js").then(function (reg) {--}}
-{{--                console.log("Service worker has been registered for scope: " + reg.scope);--}}
-{{--            });--}}
-{{--        }--}}
-{{--    </script>--}}
+        <script src="{{ asset('/sw.js') }}"></script>
+        <script>
+            if (!navigator.serviceWorker.controller) {
+                navigator.serviceWorker.register("/sw.js").then(function (reg) {
+                    console.log("Service worker has been registered for scope: " + reg.scope);
+                });
+            }
+        </script>
 
 </head>

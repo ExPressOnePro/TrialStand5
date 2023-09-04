@@ -19,3 +19,8 @@
         </div>
     </div>
 </header>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>

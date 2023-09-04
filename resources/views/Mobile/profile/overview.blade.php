@@ -143,30 +143,24 @@
         </div>
     </div>
 
-    <div class="footer mb-7">
+    <div class="footer mb-10">
         <div class="row justify-content-between align-items-center">
             <div class="col">
-                <p class="fs-6 mb-0">© Front. <span class="d-none d-sm-inline-block">2022 Htmlstream.</span></p>
+                <p class="fs-6 mb-0"></p>
             </div>
-            <!-- End Col -->
             <div class="col-auto">
                 <div class="d-flex justify-content-end">
-                    <!-- List Separator -->
                     <ul class="list-inline list-separator">
-
                         <li class="list-inline-item">
-                            Что нового
-                            <button class="btn btn-ghost-secondary btn btn-icon btn-ghost-secondary rounded-circle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasKeyboardShortcuts" aria-controls="offcanvasKeyboardShortcuts">
-                                <i class="bi bi-arrow-clockwise"></i>
-                            </button>
-                            <!-- End Keyboard Shortcuts Toggle -->
+                            <a class="btn btn-ghost-secondary btn-sm" href="{{route('changeLog')}}">
+                                Версия и обновления <i class="bi-box-arrow-up-right ms-1"></i>
+                            </a>
                         </li>
                     </ul>
-                    <!-- End List Separator -->
+
                 </div>
             </div>
-            <!-- End Col -->
+
         </div>
-        <!-- End Row -->
     </div>
 @endsection

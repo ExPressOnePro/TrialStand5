@@ -5,16 +5,16 @@
     <div class="content container-fluid">
         <div class="card mb-3 mb-lg-5">
             <div class="card-header card-header-content-sm-between">
-                <h4 class="card-header-title mb-2 mb-sm-0">Мои Записи</h4>
+                <h4 class="card-header-title mb-2 mb-sm-0 text-center">Мои записи на неделе</h4>
 
                 <ul class="nav nav-segment nav-fill" id="projectsTab" role="tablist">
                     <li class="nav-item" data-bs-toggle="chart" data-datasets="0" data-trigger="click" data-action="toggle" role="presentation">
-                        <a class="nav-link active" href="#nav-mrfs_1" data-bs-toggle="tab" aria-selected="true" role="tab">Текущая
+                        <a class="nav-link active" href="#nav-mrfs_1" data-bs-toggle="tab" aria-selected="true" role="tab">Текущей
                             <span class="badge bg-primary rounded-pill ms-1">{{$standPublishersCount}}</span>
                         </a>
                     </li>
                     <li class="nav-item" data-bs-toggle="chart" data-datasets="1" data-trigger="click" data-action="toggle" role="presentation">
-                        <a class="nav-link" href="#nav-mrfs_2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Следующая
+                        <a class="nav-link" href="#nav-mrfs_2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Следующей
                             @if($standPublishersCountNextWeek>0)
                             <span class="badge bg-primary rounded-pill ms-1">{{$standPublishersCountNextWeek}}</span>
                             @else
@@ -32,7 +32,7 @@
                                 @foreach ($standPublishers as $standPublisher)
                                     @foreach ($standPublisher->standTemplates as $standTemplate)
                                         <li class="list-group-item">
-                                            <a class="list-group-item-action border-primary" href="#">
+                                            <a class="list-group-item-action border-primary" href="{{ route('currentWeekTableFront', $standTemplate->stand_id) }}">
                                                 <div class="row">
                                                     <div class="col-sm mb-2 mb-sm-0">
                                                         <h2 class="fw-normal mb-1">{{ $standPublisher->date }} {{ \App\Enums\WeekDaysEnum::getWeekDay($standPublisher->day) }}
@@ -55,7 +55,7 @@
                             @foreach ($standPublishersNextWeek as $standPublisherNextWeek)
                                 @foreach ($standPublisherNextWeek->standTemplates as $standTemplateNextWeek)
                                     <li class="list-group-item">
-                                        <a class="list-group-item-action border-primary" href="#">
+                                        <a class="list-group-item-action border-primary" href="{{ route('nextWeekTableFront', $standTemplateNextWeek->stand_id) }}">
                                             <div class="row">
                                                 <div class="col-sm mb-2 mb-sm-0">
                                                     <h2 class="fw-normal mb-1">{{ $standPublisherNextWeek->date }} {{ \App\Enums\WeekDaysEnum::getWeekDay($standPublisherNextWeek->day) }}

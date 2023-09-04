@@ -13,8 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Detection\MobileDetect;
-class HomeController extends Controller
-{
+class HomeController extends Controller {
     /**
      * Create a new controller instance.
      *
@@ -86,11 +85,16 @@ class HomeController extends Controller
                 return view('Mobile.home.home', $compact);
             }
         } else { //Desktop
-            if ($user->congregation_id === 1) {
-                return view('Desktop.guest', ['congregation' => $congregation], ['congregationRequests' => $congregationRequests]);
+            if( $user->congregation_id === 1) {
+                return view('Mobile.guest', ['congregations' => $congregations], ['congregationRequests' => $congregationRequests]);
             } else {
-                return view('Desktop.home.home',  $compact);
+                return view('Mobile.home.home', $compact);
             }
+//            if ($user->congregation_id === 1) {
+//                return view('Desktop.guest', ['congregation' => $congregation], ['congregationRequests' => $congregationRequests]);
+//            } else {
+//                return view('Desktop.home.home',  $compact);
+//            }
         }
     }
 
@@ -109,9 +113,12 @@ class HomeController extends Controller
         if ($detect->isMobile()) { //Mobile
             return view('Mobile.guest', compact('congregations', 'congregationRequests'));
         } else { //Desktop
-            return view('Desktop.guest')
-                ->with(['congregations' => $congregations])
-                ->with(['congregationRequests' => $congregationRequests]);
+
+            return view('Mobile.guest', compact('congregations', 'congregationRequests'));
+
+//            return view('Desktop.guest')
+//                ->with(['congregations' => $congregations])
+//                ->with(['congregationRequests' => $congregationRequests]);
         }
 
     }
@@ -119,6 +126,10 @@ class HomeController extends Controller
     public function welcome() {
 
         return view('welcome');
+    }
+    public function changeLog() {
+
+        return view('changeLog');
     }
 
     public function recordsWithStandPage(){
@@ -192,6 +203,6 @@ class HomeController extends Controller
             'active_day',
         );
 
-        return view ('Mobile.home.records-with-stand', $compact);
+        return view ('Mobile.home.displays.records-with-stand', $compact);
     }
 }

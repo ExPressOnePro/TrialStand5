@@ -12,25 +12,26 @@
 @else
 @endif
 
-<div class="row">
-    <div class="col-6 col-sm-4 col-sm-3 mb-5">
-        <a class="card card-bordered h-100 text-center" href="{{ route('users') }}">
+{{--<div class="row">--}}
+{{--    <div class="col-6 col-sm-4 col-sm-3 mb-5">--}}
+{{--        <a class="card card-bordered h-100 text-center" href="{{ route('users') }}">--}}
 
-            <div class="card-body">
-                <h3 class="card-title">Browse file</h3>
-                <p class="card-text fs-6">Все Пользователи</p>
-            </div>
-        </a>
-    </div>
+{{--            <div class="card-body">--}}
+{{--                <h3 class="card-title">Browse file</h3>--}}
+{{--                <p class="card-text fs-6">Все Пользователи</p>--}}
+{{--            </div>--}}
+{{--        </a>--}}
+{{--    </div>--}}
 
-    <div class="col-6 col-sm-4 col-sm-3 mb-5">
-        <a class="card card-bordered h-100 text-center" href="{{ route('meetingSchedules.overview') }}">
-            <div class="card-body">
-                <h3 class="card-title">Test</h3>
-                <p class="card-text fs-6">Meeting Schedules</p>
-            </div>
-        </a>
-    </div>
+{{--    <div class="col-6 col-sm-4 col-sm-3 mb-5">--}}
+{{--        <a class="card card-bordered h-100 text-center" href="{{ route('meetingSchedules.overview') }}">--}}
+{{--            <div class="card-body">--}}
+{{--                <h3 class="card-title">Test</h3>--}}
+{{--                <p class="card-text fs-6">Meeting Schedules</p>--}}
+{{--            </div>--}}
+{{--        </a>--}}
+{{--    </div>--}}
+@role('Developer')
     <div class="col-6 col-sm-4 col-sm-3 mb-5">
         <a class="card card-bordered h-100 text-center" href="{{ route('testViewButtons') }}">
             <div class="card-body">
@@ -38,5 +39,6 @@
             </div>
         </a>
     </div>
-    <!-- End Col -->
-</div>
+@endrole
+{{--    <!-- End Col -->--}}
+

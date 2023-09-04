@@ -3,16 +3,16 @@
     <ul class="nav nav-sm nav-pills nav-fill fixed-bottom navbar-bordered bg-white navbar-shadow">
         <li class="nav-item">
             <a class="nav-link{{ request()->is('home*') ? ' active bg-primary' : '' }}" href="{{ route('home') }}">
-                <h4>Новости</h4>
+                <h4>Главная</h4>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{{ request()->is('api/menu*') ? ' active bg-primary' : '' }}" href="{{ route('menu.overview') }}">
+            <a class="nav-link{{ request()->is('*menu*') ? ' active bg-primary' : '' }}" href="{{ route('menu.overview') }}">
                 <h4>Меню</h4>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{{ request()->is('profile*') ? ' active bg-primary' : '' }}"
+            <a class="nav-link{{ request()->is('*profile*') ? ' active bg-primary' : '' }}"
                href="{{ route('profile.overview', Auth::id()) }}">
                 <h4>Профиль</h4>
             </a>

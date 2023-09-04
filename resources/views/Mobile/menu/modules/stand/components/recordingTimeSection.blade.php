@@ -11,12 +11,12 @@
                         <tr>
                             <th></th>
                             @foreach($daysOfWeek as $dayNumber => $dayName)
-                                <th>{{ $dayNumber }}</th>
+                                <th><center>{{ $dayName }}</center></th>
                             @endforeach
                         </tr>
                         @for($i = 6; $i <= 21; $i++)
                             <tr>
-                                <td>{{ $i }}:00</td>
+                                <td><center>{{ $i }}:00</center></td>
                                 @foreach($daysOfWeek as $dayNumber => $dayName)
                                     <td>
                                         <label class="form-check form-switch m-1">

@@ -129,14 +129,14 @@
             @php
                 $standPublisher = \App\Models\StandPublishers::find($audit->auditable_id);
             @endphp
-            <div class="card-body card-body-height" style="height: 30rem;">
+            <div class="card-body card-body-height d-flex justify-content-center align-items-center" style="height: 30rem;">
                 <ul class="step step-icon-xs mb-0">
                     <li class="step-item">
                         <div class="step-content-wrapper">
                             <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
                             <div class="step-content">
                                 <h5 class="step-title">
-                                    <a class="text-dark" href="#">Детали аудита
+                                    <a class="text-dark" href="#">Детали
                                         <span class="text-primary small text-uppercase">{{ $standPublisher->id }}</span>
                                         @if( $audit->event === 'updated')
                                             <span class="badge bg-soft-success text-success rounded-pill">

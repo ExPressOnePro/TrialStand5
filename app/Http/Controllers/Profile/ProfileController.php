@@ -24,7 +24,8 @@ class ProfileController extends Controller
         if ($detect->isMobile()) {
             return view('Mobile.profile.overview', compact('user'));
         } else {
-            return view('Desktop.profile.overview', compact('user'));
+            return view('Mobile.profile.overview', compact('user'));
+            //return view('Desktop.profile.overview', compact('user'));
 
         }
     }
@@ -56,8 +57,10 @@ class ProfileController extends Controller
                 ['user' => $user]);
 //                ['personalReports' => $personalReports]);
         } else {
-            return view('Desktop.profile.profile',
+            return view('Mobile.profile.profile',
                 ['user' => $user]);
+//            return view('Desktop.profile.profile',
+//                ['user' => $user]);
 //                ['personalReports' => $personalReports]);
         }
     }
@@ -119,7 +122,13 @@ class ProfileController extends Controller
             'additional_phone',
             ));
         } else {
-            return view('Desktop.profile.settings', compact('user'));
+            return view('Mobile.profile.settings', compact('user', 'gender',
+                'country',
+                'city',
+                'mobile_phone',
+                'additional_phone',
+            ));
+//            return view('Desktop.profile.settings', compact('user'));
         }
     }
 

@@ -1,9 +1,15 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@include('Mobile.layouts.components.front-head')
+{{--@if(Request::is('*menu'))--}}
+{{--    @include('Mobile.layouts.components.hub-head')--}}
+{{--@elseif(Request::is('*home'))--}}
+{{--    @include('Mobile.layouts.components.hub-head')--}}
+{{--@else--}}
+    @include('Mobile.layouts.components.front-head')
+{{--@endif--}}
 
-<body class="mt-3">
+<body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset mt-3">
 
 <script src="{{ asset('front/js/hs.theme-appearance.js') }}"></script>
 <script src="{{ asset('front/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
@@ -13,20 +19,29 @@
 {{--@if(Request::is('home*'))--}}
 {{--    @include('Mobile.includes.headers.header-home')--}}
 {{--@endif--}}
-{{--@if(Request::is('*stand/*'))--}}
-{{--    @include('Mobile.includes.headers.header-stand')--}}
-{{--@endif--}}
-{{--@if(Request::is('*stand'))--}}
+@if(Request::is('menu/stand*'))
+    @include('Mobile.includes.headers.header-stand')
+@elseif(Request::is('*menu'))
+    @include('Mobile.includes.headers.header-menu')
+@elseif(Request::is('*home'))
+    @include('Mobile.includes.headers.header-home')
+@endif
+@if(Request::is('dev*'))
+    @include('Mobile.includes.headers.header-developer')
+    @include('Mobile.includes.asides.aside-developer')
+@endif
+{{--@unless(Request::is('dev*'))--}}
 {{--    @include('Mobile.includes.headers.header-home')--}}
-{{--@endif--}}
-{{--@if(Request::is('menu*'))--}}
-{{--    @include('Mobile.includes.headers.header-home')--}}
-{{--@endif--}}
-@include('Mobile.includes.headers.header-home')
+{{--@endunless--}}
 <main id="content" role="main" class="main mb-7">
 
     @yield('content')
-    @include('Mobile.layouts.components.front-scripts')
+{{--    @if(Request::is('*home', '*menu'))--}}
+{{--        @include('Mobile.layouts.components.hub-scripts')--}}
+{{--    @else--}}
+        @include('Mobile.layouts.components.front-scripts')
+{{--    @endif--}}
+
 
 </main>
 @include('Mobile.includes.menuBarPhone')

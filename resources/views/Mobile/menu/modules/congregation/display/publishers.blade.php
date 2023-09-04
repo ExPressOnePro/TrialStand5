@@ -11,8 +11,6 @@
                             <h1 class="page-header-title">{{ $congregation->name }}</h1>
                             <div class="row align-items-center">
                                 <div class="col-auto">
-                                    <span>Client:</span>
-                                    <a href="#"></a>
                                 </div>
                             </div>
                         </div>
@@ -22,14 +20,14 @@
 
             @include('Mobile.menu.modules.congregation.components.navMenu')
         </div>
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
-                <div class="col mb-3 mb-lg-5">
+            <div class="row">
+                <div class="col mb-3">
                     <div class="card">
                         <div class="card-header">
                             <div class="row justify-content-between align-items-center flex-grow-1">
                                 <div class="col-12 col-md">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="card-header-title">Users</h5>
+                                        <h5 class="card-header-title"></h5>
                                     </div>
                                 </div>
 
@@ -41,7 +39,7 @@
                                             <div class="input-group-prepend input-group-text">
                                                 <i class="bi-search"></i>
                                             </div>
-                                            <input id="datatableWithSearchInput1" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
+                                            <input id="datatableWithSearchInput1" type="search" class="form-control" placeholder="Поиск" aria-label="Search users">
                                         </div>
                                         <!-- End Search -->
                                     </form>
@@ -62,14 +60,18 @@
                                 <thead class="thead-light">
                                 <tr>
                                     <th>Имя фамилия</th>
-                                    <th>Роль</th>
+{{--                                    <th>Роль</th>--}}
                                     <th>Номер телефона</th>
-                                    <th>Группа</th>
+{{--                                    <th>Группа</th>--}}
                                 </tr>
                                 </thead>
 
                                 <tbody>
                                 @foreach($users as $user)
+                                    @php
+                                        $info = json_decode($user->info, true);
+                                        $mobile_phone = isset($info['mobile_phone']) ? $info['mobile_phone'] : '';
+                                    @endphp
                                     <tr>
                                         <td>
                                             <a class="d-flex align-items-center" href="{{ route('userCard', $user->id) }}">
@@ -86,23 +88,23 @@
                                             {{--                                    <span class="d-block fs-5 text-body">{{ $user->email }}</span>--}}
 
                                         </td>
-                                        <td>
-                                            @foreach($user->usersroles as $userRole)
-                                                @if($userRole->role->name === 'Developer')
-                                                    <a class="badge" style="background: #be0101">Разработчик</a>
-                                                @elseif($userRole->role->name === 'Overseer')
-                                                    <span class="badge bg-secondary">Старейшина</span>
-                                                @elseif($userRole->role->name === 'Publisher')
-                                                    <span class="badge bg-secondary">Возвещатель</span>
-                                                @endif
-                                            @endforeach
-                                        </td>
-                                        <td>{{ $user->mobile_phone }}</td>
-                                        <td>
-                                            @foreach($user->usersGroups as $userGroup)
-                                                {{ $userGroup->group->name }}
-                                            @endforeach
-                                        </td>
+{{--                                        <td>--}}
+{{--                                            @foreach($user->usersroles as $userRole)--}}
+{{--                                                @if($userRole->role->name === 'Developer')--}}
+{{--                                                    <a class="badge" style="background: #be0101">Разработчик</a>--}}
+{{--                                                @elseif($userRole->role->name === 'Overseer')--}}
+{{--                                                    <span class="badge bg-secondary">Старейшина</span>--}}
+{{--                                                @elseif($userRole->role->name === 'Publisher')--}}
+{{--                                                    <span class="badge bg-secondary">Возвещатель</span>--}}
+{{--                                                @endif--}}
+{{--                                            @endforeach--}}
+{{--                                        </td>--}}
+                                        <td>{{ $mobile_phone }}</td>
+{{--                                        <td>--}}
+{{--                                            @foreach($user->usersGroups as $userGroup)--}}
+{{--                                                {{ $userGroup->group->name }}--}}
+{{--                                            @endforeach--}}
+{{--                                        </td>--}}
                                     </tr>
                                 @endforeach
                                 </tbody>

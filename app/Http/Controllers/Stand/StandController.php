@@ -48,18 +48,21 @@ class StandController extends Controller{
             $mobile_detect = new MobileDetect();
 
             $viewData = [
-                'accessible_stands_for_the_user' => $user->hasRole('Developer') ? $accessible_stands_for_dev : $accessible_stands_for_the_user,
+                'accessible_stands_for_the_user' =>  $accessible_stands_for_the_user,
                 'congregations' => $congregations,
             ];
 
-            $viewName = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.front.hub' : 'Desktop.stand.index';
+            $viewName = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.hub' : 'Mobile.menu.modules.stand.hub';
 
             return view($viewName, $viewData);
         }
     }
 
-    public function history($id)
-    {
+    public function history($id) {
+
+        $AuthUser = User::find(Auth::id());
+        $congregation = Congregation::find($AuthUser->congregation_id);
+        $stand = Stand::find($id);
         $standTemplate = StandTemplate::where('stand_id', $id)
             ->where('type', '=', 'current')
             ->first();
@@ -76,14 +79,20 @@ class StandController extends Controller{
 
         $mobile_detect = new MobileDetect();
 
-        $viewData = compact('audits');
+        $compact = compact('audits');
 
-        $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.history' : 'Desktop.stand.history';
-
-        return view($view, $viewData);
+        if ($mobile_detect->isMobile() && ($AuthUser->congregation_id == $stand->congregation_id)) {
+            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.displays.history' : 'Mobile.menu.modules.stand.displays.history';
+            return view($view, $compact);
+        } else {
+            return view('errors.423Locked');
+        }
     }
     /*Страница настройки стенда*/
     public function settings($id) {
+        $AuthUser = User::find(Auth::id());
+        $congregation = Congregation::find($AuthUser->congregation_id);
+
         $stand = Stand::find($id);
         $template = StandTemplate::where('stand_id', $id)
             ->where('type','=','next')
@@ -98,37 +107,38 @@ class StandController extends Controller{
         $settings_publishers_at_stand = $settings['publishers_at_stand'];
         $activation_values = explode("-", $activation);
         $daysOfWeek = [
-            1 => 'Понедельник',
-            2 => 'Вторник',
-            3 => 'Среда',
-            4 => 'Четверг',
-            5 => 'Пятница',
-            6 => 'Суббота',
-            7 => 'Воскресенье',
+            1 => 'Пн',
+            2 => 'Вт',
+            3 => 'Ср',
+            4 => 'Чт',
+            5 => 'Пт',
+            6 => 'Сб',
+            7 => 'Вс',
         ];
-
         $mobile_detect = new MobileDetect();
-        if ($mobile_detect->isMobile()) {
-            return view('Mobile.menu.modules.stand.front.settings', compact(
-                'stand',
-                'template',
-                'daysOfWeek',
-                'settings_publishers_at_stand',
-                'activation_values',
-            ));
+
+        $compact =compact(
+            'stand',
+            'template',
+            'daysOfWeek',
+            'settings_publishers_at_stand',
+            'activation_values',
+        );
+
+        if ($mobile_detect->isMobile() && ($AuthUser->congregation_id == $stand->congregation_id)) {
+            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.displays.settings' : 'Mobile.menu.modules.stand.displays.settings';
+            return view($view, $compact);
         } else {
-            return view('Desktop.stand.settings', compact(
-                'stand',
-                'template',
-                'daysOfWeek',
-                'activation_values',
-            ));
+            return view('errors.423Locked');
         }
 
     }
 
     /*Страницы текущей и следующей недели стенда*/
     public function currentWeekTableFront($id) {
+
+        $AuthUser = User::find(Auth::id());
+        $congregation = Congregation::find($AuthUser->congregation_id);
         $stand = Stand::find($id);
 
         $users = User::where('congregation_id', $stand->congregation_id)->get();
@@ -155,12 +165,15 @@ class StandController extends Controller{
             ->get(); // `->get()` because model doesn't have `->map()` method
 
         $theme = [
-//                'background' => '#8496a2',
-//                'background-color' => '#8496a2',
-            'background' => '#889087',
-            'background-color' => '#6e988f',
+            'dark' => [
+                'background' => '#246355',
+                'background-color' => '#8496a2',
+            ],
+            'default' => [
+                'background' => '#995D37',
+                'background-color' => '#6e988f',
+            ],
         ];
-
 
         $templates = $templates->map(static function ($relations) {
             $relations->standPublishers = $relations->standPublishers->keyBy(static function($standPublishers) {
@@ -170,26 +183,35 @@ class StandController extends Controller{
             return $relations;
         });
 
-        $mobile_detect = new MobileDetect();
-        if ($mobile_detect->isMobile()) {
-            return view('Mobile.menu.modules.stand.front.currentWeek', compact(
-                'StandTemplate',
+        $compact = compact('StandTemplate',
             'week_schedule',
-                'users',
-                'stand',
-                'theme',
-                'valuePublishers_at_stand',
-                'standPublishers'));
+            'users',
+            'stand',
+            'theme',
+            'valuePublishers_at_stand',
+            'standPublishers'
+        );
+
+        $mobile_detect = new MobileDetect();
+        if (($AuthUser->congregation_id == $stand->congregation_id)) {
+            $view = 'Mobile.menu.modules.stand.displays.currentWeek';
+            return view($view, $compact);
         } else {
-            return view('Desktop.stand.front.currentWeekTable', compact(
-                'StandTemplate',
-                'week_schedule',
-                'users',
-                'stand',
-                'standPublishers'));
+            return view('errors.423Locked');
+
+
+
+//            return view('Desktop.stand.front.currentWeekTable', compact(
+//                'StandTemplate',
+//                'week_schedule',
+//                'users',
+//                'stand',
+//                'standPublishers'));
         }
     }
     public function nextWeekTableFront($id) {
+        $AuthUser = User::find(Auth::id());
+        $congregation = Congregation::find($AuthUser->congregation_id);
         $stand = Stand::find($id);
 
         $users = User::where('congregation_id', $stand->congregation_id)->get();
@@ -236,7 +258,7 @@ class StandController extends Controller{
         $theme = [
 //                'background' => '#8496a2',
 //                'background-color' => '#8496a2',
-            'background' => '#889087',
+            'background' => '#608b93',
             'background-color' => '#6e988f',
         ];
         $templates = $templates->map(static function ($relations) {
@@ -246,30 +268,27 @@ class StandController extends Controller{
 
             return $relations;
         });
+        $compact = compact(
+            'StandTemplate',
+            'week_schedule',
+            'users',
+            'stand',
+            'theme',
+            'activation_value',
+            'standPublishers',
+            'activation',
+            'dayName',
+            'valuePublishers_at_stand',
+            'currentDateTime',
+            'activationDateTime',
+        );
 
         $mobile_detect = new MobileDetect();
-        if ($mobile_detect->isMobile()) {
-            return view('Mobile.menu.modules.stand.front.nextWeek' ,compact(
-                'StandTemplate',
-            'week_schedule',
-                'users',
-                'stand',
-                'theme',
-                'activation_value',
-                'standPublishers',
-                'activation',
-                'dayName',
-                'valuePublishers_at_stand',
-                'currentDateTime',
-                'activationDateTime',
-        ));
+        if ( $AuthUser->congregation_id == $stand->congregation_id) {
+            $view =  'Mobile.menu.modules.stand.displays.nextWeek';
+            return view($view, $compact);
         } else {
-            return view('Desktop.stand.front.currentWeekTable')
-                ->with(['StandTemplate' => $StandTemplate])
-                ->with(['week_schedule' => $week_schedule])
-                ->with(['users' => $users])
-                ->with(['stand' => $stand])
-                ->with(['standPublishers' => $standPublishers]);
+            return view('errors.423Locked');
         }
     }
 
@@ -282,7 +301,7 @@ class StandController extends Controller{
         $users = User::where('congregation_id', $congregation->id)->get();
 
 
-        return view ('Mobile.menu.modules.stand.front.components.redaction')
+        return view ('Mobile.menu.modules.stand.components.redaction')
             ->with(['standPublisher' => $standPublisher])
             ->with(['users' => $users])
             ->with(['stand' => $stand]);
@@ -292,7 +311,7 @@ class StandController extends Controller{
         $standTemplate = StandTemplate::find($stand_template_id);
         $stand = Stand::find($standTemplate->stand_id);
         $users = User::where('congregation_id', $stand->congregation_id)->get();
-        return view ('Mobile.menu.modules.stand.front.components.record', compact(
+        return view ('Mobile.menu.modules.stand.components.record', compact(
             'day', 'time',
             'date', 'standTemplate', 'users',
             'stand'));
@@ -311,7 +330,7 @@ class StandController extends Controller{
 
         $stand = Stand::find($standTemplate->stand_id);
         $users = User::where('congregation_id', $stand->congregation_id)->orderby('last_name', 'asc')->get();
-        return view ('Mobile.menu.modules.stand.front.components.redaction', compact(
+        return view ('Mobile.menu.modules.stand.components.redaction', compact(
             'standPublisher',
             'users',
             'settings',
@@ -357,7 +376,7 @@ class StandController extends Controller{
             }
         }
 
-        return view ('Mobile.menu.modules.stand.front.report', compact(
+        return view ('Mobile.menu.modules.stand.displays.report', compact(
             'standPublisher',
             'standPublisherTimes',
             'users',
@@ -523,27 +542,25 @@ class StandController extends Controller{
     }
 
 
-    public function ExampleTestVersionOfUpdatingPublishersCurrentWeek() {
-        $congregations = Congregation::with('stand')->get();
-
-        foreach ($congregations as $congregation) {
-            foreach ($congregation->stand as $stand) {
-                $stand_template_id_next = $stand->standTemplate()->where('type', 'next')->first();
-                $stand_template_id_current = $stand->standTemplate()->where('type', 'current')->first();
-
-                if ($stand_template_id_current) {
-                    StandPublishers::where('stand_template_id', $stand_template_id_current->id)->delete();
-                }
-
-                if ($stand_template_id_next) {
-                    StandPublishers::where('stand_template_id', $stand_template_id_next->id)
-                        ->update([
-                            'stand_template_id' => optional($stand_template_id_current)->id
-                        ]);
-                }
-            }
-        }
-
-        return redirect()->back();
-    }
+//    public function ExampleTestVersionOfUpdatingPublishersCurrentWeek() {
+//        $congregations = Congregation::with('stand')->get();
+//
+//        foreach ($congregations as $congregation) {
+//            foreach ($congregation->stand as $stand) {
+//                $stand_template_id_next = $stand->standTemplate()->where('type', 'next')->first();
+//                $stand_template_id_current = $stand->standTemplate()->where('type', 'current')->first();
+//
+//                if ($stand_template_id_current) {
+//                    StandPublishers::where('stand_template_id', $stand_template_id_current->id)->delete();
+//                }
+//
+//                if ($stand_template_id_next) {
+//                    StandPublishers::where('stand_template_id', $stand_template_id_next->id)
+//                        ->update([
+//                            'stand_template_id' => optional($stand_template_id_current)->id
+//                        ]);
+//                }
+//            }
+//        }
+//    }
 }

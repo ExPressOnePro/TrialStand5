@@ -1336,7 +1336,7 @@ class UserSeeder extends Seeder
                 2,
             ],
             'info'=> [
-                json_encode(['gender'=>'male','country'=>'Moldova','mobile_phone'=>'60319846','additional_phone'=>'','address'=>'ул. Тудор Владимиреску 51','birth_day'=>'','christening_day'=>'','registration_date'=>'',]),
+                json_encode(['city'=>'Бельцы','gender'=>'male','country'=>'Moldova','mobile_phone'=>'68484866','additional_phone'=>'','address'=>'ул. Тудор Владимиреску 51','birth_day'=>'','christening_day'=>'','registration_date'=>'',]),
                 json_encode(['city'=>'Бельцы','gender'=>'male','country'=>'Moldova','mobile_phone'=>'60319846','additional_phone'=>'','address'=>'ул. Б. Главан 37 кв. 32','birth_day'=>'27.02.1989','christening_day'=>'29.09.2007','registration_date'=>'29.04.2019 20:38',]),
                 json_encode(['city'=>'Бельцы','gender'=>'female','country'=>'Moldova','mobile_phone'=>'60078341','additional_phone'=>'0','address'=>'0','birth_day'=>'0','christening_day'=>'0','registration_date'=>'13.06.2022 22:12',]),
                 json_encode(['city'=>'Бельцы','gender'=>'male','country'=>'Moldova','mobile_phone'=>'69837859','additional_phone'=>'','address'=>'ул. Чичикало 10 кв. 21','birth_day'=>'11.07.1988','christening_day'=>'21.06.2003','registration_date'=>'03.05.2019 14:03',]),

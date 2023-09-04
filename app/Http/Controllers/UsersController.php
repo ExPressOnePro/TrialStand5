@@ -23,13 +23,10 @@ class UsersController extends Controller{
     public function allUsersPage() {
         $user = User::find(Auth::id());
 
-        if($user->hasRole('Developer')) {
-            $users = User::with('usersroles.role', 'usersGroups.group')->get();
-        } else {
-                $users = User::with('usersroles.role', 'usersGroups.group')
-                    ->where('congregation_id', $user->congregation_id)
-                    ->get();
-        }
+        $users = User::with('usersroles.role', 'usersGroups.group')
+            ->where('congregation_id', $user->congregation_id)
+            ->get();
+
 
 
         $detect = new MobileDetect;
@@ -37,7 +34,7 @@ class UsersController extends Controller{
             return view('Mobile.menu.modules.users.users')
                 ->with(['users' => $users]);
         } else {
-            return view('Desktop.users.users')
+            return view('Mobile.menu.modules.users.users')
                 ->with(['users' => $users]);
 
         }
@@ -75,29 +72,74 @@ class UsersController extends Controller{
 
 
         $detect = new MobileDetect;
-        $viewData = [
-            'user' => $user,
-            'roles' => $roles,
-            'permissions' => $permissions,
-            'groups' => $groups,
-            'congregation_id_to_name' => $congregation_id_to_name,
-            'activeGroup' => $activeGroup,
-            'audit' => $audit,
-            'standPublishers' => null
-        ];
+        $compact = compact(
+            'user',
+            'roles',
+            'permissions',
+            'groups',
+            'congregation_id_to_name',
+            'activeGroup',
+            'audit',
+            'standPublishers',
+        );
 
         if ($detect->isMobile() && $user->hasRole('Developer')) {
-            $viewData['standPublishers'] = $standPublishers;
-            return view('Mobile.menu.modules.users.card', $viewData);
+            $compact['standPublishers'] = $standPublishers;
+            return view('Mobile.menu.modules.users.card', $compact);
         } elseif ($detect->isMobile()) {
-            return view('Mobile.menu.modules.users.card', $viewData);
+            return view('Mobile.menu.modules.users.card', $compact);
         } elseif ($user->hasRole('Developer')) {
-            return view('Desktop.users.card', $viewData);
+            return view('Desktop.users.card', $compact);
         } else {
-            return view('Desktop.users.card')->with($viewData);
+            return view('Desktop.users.card')->with($compact);
         }
+    }
+
+    public function displayResponsible() {
+        $user = User::find(Auth::id());
+
+        $users = User::with('usersroles.role', 'usersGroups.group')
+            ->where('congregation_id', $user->congregation_id)
+            ->get();
+
+        $detect = new MobileDetect;
+
+        return view('Mobile.menu.modules.users.displays.responsible')->with(['users' => $users]);
 
     }
+
+    public function updateResponsibilities(Request $request)
+    {
+        $responsibilities = $request->input('responsibility'); // Получаем данные из формы
+
+        if ($responsibilities === null) {
+            // Если $responsibilities равно null, установите значение по умолчанию или выполняйте необходимую обработку.
+            $responsibilities = [];
+        }
+        // Перебираем ответственность для каждого пользователя
+        foreach ($responsibilities as $userId => $responsibility) {
+            $user = User::find($userId);
+
+            // Проверяем, что пользователь найден
+            if ($user) {
+                // Расшифровываем JSON-данные из столбца info
+                $info = json_decode($user->info, true);
+
+                // Присваиваем выбранное значение ответственности
+                $info['responsible'] = $responsibility;
+
+                // Обновляем JSON-столбец info в базе данных
+                $user->info = json_encode($info);
+                $user->save();
+            }
+        }
+
+        // После обновления перенаправьте пользователя обратно или выполните другие действия
+        return redirect()->back()->with('success', 'Ответственность успешно обновлена.');
+
+    }
+
+
     public function permissionAllow(Request $request, $id) {
         $value = $request->input('allow_permission_id');
         $user = new UsersPermissions();

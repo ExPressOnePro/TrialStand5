@@ -1,16 +1,8 @@
-@extends('layouts.app')
+@extends('Mobile.layouts.front.app')
 @section('title') Stand | Выбор собрания @endsection
 @section('content')
 
     <div class="main-content pt-4">
-        <div class="breadcrumb">
-            <h1 class="mr-2"></h1>
-            <ul>
-                <li><a href="">страница</a></li>
-                <li></li>
-            </ul>
-        </div>
-        <div class="separator-breadcrumb border-top"></div>
         <div class="row">
             @foreach($congregation as $con)
                 <div class="col-md-3">

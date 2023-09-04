@@ -1,8 +1,8 @@
 @extends('Mobile.layouts.front.users')
-@section('title')Stand | все пользователи @endsection
+@section('title') Meeper | все пользователи @endsection
 @section('content')
-    @can('Users-Open congregation users')
 
+    @can('Users-Open congregation users')
         <div class="content container-fluid">
             <div class="card">
                 <!-- Header -->

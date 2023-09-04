@@ -30,7 +30,7 @@
                             <div class="row align-items-center gx-2">
                                 <div class="col">
                                     <span class="js-counter display-4 text-dark">{{$usersCount}}</span>
-                                    <span class="text-body fs-5 ms-1"</span>
+                                    <span class="text-body fs-5 ms-1"></span>
                                 </div>
                                 <!-- End Col -->
 
@@ -55,13 +55,13 @@
 
                             <div class="row align-items-center gx-2">
                                 <div class="col">
-                                    <span class="js-counter display-4 text-dark" data-value="12"></span>
-                                    <span class="text-body fs-5 ms-1"> из </span>
+                                    <span class="js-counter display-4 text-dark">{{ $usersActiveCount }}</span>
+                                    <span class="text-body fs-5 ms-1">из {{ $usersCount }}</span>
                                 </div>
 
                                 <div class="col-auto">
                   <span class="badge bg-soft-success text-success p-1">
-                    <i class="bi-graph-up"></i> %
+                    <i class="bi-graph-up"></i>{{ number_format($usersActiveCountPercent, 2) }} %
                   </span>
                                 </div>
                             </div>
@@ -75,18 +75,18 @@
                     <!-- Card -->
                     <div class="card h-100">
                         <div class="card-body">
-                            <h6 class="card-subtitle mb-2">New/returning</h6>
+                            <h6 class="card-subtitle mb-2">Новые регистрации</h6>
 
                             <div class="row align-items-center gx-2">
                                 <div class="col">
-                                    <span class="js-counter display-4 text-dark" data-value="56">56</span>
-                                    <span class="display-4 text-dark">%</span>
-                                    <span class="text-body fs-5 ms-1">from 48.7</span>
+                                    <span class="js-counter display-4 text-dark">{{$usersRegistrationsCount}}</span>
+                                    <span class="display-4 text-dark"></span>
+                                    <span class="text-body fs-5 ms-1"></span>
                                 </div>
 
                                 <div class="col-auto">
                   <span class="badge bg-soft-danger text-danger p-1">
-                    <i class="bi-graph-down"></i> 2.8%
+                    <i class="bi-graph-down"></i>
                   </span>
                                 </div>
                             </div>

@@ -10,6 +10,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Detection\MobileDetect;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -39,9 +40,8 @@ class LoginController extends Controller
 
         $credentials = [
             $this->loginType => $request->login,
-            'password'           => $request->password
+            'password'       => $request->password
         ];
-
 
         if (Auth::attempt($credentials)) {
             return redirect()->intended($this->redirectTo);

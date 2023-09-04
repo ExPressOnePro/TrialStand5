@@ -32,15 +32,13 @@
             </div>
         </div>
         <!-- End Language -->
-                <h1>
-                    <a type="button" class="btn btn-ghost-secondary btn-icon rounded-circle" href="{{ route('logout') }}"
-                       onclick="event.preventDefault();
-                                   document.getElementById('logout-form').submit();">
-                        <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                <h6>
+                    <a href="https://t.me/meeper_support">
+                        Связь с поддержкой
                     </a>
-                </h1>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
+                    <a type="button" class="btn btn-ghost-secondary btn-icon rounded-circle" href="https://t.me/meeper_support" >
+                        <i class="fa-solid fa-headset"></i>
+                    </a>
+                </h6>
     </div>
 </header>

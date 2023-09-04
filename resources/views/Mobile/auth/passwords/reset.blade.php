@@ -1,4 +1,4 @@
-php artisan breeze:install api@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 <div class="container">

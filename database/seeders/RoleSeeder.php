@@ -18,17 +18,13 @@ class RoleSeeder extends Seeder
             'name' => [
                 'Developer',
                 'Guest',
-                'Overseer',
-                'Ministerial servants',
-                'Regular pioneer',
-                'Publisher',
+                'responsible behind stand',
+                'User-',
             ],
             'slug' => [
                 'Developer',
                 'Guest',
-                'Overseer',
-                'Ministerial servants',
-                'Regular pioneer',
+                'responsible behind stand',
                 'Publisher',
             ]
         ];
@@ -45,7 +41,7 @@ class RoleSeeder extends Seeder
             'user_id' => 1,
         ]);
         UsersRoles::create([
-            'role_id' => 2,
+            'role_id' => 1,
             'user_id' => 2,
         ]);
     }

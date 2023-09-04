@@ -66,6 +66,7 @@ class StandPublishersController extends Controller
         $day = $request->input('day1');
         $time = $request->input('time1');
         $stand_template_id = $request->input('stand_template_id1');
+        $stand_template = StandTemplate::find($stand_template_id);
 
         $new = StandPublishers::firstOrCreate([
             'date' => $date,
@@ -93,6 +94,7 @@ class StandPublishersController extends Controller
         $StandPublishersHistory->day = $day;
         $StandPublishersHistory->time = $time;
         $StandPublishersHistory->stand_publishers_id = $new->id;
+        $StandPublishersHistory->stand_id = $stand_template->stand_id;
         $StandPublishersHistory->save();
 
         if($stand_template->type === 'current') {

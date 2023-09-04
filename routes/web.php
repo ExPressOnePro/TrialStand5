@@ -5,14 +5,17 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Congregation\CongregationRequestsController;
 use App\Http\Controllers\Congregation\CongregationsController;
+use App\Http\Controllers\Contacts\ContactsController;
+use App\Http\Controllers\CronController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MeetingSchedulesController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\RolesAndPermissionsController;
-use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Stand\StandController;
+use App\Http\Controllers\Stand\StandPublishersController;
+use App\Http\Controllers\Stand\StandTemplateController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +23,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('lang/{lang}', ['as' => 'lang.switch', 'uses' => 'App\Http\Controllers\LanguageController@switchLang']);
 
 Auth::routes();
+
+
+// CRON
+Route::get('/run-cron-task/{token}', [CronController::class, 'publishersUpdateThisWeekFromNextWeekVersion1']);
+// CRON
 
 Route::get('/', [LoginController::class, 'view'])->name('auth.login');
 Route::get('/login', [LoginController::class, 'view'])->name('login');
@@ -34,16 +42,15 @@ Route::get('/password/select', [ForgotPasswordController::class, 'showSelectLogi
 Route::post('/password/select', [ForgotPasswordController::class, 'SelectLogin'])->name('password.selectLoginPass');
 Route::get('/password/update/{login}', [ForgotPasswordController::class, 'showReset'])->name('password.forgot');
 Route::post('/password/update/{login}', [ForgotPasswordController::class, 'updatePassword'])->name('password.update');
-
-
-
-//Route::post('/password/reset', [ForgotPasswordController::class, 'showReset'])->name('password.reset');
+Route::get('/password/reset/{login}/{token}', [ForgotPasswordController::class, 'showReset'])->name('password.reset');
 
 
 
 Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/guest', [HomeController::class, 'guest'])->name('guest');
+    Route::get('/changeLog', [HomeController::class, 'changeLog'])->name('changeLog');
+
 
     Route::get('/welcome', [HomeController::class, 'welcome'])->name('welcome');
     Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
@@ -110,6 +117,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/modules/{congregation_id}/', [CongregationsController::class, 'displayModules'])->name('congregation.modules');
         Route::get('/requests/{congregation_id}/', [CongregationsController::class, 'displayRequests'])->name('congregation.requests');
         Route::get('/publishers/{congregation_id}/', [CongregationsController::class, 'displayPublishers'])->name('congregation.publishers');
+        Route::get('/appointed/{congregation_id}/', [CongregationsController::class, 'displayAppointed'])->name('congregation.appointed');
         Route::get('/settings/{congregation_id}/', [CongregationsController::class, 'displaySettings'])->name('congregation.settings');
         Route::get('/stands/{congregation_id}/', [CongregationsController::class, 'displayStands'])->name('congregation.stands');
     });
@@ -183,7 +191,7 @@ Route::group(['middleware' => 'auth'], function() {
         'prefix' => 'congregation',
     ], function () {
 
-        Route::get('/', [CongregationsController::class, 'select'])->name('congregationSelect');
+        Route::get('/', [CongregationsController::class, 'hub'])->name('congregation.hub');
     });
 
     Route::group([
@@ -191,6 +199,8 @@ Route::group(['middleware' => 'auth'], function() {
         'prefix' => 'dev',
     ], function () {
         Route::get('/hub', [DeveloperController::class, 'hub'])->name('developer.hub');
+        Route::get('/roles', [DeveloperController::class, 'roles'])->name('developer.roles');
+        Route::post('/role/{roleId}', [DeveloperController::class, 'updatePermissionsForRole'])->name('developer.updatePermissionsForRole');
 
         Route::get('/test1', [DeveloperController::class, 'testViewButtons'])->name('testViewButtons');
         Route::get('/test1button', [DeveloperController::class, 'test1button'])->name('test1button');
@@ -235,8 +245,10 @@ Route::group(['middleware' => 'auth'], function() {
 });
 
 Route::get('/ref', [DeveloperController::class, 'ref'])->name('ref');
+
+
 Route::group([
-    'middleware' => 'role:Developer',
+    'middleware' => 'can:Users-Open congregation users',
     'prefix' => 'users',
 ], function () {
     Route::get('/', [UsersController::class, 'allUsersPage'])->name('users');
@@ -246,6 +258,11 @@ Route::group([
     Route::post('/card/{id}/permissionAllow', [UsersController::class, 'permissionAllow'])->name('permissionAllow');
     Route::post('/card/{id}/permissionDelete', [UsersController::class, 'permissionDelete'])->name('permissionDelete');
     Route::post('/card/{id}/changeGroup', [UsersController::class, 'changeGroup'])->name('user.changeGroup');
+
+    Route::get('/responsible/', [UsersController::class, 'displayResponsible'])->name('users.responsible');
+    Route::post('/responsible/', [UsersController::class, 'updateResponsibilities'])->name('users.updateResponsibilities');
+
+
 });
 
 Route::group([

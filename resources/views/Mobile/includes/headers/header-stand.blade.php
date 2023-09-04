@@ -1,11 +1,34 @@
 <header class="navbar-fixed navbar-height navbar-bordered bg-white navbar-shadow">
     <div class="container">
         <div class="navbar-nav-wrap mt-2">
-            @if(Request::is('stand'))
+            @if(Request::is('*stand'))
                 <div class="navbar">
-                    <h1>Стенды</h1>
+                    <a class="text-center text-dark h1" onclick="goBack()">
+                        <div class="rounded">
+
+                        </div>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
                 </div>
-                <div class="navbar ms-auto"></div>
+                <div class="navbar ms-auto">
+                    <h1>
+                        Выбор стенда
+                    </h1>
+                </div>
+            @elseif(Request::is('*stand/settings*'))
+                <div class="navbar">
+                    <a class="text-center text-dark h1" onclick="goBack()">
+                        <div class="rounded">
+
+                        </div>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
+                <div class="navbar ms-auto">
+                    <h1>
+                        Настройки стенда
+                    </h1>
+                </div>
             @else
                 <div class="navbar">
                     <a class="text-center text-dark h1" onclick="goBack()">
