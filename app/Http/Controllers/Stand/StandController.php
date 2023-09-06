@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Stand;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StandReportRequest;
 use App\Models\Congregation;
+use App\Models\Permission;
 use App\Models\Stand;
 use App\Models\StandPublishers;
 use App\Models\StandPublishersHistory;
@@ -26,7 +27,6 @@ class StandController extends Controller{
     public function hub() {
         $user = User::find(Auth::id());
         $congregation_id = $user->congregation_id;
-        $accessible_stands_for_dev = Stand::get();
         $congregations = Congregation::where('id', '!=', 1)->get();
 
         $accessible_stands_for_the_user = User::findOrFail(Auth::id())
@@ -39,22 +39,23 @@ class StandController extends Controller{
             ->where('congregation_id', $congregation_id)
             ->count();
 
-        if ($accessible_stands_for_the_user_count == 1) {
+
+        $compact = compact(
+            'accessible_stands_for_the_user',
+            'congregations',
+    );
+        $mobile_detect = new MobileDetect();
+        $viewName = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.hub' : 'Mobile.menu.modules.stand.hub';
+
+        if($user->hasRole('Developer') || $user->hasRole('HS')) {
+            return view($viewName, $compact);
+        } elseif ($accessible_stands_for_the_user_count == 1) {
             foreach ($accessible_stands_for_the_user as $one) {
                 $stand_id = $one->id;
             }
             return redirect()->route('currentWeekTableFront', $stand_id);
         } else {
-            $mobile_detect = new MobileDetect();
-
-            $viewData = [
-                'accessible_stands_for_the_user' =>  $accessible_stands_for_the_user,
-                'congregations' => $congregations,
-            ];
-
-            $viewName = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.hub' : 'Mobile.menu.modules.stand.hub';
-
-            return view($viewName, $viewData);
+            return view($viewName, $compact);
         }
     }
 
@@ -93,6 +94,8 @@ class StandController extends Controller{
         $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($AuthUser->congregation_id);
 
+        $usersCongregation= User::where('congregation_id', $congregation->id)->get();
+
         $stand = Stand::find($id);
         $template = StandTemplate::where('stand_id', $id)
             ->where('type','=','next')
@@ -115,6 +118,10 @@ class StandController extends Controller{
             6 => 'Сб',
             7 => 'Вс',
         ];
+
+        $permissionsPublishers = Permission::whereIn('name', ['stand.make_entry', 'stand.delete_entry', 'stand.change_entry'])->get();
+
+
         $mobile_detect = new MobileDetect();
 
         $compact =compact(
@@ -123,9 +130,11 @@ class StandController extends Controller{
             'daysOfWeek',
             'settings_publishers_at_stand',
             'activation_values',
+            'permissionsPublishers',
+            'usersCongregation',
         );
 
-        if ($mobile_detect->isMobile() && ($AuthUser->congregation_id == $stand->congregation_id)) {
+        if ($AuthUser->congregation_id == $stand->congregation_id) {
             $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.displays.settings' : 'Mobile.menu.modules.stand.displays.settings';
             return view($view, $compact);
         } else {
@@ -133,6 +142,62 @@ class StandController extends Controller{
         }
 
     }
+
+    public function updatePerm(Request $request)
+    {
+        $permissions = $request->input('permissions');
+
+        foreach ($permissions as $userId => $userPermissions) {
+            $user = User::find($userId);
+
+            // Проверяем, найден ли пользователь
+            if ($user) {
+                foreach ($userPermissions as $permissionId => $isChecked) {
+                    $permission = Permission::find($permissionId);
+
+                    // Проверяем, найдено ли разрешение
+                    if ($permission) {
+                        $hasPermission = $user->hasPermission($permission->name);
+
+                        // Если состояние чекбокса изменилось, обновляем разрешение
+                        if ($isChecked && !$hasPermission) {
+                            $user->givePermissionsTo($permission->name);
+                        } elseif (!$isChecked && $hasPermission) {
+                            $user->deletePermissions($permission->name);
+                        }
+                    }
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'Разрешения успешно обновлены.');
+    }
+
+
+
+
+    public function permUserStand(Request $request) {
+        $AuthUser = User::find(Auth::id());
+        $congregation = Congregation::find($AuthUser->congregation_id);
+
+        $usersCongregation= User::where('congregation_id', $congregation->id)->get();
+
+
+
+        $usersCongregation= User::where('congregation_id', $congregation->id)->get();
+        $permissionsPublishers = Permission::whereIn('name', ['stand.make_entry', 'stand.delete_entry', 'stand.change_entry'])->get();
+
+        $compact =compact(
+            'permissionsPublishers',
+            'usersCongregation',
+        );
+        $view =  'Mobile.menu.modules.stand.displays.userspermissionsStand';
+
+        return view($view, $compact);
+
+    }
+
+
 
     /*Страницы текущей и следующей недели стенда*/
     public function currentWeekTableFront($id) {

@@ -1,4 +1,4 @@
-@extends('Mobile.layouts.front.app')
+@extends('Mobile.layouts.front.auth')
 
 @section('content')
     @if (session('error'))

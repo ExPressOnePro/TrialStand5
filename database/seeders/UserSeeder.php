@@ -1787,8 +1787,8 @@ class UserSeeder extends Seeder
                 '266example@mail.mail',
                 '229example@mail.mail',
             ],
-            'password'=> [bcrypt(
-                'gena1969'),
+            'password'=> [
+                bcrypt('gena1969'),
                 bcrypt('4685583275'),
                 bcrypt('A60651668'),
                 bcrypt('popovici1233'),

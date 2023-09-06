@@ -40,7 +40,7 @@
                 </div>
                 <div class="navbar ms-auto">
                     <h1>
-                        {{$stand->name}}
+{{--                        {{$stand->name}}--}}
                     </h1>
                 </div>
             @endif

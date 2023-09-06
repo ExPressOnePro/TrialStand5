@@ -52,18 +52,35 @@ trait HasRolesAndPermissions
 
     public function givePermissionsTo(... $permissions)
     {
-        $permissions = $this->getAllPermissions($permissions);
-        if($permissions === null) {
+        // Получите все текущие разрешения пользователя
+        $currentPermissions = $this->permissions->pluck('slug')->toArray();
+
+        // Фильтруйте переданные разрешения, чтобы исключить дубликаты
+        $permissions = array_diff($permissions, $currentPermissions);
+
+        // Получите объекты разрешений для добавления
+        $permissionsToAdd = $this->getAllPermissions($permissions);
+
+        // Если нет разрешений для добавления, завершите выполнение
+        if (empty($permissionsToAdd)) {
             return $this;
         }
-        $this->permissions()->saveMany($permissions);
+
+        // Сохраните только новые разрешения
+        $this->permissions()->saveMany($permissionsToAdd);
+
         return $this;
     }
 
-    public function deletePermissions(... $permissions )
+    public function deletePermissions(... $permissions)
     {
-        $permissions = $this->getAllPermissions($permissions);
-        $this->permissions()->detach($permissions);
+        // Получите объекты разрешений для удаления
+        $permissionsToDelete = $this->getAllPermissions($permissions);
+
+        // Удалите разрешения
+        $this->permissions()->detach($permissionsToDelete);
+
+
         return $this;
     }
 

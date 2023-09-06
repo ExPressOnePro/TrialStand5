@@ -111,6 +111,7 @@ class StandTemplateController extends Controller {
 
         return redirect()->back();
     }
+
     public function StandTimeNextToCurrent($id) {
 
         $stand = Stand::find($id);

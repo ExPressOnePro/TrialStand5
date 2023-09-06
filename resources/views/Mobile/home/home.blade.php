@@ -12,6 +12,30 @@
 {{--                </div>--}}
 {{--            </div>--}}
 {{--        </div>--}}
+
+        <div class="alert alert-soft-primary border-secondary" role="alert">
+            <div class="d-sm-flex">
+                <div class="flex-shrink-0 text-center">
+                    <img class="avatar avatar-xl mb-2 mb-sm-0" src="{{ asset('/front/svg/illustrations/oc-megaphone.svg' )}}" alt="Image Description" data-hs-theme-appearance="default">
+                    <img class="avatar avatar-xl mb-2 mb-sm-0" src="{{ asset('/front/svg/illustrations-light/oc-megaphone.svg' )}}" alt="Image Description" data-hs-theme-appearance="dark">
+                </div>
+
+                <div class="flex-grow-1 ms-sm-4 text-center">
+                    <h3>Добро пожаловать</h3>
+                    <p>В видеоролике ниже мы покажем, как пользоваться нашим обновленным сайтом.</p>
+                    <p>Не волнуйтесь, если вы чувствуете себя не очень опытным пользователем, мы сделали интерфейс максимально простым и удобным.</p>
+                    <p>Давайте начнем с самого начала и шаг за шагом разберемся, как пользоваться нашим сайтом.</p>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-4 mb-3 mb-sm-0">
+                        <a data-fslightbox="youtube-video" data-video-poster="../assets/img/1920x1080/img1.jpg" href="{{ asset('/front/video/1.mp4') }}">
+                            <img class="img-fluid" src="{{ asset('/front/video/working-in-office.jpg') }}" alt="Image Description">
+
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         @role('Developer')
         <div class="row mb-4">
             <div class="col-sm-4 mb-3 mb-sm-0">

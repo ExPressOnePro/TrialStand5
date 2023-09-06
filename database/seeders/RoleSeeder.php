@@ -18,14 +18,18 @@ class RoleSeeder extends Seeder
             'name' => [
                 'Developer',
                 'Guest',
-                'responsible behind stand',
-                'User-',
+                'HS', //head stand
+                'US-1',
+                'US-2',
+                'US-3',
             ],
             'slug' => [
                 'Developer',
                 'Guest',
-                'responsible behind stand',
-                'Publisher',
+                'HS',
+                'US-1',
+                'US-2',
+                'US-3',
             ]
         ];
 

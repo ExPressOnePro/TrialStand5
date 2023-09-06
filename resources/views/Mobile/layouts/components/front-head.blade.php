@@ -15,7 +15,7 @@
 
 
     <!-- CSS Implementing Plugins -->
-{{--    <link rel="stylesheet" href="{{ asset('front/vendor/bootstrap-icons/font/bootstrap-icons.css') }}">--}}
+    <link rel="stylesheet" href="{{ asset('front/vendor/bootstrap-icons/font/bootstrap-icons.css') }}">
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.css')}}">

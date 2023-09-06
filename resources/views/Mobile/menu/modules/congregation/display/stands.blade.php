@@ -21,7 +21,7 @@
             @include('Mobile.menu.modules.congregation.components.navMenu')
 
         </div>
-        @can('Stand-Create new stand')
+        @can('stand.create')
             <div class="row mb-4">
                     <div class="col-12">
                         <div class="d-grid gap-2">
@@ -93,7 +93,7 @@
                 @endforeach
             </div>
     </div>
-    @can('Stand-Create new stand')
+    @can('stand.create')
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">

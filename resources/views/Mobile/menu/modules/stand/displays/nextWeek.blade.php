@@ -3,7 +3,7 @@
     Meeper | Таблица
 @endsection
 @section('content')
-    @can('Stand-Open stand table')
+    @can('module.stand')
 
         <div class="content container-fluid">
             {{--<div class="main-content pt-4">--}}

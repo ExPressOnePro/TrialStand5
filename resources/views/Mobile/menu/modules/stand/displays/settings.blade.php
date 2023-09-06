@@ -82,6 +82,14 @@
             <div class="col-lg-9">
                 <div class="d-grid gap-3 gap-lg-5">
 
+                    <a class="btn btn-outline-primary" href="{{ route('permUserStand') }}"> Права Пользователей стенда </a>
+{{--                    <div id="content" class="card">--}}
+{{--                        @include('Mobile.menu.modules.stand.components.permissionsPublishersPart2')--}}
+{{--                    </div>--}}
+
+                    <div id="content" class="card">
+                        @include('Mobile.menu.modules.stand.components.permissionsPublishers')
+                    </div>
 
                     <div id="content" class="card">
                         @include('Mobile.menu.modules.stand.components.publishersAtStandSection')

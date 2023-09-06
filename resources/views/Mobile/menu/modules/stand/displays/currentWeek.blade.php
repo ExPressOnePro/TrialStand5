@@ -1,9 +1,7 @@
 @extends('Mobile.layouts.front.app')
-@section('title')
-    Meeper | Таблица
-@endsection
+@section('title') Meeper|Стенд @endsection
 @section('content')
-    @can('Stand-Open stand table')
+    @can('module.stand')
         <div class="content container-fluid">
             @include('Mobile.includes.alerts.alerts')
             @include('Mobile.menu.modules.stand.components.switchWeek')
@@ -22,7 +20,7 @@
                                         ->where('stand_template_id', $StandTemplate->id)
                                         ->get();
 
-                                    $canEdit = auth()->user()->can('Stand-Entry in table');
+                                    $canEdit = auth()->user()->can('stand.make_entry');
                                     $hasUserIcon = false; // Флаг для отслеживания, был ли уже выведен значок
                                 @endphp
 
@@ -57,7 +55,7 @@
                                     if ($standPublisher) {
                                         $publishers = json_decode($standPublisher->publishers, true);
                                     }
-                                    $canEdit = auth()->user()->can('Stand-Entry in table');
+                                    $canEdit = auth()->user()->can('stand.make_entry');
                                 @endphp
 
                                 <div class="col-sm-12 mt-1">

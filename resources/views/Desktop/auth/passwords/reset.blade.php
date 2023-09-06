@@ -1,4 +1,4 @@
-@extends('Mobile.layouts.front.app')
+@extends('Mobile.layouts.front.auth')
 @section('content')
     <div class="content container-fluid">
         <div class="col-md-8">

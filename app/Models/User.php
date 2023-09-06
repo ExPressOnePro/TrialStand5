@@ -72,6 +72,24 @@ class User extends Authenticatable implements Auditable {
         'email_verified_at' => 'datetime',
     ];
 
+    public function givePermission($permissionName)
+    {
+        $permission = Permission::where('name', $permissionName)->first();
+
+        if ($permission) {
+            $this->permissions()->attach($permission->id);
+        }
+    }
+
+    public function deletePermission($permissionName)
+    {
+        $permission = Permission::where('name', $permissionName)->first();
+
+        if ($permission) {
+            $this->permissions()->detach($permission->id);
+        }
+    }
+
     public function personalReports() {
         return $this->hasMany(PersonalReport::class);
     }

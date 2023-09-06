@@ -68,13 +68,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/', [StandController::class, 'hub'])->name('stand.hub');
         Route::get('/currentWeekFront/{id}', [StandController::class, 'currentWeekTableFront'])->name('currentWeekTableFront');
         Route::get('/nextWeekFront/{id}', [StandController::class, 'nextWeekTableFront'])->name('nextWeekTableFront');
-        Route::get('/settings/{id}', [StandController::class, 'settings'])->name('stand.settings');
-        Route::get('/history/{id}', [StandController::class, 'history'])->name('stand.history');
-
-        Route::post('/publishersAtStand/{id}', [StandTemplateController::class, 'publishersAtStand'])->name('stand.publishersAtStand.update');
-        Route::post('/settings/{id}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
-        Route::get('/settingsNTC/{id}', [StandTemplateController::class, 'StandTimeNextToCurrent'])->name('StandTimeNextToCurrent');
-        Route::post('/timeActivation/{id}', [StandController::class, 'timeActivation'])->name('timeActivation');
 
         Route::post('/NewRecordStand1', [StandPublishersController::class, 'NewRecordStand1'])->name('NewRecordStand1');
 
@@ -97,7 +90,57 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/recordRedaction/{stand_publishers_id}', [StandController::class, 'recordRedactionPageMobile'])->name('recordRedactionPageMobile');
         Route::get('/report/{stand_publishers_id}', [StandController::class, 'reportPage'])->name('stand.reportPage');
 
+
+        //создать новый стенд (для управляющего)
+        Route::group([
+            'middleware' => 'can:stand.create',
+        ], function () {
+            Route::get('/create', [StandController::class, 'createNewStandPage'])->name('createNewStandPage');
+            Route::post('/create', [StandController::class, 'createNewStand'])->name('createNewStand');
+        });
+
+
+        //настройки стенда (для управляющего)
+        Route::group([
+            'middleware' => 'can:stand.settings',
+            'prefix' => '/settings',
+        ], function () {
+            Route::get('/{id}', [StandController::class, 'settings'])->name('stand.settings');
+
+            Route::post('/timeUpdateNext/{id}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
+            Route::post('/{id}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
+            Route::post('/publishersAtStand/{id}', [StandTemplateController::class, 'publishersAtStand'])->name('stand.publishersAtStand.update');
+            Route::post('/timeActivation/{id}', [StandController::class, 'timeActivation'])->name('timeActivation');
+
+
+
+            //добавить изменеия прав для пользователей стенда
+            //'stand.make_entry',
+            //'stand.delete_entry',
+            //'stand.change_entry',
+
+            Route::get('/NTC/{id}', [StandTemplateController::class, 'StandTimeNextToCurrent'])->name('StandTimeNextToCurrent');
+        });
+
+        //история стенда (для управляющего)
+        Route::group([
+            'middleware' => 'can:stand.history',
+            'prefix' => '/history',
+        ], function () {
+            Route::get('/{id}', [StandController::class, 'history'])->name('stand.history');
+        });
+
+        // создавать запись в стенде (для пользователя)
+        Route::group([
+            'middleware' => 'can:stand.make_entry',
+        ], function () {
+            Route::post('/NewRecordStand1', [StandPublishersController::class, 'NewRecordStand1'])->name('NewRecordStand1');
+        });
+
     });
+
+    Route::get('/permUser323', [StandController::class, 'permUserStand'])->name('permUserStand');
+    Route::post('/updatePerm', [StandController::class, 'updatePerm'])->name('updatePerm');
 
     Route::group([
 //        'middleware' => 'can:module.add',
@@ -269,9 +312,6 @@ Route::group([
     'middleware' => 'can:Stand-Create new stand',
     'prefix' => 'stand',
 ], function () {
-
-    Route::get('/create', [StandController::class, 'createNewStandPage'])->name('createNewStandPage');
-    Route::post('/create', [StandController::class, 'createNewStand'])->name('createNewStand');
 
 
     Route::get('/ExampleNext/{stand_id}/{congregation_id}', [StandController::class, 'ExampleTestVersionOfAddingToPublishersNextWeek'])->name('ExampleNext');
