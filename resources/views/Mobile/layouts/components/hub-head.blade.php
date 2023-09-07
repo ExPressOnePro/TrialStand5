@@ -17,6 +17,7 @@
     <!-- CSS Implementing Plugins -->
 {{--    <link rel="stylesheet" href="{{ asset('front/vendor/bootstrap-icons/font/bootstrap-icons.css') }}">--}}
 
+
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="{{ asset('front/css/theme.min.css') }}" data-hs-appearance="default" as="style">
     <link rel="stylesheet" href="{{ asset('front/css/theme-dark.min.css') }}" data-hs-appearance="dark" as="style" >

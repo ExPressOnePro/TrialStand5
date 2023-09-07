@@ -39,9 +39,10 @@
                     </a>
                 </div>
                 <div class="navbar ms-auto">
-                    <h1>
-{{--                        {{$stand->name}}--}}
-                    </h1>
+                    <div class="col-sm text-end">
+                        <span class="d-block h2 mb-0">{{$stand->name}}</span>
+                        <span class="d-block">{{$stand->location}}</span>
+                    </div>
                 </div>
             @endif
         </div>

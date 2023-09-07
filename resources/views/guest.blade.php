@@ -5,7 +5,7 @@
         <div class="heading text-center">
             <h1 class="text-60"></h1>
             <p class="text-36 subheading mb-3 text-danger">Уведомление</p>
-            <p class="mb-5 text-muted text-20">Для того чтобы увидеть доступы необходимо присоединиться к одному из списка<h1 class="header "></h1>
+            <p class="mb-5 text-muted text-20">Для того чтобы увидеть доступы необходимо присоединиться к одному из списка
             </p>
             <div class="row">
                 <div class="col-md-4 mb-3"></div>
@@ -48,3 +48,4 @@
         </div>--}}
     </div>
 @endsection
+@include('Mobile.includes.menuBarPhone')

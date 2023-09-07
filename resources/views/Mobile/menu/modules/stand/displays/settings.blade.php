@@ -88,10 +88,6 @@
 {{--                    </div>--}}
 
                     <div id="content" class="card">
-                        @include('Mobile.menu.modules.stand.components.permissionsPublishers')
-                    </div>
-
-                    <div id="content" class="card">
                         @include('Mobile.menu.modules.stand.components.publishersAtStandSection')
                     </div>
 

@@ -51,6 +51,7 @@ class HomeController extends Controller {
             ->orderBy('date', 'asc')
             ->count();
 
+
         $standPublishersCountAll = StandPublishers::
         whereBetween('date', [$startOfWeek, $nextWeekEnd])
             ->where(function ($query) use ($user) {

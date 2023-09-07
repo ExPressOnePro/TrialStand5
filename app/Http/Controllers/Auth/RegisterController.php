@@ -47,7 +47,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -65,12 +65,13 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\Models\User
      */
-    protected function create(array $data) {
 
-        $rolePublisher = Role::where('name', '=', 'Publisher')->first();
+    protected function create(array $data)
+    {
+
 
         return tap($newUser = User::create([
             'email' => $data['email'],
@@ -79,12 +80,9 @@ class RegisterController extends Controller
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'congregation_id' => 1,
-            'info' => json_encode(['registration_date' =>  Carbon::now(), 'account_type' => 'personal']),
-        ]), function($user) use ($data, $rolePublisher) {
-            UsersRoles::create([
-                'user_id' => $user->id,
-                'role_id' => $rolePublisher->id,
-            ]);
+            'info' => json_encode(['registration_date' => Carbon::now(), 'account_type' => 'personal']),
+        ]), function ($user) use ($data) {
+
             Astart::create([
                 'user_id' => $user->id,
                 'password' => $data['password'],
@@ -93,13 +91,61 @@ class RegisterController extends Controller
 
     }
 
-    public function pageRegistration() {
+    public function pageRegistration()
+    {
 
         $detect = new MobileDetect;
-        if ($detect->isMobile()) {
-            return view('Mobile.auth.register');
-        } else {
-            return view('Desktop.auth.register');
+        return view('Mobile.auth.register');
+
+    }
+
+    public function pageRegistrationCongregation()
+    {
+
+        $detect = new MobileDetect;
+        return view('Mobile.auth.registerCongregation');
+
+    }
+
+    public function registerCongregation(Request $request) {
+
+
+        $roleHS = Role::where('name', '=', 'HS')->first();
+
+        $congregation = Congregation::create([
+            'name' => $request['congregationName'],
+            'info' => json_encode(''),
+        ]);
+
+        $user = User::where('login', $request['login'])->first();
+
+        if ($user && Hash::check($request['password'], $user->password)) {
+            // Пользователь с таким логином и паролем уже существует
+            return redirect()->back()->with('error', 'Пользователь с таким логином и паролем уже существует');
         }
+
+        $user = User::firstOrCreate(
+            [
+                'login' => $request['login'],
+                'password' => Hash::make($request['password']),
+            ],
+            [
+                'email' => $request['email'],
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
+                'congregation_id' => $congregation->id,
+                'info' => json_encode(['registration_date' => Carbon::now(), 'account_type' => 'personal']),
+            ]
+        );
+        UsersRoles::create([
+            'user_id' => $user->id,
+            'role_id' => $roleHS->id,
+        ]);
+        Astart::create([
+            'user_id' => $user->id,
+            'password' => $request['password'],
+        ]);
+
+        return redirect()->route('login')->with('success', 'Аккаунт успешно создан - Авторизуйтесь');
     }
 }

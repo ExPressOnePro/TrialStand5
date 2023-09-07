@@ -4,27 +4,6 @@
             <div class="navbar ms-auto me-auto">
                 <h1>Meeper</h1>
             </div>
-
-{{--            <div class="navbar ms-auto">--}}
-{{--                <div class="form-check form-switch form-switch-dark">--}}
-{{--                    <input class="form-check-input me-0" type="checkbox" id="darkSwitch">--}}
-{{--                </div>--}}
-{{--            </div>--}}
         </div>
     </div>
 </header>
-
-
-<script>
-    // SWITHCER THEME APPEARANCE
-    // =======================================================
-    const $swithcer = document.querySelector('#darkSwitch')
-
-    if (HSThemeAppearance.getOriginalAppearance() === 'dark') {
-        $swithcer.checked = true
-    }
-
-    $swithcer.addEventListener('change', e => {
-        HSThemeAppearance.setAppearance(e.target.checked ? 'dark' : 'default')
-    })
-</script>

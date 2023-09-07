@@ -41,3 +41,4 @@
         </div>--}}
     </div>
 @endsection
+@include('Mobile.includes.menuBarPhone')

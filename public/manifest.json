@@ -2,18 +2,18 @@
     "name": "Meeting Helper",
     "short_name": "Meeper",
     "start_url": "/",
-    "background_color": "#6777ef",
+    "background_color": "#8ca3b4",
     "description": "Helper for all who stay with Meeper",
-    "display": "fullscreen",
-    "theme_color": "#6777ef",
+    "display": "standalone",
+    "theme_color": "#8ca3b4",
     "icons": [
         {
-            "src": "android-chrome-512x512.PNG",
-            "sizes": "512x512",
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "android-chrome-192x192.PNG",
+            "src": "/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
         }

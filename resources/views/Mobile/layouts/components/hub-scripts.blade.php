@@ -16,7 +16,7 @@
 <!-- JS Front -->
 <script src="{{ asset('front/js/theme.min.js')}}"></script>
 <script src="{{ asset('front/js/hs.theme-appearance-charts.js')}}"></script>
-
+<script src="{{ asset('front/vendor/hs-step-form/dist/hs-step-form.min.js') }}"></script>
 <!-- JS Front -->
 
 
@@ -112,3 +112,38 @@
     })()
 </script>
 
+<script>
+    (function() {
+        // INITIALIZATION OF STEP FORM
+        // =======================================================
+        new HSStepForm('.js-step-form', {
+            finish ($el) {
+                const $successMessageTempalte = $el.querySelector('.js-success-message').cloneNode(true)
+
+                $successMessageTempalte.style.display = 'block'
+
+                $el.style.display = 'none'
+                $el.parentElement.appendChild($successMessageTempalte)
+            }
+        })
+    })();
+</script>
+
+<!-- JS Plugins Init. -->
+<script>
+    (function() {
+        // INITIALIZATION OF STEP FORM
+        // =======================================================
+        new HSStepForm('.js-step-form-validate', {
+            validator: HSBsValidation.init('.js-validate'),
+            finish ($el) {
+                const $successMessageTempalte = $el.querySelector('.js-success-message').cloneNode(true)
+
+                $successMessageTempalte.style.display = 'block'
+
+                $el.style.display = 'none'
+                $el.parentElement.appendChild($successMessageTempalte)
+            }
+        })
+    })()
+</script>

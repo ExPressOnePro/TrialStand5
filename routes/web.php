@@ -33,6 +33,8 @@ Route::get('/', [LoginController::class, 'view'])->name('auth.login');
 Route::get('/login', [LoginController::class, 'view'])->name('login');
 
 Route::get('/registration', [RegisterController::class, 'pageRegistration'])->name('auth.registration');
+Route::get('/registrationCongregation', [RegisterController::class, 'pageRegistrationCongregation'])->name('auth.registrationCongregation');
+Route::post('/registrationCongregation', [RegisterController::class, 'registerCongregation'])->name('registerCongregation');
 
 //Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 //Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');

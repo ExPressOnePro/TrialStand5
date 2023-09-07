@@ -25,14 +25,6 @@
                                 </div>
                             </div>
 
-                            <label class="form-label w-100" for="signupSrPassword" tabindex="0">
-                                <span class="d-flex justify-content-between align-items-center">
-                                    <span></span>
-                                     @if (Route::has('password.selectLogin'))
-                                    <a class="form-label-link mb-0" href="{{ route('password.selectLogin') }}">{{ __('text.Forgot your password?') }}</a>
-                                    @endif
-                                </span>
-                            </label>
 
                             <div class="form-group">
                                 <div class="input-group mb-3">
@@ -48,6 +40,12 @@
                                 </div>
                             </div>
 
+{{--                            <span class="d-flex justify-content-end align-items-center">--}}
+{{--                                     @if (Route::has('password.selectLogin'))--}}
+{{--                                    <a class="form-label-link mb-0" href="{{ route('password.selectLogin') }}">{{ __('text.Forgot your password?') }}</a>--}}
+{{--                                @endif--}}
+{{--                            </span>--}}
+
 {{--                            <div class="form-check mb-4">--}}
 {{--                                <input class="form-check-input" type="checkbox" value="" id="termsCheckbox">--}}
 {{--                                <label class="form-check-label" for="termsCheckbox">--}}
@@ -59,12 +57,9 @@
                                 <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('text.Enter') }}</button>
                             </div>
                     </form>
-                    <div class="w-100 content-space-t-2 content-space-t-lg-2 content-space-b-1" style="max-width: 25rem;">
-                        <div class="text-center">
-                            <div class="mb-5">
-                                <p>Не имеете аккаунта?<a class="link" href="{{ route('auth.registration') }}"> Зарегистрироваться</a></p>
-                            </div>
-                        </div>
+                    <div class="d-grid mt-9">
+                                <p> Не имеете аккаунта? </p>
+                                    <a class="btn btn-outline-primary btn-sm btn-block" href="{{ route('auth.registration') }}"> Зарегистрироваться</a>
                     </div>
 
                 </div>

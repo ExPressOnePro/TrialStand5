@@ -1,9 +1,9 @@
-@extends('Mobile.layouts.front.stand')
+@extends('Mobile.layouts.front.app')
 @section('title') Meeper | новая запись @endsection
 @section('content')
 
     <div class="content container-fluid">
-        <div class="alert alert-soft-dark mb-5 mb-lg-7" role="alert">
+        <div class="alert alert-soft-dark border-info mb-5 mb-lg-7" role="alert">
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1 ms-3">
                     <h3 class="alert-heading mb-1">Информация о записи</h3>
@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="card card-hover-shadow mt-4">
+        <div class="card card-hover-shadow border-secondary mt-4">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
@@ -26,7 +26,7 @@
                             <input type="hidden" name="day1" id="day" value="{{$day}}">
                             <input type="hidden" name="stand_template_id1" id="stand_template_id" value="{{$standTemplate->id}}">
                             <div class="tom-select-custom">
-                                        <select class="js-select form-select" autocomplete="off" name="user_1" id="user_1"
+                                        <select class="js-select form-select border-secondary" autocomplete="off" name="user_1" id="user_1"
                                                 data-hs-tom-select-options='{
               "placeholder": "<div><i class=\"bi-person me-2\"></i> Select member</div>",
               "hideSearch": true,
@@ -46,6 +46,7 @@
                     </div>
                 </div>
             </div>
+            @can('stand.make_entry')
             <div class="card-footer">
                 <div class="row">
                     <div class="col-12">
@@ -59,6 +60,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
         </div>
 
 @endsection

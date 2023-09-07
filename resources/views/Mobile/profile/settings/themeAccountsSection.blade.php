@@ -1,5 +1,14 @@
 <div class="card-header">
-    <h4 class="card-title">Тема аккаунта</h4>
+    <div class="d-flex justify-content-between">
+        <div>
+            <h4 class="card-title">Тема аккаунта</h4>
+        </div>
+        <div class="col-auto">
+            <div class="form-check form-switch form-switch-dark">
+                <input class="form-check-input me-0" type="checkbox" id="darkSwitch">
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Body -->

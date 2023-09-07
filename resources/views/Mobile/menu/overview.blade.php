@@ -9,7 +9,7 @@
             @can('module.stand')
                 <div class="col mb-3 mb-lg-5">
                     <div class="list-group d-flex align-items-center">
-                        <a class="list-group-item list-group-item-action border border-success" href="{{ route('stand.hub') }}">
+                        <a class="list-group-item list-group-item-action border border-3 border-secondary" href="{{ route('stand.hub') }}">
                             <div class="d-flex align-items-center m-2">
                                 <div class="avatar">
                                     <img class="card-img" src="{{ asset('front/img/ss.svg') }}">

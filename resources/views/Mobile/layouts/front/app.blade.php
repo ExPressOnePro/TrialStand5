@@ -9,7 +9,7 @@
     @include('Mobile.layouts.components.front-head')
 {{--@endif--}}
 
-<body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset mt-3">
+<body>
 
 <script src="{{ asset('front/js/hs.theme-appearance.js') }}"></script>
 <script src="{{ asset('front/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
@@ -26,10 +26,10 @@
 @elseif(Request::is('*home'))
     @include('Mobile.includes.headers.header-home')
 @endif
-@if(Request::is('dev*'))
-    @include('Mobile.includes.headers.header-developer')
-    @include('Mobile.includes.asides.aside-developer')
-@endif
+{{--@if(Request::is('dev*'))--}}
+{{--    @include('Mobile.includes.headers.header-developer')--}}
+{{--    @include('Mobile.includes.asides.aside-developer')--}}
+{{--@endif--}}
 {{--@unless(Request::is('dev*'))--}}
 {{--    @include('Mobile.includes.headers.header-home')--}}
 {{--@endunless--}}

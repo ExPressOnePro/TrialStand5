@@ -103,7 +103,7 @@ class User extends Authenticatable implements Auditable {
         return $this->hasMany(Stand::class, 'congregation_id', 'congregation_id');
     }
 
-    public function usersroles() {
+    public function usersRoles() {
         return $this->hasMany(UsersRoles::class, 'user_id', 'id');
     }
 
@@ -132,6 +132,10 @@ class User extends Authenticatable implements Auditable {
     }
 
 
+    public function getAuditHistoryAttribute()
+    {
+//        return $this->audits();// Этот метод возвращает историю аудита для пользователя
+    }
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

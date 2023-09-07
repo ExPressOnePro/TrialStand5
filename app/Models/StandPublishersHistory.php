@@ -17,11 +17,8 @@ class StandPublishersHistory extends Model
         'day',
         'time',
         'date',
-        'stand_publishers_id',
-        'user_1',
-        'user_2',
-        'user_3',
-        'user_4',
+        'stand_template_id',
+        'publishers',
     ];
 
 

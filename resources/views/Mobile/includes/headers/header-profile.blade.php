@@ -2,6 +2,14 @@
     <div class="container">
         <div class="navbar-nav-wrap mt-2">
             <div class="navbar">
+                <a class="text-center text-dark h1" onclick="goBack()">
+                    <div class="rounded">
+
+                    </div>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="navbar ms-auto">
                 <h1>Профиль</h1>
             </div>
             <div class="navbar ms-auto">

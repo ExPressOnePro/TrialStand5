@@ -3,8 +3,8 @@
 @section('content')
 
     <div class="content container-fluid">
-        <div class="card mb-3 mb-lg-5">
-            <div class="card-header card-header-content-sm-between">
+        <div class="card border-secondary mb-3 mb-lg-5">
+            <div class="card-header card-header-content-sm-between  border-secondary ">
                 <h4 class="card-header-title mb-2 mb-sm-0 text-center">Мои записи на неделе</h4>
 
                 <ul class="nav nav-segment nav-fill" id="projectsTab" role="tablist">

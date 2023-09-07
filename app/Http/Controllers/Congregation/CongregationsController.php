@@ -444,12 +444,18 @@ class CongregationsController extends Controller {
 
         $user = User::find(Auth::id());
         $congregation = Congregation::find($congregation_id);
-        $accessible_stands_for_the_user = DB::table('users')
-            ->join('stands', 'stands.congregation_id', '=', 'users.congregation_id')
-            ->select('stands.*')
-            ->where('users.id', Auth::id())
-            ->where('stands.congregation_id', $congregation_id)
-            ->get();
+
+        if($user->hasRole('Developer')) {
+            $accessible_stands_for_the_user = Stand::where('congregation_id', $congregation_id)->get();
+        } else {
+            $accessible_stands_for_the_user = DB::table('users')
+                ->join('stands', 'stands.congregation_id', '=', 'users.congregation_id')
+                ->select('stands.*')
+                ->where('users.id', Auth::id())
+                ->where('stands.congregation_id', $congregation_id)
+                ->get();
+        }
+
 
         $congregationRequestsCount = CongregationRequests::with('user')
             ->where('congregation_id', $congregation_id)

@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StandReportRequest;
 use App\Models\Congregation;
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Stand;
 use App\Models\StandPublishers;
 use App\Models\StandPublishersHistory;
 use App\Models\StandReports;
 use App\Models\StandTemplate;
 use App\Models\User;
+use App\Models\UsersPermissions;
 use Detection\MobileDetect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,23 +28,24 @@ class StandController extends Controller{
     // views start
     public function hub() {
         $user = User::find(Auth::id());
-        $congregation_id = $user->congregation_id;
+        $congregation = Congregation::find($user->congregation_id);
         $congregations = Congregation::where('id', '!=', 1)->get();
 
         $accessible_stands_for_the_user = User::findOrFail(Auth::id())
             ->stands()
-            ->where('congregation_id', $congregation_id)
+            ->where('congregation_id', $congregation->id)
             ->get();
 
         $accessible_stands_for_the_user_count = User::findOrFail(Auth::id())
             ->stands()
-            ->where('congregation_id', $congregation_id)
+            ->where('congregation_id', $congregation->id)
             ->count();
 
 
         $compact = compact(
             'accessible_stands_for_the_user',
             'congregations',
+            'congregation',
     );
         $mobile_detect = new MobileDetect();
         $viewName = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.hub' : 'Mobile.menu.modules.stand.hub';
@@ -92,11 +95,13 @@ class StandController extends Controller{
     /*Страница настройки стенда*/
     public function settings($id) {
         $AuthUser = User::find(Auth::id());
-        $congregation = Congregation::find($AuthUser->congregation_id);
+        $stand = Stand::find($id);
+
+        $congregation = Congregation::find($stand->congregation_id);
+
 
         $usersCongregation= User::where('congregation_id', $congregation->id)->get();
 
-        $stand = Stand::find($id);
         $template = StandTemplate::where('stand_id', $id)
             ->where('type','=','next')
             ->first();
@@ -134,8 +139,8 @@ class StandController extends Controller{
             'usersCongregation',
         );
 
-        if ($AuthUser->congregation_id == $stand->congregation_id) {
-            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.displays.settings' : 'Mobile.menu.modules.stand.displays.settings';
+        if ($AuthUser->hasRole('Developer') || $AuthUser->congregation_id == $stand->congregation_id) {
+            $view =  'Mobile.menu.modules.stand.displays.settings';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');
@@ -185,7 +190,7 @@ class StandController extends Controller{
 
 
         $usersCongregation= User::where('congregation_id', $congregation->id)->get();
-        $permissionsPublishers = Permission::whereIn('name', ['stand.make_entry', 'stand.delete_entry', 'stand.change_entry'])->get();
+        $permissionsPublishers = Permission::whereIn('name', ['module.stand', 'stand.make_entry', 'stand.delete_entry', 'stand.change_entry'])->get();
 
         $compact =compact(
             'permissionsPublishers',
@@ -205,6 +210,7 @@ class StandController extends Controller{
         $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($AuthUser->congregation_id);
         $stand = Stand::find($id);
+        $moduleStandPermission = Permission::where('name', '=', 'module.stand')->first();
 
         $users = User::where('congregation_id', $stand->congregation_id)->get();
 
@@ -363,7 +369,19 @@ class StandController extends Controller{
         $standTemplate = StandTemplate::find($standPublisher->stand_template_id);
         $stand = Stand::find($standTemplate->stand_id);
         $congregation = Congregation::find($stand->congregation_id);
-        $users = User::where('congregation_id', $congregation->id)->get();
+        $roleHS = Role::where('name', 'HS')->first();
+        $roleDeveloper = Role::where('name', 'Developer')->first();
+
+        $users = User::where('congregation_id', $stand->congregation_id)
+            ->where(function ($query) use ($roleHS, $roleDeveloper) {
+                $query->whereHas('usersPermissions', function ($subquery) {
+                    $subquery->where('permission_id', 1);
+                })->orWhereHas('usersRoles', function ($subquery) use ($roleHS, $roleDeveloper) {
+                    $subquery->whereIn('role_id', [$roleHS->id, $roleDeveloper->id]);
+                });
+            })
+            ->orderBy('last_name', 'asc')
+            ->get();
 
 
         return view ('Mobile.menu.modules.stand.components.redaction')
@@ -376,6 +394,26 @@ class StandController extends Controller{
         $standTemplate = StandTemplate::find($stand_template_id);
         $stand = Stand::find($standTemplate->stand_id);
         $users = User::where('congregation_id', $stand->congregation_id)->get();
+        $moduleStandPermission = Permission::where('name', '=', 'module.stand')->first();
+
+        $usersPermissionStand = UsersPermissions::where('permission_id',$moduleStandPermission->id)->pluck('user_id');
+        $roleHS = Role::where('name', 'HS')->first();
+        $roleDeveloper = Role::where('name', 'Developer')->first();
+
+        $users = User::where('congregation_id', $stand->congregation_id)
+            ->where(function ($query) use ($roleHS, $roleDeveloper) {
+                $query->whereHas('usersPermissions', function ($subquery) {
+                    $subquery->where('permission_id', 1);
+                })->orWhereHas('usersRoles', function ($subquery) use ($roleHS, $roleDeveloper) {
+                    $subquery->whereIn('role_id', [$roleHS->id, $roleDeveloper->id]);
+                });
+            })
+            ->orderBy('last_name', 'asc')
+            ->get();
+
+
+
+
         return view ('Mobile.menu.modules.stand.components.record', compact(
             'day', 'time',
             'date', 'standTemplate', 'users',
@@ -394,7 +432,13 @@ class StandController extends Controller{
         }
 
         $stand = Stand::find($standTemplate->stand_id);
-        $users = User::where('congregation_id', $stand->congregation_id)->orderby('last_name', 'asc')->get();
+        $users= User::where('congregation_id',$stand->congregation_id)
+            ->whereHas('UsersPermissions', function ($query) {
+                $query->where('permission_id', 1);
+            })->orwhereHas('usersroles', function ($query) {
+                $query->where('role_id', '=', 'HS');
+            })->orderby('last_name', 'asc')
+            ->get();
         return view ('Mobile.menu.modules.stand.components.redaction', compact(
             'standPublisher',
             'users',

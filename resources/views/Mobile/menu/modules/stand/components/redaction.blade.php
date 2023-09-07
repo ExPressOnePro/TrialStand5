@@ -1,4 +1,4 @@
-@extends('Mobile.layouts.front.stand')
+@extends('Mobile.layouts.front.app')
 @section('title') Meeper | детали @endsection
 @section('content')
 
@@ -22,7 +22,7 @@
                 $userLabel = $isUserEmpty ? 'Пусто' : 'Записан';
             @endphp
 
-            <div class="card card-hover-shadow mt-4">
+            <div class="card card-hover-shadow border-secondary mt-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
                         <div class="flex-grow-1">
@@ -37,7 +37,7 @@
                             <form id="changeForm{{ $i }}" method="post" action="{{ route('AddPublisherToStand' . $i, ['id' => $standPublisher->id]) }}">
                                 @csrf
                                 <div class="tom-select-custom">
-                                    <select class="js-select form-select" autocomplete="off" name="{{ $i }}_user_id" id="{{ $i }}_user_id">
+                                    <select class="js-select form-select border-secondary" autocomplete="off" name="{{ $i }}_user_id" id="{{ $i }}_user_id">
                                         @php
                                             $currentUser = auth()->user();
                                         @endphp
@@ -58,8 +58,8 @@
                             </form>
                         </div>
                     </div>
-
                     @if($isUserEmpty)
+                        @can('stand.make_entry')
                         <div class="col-12">
                             <div class="d-grid gap-2">
                                 <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
@@ -69,24 +69,29 @@
                                 </a>
                             </div>
                         </div>
+                        @endif
                     @else
                         <div class="row">
-                            <div class="col-6">
-                                <div class="d-grid">
-                                    <a class="btn btn-danger m-1" type="button" href="{{ route('recordRedactionDelete' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
-                                        Выписать(ся)
-                                    </a>
+                            @can('stand.delete_entry')
+                                <div class="col-6">
+                                    <div class="d-grid">
+                                        <a class="btn btn-danger m-1" type="button" href="{{ route('recordRedactionDelete' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
+                                            Выписать(ся)
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-grid gap-2">
-                                    <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
-                                       onclick="event.preventDefault();
+                            @endcan
+                            @can('stand.change_entry')
+                                <div class="col-6">
+                                    <div class="d-grid gap-2">
+                                        <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
+                                           onclick="event.preventDefault();
                                             document.getElementById('changeForm{{ $i }}').submit();">
-                                        Изменить
-                                    </a>
+                                            Изменить
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            @endcan
                         </div>
                     @endif
 

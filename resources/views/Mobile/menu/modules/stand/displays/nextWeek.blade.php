@@ -38,7 +38,7 @@
                                             ->where('stand_template_id', $StandTemplate->id)
                                             ->get();
 
-                                        $canEdit = auth()->user()->can('Stand-Entry in table');
+                                        $canEdit = auth()->user()->can('stand.make_entry');
                                         $hasUserIcon = false; // Флаг для отслеживания, был ли уже выведен значок
                                     @endphp
 
@@ -73,7 +73,7 @@
                                         if ($standPublisher) {
                                             $publishers = json_decode($standPublisher->publishers, true);
                                         }
-                                        $canEdit = auth()->user()->can('Stand-Entry in table');
+                                        $canEdit = auth()->user()->can('stand.make_entry');
                                     @endphp
 
                                     <div class="col-sm-12 mt-1">

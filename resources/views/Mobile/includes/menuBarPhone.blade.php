@@ -1,6 +1,6 @@
 @section('menuBarPhone')
 
-    <ul class="nav nav-sm nav-pills nav-fill fixed-bottom navbar-bordered bg-white navbar-shadow">
+    <ul class="nav nav-sm nav-pills nav-fill fixed-bottom navbar-bordered bg-white navbar-shadow" style="position: fixed">
         <li class="nav-item">
             <a class="nav-link{{ request()->is('home*') ? ' active bg-primary' : '' }}" href="{{ route('home') }}">
                 <h4>Главная</h4>
