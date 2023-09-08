@@ -509,16 +509,6 @@ class CongregationsController extends Controller {
             $userPermissions->save();
         }
 
-
-        $rolePublisher = Role::where('name', 'Publisher')->first();
-        $roleGuest = Role::where('name', 'Guest')->first();
-
-        $UserRole = UsersRoles::where('user_id', $user_id)->where('role_id',$roleGuest)->update([
-            'user_id' => $user_id,
-            'role_id' => $rolePublisher->id
-        ]);
-
-
         $congrRequests = CongregationRequests::where('user_id', $user_id);
         $congrRequests->delete();
 

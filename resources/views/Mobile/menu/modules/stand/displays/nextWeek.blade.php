@@ -26,7 +26,7 @@
             @if(date('N') . '-'. date('H:i') >= $activation)
                 <div class="row">
                     @foreach ($week_schedule as $day => $times)
-                        <div class="col-12 mb-4">
+                        <div class="col-sm-12 col-lg-3 mb-6 mb-lg-5">
                                 <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
                                     <h2 class="card-header-title">
                                         {{ \App\Enums\WeekDaysEnum::getWeekDay($day) }}
@@ -101,13 +101,13 @@
                                                             @if ($user)
                                                                 @if ($user == Auth()->user()->id)
                                                                     <h3 class="text-primary">
-                                                                        {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                         {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                                        {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                     </h3>
                                                                 @else
                                                                     <h3>
-                                                                        {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                         {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                                        {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                     </h3>
                                                                 @endif
                                                             @else

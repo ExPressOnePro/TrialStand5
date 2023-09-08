@@ -71,7 +71,25 @@
                             </div>
                         </div>
                     </a>
+                    @role('Developer')
+                    <a class="card card-hover-shadow border-secondary" href="{{ route('profile') }}">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                </div>
 
+                                <div class="flex-grow-1 ms-4">
+                                    <h3 class="text-inherit mb-1">Помощь</h3>
+                                    <span class="text-body">Часто задаваемые вопросы</span>
+                                </div>
+
+                                <div class="ms-2 text-end">
+                                    <i class="bi-chevron-right text-body text-inherit"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    @endrole
 {{--                    @can('congregation.open_congregation')--}}
 {{--                        <a class="card card-hover-shadow h-100" href="{{ route('congregationView', ['id' =>auth()->user()->congregation_id ]) }}">--}}
 {{--                            <div class="card-body">--}}
@@ -113,51 +131,20 @@
                 </div>
             </div>
         </div>
+
+
+    <div class="footer mb-7">
         <div class="row justify-content-between align-items-center">
             <div class="col">
-
-            </div>
-            <!-- End Col -->
-
-            <div class="col-auto">
-                <div class="d-flex justify-content-end">
-                    <!-- List Separator -->
-                    <ul class="list-inline-item">
-                        <li class="list-inline-item">
-                            <i class="bi bi-telegram"><span> Связь с поддержкой в Telegram </span></i>
-                        </li>
-
-
-                        <li class="list-inline-item">
-                            <!-- Keyboard Shortcuts Toggle -->
-                            <a type="button" class="btn btn-outline-primary btn-icon btn-lg" href="https://t.me/meeper_support">
-                                <i class="fa-solid fa-headset"></i>
-                            </a>
-                            <!-- End Keyboard Shortcuts Toggle -->
-                        </li>
-                    </ul>
-                    <!-- End List Separator -->
-                </div>
-            </div>
-            <!-- End Col -->
-        </div>
-    </div>
-
-    <div class="footer mb-10">
-        <div class="row justify-content-between align-items-center">
-            <div class="col">
-                <p class="fs-6 mb-0"></p>
+                <a class="btn btn-outline-primary btn-sm" href="https://t.me/meeper_support">
+                    <i class="fa-solid fa-headset"><span> Поддержка </span></i>
+                </a>
             </div>
             <div class="col-auto">
-                <div class="d-flex justify-content-end">
-                    <ul class="list-inline list-separator">
-                        <li class="list-inline-item">
-                            <a class="btn btn-ghost-secondary btn-sm" href="{{route('changeLog')}}">
-                                Версия и обновления <i class="bi-box-arrow-up-right ms-1"></i>
-                            </a>
-                        </li>
-                    </ul>
-
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-outline-secondary border-secondary btn-sm" href="{{route('changeLog')}}">
+                        <i class="bi-box-arrow-up-right ms-1"><span>Версия и обновления</span></i>
+                    </a>
                 </div>
             </div>
 

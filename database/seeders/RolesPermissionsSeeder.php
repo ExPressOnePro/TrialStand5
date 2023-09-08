@@ -18,7 +18,7 @@ class RolesPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissionIds = Permission::pluck('id');
+
         $permission1 = Permission::where('name', '=','Stand-Open stand table')->first();
         $permission2 = Permission::where('name', '=','Stand-Entry in table')->first();
         $permission3 = Permission::where('name', '=','module.stand')->first();
@@ -28,6 +28,33 @@ class RolesPermissionsSeeder extends Seeder
         $users_dacia = User::where('congregation_id', 3)->get();
 
         $rolePublishers = Role::where('name', '=', 'Publisher')->first();
+
+
+
+        // Получите необходимые разрешения
+        $permissions = Permission::whereIn('name', [
+            'module.stand',
+            'stand.make_entry',
+            'stand.delete_entry',
+            'stand.change_entry'
+        ])->get();
+
+        // Получите всех пользователей с congregation_id равным 2 или 3
+        $users = User::whereIn('congregation_id', [2, 3])->get();
+
+        // Получите роль "Publisher"
+        $rolePublishers = Role::where('name', '=', 'Publisher')->first();
+
+        // Пройдитесь по каждому пользователю и присвойте им разрешения и роль
+        foreach ($users as $user) {
+            // Присвойте разрешения пользователю
+            foreach ($permissions as $permission) {
+                $userPermission = new UsersPermissions();
+                $userPermission->user_id = $user->id;
+                $userPermission->permission_id = $permission->id;
+                $userPermission->save();
+            }
+        }
 
 //        foreach($users_pamanteni as $user_pamanteni){
 //
@@ -87,7 +114,7 @@ class RolesPermissionsSeeder extends Seeder
 
 
         $roleId = 1; // Идентификатор роли, для которой выполняется присвоение разрешений
-
+        $permissionIds = Permission::pluck('id');
         // Создаем записи в таблице roles_permissions
         foreach ($permissionIds as $permissionId) {
             RolesPermissions::create([

@@ -13,12 +13,12 @@
             </div>
         </div>
         <div class="accordion mb-4" id="accordionExample">
-            <div class="accordion-item bg-soft-info">
+            <div class="accordion-item bg-soft-info ">
                 <div class="accordion-header" id="headingOne">
                     <a class="accordion-button collapsed bg-soft-info" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                         <div class="d-flex">
                             <div class="flex-shrink-0">
-                                <i class="bi-exclamation-triangle-fill"></i>
+                                <i class="bi bi-question-circle"></i>
                             </div>
                             <div class="flex-grow-1 ms-2">
                                 Первый раз на сайте?
@@ -26,7 +26,7 @@
                         </div>
                     </a>
                 </div>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
                     <div class="accordion-body">
                         <div class="d-sm-flex">
                                 <div class="flex-shrink-0 text-center">

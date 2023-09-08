@@ -15,7 +15,7 @@ class CongregationSeeder extends Seeder
         $congregation->save();
 
         $congregation = new Congregation();
-        $congregation->name = 'Бельцы - Пэмынтень';
+        $congregation->name = 'Бельцы - Пэмынтены';
 //        $congregation->address = 'Дософтей 20';
 //        $congregation->district = '5';
 //        $congregation->country = 'Молдова';
@@ -33,7 +33,7 @@ class CongregationSeeder extends Seeder
         $congregation->save();
 
         $congregation = new Congregation();
-        $congregation->name = 'Бельцы - Центр';
+        $congregation->name = 'Кишинев - Буюкань';
 //        $congregation->address = 'Дософтей 20';
 //        $congregation->district = '5';
 //        $congregation->country = 'Молдова';

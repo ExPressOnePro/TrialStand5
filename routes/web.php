@@ -264,7 +264,7 @@ Route::group(['middleware' => 'auth'], function() {
             'prefix' => 'congregation',
         ], function () {
 
-        Route::get('/congregation{id}/User{user_id}', [CongregationsController::class, 'allow'])->name('congregationAllow');
+        Route::get('/congregation/{id}/User/{user_id}', [CongregationsController::class, 'allow'])->name('congregationAllow');
         Route::get('/congregation{id}/congregationRequest{conReq}', [CongregationsController::class, 'reject'])->name('congregationReject');
         Route::get('/{congregation_id}/group{group_id}', [CongregationsController::class, 'groupView'])->name('groupView');
     });

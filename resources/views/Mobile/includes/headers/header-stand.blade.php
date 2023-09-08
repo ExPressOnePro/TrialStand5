@@ -1,3 +1,26 @@
+<style>
+    .scrolling-container {
+        max-width: 300px; /* Фиксированная ширина контейнера */
+        overflow: hidden; /* Скрыть содержимое, которое выходит за пределы контейнера */
+        position: relative; /* Положение относительно для внутреннего контейнера */
+    }
+
+    .scrolling-text {
+        white-space: nowrap; /* Предотвратите перенос текста на следующую строку */
+        animation: scrollText 1s linear forwards; /* Анимация горизонтальной прокрутки текста */
+    }
+
+    @keyframes scrollText {
+        0% {
+            transform: translateX(0); /* Начните с начала */
+        }
+        100% {
+            transform: translateX(-100%); /* Завершите на правой границе */
+        }
+    }
+</style>
+
+
 <header class="navbar-fixed navbar-height navbar-bordered bg-white navbar-shadow">
     <div class="container">
         <div class="navbar-nav-wrap mt-2">
@@ -40,8 +63,14 @@
                 </div>
                 <div class="navbar ms-auto">
                     <div class="col-sm text-end">
-                        <span class="d-block h2 mb-0">{{$stand->name}}</span>
-                        <span class="d-block">{{$stand->location}}</span>
+                        <div class="col-sm text-end">
+                            <div class="scrolling-container">
+                                <div class="scrolling-text">
+                                    <span class="d-block h2 mb-0">{{$stand->name}}</span>
+                                    <span class="d-block">{{$stand->location}}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endif
@@ -55,4 +84,15 @@
 </script>
 
 
+<script>
+    // Получите элемент с классом "scrolling-text"
+    const scrollingText = document.querySelector(".scrolling-text");
 
+    // Остановите анимацию
+    scrollingText.style.animation = "none";
+
+    // Запустите анимацию после некоторой задержки
+    setTimeout(() => {
+        scrollingText.style.animation = "scrollText 10s linear infinite";
+    }, 5000); // Задержка в 5 секунд
+</script>

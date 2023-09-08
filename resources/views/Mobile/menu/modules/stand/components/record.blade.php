@@ -34,9 +34,9 @@
             }'>
                                             @foreach ($users as $user)
                                                 @if (auth()->user()->id == $user->id)
-                                                    <option value="{{ $user->id }}" selected>{{ $user->first_name }} {{ $user->last_name }}</option>
+                                                    <option value="{{ $user->id }}" selected>{{ $user->last_name }} {{ $user->first_name }}</option>
                                                 @else
-                                                    <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
+                                                    <option value="{{ $user->id }}">{{ $user->last_name }} {{ $user->first_name }}</option>
                                                 @endif
                                             @endforeach
 

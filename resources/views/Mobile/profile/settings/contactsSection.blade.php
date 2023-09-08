@@ -9,59 +9,62 @@
     <!-- Form -->
     <form method="post" action="{{ route('profile.contactsInfoSave') }}">
         @csrf
-        <div class="row mb-4">
-            <label for="countryLabel" class="col-sm-3 col-form-label form-label">Страна</label>
-            <div class="col-sm-9">
-                <select id="countrySelect" name="inputMergeCountrySelect" class="form-select">
-                    <option>Не выбрана</option>
-                    <option value="Moldova" {{ $country === 'Moldova' ? 'selected' : '' }}>Молдова</option>
-                    <option value="Great Britain" {{ $country === 'Great Britain' ? 'selected' : '' }}>Великобритания</option>
-                </select>
-            </div>
-        </div>
+{{--        <div class="row mb-4">--}}
+{{--            <label for="countryLabel" class="col-sm-3 col-form-label form-label">Страна</label>--}}
+{{--            <div class="col-sm-9">--}}
+{{--                <select id="countrySelect" name="inputMergeCountrySelect" class="form-select">--}}
+{{--                    <option>Не выбрана</option>--}}
+{{--                    <option value="Moldova" {{ $country === 'Moldova' ? 'selected' : '' }}>Молдова</option>--}}
+{{--                    <option value="Great Britain" {{ $country === 'Great Britain' ? 'selected' : '' }}>Великобритания</option>--}}
+{{--                </select>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
-        <div class="row mb-4" id="cityRow" {{ empty($country) ? 'style=display:none;' : '' }}>
-            <label for="cityLabel" class="col-sm-3 col-form-label form-label">Город</label>
-            <div class="col-sm-9">
-                <select id="citySelect" name="inputMergeCitySelect" class="form-select">
-                    <option>Выберите страну, чтобы увидеть города</option>
-                    @if (!empty($city))
-                        <option value="{{ $city }}" selected>{{ $city }}</option>
-                    @endif
-                </select>
-            </div>
-        </div>
-        <script>
-            $(document).ready(function() {
-                // Маппинг стран и их городов
-                var citiesByCountry = {
-                    'Moldova': ['Кишинев', 'Бельцы', 'Тирасполь'],
-                    'Great Britain': ['Лондон', 'Манчестер', 'Бирмингем']
-                };
+{{--        <div class="row mb-4" id="cityRow" style="display: none;">--}}
+{{--            <label for="cityLabel" class="col-sm-3 col-form-label form-label">Город</label>--}}
+{{--            <div class="col-sm-9">--}}
+{{--                <select id="citySelect" name="inputMergeCitySelect" class="form-select">--}}
+{{--                    <option>Выберите страну, чтобы увидеть города</option>--}}
+{{--                    @if (!empty($city))--}}
+{{--                        <option value="{{ $city }}" selected>{{ $city }}</option>--}}
+{{--                    @endif--}}
+{{--                </select>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <script>--}}
+{{--            $(document).ready(function() {--}}
+{{--                // Маппинг стран и их городов--}}
+{{--                var citiesByCountry = {--}}
+{{--                    'Moldova': ['Кишинев', 'Бельцы', 'Тирасполь'],--}}
+{{--                    'Great Britain': ['Лондон', 'Манчестер', 'Бирмингем']--}}
+{{--                };--}}
 
-                // При изменении выбранной страны
-                $('#countrySelect').on('change', function() {
-                    var selectedCountry = $(this).val();
-                    var citySelect = $('#citySelect');
-                    var cityRow = $('#cityRow');
-                    citySelect.empty();
+{{--                var countrySelect = $('#countrySelect');--}}
+{{--                var citySelect = $('#citySelect');--}}
+{{--                var cityRow = $('#cityRow');--}}
 
-                    if (selectedCountry !== 'Не выбрана') {
-                        var cities = citiesByCountry[selectedCountry];
-                        cityRow.show();
-                        citySelect.append('<option>Выберите город</option>');
+{{--                // При изменении выбранной страны--}}
+{{--                countrySelect.on('change', function() {--}}
+{{--                    var selectedCountry = $(this).val();--}}
+{{--                    citySelect.empty();--}}
 
-                        cities.forEach(function(city) {
-                            citySelect.append('<option>' + city + '</option>');
-                        });
-                    } else {
-                        cityRow.hide();
-                        citySelect.append('<option>Выберите страну, чтобы увидеть города</option>');
-                    }
-                });
-            });
-        </script>
-            <!-- Form -->
+{{--                    if (selectedCountry !== 'Не выбрана') {--}}
+{{--                        var cities = citiesByCountry[selectedCountry];--}}
+{{--                        cityRow.show();--}}
+{{--                        citySelect.append('<option>Выберите город</option>');--}}
+
+{{--                        cities.forEach(function(city) {--}}
+{{--                            citySelect.append('<option>' + city + '</option>');--}}
+{{--                        });--}}
+{{--                    } else {--}}
+{{--                        cityRow.hide();--}}
+{{--                        citySelect.append('<option>Выберите страну, чтобы увидеть города</option>');--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+{{--        </script>--}}
+
+        <!-- Form -->
         <div class="row mb-4">
             <label for="phoneLabel" class="col-sm-3 col-form-label form-label">Номер телефона <span class="form-label-secondary">( Действующий )</span></label>
             <div class="col-sm-9">
@@ -89,4 +92,3 @@
         HSCore.components.HSFlatpickr.init('.js-flatpickr')
     })();
 </script>
-<!-- End Body -->

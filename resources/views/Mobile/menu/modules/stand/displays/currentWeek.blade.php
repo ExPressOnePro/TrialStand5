@@ -83,13 +83,13 @@
                                                         @if ($user)
                                                             @if ($user == Auth()->user()->id)
                                                                 <h3 class="text-primary">
-                                                                    {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                     {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                                    {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                 </h3>
                                                             @else
                                                                 <h3>
-                                                                    {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                     {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                                    {{ $users->where('id', $user)->pluck('first_name')->first() }}
                                                                 </h3>
                                                             @endif
                                                         @else
