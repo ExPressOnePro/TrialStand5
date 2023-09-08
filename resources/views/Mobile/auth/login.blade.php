@@ -28,7 +28,7 @@
 
                             <div class="form-group">
                                 <div class="input-group mb-3">
-                                    <input id="password" type="password" class="form-control form-control
+                                    <input id="passw" type="passw" class="form-control form-control
                                     @error('password') is-invalid @enderror" name="password" required autocomplete="current-password"
                                            placeholder="{{ __('Пароль') }}" aria-describedby="basic-addon1">
                                     <div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa-regular fa-eye" id="show-password"></i></span></div>

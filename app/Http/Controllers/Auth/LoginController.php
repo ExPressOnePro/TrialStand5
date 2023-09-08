@@ -35,12 +35,12 @@ class LoginController extends Controller
     {
         $this->validate($request, [
             'login' => 'required|string',
-            'password' => 'required|string'
+            'passw' => 'required|string'
         ]);
 
         $credentials = [
             $this->loginType => $request->login,
-            'password'       => $request->password
+            'passw'       => $request->password
         ];
 
         if (Auth::attempt($credentials)) {
