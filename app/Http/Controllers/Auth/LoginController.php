@@ -40,7 +40,7 @@ class LoginController extends Controller
 
         $credentials = [
             $this->loginType => $request->login,
-            'passw'       => $request->password
+            'password'       => $request->passw
         ];
 
         if (Auth::attempt($credentials)) {
