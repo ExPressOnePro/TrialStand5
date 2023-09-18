@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@include('Mobile.layouts.components.front-head')
+@include('Mobile.layouts.components.hub-head')
 
 <body class="mt-3 mb-3">
 
@@ -13,7 +13,7 @@
 @endif
 <main id="content" role="main" class="main mb-7">
     @yield('content')
-    @include('Mobile.layouts.components.front-scripts')
+    @include('Mobile.layouts.components.hub-scripts')
 </main>
     @include('Mobile.includes.menuBarPhone')
 </body>

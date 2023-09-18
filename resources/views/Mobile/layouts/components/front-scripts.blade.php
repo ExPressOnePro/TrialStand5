@@ -26,14 +26,46 @@
 <script src="{{ asset('front/vendor/hs-toggle-password/dist/js/hs-toggle-password.js')}}"></script>
 <script src="{{ asset('front/vendor/fslightbox/index.js')}}"></script>
 <script src="{{ asset('front/vendor/tom-select/dist/js/tom-select.complete.min.js')}}"></script>
+<script src="{{ asset('front/vendor/hs-toggle-password/dist/js/hs-toggle-password.js')}}"></script>
+<script src="{{ asset('front/vendor/hs-add-field/dist/hs-add-field.min.js')}}"></script>
 
+<script src="{{ asset('front/vendor/appear/dist/appear.min.js')}}"></script>
+<script src="{{ asset('front/vendor/circles.js/circles.js')}}"></script>
+
+<script src="{{ asset('front/vendor/hs-counter/dist/hs-counter.min.js')}}"></script>
 <!-- JS Front -->
 <script src="{{ asset('front/js/theme.min.js') }}"></script>
 <script src="{{ asset('front/js/hs.theme-appearance-charts.js')}}"></script>
 
+
 <!-- JS Front -->
-
-
+<script>
+    (function() {
+        // INITIALIZATION OF COUNTER
+        // =======================================================
+        new HSCounter('.js-counter')
+    })();
+</script>
+<script>
+    (function() {
+        // INITIALIZATION OF CIRCLES
+        // =======================================================
+        setTimeout(() => {
+            document.querySelectorAll('.js-circle').forEach(item => {
+                HSCore.components.HSCircles.init(item)
+            })
+        })
+    })();
+</script>
+<script>
+    (function() {
+        // INITIALIZATION OF ADD FIELD
+        // =======================================================
+        new HSAddField('.js-add-field', {
+            limit: 48 // Ваш новый лимит полей
+        });
+    })();
+</script>
 <script>
     (function() {
         // INITIALIZATION OF TOGGLE PASSWORD

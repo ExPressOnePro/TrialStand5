@@ -28,9 +28,45 @@
 {{--            </div>--}}
 {{--        </div>--}}
         <!-- End Alert -->
+        <div id="version2_1_1" class="content-divider">
+            <h2 class="hs-docs-heading"><code>v2.0.2</code> - 09 Сентября, 2023
+                <a class="anchorjs-link" href="#version2_1_1" aria-label="Anchor" data-anchorjs-icon="#"></a></h2>
+
+            <div class="mb-3">
+                <span class="badge bg-soft-primary text-primary py-2 px-3 me-2">Новое</span>
+                Ответсвенный имеет возможность помочь с авторизацией пользователей
+            </div>
+
+            <div class="mb-3">
+                <span class="badge bg-soft-primary text-primary py-2 px-3 me-2">Новое</span>
+                Добавлена функция запомнить меня
+            </div>
+
+
+            <div class="mb-3">
+                <span class="badge bg-soft-danger text-danger py-2 px-3 me-2">Исправлено</span>
+                Ошибки при записях в таблицу стенда
+            </div>
+            <div class="mb-3">
+                <span class="badge bg-soft-info text-info py-2 px-3 me-2">Обновление</span>
+                Вывод некоторых ошибок на страницу, связанных с использованием
+            </div>
+
+
+
+        </div>
+        <div id="version2_1_1" class="content-divider">
+            <h2 class="hs-docs-heading"><code>v2.0.1</code> - 06 сентября, 2023 <a class="anchorjs-link" href="#version2_1_1" aria-label="Anchor" data-anchorjs-icon="#"></a></h2>
+
+            <div class="mb-3">
+                <span class="badge bg-soft-info text-info py-2 px-3 me-2">Обновление</span>
+                Интерфейса
+            </div>
+
+        </div>
 
         <div id="version2_1_1" class="content-divider">
-            <h2 class="hs-docs-heading"><code>v1.5.89</code> - 04 сентября, 2023 <a class="anchorjs-link" href="#version2_1_1" aria-label="Anchor" data-anchorjs-icon="#"></a></h2>
+            <h2 class="hs-docs-heading"><code>v2.0.0</code> - 04 сентября, 2023 <a class="anchorjs-link" href="#version2_1_1" aria-label="Anchor" data-anchorjs-icon="#"></a></h2>
 
             <div class="mb-3">
                 <span class="badge bg-soft-info text-info py-2 px-3 me-2">Обновление</span>

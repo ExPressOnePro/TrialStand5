@@ -58,23 +58,23 @@
                 </div>
             @endcan
 
-            @role('Developer')
-            <div class="col mb-3 mb-lg-5">
-                <div class="list-group d-flex align-items-center">
-                    <a class="list-group-item list-group-item-action border border-2 border-danger" href="{{ route('developer.hub') }}">
-                        <div class="d-flex align-items-center m-2">
-                            <div class="avatar">
-                                <img class="card-img" src="{{ asset('front/svg/illustrations/oc-project-development.svg') }}">
-                            </div>
-                            <div class="ms-3">
-                                <span class="d-block h1 text-inherit mb-0">DEVELOPER</span>
-                                <span class="d-block h4 text-inherit text-body mb-0">functions for devops</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            @endrole
+{{--            @role('Developer')--}}
+{{--            <div class="col mb-3 mb-lg-5">--}}
+{{--                <div class="list-group d-flex align-items-center">--}}
+{{--                    <a class="list-group-item list-group-item-action border border-2 border-danger" href="{{ route('developer.hub') }}">--}}
+{{--                        <div class="d-flex align-items-center m-2">--}}
+{{--                            <div class="avatar">--}}
+{{--                                <img class="card-img" src="{{ asset('front/svg/illustrations/oc-project-development.svg') }}">--}}
+{{--                            </div>--}}
+{{--                            <div class="ms-3">--}}
+{{--                                <span class="d-block h1 text-inherit mb-0">DEVELOPER</span>--}}
+{{--                                <span class="d-block h4 text-inherit text-body mb-0">functions for devops</span>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </a>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            @endrole--}}
         </div>
     </div>
 

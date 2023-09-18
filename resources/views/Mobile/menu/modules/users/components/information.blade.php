@@ -28,29 +28,46 @@
                 <li class="pb-0"><span class="card-subtitle">Информация</span></li>
                 <li><i class="bi-person dropdown-item-icon"></i> {{ $user->first_name }} {{ $user->last_name }}</li>
                 <li><i class="bi-briefcase dropdown-item-icon"></i> {{ $user->congregation->name }}</li>
+{{--                <li>--}}
+{{--                    <div class="row align-items-center">--}}
+{{--                        <div class="col-sm mb-3 mb-sm-0">--}}
+{{--                            <i class="bi-briefcase dropdown-item-icon"></i>--}}
+{{--                            @if(!$user->usersGroups)--}}
+{{--                                <span>Не в группе</span>--}}
+{{--                            @else--}}
+{{--                                @foreach($user->usersGroups as $usersGroups)--}}
+{{--                                    <span>{{$usersGroups->group->name}}</span>--}}
+{{--                                @endforeach--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
+{{--                        <div class="col-sm-auto">--}}
+{{--                            <div class="d-flex">--}}
+{{--                                <button type="button" class="btn btn-info btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">--}}
+{{--                                    <i class="fa-solid fa-pencil"></i>--}}
+{{--                                </button>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </li>--}}
+
+                <li class="pt-4 pb-0"><span class="card-subtitle">Контакты</span></li>
                 <li>
-                    <div class="row align-items-center">
-                        <div class="col-sm mb-3 mb-sm-0">
-                            <i class="bi-briefcase dropdown-item-icon"></i>
-                            @if(!$user->usersGroups)
-                                <span>Не в группе</span>
-                            @else
-                                @foreach($user->usersGroups as $usersGroups)
-                                    <span>{{$usersGroups->group->name}}</span>
-                                @endforeach
-                            @endif
-                        </div>
-                        <div class="col-sm-auto">
-                            <div class="d-flex">
-                                <button type="button" class="btn btn-info btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </button>
-                            </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-right-to-bracket dropdown-item-icon"></i>
+                        <div class="input-group input-group-merge border-secondary">
+                            <input type="text" id="iconExample" class="form-control" value="{{$user->login}}">
+                            <a class="js-clipboard input-group-append input-group-text" href="javascript:;"
+                               data-hs-clipboard-options='{
+       "contentTarget": "#iconExample",
+       "classChangeTarget": "#iconExampleLinkIcon",
+       "defaultClass": "bi-clipboard",
+       "successClass": "bi-check"
+     }'>
+                                <i id="iconExampleLinkIcon" class="bi-clipboard"></i>
+                            </a>
                         </div>
                     </div>
                 </li>
-
-                <li class="pt-4 pb-0"><span class="card-subtitle">Контакты</span></li>
                 <li><i class="bi-at dropdown-item-icon"></i> {{ $user->email }}</li>
 
                 @if(isset($info['mobile_phone']))
@@ -58,9 +75,6 @@
                 @else
                     <li><i class="bi-phone dropdown-item-icon"></i> Номер телефона отсутствует</li>
                 @endif
-                @role('Developer')
-                <li><i class="fa-solid fa-right-to-bracket dropdown-item-icon"></i> {{ $user->login }}</li>
-                @endrole
                 {{--                                    <li class="pt-4 pb-0"><span class="card-subtitle">Teams</span></li>--}}
                 {{--                                    <li><i class="bi-people dropdown-item-icon"></i> Member of 7 teams</li>--}}
                 {{--                                    <li><i class="bi-stickies dropdown-item-icon"></i> Working on 8 projects</li>--}}
@@ -70,3 +84,20 @@
     </div>
     <!-- End Card -->
 </div>
+<script>
+    function copyToClipboard() {
+        // Создаем временный элемент для копирования
+        var tempInput = document.createElement("input");
+        tempInput.value = document.getElementById("api-token").textContent;
+        document.body.appendChild(tempInput);
+
+        // Выделяем текст в элементе
+        tempInput.select();
+
+        // Копируем выделенный текст в буфер обмена
+        document.execCommand("copy");
+
+        // Удаляем временный элемент
+        document.body.removeChild(tempInput);
+    }
+</script>

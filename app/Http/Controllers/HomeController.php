@@ -64,16 +64,18 @@ class HomeController extends Controller {
             ->count();
 
         $user_congregation_id = $user->congregation_id;
-        $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
-        $congregationRequestsCountAll = CongregationRequests::count();
 
+        if($user->hasRole('Developer') ) {
+            $congregationRequestsCount = CongregationRequests::count();
+        } else {
+            $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
+        }
         $compact = compact(
             'standPublishersCountAll',
                     'stand',
                     'user_congregation_id',
                     'congregationRequestsCount',
                     'standPublishersCount',
-                    'congregationRequestsCountAll',
                     'congregationRequests',
                     'active_day'
         );

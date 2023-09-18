@@ -59,7 +59,7 @@ class StandPublishersController extends Controller
     }
 
 
-    public function NewRecordStand1(Request $request) {
+    public function NewRecordStand(Request $request) {
 
         $user_1 = $request->input('user_1');
         $date = $request->input('date1');
@@ -68,28 +68,41 @@ class StandPublishersController extends Controller
         $stand_template_id = $request->input('stand_template_id1');
         $stand_template = StandTemplate::find($stand_template_id);
 
+        $stand_template = StandTemplate::find($stand_template_id);
+
+        // Распарсите JSON из settings и получите publishers_at_stand
+        $settings = json_decode($stand_template->settings, true);
+        $publishersCount = $settings['publishers_at_stand'];
+
+        // Создайте массив для хранения данных о пользователях
+        $publishersData = [];
+
+        // Заполните массив нужным количеством полей
+        for ($i = 1; $i <= $publishersCount; $i++) {
+            // Генерируйте ключи в формате 'user_X', где X - номер пользователя
+            $key = 'user_' . $i;
+
+            // Инициализируйте каждого пользователя пустой строкой
+            $publishersData[$key] = "";
+        }
+
+        // Присвойте значение $user_1 первому индексу 'user_1'
+        $publishersData['user_1'] = $user_1;
+
+        // Создайте запись в базе данных
         $new = StandPublishers::firstOrCreate([
             'date' => $date,
             'day' => $day,
             'time' => $time,
             'stand_template_id' => $stand_template_id,
-            'publishers' => json_encode([
-                'user_1' => $user_1,
-                'user_2' => "",
-                'user_3' => "",
-                'user_4' => "",
-            ]),
+            'publishers' => json_encode($publishersData),
         ]);
 
-        $stand_template = StandTemplate::find($stand_template_id);
 
         $StandPublishersHistory = new StandPublishersHistory();
-        $StandPublishersHistory->publishers = json_encode([
-            'user_1' => $user_1,
-            'user_2' => "",
-            'user_3' => "",
-            'user_4' => "",
-        ]);
+
+        $StandPublishersHistory->publishers = json_encode($publishersData);
+
         $StandPublishersHistory->date = $date;
         $StandPublishersHistory->day = $day;
         $StandPublishersHistory->time = $time;
@@ -97,225 +110,86 @@ class StandPublishersController extends Controller
         $StandPublishersHistory->stand_id = $stand_template->stand_id;
         $StandPublishersHistory->save();
 
-        if($stand_template->type === 'current') {
-            return redirect()->route('currentWeekTableFront', ['id' => $stand_template->stand_id])
+        $routeName = $stand_template->type === 'current' ? 'currentWeekTableFront' : 'nextWeekTableFront';
+        return redirect()->route($routeName, ['id' => $stand_template->stand_id])->with('success', 'Вы успешно записаны');
+    }
+
+
+    // May be BUG to do 😊
+    public function AddPublisherToStand(Request $request, $id = null) {
+        $user_id = $request->input('user_id');
+
+        $standPublisher = StandPublishers::find($id);
+        $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $standPublisher->id)->first();
+        $stand_full = StandTemplate::find($standPublisher->stand_template_id);
+        $standPublishersDecode = json_decode($standPublisher->publishers, true);
+
+        $foundEmpty = false;
+        foreach ($standPublishersDecode as $key => $value) {
+            if ($value == $user_id) {
+                $errorMessage = 'Пользователь уже записан в выбранное время и дату!';
+                if ($stand_full->type == 'next') {
+                    return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])->with('error', $errorMessage);
+                } else {
+                    return redirect()->route('currentWeekTableFront', ['id' => $stand_full->stand_id])->with('error', $errorMessage);
+                }
+            }
+
+            if (empty($value) && !$foundEmpty) {
+                $standPublishersDecode[$key] = $user_id;
+                $standPublishersHistory->publishers = json_encode($standPublishersDecode);
+                $standPublishersHistory->save();
+                $foundEmpty = true;
+            }
+        }
+
+        $standPublisher->publishers = $standPublishersHistory->publishers;
+        $standPublisher->save();
+
+
+        if (!$foundEmpty) {
+            // Если не было найдено пустых значений, вы можете выполнить другие действия
+        }
+
+        if($stand_full->type != 'next') {
+            return redirect()->route('currentWeekTableFront', ['id' => $stand_full->stand_id])
                 ->with('success','Вы успешно записаны');
         } else {
-            return redirect()->route('nextWeekTableFront', ['id' => $stand_template->stand_id])
+            return redirect()->route('nextWeekTableFront',  ['id' => $stand_full->stand_id])
                 ->with('success','Вы успешно записаны');
         }
     }
 
-    public function AddPublisherToStand1(Request $request, $id) {
 
-        $user_id1 = $request->input('1_user_id');
-        $StandPublisher = StandPublishers::find($id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $StandPublisher->id)->first();
-        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
-
-        if ($StandPublisher) {
-            $publishers = json_decode($StandPublisher->publishers, true);
-        } else {
-            $publishers = [];
-        }
-
-        if($publishers['user_2'] != $user_id1) {
-
-            $StandPublishersHistory->publishers = json_encode([
-                'user_1' => $user_id1,
-                'user_2' => $publishers['user_2'],
-                'user_3' => $publishers['user_3'],
-                'user_4' => $publishers['user_4'],
-            ]);
-            $StandPublishersHistory->save();
-            $StandPublisher->publishers = json_encode([
-                'user_1' => $user_id1,
-                'user_2' => $publishers['user_2'],
-                'user_3' => $publishers['user_3'],
-                'user_4' => $publishers['user_4'],
-            ]);
-            $StandPublisher->save();
-
-            if($stand_full->type != 'next') {
-                return redirect()->route('currentWeekTableFront', ['id' => $stand_full->stand_id])
-                    ->with('success','Вы успешно записаны');
-            } else {
-                return redirect()->route('nextWeekTableFront',  ['id' => $stand_full->stand_id])
-                    ->with('success','Вы успешно записаны');
-            }
-        } else {
-            if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
-                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            } else {
-                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
-                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            }
-        }
-    }
-    public function AddPublisherToStand2(Request $request, $id) {
-        $user_id2 = $request->input('2_user_id');
-        $StandPublisher = StandPublishers::find($id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $StandPublisher->id)->first();
-        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
-
-        if ($StandPublisher) {
-            $publishers = json_decode($StandPublisher->publishers, true);
-        } else {
-            $publishers = [];
-        }
-
-        if($publishers['user_1'] != $user_id2) {
-
-            $StandPublishersHistory->publishers = json_encode([
-                'user_1' => $publishers['user_1'],
-                'user_2' => $user_id2,
-                'user_3' => $publishers['user_3'],
-                'user_4' => $publishers['user_4'],
-            ]);
-            $StandPublishersHistory->save();
-            $StandPublisher->publishers = json_encode([
-                'user_1' => $publishers['user_1'],
-                'user_2' => $user_id2,
-                'user_3' => $publishers['user_3'],
-                'user_4' => $publishers['user_4'],
-            ]);
-            $StandPublisher->save();
-
-            if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
-                    ->with('success','Вы успешно записаны');
-            } else {
-                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
-                    ->with('success','Вы успешно записаны');
-            }
-        } else {
-            if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
-                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            } else {
-                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
-                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            }
-        }
-    }
-    public function AddPublisherToStand3(Request $request, $id) {
-        $user_id3 = $request->input('3_user_id');
-        $StandPublisher = StandPublishers::find($id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $StandPublisher->id)->first();
-        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
-
-        if ($StandPublisher) {
-            $publishers = json_decode($StandPublisher->publishers, true);
-        } else {
-            $publishers = [];
-        }
-
-        if($publishers['user_1'] != $user_id3 && $publishers['user_2'] != $user_id3) {
-
-            $StandPublishersHistory->publishers = json_encode([
-                'user_1' => $publishers['user_1'],
-                'user_2' => $publishers['user_2'],
-                'user_3' => $user_id3,
-                'user_4' => $publishers['user_4'],
-            ]);
-            $StandPublishersHistory->save();
-            $StandPublisher->publishers = json_encode([
-                'user_1' => $publishers['user_1'],
-                'user_2' => $publishers['user_2'],
-                'user_3' => $user_id3,
-                'user_4' => $publishers['user_4'],
-            ]);
-            $StandPublisher->save();
-
-            if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
-                    ->with('success','Вы успешно записаны');
-            } else {
-                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
-                    ->with('success','Вы успешно записаны');
-            }
-        } else {
-            if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
-                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            } else {
-                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
-                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            }
-        }
-    }
-    public function AddPublisherToStand4(Request $request, $id) {
-        $user_id4 = $request->input('4_user_id');
-        $StandPublisher = StandPublishers::find($id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $StandPublisher->id)->first();
-        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
-
-        if ($StandPublisher) {
-            $publishers = json_decode($StandPublisher->publishers, true);
-        } else {
-            $publishers = [];
-        }
-
-        if($publishers['user_1'] != $user_id4 && $publishers['user_2'] != $user_id4 && $publishers['user_3'] != $user_id4) {
-
-            $StandPublishersHistory->publishers = json_encode([
-                'user_1' => $publishers['user_1'],
-                'user_2' => $publishers['user_2'],
-                'user_3' => $publishers['user_3'],
-                'user_4' => $user_id4,
-            ]);
-            $StandPublishersHistory->save();
-            $StandPublisher->publishers = json_encode([
-                'user_1' => $publishers['user_1'],
-                'user_2' => $publishers['user_2'],
-                'user_3' => $publishers['user_3'],
-                'user_4' => $user_id4,
-            ]);
-            $StandPublisher->save();
-
-            if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
-                    ->with('success','Вы успешно записаны');
-            } else {
-                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
-                    ->with('success','Вы успешно записаны');
-            }
-        } else {
-            if($stand_full->type == 'next') {
-                return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
-                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            } else {
-                return redirect()->route('currentWeekTableFront',  ['id' => $stand_full->stand_id])
-                    ->with('error', 'Пользователь уже записан в выбраное время и дату!');
-            }
-        }
-    }
     /*выписаться со стенда*/
-
-    public function recordRedactionDelete1($id, $stand) {
+    public function recordRedactionDelete($id, $stand, $user_id) {
         $standPublisher = StandPublishers::findOrFail($id);
         $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
-
         $publishers = json_decode($standPublisher->publishers, true);
-        $user2Value = $publishers['user_2'] ?? '';
-        $user3Value = $publishers['user_3'] ?? '';
-        $user4Value = $publishers['user_4'] ?? '';
-        $standPublishersHistory->publishers = json_encode([
-            'user_1' => "",
-            'user_2' => $user2Value,
-            'user_3' => $user3Value,
-            'user_4' => $user4Value,
-        ]);
-        $standPublishersHistory->save();
+
+        foreach ($publishers as $key => $value) {
+            if($value === $user_id) {
+                $publishers[$key] = "";
+                $standPublishersHistory->publishers = json_encode($publishers);
+                $standPublishersHistory->save();
+                break;
+            }
+        }
 
         $standPublisher->publishers = $standPublishersHistory->publishers;
         $standPublisher->save();
 
         $stand_full = StandTemplate::find($standPublisher->stand_template_id);
 
-        $publisher = json_decode($standPublisher->publishers, true);
-        if (empty($publisher['user_1']) && empty($publisher['user_2']) && empty($publisher['user_3']) && empty($publisher['user_4'])) {
+
+        $allEmpty = true;
+        foreach ($publishers as $key => $value) {
+            if (!empty($value)) {
+                $allEmpty = false;
+                break;
+            }
+        }
+        if ($allEmpty) {
             $standPublisher->delete();
             $standPublishersHistory->delete();
         }
@@ -323,110 +197,54 @@ class StandPublishersController extends Controller
         $routeName = ($stand_full->type == 'next') ? 'nextWeekTableFront' : 'currentWeekTableFront';
         return redirect()->route($routeName, ['id' => $stand]);
     }
-    public function recordRedactionDelete2($id, $stand) {
 
-        $StandPublisher = StandPublishers::findOrFail($id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
 
-        $publishers = json_decode($StandPublisher->publishers, true);
-        $user1Value = $publishers['user_1'] ?? '';
-        $user3Value = $publishers['user_3'] ?? '';
-        $user4Value = $publishers['user_4'] ?? '';
-        $StandPublishersHistory->publishers = json_encode([
-            'user_1' => $user1Value,
-            'user_2' => "",
-            'user_3' => $user3Value,
-            'user_4' => $user4Value,
-        ]);
-        $StandPublishersHistory->save();
-
-        $StandPublisher->publishers = $StandPublishersHistory->publishers;
-        $StandPublisher->save();
-
-        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
-
-        $publisher = json_decode($StandPublisher->publishers, true);
-        if (empty($publisher['user_1']) && empty($publisher['user_2']) && empty($publisher['user_3']) && empty($publisher['user_4'])) {
-            $StandPublisher->delete();
-            $StandPublishersHistory->delete();
-        }
-
-        $routeName = ($stand_full->type == 'next') ? 'nextWeekTableFront' : 'currentWeekTableFront';
-        return redirect()->route($routeName, ['id' => $stand]);
-
-        /*return redirect()->route('StandTable',  $id);*/
-    }
-    public function recordRedactionDelete3($id, $stand) {
-
-        $StandPublisher = StandPublishers::findOrFail($id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
-
-        $publishers = json_decode($StandPublisher->publishers, true);
-        $user1Value = $publishers['user_1'] ?? '';
-        $user2Value = $publishers['user_2'] ?? '';
-        $user4Value = $publishers['user_4'] ?? '';
-
-        $StandPublishersHistory->publishers = json_encode([
-            'user_1' => $user1Value,
-            'user_2' => $user2Value,
-            'user_3' => "",
-            'user_4' => $user4Value,
-        ]);
-        $StandPublishersHistory->save();
-
-        $StandPublisher->publishers = $StandPublishersHistory->publishers;
-        $StandPublisher->save();
-
-        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
-
-        $publisher = json_decode($StandPublisher->publishers, true);
-        if (empty($publisher['user_1']) && empty($publisher['user_2']) && empty($publisher['user_3']) && empty($publisher['user_4'])) {
-            $StandPublisher->delete();
-            $StandPublishersHistory->delete();
-        }
-
-        $routeName = ($stand_full->type == 'next') ? 'nextWeekTableFront' : 'currentWeekTableFront';
-        return redirect()->route($routeName, ['id' => $stand]);
-
-        /*return redirect()->route('StandTable',  $id);*/
-    }
-    public function recordRedactionDelete4($id, $stand) {
-
-        $StandPublisher = StandPublishers::findOrFail($id);
-        $StandPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
-
-        $publishers = json_decode($StandPublisher->publishers, true);
-        $user1Value = $publishers['user_1'] ?? '';
-        $user2Value = $publishers['user_2'] ?? '';
-        $user3Value = $publishers['user_3'] ?? '';
-
-        $StandPublishersHistory->publishers = json_encode([
-            'user_1' => $user1Value,
-            'user_2' => $user2Value,
-            'user_3' => $user3Value,
-            'user_4' => "",
-
-        ]);
-        $StandPublishersHistory->save();
-
-        $StandPublisher->publishers = $StandPublishersHistory->publishers;
-        $StandPublisher->save();
-
-        $stand_full = StandTemplate::find($StandPublisher->stand_template_id);
-
-        $publisher = json_decode($StandPublisher->publishers, true);
-        if (empty($publisher['user_1']) && empty($publisher['user_2']) && empty($publisher['user_3']) && empty($publisher['user_4'])) {
-            $StandPublisher->delete();
-            $StandPublishersHistory->delete();
-        }
-
-        $routeName = ($stand_full->type == 'next') ? 'nextWeekTableFront' : 'currentWeekTableFront';
-        return redirect()->route($routeName, ['id' => $stand]);
-
-        /*return redirect()->route('StandTable',  $id);*/
-    }
     /*Перезаписать пользователя на стенд*/
 
+    public function recordRedactionChange(Request $request, $id, $user_id) {
+        $user_id = $request->input('user_id');
+
+
+        $standPublisher = StandPublishers::find($id);
+        $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $standPublisher->id)->first();
+        $stand_full = StandTemplate::find($standPublisher->stand_template_id);
+        $standPublishersDecode = json_decode($standPublisher->publishers, true);
+
+        $foundEmpty = false;
+        foreach ($standPublishersDecode as $key => $value) {
+            if ($value == $user_id) {
+                $errorMessage = 'Пользователь уже записан в выбранное время и дату!';
+                if ($stand_full->type == 'next') {
+                    return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])->with('error', $errorMessage);
+                } else {
+                    return redirect()->route('currentWeekTableFront', ['id' => $stand_full->stand_id])->with('error', $errorMessage);
+                }
+            }
+
+            if (empty($value) && !$foundEmpty) {
+                $standPublishersDecode[$key] = $user_id;
+                $standPublishersHistory->publishers = json_encode($standPublishersDecode);
+                $standPublishersHistory->save();
+                $foundEmpty = true;
+            }
+        }
+
+        $standPublisher->publishers = $standPublishersHistory->publishers;
+        $standPublisher->save();
+
+
+        if (!$foundEmpty) {
+            // Если не было найдено пустых значений, вы можете выполнить другие действия
+        }
+
+        if ($stand_full->type != 'next') {
+            return redirect()->route('currentWeekTableFront', ['id' => $stand_full->stand_id])
+                ->with('success', 'Вы успешно записаны');
+        } else {
+            return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])
+                ->with('success', 'Вы успешно записаны');
+        }
+    }
     public function recordRedactionChange1(Request $request, $id, $stand) {
         $value = $request->input('1_user_id');
         $StandPublisher = StandPublishers::find($id);
@@ -569,6 +387,4 @@ class StandPublishersController extends Controller
                 ->with('error', $errorMessage);
         }
     }
-
-
 }

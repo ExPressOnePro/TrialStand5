@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Astart;
 use App\Models\Congregation;
+use App\Models\CongregationRequests;
 use App\Models\CongregationsPermissions;
 use App\Models\Permission;
 use App\Models\Role;
@@ -29,19 +30,86 @@ class DeveloperController extends Controller{
         $permissionModule = Permission::where('name', 'module.schedule')->first();
 
         $lastWeek = Carbon::now()->subWeek();
+        // Получить текущую дату и время
+        $now = Carbon::now();
+
+        // Определить начало и конец текущей недели
+        $startOfCurrentWeek = $now->startOfWeek();
+        $endOfCurrentWeek = $now->endOfWeek();
+
+        // Определить начало и конец прошлой недели
+        $startOfLastWeek = $now->subWeek()->startOfWeek();
+        $endOfLastWeek = $now->endOfWeek();
+
+        // Выборка пользователей, зарегистрировавшихся за прошлую неделю
+        $usersLastWeekCount = User::whereBetween('created_at', [$startOfLastWeek, $endOfLastWeek])->count();
+        $usersCurrentWeekCount = User::whereBetween('created_at', [$startOfCurrentWeek, $endOfCurrentWeek])->count();
+
+
+        if ($usersLastWeekCount > 0 && $usersCurrentWeekCount > 0) {
+            $userCountPercent = ($usersLastWeekCount / $usersCurrentWeekCount) * 100;
+        } else {
+            $userCountPercent = 0; // Защита от деления на ноль
+        }
+
+        // Количество пользователей
         $usersCount = User::count();
+
         $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->count();
         $usersActiveCountPercent = ($usersActiveCount / $usersCount) * 100;
         $usersRegistrationsCount = User::whereDate('created_at', '>=', Carbon::now()->subDay())->count();
+        $usersRequestsCongregationsCount = CongregationRequests::count();
+        $congregationCount = Congregation::where('id','!=', 1)->count();
+        $standCount = Stand::count();
 
         $congregations = Congregation::get();
 
+        $metrics = [
+            [
+                'title' => 'Пользователей',
+                'route' => route('users'),
+                'count' => $usersCount,
+                'percent' => $userCountPercent,
+            ],
+
+            [
+                'title' => 'Активных за неделю',
+                'route' => route('developer.activeUsersDisplay'),
+                'count' => $usersActiveCount,
+                'percent' => $usersActiveCountPercent,
+            ],
+
+            [
+                'title' => 'Новые регистрации',
+                'route' => route('developer.registeredUsersDisplay'),
+                'count' => $usersRegistrationsCount,
+                'percent' => null, // Здесь процент не указан
+            ],
+            [
+                'title' => 'Новые запросы в собрания',
+                'route' => route('developer.usersRequestsCongregation'),
+                'count' => $usersRequestsCongregationsCount,
+                'percent' => null, // Здесь процент не указан
+            ],
+            [
+                'title' => 'Собрания',
+                'route' => route('congregation.hub'),
+                'count' => $congregationCount,
+                'percent' => null, // Здесь процент не указан
+            ],
+            [
+                'title' => 'Стенды',
+                'route' => route('stand.hub'),
+                'count' => $standCount,
+                'percent' => null, // Здесь процент не указан
+            ],
+        ];
+
+
         $compact = compact(
             'usersCount',
-            'usersActiveCountPercent',
-            'usersActiveCount',
+            'metrics',
             'congregations',
-            'usersRegistrationsCount',
         );
 
         return view ('Mobile.menu.modules.developer.hub', $compact);
@@ -62,7 +130,21 @@ class DeveloperController extends Controller{
         return view ('Mobile.menu.modules.developer.displays.roles', $compact);
     }
 
+    public function usersRequestsCongregation() {
+        $congregationRequests = CongregationRequests::with('user', 'congregation')->get();
+
+        $compact = compact(
+            'congregationRequests',
+        );
+        $view = 'Mobile.menu.modules.developer.displays.usersRequestsCongregation';
+
+        return view($view, $compact);
+    }
+
+
+
     public function updatePermissionsForRole(Request $request, $roleId){
+
         // Получите роль
         $role = Role::findOrFail($roleId);
 
@@ -72,6 +154,24 @@ class DeveloperController extends Controller{
 
         return redirect()->back()->with('success', 'Разрешения успешно обновлены для роли ' . $role->name);
     }
+
+    public function activeUsersDisplay() {
+        $users = User::whereRaw('JSON_EXTRACT(info, "$.last_login") IS NOT NULL')->get();
+
+        $compact = compact('users');
+        return view('Mobile.menu.modules.developer.displays.activeUsersDisplay', $compact);
+    }
+
+    public function registeredUsersDisplay() {
+        $startDate = Carbon::now()->subWeek(); // Получаем дату начала предыдущей недели
+        $endDate = Carbon::now(); // Получаем текущую дату
+
+        $users = User::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        $compact = compact('users');
+        return view('Mobile.menu.modules.developer.displays.registeredUser', $compact);
+    }
+
 
 
     public function testViewButtons() {
@@ -208,6 +308,7 @@ class DeveloperController extends Controller{
         return redirect()->route('testViewButtons');
 
     }
+
     public function rolesPermissionsPage() {
         $roles = Role::get();
         $permissions = Permission::get();

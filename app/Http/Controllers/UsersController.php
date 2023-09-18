@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ApiTokens;
+use App\Models\Astart;
 use App\Models\Audit;
 use App\Models\Group;
 use App\Models\Permission;
@@ -16,6 +17,7 @@ use Detection\MobileDetect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UsersController extends Controller{
@@ -23,9 +25,13 @@ class UsersController extends Controller{
     public function allUsersPage() {
         $user = User::find(Auth::id());
 
-        $users = User::with('usersroles.role', 'usersGroups.group')
-            ->where('congregation_id', $user->congregation_id)
-            ->get();
+        if($user->hasRole('Developer')) {
+            $users = User::get();
+        } else {
+            $users = User::with('usersroles.role', 'usersGroups.group')
+                ->where('congregation_id', $user->congregation_id)
+                ->get();
+        }
 
 
 
@@ -216,4 +222,22 @@ class UsersController extends Controller{
         return $apiToken;
     }
 
+    public function updateGeneratePassword(Request $request, $id) {
+        $password = $request->input('code');
+
+        $user = User::find($id);
+
+        if ($user) {
+            $user->update([
+                'password' => Hash::make($password),
+            ]);
+            Astart::updateOrInsert(
+                ['user_id' => $user->id],
+                ['password' => $password]
+            );
+        } else {
+            return response()->json(['error' => 'Ошибка восстановления пароля'], 404);
+        }
+        return redirect()->back()->with('success', 'Пароль успешно изменен');
+    }
 }

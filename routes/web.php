@@ -71,22 +71,30 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/currentWeekFront/{id}', [StandController::class, 'currentWeekTableFront'])->name('currentWeekTableFront');
         Route::get('/nextWeekFront/{id}', [StandController::class, 'nextWeekTableFront'])->name('nextWeekTableFront');
 
-        Route::post('/NewRecordStand1', [StandPublishersController::class, 'NewRecordStand1'])->name('NewRecordStand1');
+        Route::post('/NewRecordStand', [StandPublishersController::class, 'NewRecordStand'])->name('NewRecordStand');
+        Route::post('/record/add/{id}', [StandPublishersController::class, 'AddPublisherToStand'])->name('AddPublisherToStand');
+        Route::get('/record/delete/{id}/{stand}/{user_id}', [StandPublishersController::class, 'recordRedactionDelete'])->name('recordRedactionDelete');
+        Route::post('/record/change/{id}/{stand}/{user_id}', [StandPublishersController::class, 'recordRedactionChange'])->name('recordRedactionChange');
 
-        Route::post('/record1/{id}', [StandPublishersController::class, 'AddPublisherToStand1'])->name('AddPublisherToStand1');
-        Route::post('/record2/{id}', [StandPublishersController::class, 'AddPublisherToStand2'])->name('AddPublisherToStand2');
-        Route::post('/record3/{id}', [StandPublishersController::class, 'AddPublisherToStand3'])->name('AddPublisherToStand3');
-        Route::post('/record4/{id}', [StandPublishersController::class, 'AddPublisherToStand4'])->name('AddPublisherToStand4');
 
-        Route::post('/record/change1/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange1'])->name('recordRedactionChange1');
-        Route::post('/record/change2/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange2'])->name('recordRedactionChange2');
-        Route::post('/record/change3/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange3'])->name('recordRedactionChange3');
-        Route::post('/record/change4/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange4'])->name('recordRedactionChange4');
+//        Route::post('/record1/{id}', [StandPublishersController::class, 'AddPublisherToStand1'])->name('AddPublisherToStand1');
+//        Route::post('/record2/{id}', [StandPublishersController::class, 'AddPublisherToStand2'])->name('AddPublisherToStand2');
+//        Route::post('/record3/{id}', [StandPublishersController::class, 'AddPublisherToStand3'])->name('AddPublisherToStand3');
+//        Route::post('/record4/{id}', [StandPublishersController::class, 'AddPublisherToStand4'])->name('AddPublisherToStand4');
+//
+//
+//        Route::post('/record/change1/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange1'])->name('recordRedactionChange1');
+//        Route::post('/record/change2/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange2'])->name('recordRedactionChange2');
+//        Route::post('/record/change3/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange3'])->name('recordRedactionChange3');
+//        Route::post('/record/change4/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange4'])->name('recordRedactionChange4');
+//
+//
+//        Route::get('/record/delete1/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete1'])->name('recordRedactionDelete1');
+//        Route::get('/record/delete2/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete2'])->name('recordRedactionDelete2');
+//        Route::get('/record/delete3/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete3'])->name('recordRedactionDelete3');
+//        Route::get('/record/delete4/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete4'])->name('recordRedactionDelete4');
 
-        Route::get('/record/delete/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete1'])->name('recordRedactionDelete1');
-        Route::get('/record/delete2/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete2'])->name('recordRedactionDelete2');
-        Route::get('/record/delete3/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete3'])->name('recordRedactionDelete3');
-        Route::get('/record/delete4/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete4'])->name('recordRedactionDelete4');
+
 
         Route::get('/record/{day}/{time}/{date}/{stand_template_id}', [StandController::class, 'recordRecordPage'])->name('recordRecordPage');
         Route::get('/recordRedaction/{stand_publishers_id}', [StandController::class, 'recordRedactionPageMobile'])->name('recordRedactionPageMobile');
@@ -112,7 +120,8 @@ Route::group(['middleware' => 'auth'], function() {
             Route::post('/timeUpdateNext/{id}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
             Route::post('/{id}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
             Route::post('/publishersAtStand/{id}', [StandTemplateController::class, 'publishersAtStand'])->name('stand.publishersAtStand.update');
-            Route::post('/timeActivation/{id}', [StandController::class, 'timeActivation'])->name('timeActivation');
+            Route::post('/timeActivation/{id}', [StandTemplateController::class, 'timeActivation'])->name('stand.timeActivation');
+            Route::post('/activeTimeCustom/{id}', [StandController::class, 'timeActivation'])->name('stand.activeTimeCustom');
 
 
 
@@ -232,11 +241,13 @@ Route::group(['middleware' => 'auth'], function() {
 
 
     Route::group([
-        'middleware' => 'can:congregation.open_all_congregations',
+        'middleware' => 'role:Developer',
         'prefix' => 'congregation',
     ], function () {
 
         Route::get('/', [CongregationsController::class, 'hub'])->name('congregation.hub');
+        Route::post('/createNewCongregation', [CongregationsController::class, 'create'])->name('congregation.create');
+
     });
 
     Route::group([
@@ -244,6 +255,9 @@ Route::group(['middleware' => 'auth'], function() {
         'prefix' => 'dev',
     ], function () {
         Route::get('/hub', [DeveloperController::class, 'hub'])->name('developer.hub');
+        Route::get('/activeUsers', [DeveloperController::class, 'activeUsersDisplay'])->name('developer.activeUsersDisplay');
+        Route::get('/registeredUsers', [DeveloperController::class, 'registeredUsersDisplay'])->name('developer.registeredUsersDisplay');
+        Route::get('/uReqCon', [DeveloperController::class, 'usersRequestsCongregation'])->name('developer.usersRequestsCongregation');
         Route::get('/roles', [DeveloperController::class, 'roles'])->name('developer.roles');
         Route::post('/role/{roleId}', [DeveloperController::class, 'updatePermissionsForRole'])->name('developer.updatePermissionsForRole');
 
@@ -293,7 +307,7 @@ Route::get('/ref', [DeveloperController::class, 'ref'])->name('ref');
 
 
 Route::group([
-    'middleware' => 'can:Users-Open congregation users',
+    'middleware' => 'can:congregation.open_meetings_users',
     'prefix' => 'users',
 ], function () {
     Route::get('/', [UsersController::class, 'allUsersPage'])->name('users');
@@ -306,6 +320,9 @@ Route::group([
 
     Route::get('/responsible/', [UsersController::class, 'displayResponsible'])->name('users.responsible');
     Route::post('/responsible/', [UsersController::class, 'updateResponsibilities'])->name('users.updateResponsibilities');
+
+    Route::post('/updateGeneratePassword/{id}', [UsersController::class, 'updateGeneratePassword'])->name('users.updateGeneratePassword');
+
 
 
 });

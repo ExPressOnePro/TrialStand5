@@ -26,18 +26,30 @@ use Illuminate\Support\Facades\Response;
 class CongregationsController extends Controller {
 
     public function hub() {
+        $AuthUser = User::find(Auth::id());
         $congregation = Congregation::where('id', '>', 1)->get();
 
-        $mobile_detect = new MobileDetect();
-        if ($mobile_detect->isMobile()) {
-            return view('Mobile.menu.modules.congregation.hub')
-                ->with(['congregation' => $congregation,]);
+        $compact = compact('congregation');
+        if($AuthUser->hasRole('Developer')){
+            $view = 'Mobile.menu.modules.congregation.hub';
+            return view($view, $compact);
         } else {
-            return view('Mobile.menu.modules.congregation.hub')
-                ->with(['congregation' => $congregation,]);
-//            return view('Desktop.congregation.select')
-//                ->with(['congregation' => $congregation,]);
+            return view('errors.423Locked');
         }
+
+    }
+
+    public function create(Request $request){
+        $this->validate($request, [
+            'name' => 'required',
+        ]);
+
+        $congregation = new Congregation();
+        $congregation->name = $request->input('name');
+        $congregation->info = json_encode("");
+        $congregation->save();
+
+        return redirect()->back();
     }
     public function view($id) {
 

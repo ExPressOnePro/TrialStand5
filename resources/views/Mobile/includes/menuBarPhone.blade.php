@@ -17,6 +17,14 @@
                 <h4>Профиль</h4>
             </a>
         </li>
+        @role('Developer')
+        <li class="nav-item">
+            <a class="nav-link{{ request()->is('*dev*') ? ' active bg-primary' : '' }}"
+               href="{{ route('developer.hub') }}">
+                <i class="fa-brands fa-connectdevelop display-4"></i>
+            </a>
+        </li>
+        @endrole
     </ul>
 
 

@@ -46,10 +46,8 @@
                             @foreach($user->usersroles as $userRole)
                                 @if($userRole->role->name === 'Developer')
                                     <span class="badge bg-soft-danger text-danger">Разработчик</span>
-                                @elseif($userRole->role->name === 'Overseer')
-                                    <span class="badge bg-info">Старейшина</span>
-                                @elseif($userRole->role->name === 'Publisher')
-                                    <span class="badge bg-info">Возвещатель</span>
+                                @else
+                                    <span class="badge bg-info">Пользователь</span>
                                 @endif
                             @endforeach
                         </li>
@@ -83,14 +81,20 @@
                                data-bs-target="#nav-one-eg1" role="tab" aria-controls="nav-one-eg1"
                                aria-selected="true">Профиль</a>
                         </li>
-                        @can('Users-Change permissions')
+
                         <li class="nav-item" role="presentation">
                             <a class="nav-link"
                                id="nav-two-eg1-tab" href="#nav-two-eg1" data-bs-toggle="pill"
                                data-bs-target="#nav-two-eg1" role="tab" aria-controls="nav-two-eg1"
                                aria-selected="false" tabindex="-1">Права</a>
                         </li>
-                        @endcan
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link"
+                               id="nav-two-eg2-tab" href="#nav-two-eg2" data-bs-toggle="pill"
+                               data-bs-target="#nav-two-eg2" role="tab" aria-controls="nav-two-eg2"
+                               aria-selected="false" tabindex="-1">Настройки</a>
+                        </li>
 
                     </ul>
                 </div>
@@ -113,9 +117,11 @@
                         @include('Mobile.menu.modules.users.components.user-permissions')
                     </div>
 
-                    <div class="tab-pane fade" id="nav-three-eg1" role="tabpanel" aria-labelledby="nav-three-eg1-tab">
-                        <p>Third tab content...</p>
+                    <div class="tab-pane fade" id="nav-two-eg2" role="tabpanel" aria-labelledby="nav-two-eg2-tab">
+                        @include('Mobile.menu.modules.users.components.settings')
                     </div>
+
+
                 </div>
             </div>
         </div>

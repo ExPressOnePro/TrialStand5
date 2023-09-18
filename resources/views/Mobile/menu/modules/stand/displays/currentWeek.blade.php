@@ -1,5 +1,5 @@
-@extends('Mobile.layouts.front.app')
-@section('title') Meeper|Стенд @endsection
+@extends('Mobile.layouts.front.stand')
+@section('title') Meeper | Стенд @endsection
 @section('content')
     @can('module.stand')
         <div class="content container-fluid">
@@ -10,7 +10,7 @@
                     <div class="col-sm-12 col-lg-3 mb-6 mb-lg-5">
 
                             <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
-                                <h2 class="card-header-title">
+                                <h2 class="card-header-title dd">
                                     {{ \App\Enums\WeekDaysEnum::getWeekDay($day) }}
                                     {{ $gwe = \App\Enums\WeekDaysEnum::getWeekDayDate($day) }}
                                 </h2>
@@ -69,7 +69,7 @@
                                         <div class="row align-items-center">
                                             <!-- time -->
                                             <div class="col-3 text-center">
-                                                <span class="text-dark h2">{{ date('H:i', strtotime($time . ':00')) }}</span>
+                                                <span class="text-dark h2">{{ $time }}</span>
                                             </div>
                                             <!-- publishers -->
                                             <div class="col-9">
@@ -93,7 +93,7 @@
                                                                 </h3>
                                                             @endif
                                                         @else
-                                                            <h3><span class="badge bg-success">Свободно</span></h3>
+                                                            <h3><span class="badge bg-secondary">Свободно</span></h3>
                                                         @endif
                                                     @endfor
                                                 </div>

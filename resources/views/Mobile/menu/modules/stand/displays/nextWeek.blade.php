@@ -111,7 +111,7 @@
                                                                     </h3>
                                                                 @endif
                                                             @else
-                                                                <h3><span class="badge bg-success">Свободно</span></h3>
+                                                                <h3><span class="badge bg-secondary">Свободно</span></h3>
                                                             @endif
                                                         @endfor
                                                     </div>

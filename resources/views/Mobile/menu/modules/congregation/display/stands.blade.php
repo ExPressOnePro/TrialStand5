@@ -49,7 +49,7 @@
 
                                 <div class="col-3 text-end">
                                     <!-- Dropdown -->
-                                    @can('Stand-Open settings stand')
+                                    @can('stand.settings')
                                         <div class="dropdown">
                                             <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm card-dropdown-btn rounded-circle" id="projectsListDropdown3" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bi-three-dots-vertical"></i>
@@ -57,10 +57,10 @@
                                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="projectsListDropdown3">
                                                 <a class="dropdown-item" href="{{ route('currentWeekTableFront', $asfu->id) }}">Открыть</a>
                                                 <div class="dropdown-divider"></div>
-                                                @can('Stand-Open settings stand')
+                                                @can('stand.settings')
                                                     <a class="dropdown-item" href="{{ route('stand.settings', $asfu->id) }}">{{ __('text.Settings') }}</a>
                                                 @endcan
-                                                @can('Stand-Open history stand')
+                                                @can('stand.history')
                                                     <a class="dropdown-item" href="{{ route('stand.history', $asfu->id) }} ">{{ __('text.History') }}</a>
                                                 @endcan
 

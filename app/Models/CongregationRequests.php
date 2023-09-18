@@ -16,4 +16,8 @@ class CongregationRequests extends Model{
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function congregation() {
+        return $this->belongsTo(Congregation::class, 'congregation_id');
+    }
 }

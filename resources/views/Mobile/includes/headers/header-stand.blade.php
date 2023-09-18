@@ -52,6 +52,20 @@
                         Настройки стенда
                     </h1>
                 </div>
+            @elseif(Request::is('*stand/history*'))
+                <div class="navbar">
+                    <a class="text-center text-dark h1" onclick="goBack()">
+                        <div class="rounded">
+
+                        </div>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
+                <div class="navbar ms-auto">
+                    <h1>
+                        История стенда
+                    </h1>
+                </div>
             @else
                 <div class="navbar">
                     <a class="text-center text-dark h1" onclick="goBack()">

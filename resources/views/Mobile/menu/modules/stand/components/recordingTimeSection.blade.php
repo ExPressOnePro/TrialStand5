@@ -1,5 +1,4 @@
-<div class="col-lg-9">
-    <div class="card">
+
         <div class="card-header d-flex align-items-center">
             <h1 class="heading float-left card-title m-0">Активное время</h1>
         </div>
@@ -44,8 +43,6 @@
 {{--                </a>--}}
             </div>
         </div>
-    </div>
-</div>
 
 
 <!-- Modal -->

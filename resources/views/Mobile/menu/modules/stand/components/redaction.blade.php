@@ -3,12 +3,12 @@
 @section('content')
 
     <div class="content container-fluid">
-        <div class="alert alert-soft-dark mb-5 mb-lg-7" role="alert">
+        <div class="alert alert-info mb-5 mb-lg-7" role="alert">
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1 ms-3">
                     <h3 class="alert-heading mb-1">Информация о записи</h3>
                     <p class="mb-0">Дата:  {{ $standPublisher->date }}</p>
-                    <p class="mb-0">Время:  {{ date('H:i', strtotime($standPublisher->time . ':00')) }}</p>
+                    <p class="mb-0">Время:  {{ date('H:i', strtotime($standPublisher->time)) }}</p>
                 </div>
             </div>
         </div>
@@ -34,26 +34,26 @@
                                 @endif
                             </h3>
 
-                            <form id="changeForm{{ $i }}" method="post" action="{{ route('AddPublisherToStand' . $i, ['id' => $standPublisher->id]) }}">
+                            <form id="changeForm{{ $i }}" method="post" action="{{ route('AddPublisherToStand', ['id' => $standPublisher->id]) }}">
                                 @csrf
                                 <div class="tom-select-custom">
-                                    <select class="js-select form-select border-secondary" autocomplete="off" name="{{ $i }}_user_id" id="{{ $i }}_user_id">
-                                        @php
-                                            $currentUser = auth()->user();
-                                        @endphp
+                                        <select class="js-select form-select" autocomplete="off" name="user_id" id="user_id" @if($isUserEmpty) @else disabled readonly @endif>
+                                            @php
+                                                $currentUser = auth()->user();
+                                            @endphp
 
-                                        <option value="{{ $currentUser->id }}" {{ ($publishers[$userKey] == $currentUser->id || $isCurrentUser) ? 'selected' : '' }}>
-                                            {{ $currentUser->last_name }} {{ $currentUser->first_name }}
-                                        </option>
+                                            <option value="{{ $currentUser->id }}" {{ ($publishers[$userKey] == $currentUser->id || $isCurrentUser) ? 'selected' : '' }}>
+                                                {{ $currentUser->last_name }} {{ $currentUser->first_name }}
+                                            </option>
 
-                                        @foreach ($users as $user)
-                                            @if ($user->id != $currentUser->id)
-                                                <option value="{{ $user->id }}" {{ ($publishers[$userKey] == $user->id) ? 'selected' : '' }}>
-                                                    {{ $user->last_name }} {{ $user->first_name }}
-                                                </option>
-                                            @endif
-                                        @endforeach
-                                    </select>
+                                            @foreach ($users as $user)
+                                                @if ($user->id != $currentUser->id)
+                                                    <option value="{{ $user->id }}" {{ ($publishers[$userKey] == $user->id) ? 'selected' : '' }}>
+                                                        {{ $user->last_name }} {{ $user->first_name }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
                                 </div>
                             </form>
                         </div>
@@ -62,10 +62,10 @@
                         @can('stand.make_entry')
                         <div class="col-12">
                             <div class="d-grid gap-2">
-                                <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
+                                <a class="btn btn-success m-1" type="button" href="{{ route('AddPublisherToStand', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $user->id]) }}"
                                    onclick="event.preventDefault();
                                         document.getElementById('changeForm{{ $i }}').submit();">
-                                    Записать(ся)
+                                    Записать
                                 </a>
                             </div>
                         </div>
@@ -73,25 +73,25 @@
                     @else
                         <div class="row">
                             @can('stand.delete_entry')
-                                <div class="col-6">
-                                    <div class="d-grid">
-                                        <a class="btn btn-danger m-1" type="button" href="{{ route('recordRedactionDelete' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}">
-                                            Выписать(ся)
-                                        </a>
-                                    </div>
-                                </div>
-                            @endcan
-                            @can('stand.change_entry')
-                                <div class="col-6">
+                                <div class="col-12">
                                     <div class="d-grid gap-2">
-                                        <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id]) }}"
-                                           onclick="event.preventDefault();
-                                            document.getElementById('changeForm{{ $i }}').submit();">
-                                            Изменить
+                                        <a class="btn btn-outline-danger m-1" type="button" href="{{ route('recordRedactionDelete', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $publishers[$userKey]]) }}">
+                                            Выписать
                                         </a>
                                     </div>
                                 </div>
                             @endcan
+{{--                            @can('stand.change_entry')--}}
+{{--                                <div class="col-6 gap-2">--}}
+{{--                                    <div class="d-grid gap-2">--}}
+{{--                                        <a class="btn btn-success m-1" type="button" href="{{ route('recordRedactionChange' . $i, ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $currentUser->id]) }}"--}}
+{{--                                           onclick="event.preventDefault();--}}
+{{--                                            document.getElementById('changeForm{{ $i }}').submit();">--}}
+{{--                                            Изменить--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            @endcan--}}
                         </div>
                     @endif
 

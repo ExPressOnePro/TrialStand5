@@ -38,12 +38,13 @@ class LoginController extends Controller
             'passw' => 'required|string'
         ]);
 
+
         $credentials = [
             $this->loginType => $request->login,
             'password'       => $request->passw
         ];
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, true)) {
             return redirect()->intended($this->redirectTo);
         }
 

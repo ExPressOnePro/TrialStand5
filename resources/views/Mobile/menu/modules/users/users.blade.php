@@ -2,7 +2,7 @@
 @section('title') Meeper | все пользователи @endsection
 @section('content')
 
-    @can('Users-Open congregation users')
+    @can('congregation.open_meetings_users')
         <div class="content container-fluid">
             <div class="card">
                 <!-- Header -->
@@ -46,6 +46,9 @@
                         <tr>
                             <th>Имя фамилия</th>
                             <th>Роль</th>
+                            @role('Developer')
+                            <th>Роль</th>
+                            @endrole
                         </tr>
                         </thead>
 
@@ -79,7 +82,7 @@
                                         @endif
                                     @endforeach
                                 </td>
-                            </tr>
+                            </tr><div class="divider-center"></div>
                         @endforeach
                         </tbody>
                     </table>

@@ -3,12 +3,12 @@
 @section('content')
 
     <div class="content container-fluid">
-        <div class="alert alert-soft-dark border-info mb-5 mb-lg-7" role="alert">
+        <div class="alert alert-info border-info mb-5 mb-lg-7" role="alert">
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1 ms-3">
                     <h3 class="alert-heading mb-1">Информация о записи</h3>
                     <p class="mb-0">Дата: {{ $date }}</p>
-                    <p class="mb-0">Время:  {{ date('H:i', strtotime($time . ':00')) }}</p>
+                    <p class="mb-0">Время: {{ date('H:i', strtotime($time)) }}</p>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
 
                         <form id="recordStandFirst" method="post" action="{{ route('NewRecordStand1') }}">
                             @csrf
-                            <input type="hidden" name="time1" id="time" value="{{$time}}">
+                            <input type="hidden" name="time1" id="time" value="{{ $time }}">
                             <input type="hidden" name="date1" id="date" value="{{$date}}">
                             <input type="hidden" name="day1" id="day" value="{{$day}}">
                             <input type="hidden" name="stand_template_id1" id="stand_template_id" value="{{$standTemplate->id}}">

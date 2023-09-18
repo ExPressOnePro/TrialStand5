@@ -12,20 +12,6 @@
             <div class="card-body card-body-height" style="height: 30rem;">
                 <!-- Step -->
                 <ul class="step step-icon-xs mb-0">
-
-{{--                    @foreach($user->audits as $audit)--}}
-{{--                        <p>ID аудита: {{ $audit->orderBy("id", "desc")->first()->id }}</p>--}}
-{{--                        <p>Отредактировано: {{ $audit->created_at }}</p>--}}
-{{--                        <p>Изменения:</p>--}}
-{{--                        <ul>--}}
-{{--                            @foreach($audit->old_values as $attribute => $value)--}}
-{{--                                <li>{{ $attribute }}: {{ $value }} &rarr; <br>{{ $audit->new_values[$attribute] }}</li>--}}
-{{--                            @endforeach--}}
-{{--                        </ul>--}}
-{{--                    @endforeach--}}
-
-                    <!-- Step Item -->
-
                     @foreach($user->audits() as $audit)
                         <li>
                             <h5>{{ $audit->user->name }}</h5>

@@ -108,7 +108,13 @@ class RegisterController extends Controller
     }
 
     public function registerCongregation(Request $request) {
+        // Проверяем, существует ли пользователь с таким логином и паролем
+        $existingUser = User::where('login', $request['login'])->orWhere('email', $request['email'])->first();
 
+        if ($existingUser && Hash::check($request['password'], $existingUser->password)) {
+            // Пользователь с таким логином и паролем уже существует
+            return redirect()->route('login')->with('error', 'Пользователь с таким логином и паролем уже существует');
+        }
 
         $roleHS = Role::where('name', '=', 'HS')->first();
 
