@@ -156,7 +156,9 @@ class DeveloperController extends Controller{
     }
 
     public function activeUsersDisplay() {
-        $users = User::whereRaw('JSON_EXTRACT(info, "$.last_login") IS NOT NULL')->get();
+        $users = User::whereRaw('JSON_EXTRACT(info, "$.last_login") IS NOT NULL')
+            ->orderByDesc('info->last_login')
+            ->get();
 
         $compact = compact('users');
         return view('Mobile.menu.modules.developer.displays.activeUsersDisplay', $compact);

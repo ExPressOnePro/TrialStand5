@@ -1,4 +1,4 @@
-@extends('Mobile.layouts.front.stand')
+@extends('Mobile.layouts.front.app')
 @section('title') Meeper | Стенд @endsection
 @section('content')
     @can('module.stand')
@@ -8,7 +8,6 @@
             <div class="row">
                 @foreach ($week_schedule as $day => $times)
                     <div class="col-sm-12 col-lg-3 mb-6 mb-lg-5">
-
                             <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
                                 <h2 class="card-header-title dd">
                                     {{ \App\Enums\WeekDaysEnum::getWeekDay($day) }}
@@ -57,7 +56,6 @@
                                     }
                                     $canEdit = auth()->user()->can('stand.make_entry');
                                 @endphp
-
                                 <div class="col-sm-12 mt-1">
                                     <a class="card card-hover-shadow border border-secondary h-100 {{ isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'] && (!$standPublisher || $canEdit) ? 'is-editable' : '' }}"
                                        @if($standPublisher && $canEdit)

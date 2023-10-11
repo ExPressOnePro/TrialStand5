@@ -10,7 +10,10 @@
                 <ul class="nav nav-segment nav-fill" id="projectsTab" role="tablist">
                     <li class="nav-item" data-bs-toggle="chart" data-datasets="0" data-trigger="click" data-action="toggle" role="presentation">
                         <a class="nav-link active" href="#nav-mrfs_1" data-bs-toggle="tab" aria-selected="true" role="tab">Текущей
+                            @if($standPublishersCount>0)
                             <span class="badge bg-primary rounded-pill ms-1">{{$standPublishersCount}}</span>
+                            @else
+                            @endif
                         </a>
                     </li>
                     <li class="nav-item" data-bs-toggle="chart" data-datasets="1" data-trigger="click" data-action="toggle" role="presentation">
@@ -32,11 +35,16 @@
                                 @foreach ($standPublishers as $standPublisher)
                                     @foreach ($standPublisher->standTemplates as $standTemplate)
                                         <li class="list-group-item">
-                                            <a class="list-group-item-action border-primary" href="{{ route('currentWeekTableFront', $standTemplate->stand_id) }}">
+                                            <a class="list-group-item-action border-warning" href="
+                                            @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 0)
+    {{ route('currentWeekTableFront', $standTemplate->stand_id) }}
+@else
+    {{ route('stand.allInOneCurrent') }}
+@endif">
                                                 <div class="row">
                                                     <div class="col-sm mb-2 mb-sm-0">
                                                         <h2 class="fw-normal mb-1">{{ $standPublisher->date }} {{ \App\Enums\WeekDaysEnum::getWeekDay($standPublisher->day) }}
-                                                            {{ date('H:i', strtotime($standPublisher->time . ':00')) }}</h2>
+                                                            {{$standPublisher->time}}</h2>
                                                         <h5 class="text-inherit mb-0">Стенд - {{ $standTemplate->Stand->location }}</h5>
                                                     </div>
                                                     <div class="col-sm-auto align-self-sm-end">
@@ -56,10 +64,15 @@
                                 @foreach ($standPublisherNextWeek->standTemplates as $standTemplateNextWeek)
                                     <li class="list-group-item">
                                         <a class="list-group-item-action border-primary" href="{{ route('nextWeekTableFront', $standTemplateNextWeek->stand_id) }}">
+{{--                                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 0)--}}
+{{--    {{ route('nextWeekTableFront', $standTemplateNextWeek->stand_id) }}--}}
+{{--@else--}}
+{{--    {{ route('stand.allInOneNext') }}--}}
+{{--@endif">--}}
                                             <div class="row">
                                                 <div class="col-sm mb-2 mb-sm-0">
                                                     <h2 class="fw-normal mb-1">{{ $standPublisherNextWeek->date }} {{ \App\Enums\WeekDaysEnum::getWeekDay($standPublisherNextWeek->day) }}
-                                                        {{ date('H:i', strtotime($standPublisherNextWeek->time . ':00')) }}</h2>
+                                                        {{ $standPublisherNextWeek->time }}</h2>
                                                     <h5 class="text-inherit mb-0">Стенд - {{ $standTemplateNextWeek->Stand->location }}</h5>
                                                 </div>
 

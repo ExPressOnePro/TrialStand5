@@ -68,6 +68,10 @@ Route::group(['middleware' => 'auth'], function() {
     ], function () {
         // Stand Controller
         Route::get('/', [StandController::class, 'hub'])->name('stand.hub');
+        Route::get('/aio_current', [StandController::class, 'allInOneCurrent'])->name('stand.allInOneCurrent');
+        Route::get('/aio_next', [StandController::class, 'allInOneNext'])->name('stand.allInOneNext');
+
+
         Route::get('/currentWeekFront/{id}', [StandController::class, 'currentWeekTableFront'])->name('currentWeekTableFront');
         Route::get('/nextWeekFront/{id}', [StandController::class, 'nextWeekTableFront'])->name('nextWeekTableFront');
 
@@ -182,6 +186,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::post('/profile/basicInfo', [ProfileController::class, 'basicInfoSave'])->name('profile.basicInfoSave');
     Route::post('/profile/contactInfo', [ProfileController::class, 'contactsInfoSave'])->name('profile.contactsInfoSave');
+    Route::post('/profile/standShow', [ProfileController::class, 'standShowSave'])->name('profile.standShowSave');
 //    Route::post('/DataHack', [StandController::class, 'ExampleTestVersionOfUpdatingPublishersCurrentWeek'])->name('DataHack');
 
     Route::group([

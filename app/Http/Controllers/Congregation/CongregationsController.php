@@ -257,7 +257,7 @@ class CongregationsController extends Controller {
 
     public function viewExampleSchedule(){
 
-        return view ('Mobile.modules.examples.meetingSchedule');
+        return view ('Mobile.menu.modules.meetingSchedules.overview');
     }
 
 

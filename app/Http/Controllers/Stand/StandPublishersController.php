@@ -8,9 +8,11 @@ use App\Http\Requests\StandPublishersUpdateRequest;
 use App\Models\StandPublishers;
 use App\Models\StandPublishersHistory;
 use App\Models\StandTemplate;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class StandPublishersController extends Controller
@@ -59,7 +61,8 @@ class StandPublishersController extends Controller
     }
 
 
-    public function NewRecordStand(Request $request) {
+    public function NewRecordStand(Request $request)
+    {
 
         $user_1 = $request->input('user_1');
         $date = $request->input('date1');
@@ -110,8 +113,18 @@ class StandPublishersController extends Controller
         $StandPublishersHistory->stand_id = $stand_template->stand_id;
         $StandPublishersHistory->save();
 
-        $routeName = $stand_template->type === 'current' ? 'currentWeekTableFront' : 'nextWeekTableFront';
-        return redirect()->route($routeName, ['id' => $stand_template->stand_id])->with('success', 'Вы успешно записаны');
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
+
+
+        if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+            $routeName = $stand_template->type === 'current' ? 'stand.allInOneCurrent' : 'stand.allInOneNext';
+        } else {
+            $routeName = $stand_template->type === 'current' ? 'currentWeekTableFront' : 'nextWeekTableFront';
+        }
+
+        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно записаны');
+
     }
 
 
@@ -119,20 +132,24 @@ class StandPublishersController extends Controller
     public function AddPublisherToStand(Request $request, $id = null) {
         $user_id = $request->input('user_id');
 
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
+
         $standPublisher = StandPublishers::find($id);
         $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $standPublisher->id)->first();
-        $stand_full = StandTemplate::find($standPublisher->stand_template_id);
+        $stand_template = StandTemplate::find($standPublisher->stand_template_id);
         $standPublishersDecode = json_decode($standPublisher->publishers, true);
 
         $foundEmpty = false;
         foreach ($standPublishersDecode as $key => $value) {
             if ($value == $user_id) {
                 $errorMessage = 'Пользователь уже записан в выбранное время и дату!';
-                if ($stand_full->type == 'next') {
-                    return redirect()->route('nextWeekTableFront', ['id' => $stand_full->stand_id])->with('error', $errorMessage);
+                if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+                    $routeName = $stand_template->type === 'current' ? 'stand.allInOneCurrent' : 'stand.allInOneNext';
                 } else {
-                    return redirect()->route('currentWeekTableFront', ['id' => $stand_full->stand_id])->with('error', $errorMessage);
+                    $routeName = $stand_template->type === 'current' ? 'currentWeekTableFront' : 'nextWeekTableFront';
                 }
+                return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('error', $errorMessage);
             }
 
             if (empty($value) && !$foundEmpty) {
@@ -151,13 +168,14 @@ class StandPublishersController extends Controller
             // Если не было найдено пустых значений, вы можете выполнить другие действия
         }
 
-        if($stand_full->type != 'next') {
-            return redirect()->route('currentWeekTableFront', ['id' => $stand_full->stand_id])
-                ->with('success','Вы успешно записаны');
+        if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+            $routeName = $stand_template->type === 'current' ? 'stand.allInOneCurrent' : 'stand.allInOneNext';
         } else {
-            return redirect()->route('nextWeekTableFront',  ['id' => $stand_full->stand_id])
-                ->with('success','Вы успешно записаны');
+            $routeName = $stand_template->type === 'current' ? 'currentWeekTableFront' : 'nextWeekTableFront';
         }
+
+        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно записаны');
+
     }
 
 
@@ -179,7 +197,7 @@ class StandPublishersController extends Controller
         $standPublisher->publishers = $standPublishersHistory->publishers;
         $standPublisher->save();
 
-        $stand_full = StandTemplate::find($standPublisher->stand_template_id);
+        $stand_template = StandTemplate::find($standPublisher->stand_template_id);
 
 
         $allEmpty = true;
@@ -194,8 +212,18 @@ class StandPublishersController extends Controller
             $standPublishersHistory->delete();
         }
 
-        $routeName = ($stand_full->type == 'next') ? 'nextWeekTableFront' : 'currentWeekTableFront';
-        return redirect()->route($routeName, ['id' => $stand]);
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
+
+        $routeName = ($stand_template->type == 'next') ? 'nextWeekTableFront' : 'currentWeekTableFront';
+        if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+            $routeName = $stand_template->type === 'current' ? 'stand.allInOneCurrent' : 'stand.allInOneNext';
+        } else {
+            $routeName = $stand_template->type === 'current' ? 'currentWeekTableFront' : 'nextWeekTableFront';
+        }
+
+        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно записаны');
+
     }
 
 

@@ -113,23 +113,17 @@ class ProfileController extends Controller
         $additional_phone = isset($userInfo['additional_phone']) ? $userInfo['additional_phone'] : '';
 
 
-        $detect = new MobileDetect;
-        if ($detect->isMobile()) {
-            return view('Mobile.profile.settings', compact('user', 'gender',
+
+        return view('Mobile.profile.settings',
+                compact('user',
+                    'gender',
             'country',
             'city',
             'mobile_phone',
             'additional_phone',
+            'userInfo',
             ));
-        } else {
-            return view('Mobile.profile.settings', compact('user', 'gender',
-                'country',
-                'city',
-                'mobile_phone',
-                'additional_phone',
-            ));
-//            return view('Desktop.profile.settings', compact('user'));
-        }
+
     }
 
     public function basicInfoSave(Request $request) {
@@ -154,25 +148,6 @@ class ProfileController extends Controller
 // Сохраняем изменения
         $user->save();
 
-
-        $array = [
-            'mobile_phone' => '068484866',
-            'addition_phone' => '',
-            'gender' => '',
-            'country' => 'Moldova',
-            'city' => 'Balti',
-            'address' => 'Бельцы',
-            'birthday' => '',
-            'christening_day' => '',
-        ];
-
-
-        $contactsArray = [
-            'country' => 'Moldova',
-            'city' => 'Balti',
-            'mobile_phone' => '068484866',
-            'addition_phone' => '',
-        ];
 
         return redirect()->back();
 
@@ -206,25 +181,6 @@ class ProfileController extends Controller
         $user->save();
 
 
-        $array = [
-            'mobile_phone' => '068484866',
-            'addition_phone' => '',
-            'gender' => '',
-            'country' => 'Moldova',
-            'city' => 'Balti',
-            'address' => 'Бельцы',
-            'birthday' => '',
-            'christening_day' => '',
-        ];
-
-
-        $contactsArray = [
-            'country' => 'Moldova',
-            'city' => 'Balti',
-            'mobile_phone' => '068484866',
-            'addition_phone' => '',
-        ];
-
         return redirect()->back();
 
 //        $detect = new MobileDetect;
@@ -233,6 +189,31 @@ class ProfileController extends Controller
 //        } else {
 //            return view('Desktop.profile.settings', compact('user'));
 //        }
+    }
+
+
+
+    public function standShowSave(Request $request)
+    {
+        $id = Auth::id();
+        $user = User::find($id);
+        $userInfo = json_decode($user->info, true);
+
+        // Если поле 'stand_settings' не существует, создаем его со значением 1
+        if (!isset($userInfo['stand_settings'])) {
+            $userInfo['stand_settings'] = 1;
+        }
+
+        // Обновляем 'stand_settings' значением из чекбокса
+        $userInfo['stand_settings'] = $request->has('standShow') ? 1 : 0;
+
+        // Обновляем JSON-поле в базе данных
+        $user->info = json_encode($userInfo);
+
+        // Сохраняем изменения
+        $user->save();
+
+        return redirect()->back();
     }
 
     public function changePassword(Request $request) {

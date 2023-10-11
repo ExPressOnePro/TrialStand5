@@ -1,7 +1,27 @@
 @extends('Mobile.layouts.front.app')
 @section('title') Meeper | детали @endsection
 @section('content')
+    @include('Mobile.includes.loadingOverlay')
 
+    <style>
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
     <div class="content container-fluid">
         <div class="alert alert-info mb-5 mb-lg-7" role="alert">
             <div class="d-flex align-items-center">
@@ -64,7 +84,8 @@
                             <div class="d-grid gap-2">
                                 <a class="btn btn-success m-1" type="button" href="{{ route('AddPublisherToStand', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $user->id]) }}"
                                    onclick="event.preventDefault();
-                                        document.getElementById('changeForm{{ $i }}').submit();">
+                                        document.getElementById('changeForm{{ $i }}').submit();
+                                        document.getElementById('loadingOverlay').style.display = 'flex';">
                                     Записать
                                 </a>
                             </div>
@@ -75,7 +96,8 @@
                             @can('stand.delete_entry')
                                 <div class="col-12">
                                     <div class="d-grid gap-2">
-                                        <a class="btn btn-outline-danger m-1" type="button" href="{{ route('recordRedactionDelete', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $publishers[$userKey]]) }}">
+                                        <a class="btn btn-outline-danger m-1" type="button" href="{{ route('recordRedactionDelete', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $publishers[$userKey]]) }}"
+                                        onclick="document.getElementById('loadingOverlay').style.display = 'flex';">
                                             Выписать
                                         </a>
                                     </div>

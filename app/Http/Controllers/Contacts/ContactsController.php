@@ -12,6 +12,7 @@ class ContactsController extends Controller
         $user = User::find(Auth::id());
         $users = User::with('usersroles.role', 'usersGroups.group')
             ->where('congregation_id', $user->congregation_id)
+            ->orderBy('last_name', 'asc')
             ->get();
         return view('Mobile.menu.modules.contacts.hub', compact('users'));
     }

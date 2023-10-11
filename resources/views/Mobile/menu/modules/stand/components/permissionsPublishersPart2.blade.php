@@ -30,7 +30,7 @@
                             <tbody>
                             @foreach($usersCongregation as $user)
                                 <tr class="border-bottom">
-                                    <td>{{ $user->first_name }} {{ $user->last_name }}</td>
+                                    <td>{{ $user->last_name }} {{ $user->first_name }}</td>
                                     @foreach($permissionsPublishers as $permission)
                                         <td>
                                             <label class="form-check form-switch m-1">

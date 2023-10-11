@@ -4,7 +4,7 @@
 
 <!-- Body -->
 <div class="card-body">
-    <p>Ваша текущая почта <span class="fw-semibold">{{$user->email}}</span></p>
+    <p>Ваша текущая почта <h1><span class="badge bg-info ">{{$user->email}}</span></h1></p>
 
     <!-- Form -->
     <form>
@@ -19,7 +19,7 @@
         <!-- End Form -->
 
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="submit" class="btn btn-primary">Сохранить настройки</button>
         </div>
     </form>
     <!-- End Form -->

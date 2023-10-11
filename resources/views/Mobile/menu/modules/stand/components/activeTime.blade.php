@@ -5,7 +5,7 @@
 {{--        $scheduleData    --}}
         @foreach ($daysOfWeek as $dayNumber => $dayName)
             <div class="card-body">
-                <form method="POST" action="{{ route('StandTimeNext', $id = $stand->id) }}" class="mb-4">
+                <form id="StandTimeNext" method="POST" action="{{ route('StandTimeNext', $id = $stand->id) }}" class="mb-4">
                     @csrf
                     <input type="hidden" name="day" value="{{ $dayNumber }}">
                     <h2>День {{ $dayName }}</h2>

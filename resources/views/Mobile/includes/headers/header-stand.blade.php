@@ -26,7 +26,7 @@
         <div class="navbar-nav-wrap mt-2">
             @if(Request::is('*stand'))
                 <div class="navbar">
-                    <a class="text-center text-dark h1" onclick="goBack()">
+                    <a class="text-center text-dark h1" href="{{route('menu.overview')}}">
                         <div class="rounded">
 
                         </div>
@@ -66,9 +66,44 @@
                         История стенда
                     </h1>
                 </div>
-            @else
+            @elseif(Request::is('*stand/record*'))
                 <div class="navbar">
                     <a class="text-center text-dark h1" onclick="goBack()">
+                        <div class="rounded">
+
+                        </div>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
+                <div class="navbar ms-auto">
+                    <h1>
+                        Запись
+                    </h1>
+                </div>
+            @elseif(Request::is('*aio_current*', '*aio_next*'))
+                <div class="navbar">
+                    <a class="text-center text-dark h1" href="{{route('menu.overview')}}">
+                        <div class="rounded">
+
+                        </div>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
+                <div class="navbar ms-auto">
+                    <div class="col-sm text-end">
+                        <div class="col-sm text-end">
+                            <div class="scrolling-container">
+                                <div class="scrolling-text">
+
+                                    <span class="d-block h2 mb-0">Записи</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @elseif(Request::is('*currentWeekFront*', '*nextWeekFront*'))
+                <div class="navbar">
+                    <a class="text-center text-dark h1" href="{{route('stand.hub')}}">
                         <div class="rounded">
 
                         </div>

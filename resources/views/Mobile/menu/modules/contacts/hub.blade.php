@@ -3,8 +3,6 @@
 @section('content')
 
     <div class="content container-fluid">
-
-
             <!-- Header -->
             <div class="card card-header">
                 <div class="row justify-content-between align-items-center flex-grow-1">
@@ -37,6 +35,7 @@
                 <table class="js-datatable table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
                        data-hs-datatables-options='{
                    "order": [],
+                   "search": "#datatableWithSearchInput",
                    "info": {
                      "totalQty": "#datatableEntriesInfoTotalQty"
                    },
@@ -48,41 +47,99 @@
                     <thead class="thead-light">
                     <tr>
                         <th>Имя фамилия</th>
-                        <th>Звонок</th>
+{{--                        <th>Звонок</th>--}}
                     </tr>
                     </thead>
 
                     <tbody>
                     @foreach($users as $user)
-                        <tr class="border-bottom">
+                        <tr>
                             <td>
-                                <a class="d-flex align-items-center" href="{{ route('userCard', $user->id) }}">
-                                            <span class="d-block h5 text-inherit mb-0"> {{ $user->first_name }} {{ $user->last_name }}
-                                                @foreach($user->usersroles as $userRole)
-                                                    @if($userRole->role->name === 'Developer')
-                                                        <i class="bi-patch-check-fill text-primary" data-toggle="tooltip"
-                                                           data-bs-placement="top" title="Top endorsed"></i>
-                                                    @else
-                                                    @endif
-                                                @endforeach
-                                            </span>
-                                    @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
-                                        @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
-                                            <a class="d-flex align-items-center">
-                                                <div class="h1"><span class="badge bg-secondary">{{ $decodedInfo['mobile_phone'] }}</span></div>
-                                            </a>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <dd>
+                                            {{ $user->last_name }} {{ $user->first_name }}
+                                            @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
+                                                @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
+                                                    <div class="h3"><span class="badge bg-secondary">{{ $decodedInfo['mobile_phone'] }}</span></div>
+                                                @endif
+                                            @endif
+                                        </dd>
+
+                                    </div>
+                                    <div class="col-3">
+                                        @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
+                                            @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
+                                                <button class="btn btn-outline-primary" onclick="callNumber('{{$decodedInfo['mobile_phone']}}')">
+                                                    <i class="fa-solid fa-phone"></i>
+                                                </button>
+                                            @endif
                                         @endif
-                                    @endif
-                                </a>
-                            </td>
-                            <td>
-                                @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
-                                    @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
-                                        <button class="btn btn-outline-primary" onclick="callNumber('{{$decodedInfo['mobile_phone']}}')">
-                                            <i class="fa-solid fa-phone"></i>
-                                        </button>
-                                    @endif
-                                @endif
+                                    </div>
+                                </div>
+{{--                                <div class="card card-body">--}}
+{{--                                    <div class="d-flex align-items-md-center">--}}
+{{--                                        <div class="flex-grow-1">--}}
+{{--                                            <div class="row align-items-md-center">--}}
+{{--                                                <div class="col-9 col-md-4 col-lg-3">--}}
+{{--                                                    <h4 class="mb-1">--}}
+{{--                                                        <a class="text-dark" href="#">{{ $user->last_name }} {{ $user->first_name }}</a>--}}
+{{--                                                    </h4>--}}
+
+{{--                                                    @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))--}}
+{{--                                                        @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))--}}
+{{--                                                            <a class="d-flex align-items-center">--}}
+{{--                                                                <div class="h1"><span class="badge bg-secondary">{{ $decodedInfo['mobile_phone'] }}</span></div>--}}
+{{--                                                            </a>--}}
+{{--                                                        @endif--}}
+{{--                                                    @endif--}}
+{{--                                                </div>--}}
+{{--                                                <!-- End Col -->--}}
+
+{{--                                                <!-- End Col -->--}}
+
+{{--                                                <div class="col-3">--}}
+{{--                                                    @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))--}}
+{{--                                                        @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))--}}
+{{--                                                            <button class="btn btn-outline-primary" onclick="callNumber('{{$decodedInfo['mobile_phone']}}')">--}}
+{{--                                                                <i class="fa-solid fa-phone"></i>--}}
+{{--                                                            </button>--}}
+{{--                                                        @endif--}}
+{{--                                                    @endif--}}
+{{--                                                </div>--}}
+{{--                                                <!-- End Col -->--}}
+{{--                                            </div>--}}
+{{--                                            <!-- End Row -->--}}
+                                        </div>
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <a class="d-flex align-items-center" --}}{{--@role('Developer') href="{{ route('userCard', $user->id) }}" @endrole--}}{{-->--}}
+{{--                                            <span class="d-block h5 text-inherit mb-0"> {{ $user->last_name }} {{ $user->first_name }}--}}
+{{--                                                @foreach($user->usersroles as $userRole)--}}
+{{--                                                    @if($userRole->role->name === 'Developer')--}}
+{{--                                                        <i class="bi-patch-check-fill text-primary" data-toggle="tooltip"--}}
+{{--                                                           data-bs-placement="top" title="Top endorsed"></i>--}}
+{{--                                                    @else--}}
+{{--                                                    @endif--}}
+{{--                                                @endforeach--}}
+{{--                                            </span>--}}
+{{--                                    @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))--}}
+{{--                                        @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))--}}
+{{--                                            <a class="d-flex align-items-center">--}}
+{{--                                                <div class="h1"><span class="badge bg-secondary">{{ $decodedInfo['mobile_phone'] }}</span></div>--}}
+{{--                                            </a>--}}
+{{--                                        @endif--}}
+{{--                                    @endif--}}
+{{--                                </a>--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))--}}
+{{--                                    @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))--}}
+{{--                                        <button class="btn btn-outline-primary" onclick="callNumber('{{$decodedInfo['mobile_phone']}}')">--}}
+{{--                                            <i class="fa-solid fa-phone"></i>--}}
+{{--                                        </button>--}}
+{{--                                    @endif--}}
+{{--                                @endif--}}
                             </td>
                         </tr>
                     @endforeach

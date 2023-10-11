@@ -65,6 +65,11 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="#standShow">
+                                    <i class="bi-person nav-icon"></i> Таблицы стенда
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="#contactsSection">
                                     <i class="bi bi-link-45deg nav-icon"></i> Контакты
                                 </a>
@@ -96,14 +101,15 @@
                 <!-- End Navbar -->
             </div>
 
-            <div class="col-lg-9">
+            <div class="col-lg-6">
                 <div class="d-grid gap-3 gap-lg-5">
-
 
                     <div id="content" class="card">
                         @include('Mobile.profile.settings.basicInformation')
                     </div>
-
+                    <div id="standShow" class="card">
+                        @include('Mobile.profile.settings.standShow')
+                    </div>
 
                     <div id="contactsSection" class="card">
                         @include('Mobile.profile.settings.contactsSection')

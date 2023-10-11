@@ -22,21 +22,18 @@
         </div>
         <!-- End Form -->
         <div class="row mb-4">
+            <label for="inputGroupMergeGenderSelect" class="col-sm-3 col-form-label form-label">Пол</label>
             <div class="col-sm-9">
                 <div class="input-group input-group-sm-vertical">
-                    <div class="mb-3">
-                        <label for="inputGroupMergeGenderSelect" class="form-label">Пол</label>
-
-                        <div class="input-group input-group-merge">
-                            <div class="input-group-prepend input-group-text">
-                                <i class="bi-person"></i>
-                            </div>
-                            <select id="inputGroupMergeGenderSelect" name="inputGroupMergeGenderSelect" class="form-select">
-                                <option>Выберите пол</option>
-                                <option value="male" {{ $gender === 'male' ? 'selected' : '' }}>Мужской</option>
-                                <option value="female" {{ $gender === 'female' ? 'selected' : '' }}>Женский</option>
-                            </select>
+                    <div class="input-group input-group-merge">
+                        <div class="input-group-prepend input-group-text">
+                            <i class="bi-person"></i>
                         </div>
+                        <select id="inputGroupMergeGenderSelect" name="inputGroupMergeGenderSelect" class="form-select">
+                            <option>Выберите пол</option>
+                            <option value="male" {{ $gender === 'male' ? 'selected' : '' }}>Мужской</option>
+                            <option value="female" {{ $gender === 'female' ? 'selected' : '' }}>Женский</option>
+                        </select>
                     </div>
                 </div>
             </div>

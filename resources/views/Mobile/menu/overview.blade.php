@@ -4,12 +4,17 @@
 
     @include('Mobile.includes.alerts.alerts')
     <div class="content container-fluid">
-        <div class="row row-cols-1">
-
+        <div class="row justify-content-center">
+            <div class="col-sm-6 col-xl-4 mb-3 mb-xl-6">
             @can('module.stand')
                 <div class="col mb-3 mb-lg-5">
                     <div class="list-group d-flex align-items-center">
-                        <a class="list-group-item list-group-item-action border border-3 border-secondary" href="{{ route('stand.hub') }}">
+                        <a class="list-group-item list-group-item-action border border-3 border-secondary" href="
+                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 0)
+    {{ route('stand.hub') }}
+@else
+    {{ route('stand.allInOneCurrent') }}
+@endif">
                             <div class="d-flex align-items-center m-2">
                                 <div class="avatar">
                                     <img class="card-img" src="{{ asset('front/img/ss.svg') }}">
@@ -57,6 +62,7 @@
                     </div>
                 </div>
             @endcan
+            </div>
 
 {{--            @role('Developer')--}}
 {{--            <div class="col mb-3 mb-lg-5">--}}

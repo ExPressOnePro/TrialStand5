@@ -1,3 +1,5 @@
+<div class="row justify-content-center">
+    <div class="col-lg-4 mb-2 mb-lg-5 mx-auto">
 <div class="accordion mb-4" id="accordionExample">
     <div class="accordion-item bg-soft-info ">
         <div class="accordion-header" id="headingOne">
@@ -25,16 +27,18 @@
                         <dd>Не волнуйтесь, если вы чувствуете себя не очень опытным пользователем, мы сделали интерфейс максимально простым и удобным.</dd>
                         <dd>Давайте начнем с самого начала и шаг за шагом разберемся, как пользоваться нашим сайтом.</dd>
                     </div>
-                    <div class="row mt-4">
-                        <div class="col-sm-4 mb-3 mb-sm-0">
-                            <a data-fslightbox="youtube-video" data-video-poster="{{ asset('/front/img/1.jpg') }}" href="{{ asset('/front/video/Meeper_first_meet.mp4') }}">
-                                <img class="img-fluid" src="{{ asset('/front/img/VideoPlayer.jpg') }}" alt="Image Description">
+                </div>
+                <div class="row mt-4">
+                    <div class="col">
+                        <a data-fslightbox="youtube-video" data-video-poster="{{ asset('/front/img/1.jpg') }}" href="{{ asset('/front/video/Meeper_first_meet.mp4') }}">
+                            <img class="img-fluid" src="{{ asset('/front/img/VideoPlayer.jpg') }}" alt="Image Description">
 
-                            </a>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
     </div>
 </div>

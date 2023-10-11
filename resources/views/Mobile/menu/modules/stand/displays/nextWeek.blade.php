@@ -87,7 +87,7 @@
                                             <div class="row align-items-center">
                                                 <!-- time -->
                                                 <div class="col-3 text-center">
-                                                    <span class="text-dark h2">{{ date('H:i', strtotime($time . ':00')) }}</span>
+                                                    <span class="text-dark h2">{{ $time }}</span>
                                                 </div>
                                                 <!-- publishers -->
                                                 <div class="col-9">
@@ -124,7 +124,6 @@
                     @endforeach
                 </div>
             @else
-
                 @if($currentDateTime >= $activationDateTime)
                     <div class="not-found-wrap text-center">
                         <h1 class="heading">Следующая неделя будет доступна</h1>

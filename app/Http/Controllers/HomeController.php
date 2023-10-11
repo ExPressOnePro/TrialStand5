@@ -39,6 +39,7 @@ class HomeController extends Controller {
         $startOfWeek = now()->format('Y-m-d');
         $endOfWeek = now()->endOfWeek()->format('Y-m-d');
         $nextWeekEnd = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
+        $userInfo = json_decode($user->info, true);
 
         $standPublishersCount = StandPublishers::
         whereBetween('date', [$startOfWeek, $endOfWeek])
@@ -65,6 +66,8 @@ class HomeController extends Controller {
 
         $user_congregation_id = $user->congregation_id;
 
+
+
         if($user->hasRole('Developer') ) {
             $congregationRequestsCount = CongregationRequests::count();
         } else {
@@ -77,6 +80,7 @@ class HomeController extends Controller {
                     'congregationRequestsCount',
                     'standPublishersCount',
                     'congregationRequests',
+                    'userInfo',
                     'active_day'
         );
 
@@ -102,8 +106,13 @@ class HomeController extends Controller {
     }
 
     public function menu(){
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
 
-        return view ('Mobile.menu.overview');
+        $compact = compact('userInfo'
+        );
+
+        return view ('Mobile.menu.overview', $compact);
     }
 
     public function guest() {
@@ -132,12 +141,13 @@ class HomeController extends Controller {
     }
     public function changeLog() {
 
-        return view('changeLog');
+        return view('ChangeLog.changeLog');
     }
 
     public function recordsWithStandPage(){
 
         $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
         $congregation = Congregation::where('id', '>', 1)->get();
         $congregationRequests = CongregationRequests::get();
         $stand = Stand::where('congregation_id', $user->congregation_id)->get();
@@ -150,7 +160,6 @@ class HomeController extends Controller {
 
         $nextWeekStart = Carbon::now()->addWeek()->startOfWeek()->format('Y-m-d');
         $nextWeekEnd = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
-
 
         $standPublishers = StandPublishers::with('standTemplates')
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
@@ -173,7 +182,6 @@ class HomeController extends Controller {
             })
             ->orderBy('date', 'asc')
             ->get();
-
 
         $standPublishersCount = StandPublishers::
             whereBetween('date', [$startOfWeek, $endOfWeek])
@@ -202,6 +210,7 @@ class HomeController extends Controller {
             'standPublishersNextWeek',
             'standPublishers',
             'stand',
+            'userInfo',
             'standPublishersCount',
             'active_day',
         );
