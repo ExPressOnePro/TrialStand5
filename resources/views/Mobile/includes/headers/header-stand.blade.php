@@ -35,7 +35,7 @@
                 </div>
                 <div class="navbar ms-auto">
                     <h1>
-                        Выбор стенда
+                        {{ __('text.Выбор стенда') }}
                     </h1>
                 </div>
             @elseif(Request::is('*stand/settings*'))
@@ -49,7 +49,7 @@
                 </div>
                 <div class="navbar ms-auto">
                     <h1>
-                        Настройки стенда
+                        {{ __('text.Настройки стенда') }}
                     </h1>
                 </div>
             @elseif(Request::is('*stand/history*'))
@@ -63,7 +63,7 @@
                 </div>
                 <div class="navbar ms-auto">
                     <h1>
-                        История стенда
+                        {{ __('text.История стенда') }}
                     </h1>
                 </div>
             @elseif(Request::is('*stand/record*'))
@@ -77,7 +77,7 @@
                 </div>
                 <div class="navbar ms-auto">
                     <h1>
-                        Запись
+                        {{ __('text.Запись') }}
                     </h1>
                 </div>
             @elseif(Request::is('*aio_current*', '*aio_next*'))
@@ -95,7 +95,9 @@
                             <div class="scrolling-container">
                                 <div class="scrolling-text">
 
-                                    <span class="d-block h2 mb-0">Записи</span>
+                                    <span class="d-block h2 mb-0">
+                                        {{ __('text.Записи') }}
+                                    </span>
                                 </div>
                             </div>
                         </div>

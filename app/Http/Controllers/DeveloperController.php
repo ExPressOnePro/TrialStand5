@@ -57,7 +57,7 @@ class DeveloperController extends Controller{
 
         $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->count();
         $usersActiveCountPercent = ($usersActiveCount / $usersCount) * 100;
-        $usersRegistrationsCount = User::whereDate('created_at', '>=', Carbon::now()->subDay())->count();
+        $usersRegistrationsCount = User::whereDate('created_at', '>=', Carbon::now()->subDays(2))->count();
         $usersRequestsCongregationsCount = CongregationRequests::count();
         $congregationCount = Congregation::where('id','!=', 1)->count();
         $standCount = Stand::count();
@@ -165,8 +165,8 @@ class DeveloperController extends Controller{
     }
 
     public function registeredUsersDisplay() {
-        $startDate = Carbon::now()->subWeek(); // Получаем дату начала предыдущей недели
         $endDate = Carbon::now(); // Получаем текущую дату
+        $startDate = $endDate->copy()->subDays(2); // Получаем дату, отстоящую от текущей на 2 дня
 
         $users = User::whereBetween('created_at', [$startDate, $endDate])->get();
 

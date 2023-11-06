@@ -75,7 +75,7 @@
                             <td class="table-column-ps-0">
                                 <a class="d-flex align-items-center" href="{{ route('userCard', $user->id) }}">
                                     <div class="ms-3">
-                                        <span class="d-block h5 text-inherit mb-0">{{ $user->first_name }} {{ $user->last_name }}</span>
+                                        <span class="d-block h5 text-inherit mb-0">{{ $user->last_name }} {{ $user->first_name }}</span>
                                         <span class="d-block h5 text-inherit mb-0">{{ $user->login }}</span>
                                     </div>
                                 </a>
@@ -84,7 +84,7 @@
                                 @php
                                     $userInfo = json_decode($user->info, true);
                                 @endphp
-                                <span class="d-block h5 text-inherit mb-0">{{ $userInfo['last_login'] }}</span>
+                                <span class="d-block h5 text-inherit mb-0">{{ $user->created_at }}</span>
                             </td>
                         </tr>
                     @endforeach

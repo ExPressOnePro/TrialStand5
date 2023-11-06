@@ -27,9 +27,9 @@
         <div class="alert alert-info border-info mb-5 mb-lg-7" role="alert">
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1 ms-3">
-                    <h3 class="alert-heading mb-1">Информация о записи</h3>
-                    <p class="mb-0">Дата: {{ $date }}</p>
-                    <p class="mb-0">Время: {{ date('H:i', strtotime($time)) }}</p>
+                    <h3 class="alert-heading mb-1">{{ __('text.Информация о записи') }}</h3>
+                    <p class="mb-0">{{ __('text.Дата') }}: {{ $date }}</p>
+                    <p class="mb-0">{{ __('text.Время') }}: {{ date('H:i', strtotime($time)) }}</p>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <h3 class="text-inherit mb-4">Первый возвещатель</h3>
+                        <h3 class="text-inherit mb-4">{{ __('text.Первый возвещатель') }}</h3>
 
                         <form id="recordStandFirst" method="post" action="{{ route('NewRecordStand') }}">
                             @csrf
@@ -79,7 +79,7 @@
                                onclick="event.preventDefault();
                    document.getElementById('recordStandFirst').submit();
                    document.getElementById('loadingOverlay').style.display = 'flex';">
-                                Записать
+                                {{ __('text.Записать') }}
                             </a>
                         </div>
                     </div>

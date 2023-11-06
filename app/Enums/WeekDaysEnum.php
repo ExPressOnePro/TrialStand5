@@ -23,7 +23,7 @@ class WeekDaysEnum {
         self::WED => 'Среда',
         self::THU => 'Четверг',
         self::FRI => 'Пятница',
-        self::SAT => 'Субота',
+        self::SAT => 'Суббота',
         self::SUN => 'Воскресенье',
     ];
 

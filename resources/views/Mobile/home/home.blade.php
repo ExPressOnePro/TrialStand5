@@ -3,8 +3,8 @@
 @section('content')
 
     <div class="content container-fluid">
+
         @include('Mobile.home.components.congregationRequest')
-{{--        @include('Mobile.home.components.welcome')--}}
         @include('Mobile.home.components.firstTimeOnTheSite')
 {{--        @include('Mobile.home.components.update204')--}}
         @include('Mobile.home.components.myStandRecordings')

@@ -92,14 +92,44 @@ class StandPublishersController extends Controller
         // Присвойте значение $user_1 первому индексу 'user_1'
         $publishersData['user_1'] = $user_1;
 
-        // Создайте запись в базе данных
-        $new = StandPublishers::firstOrCreate([
+        $existingRecord = StandPublishers::where([
+            'date' => $date,
+            'day' => $day,
+            'time' => $time,
+            'stand_template_id' => $stand_template_id,
+        ])->first();
+
+        // Если запись уже существует, выбросить исключение
+        if ($existingRecord) {
+            $user = User::find(Auth::id());
+            $userInfo = json_decode($user->info, true);
+
+            if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+                $routeName = $stand_template->type === 'current' ? 'stand.allInOneCurrent' : 'stand.allInOneNext';
+            } else {
+                $routeName = $stand_template->type === 'current' ? 'currentWeekTableFront' : 'nextWeekTableFront';
+            }
+
+            return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('error', 'Запись уже существует');
+        }
+
+        // Создать новую запись
+        $new = StandPublishers::create([
             'date' => $date,
             'day' => $day,
             'time' => $time,
             'stand_template_id' => $stand_template_id,
             'publishers' => json_encode($publishersData),
         ]);
+
+        // Создайте запись в базе данных
+//        $new = StandPublishers::firstOrCreate([
+//            'date' => $date,
+//            'day' => $day,
+//            'time' => $time,
+//            'stand_template_id' => $stand_template_id,
+//            'publishers' => json_encode($publishersData),
+//        ]);
 
 
         $StandPublishersHistory = new StandPublishersHistory();
@@ -123,7 +153,7 @@ class StandPublishersController extends Controller
             $routeName = $stand_template->type === 'current' ? 'currentWeekTableFront' : 'nextWeekTableFront';
         }
 
-        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно записаны');
+        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', __('text.Вы успешно записаны'));
 
     }
 
@@ -143,7 +173,7 @@ class StandPublishersController extends Controller
         $foundEmpty = false;
         foreach ($standPublishersDecode as $key => $value) {
             if ($value == $user_id) {
-                $errorMessage = 'Пользователь уже записан в выбранное время и дату!';
+                $errorMessage = __('text.Пользователь уже записан в выбранное время и дату!');
                 if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
                     $routeName = $stand_template->type === 'current' ? 'stand.allInOneCurrent' : 'stand.allInOneNext';
                 } else {

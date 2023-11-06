@@ -17,6 +17,7 @@
         "mcamara/laravel-localization": "*",
         "mobiledetect/mobiledetectlib": "^2.8",
         "nwidart/laravel-modules": "^10.0",
+        "opcodesio/log-viewer": "^3.1",
         "owen-it/laravel-auditing": "^13.5",
         "silviolleite/laravelpwa": "*",
         "swiftmailer/swiftmailer": "*"

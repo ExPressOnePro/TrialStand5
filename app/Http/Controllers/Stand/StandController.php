@@ -47,11 +47,14 @@ class StandController extends Controller
             ->where('congregation_id', $congregation->id)
             ->count();
 
+        $userInfo = json_decode($user->info, true);
+
 
         $compact = compact(
             'accessible_stands_for_the_user',
             'congregations',
             'congregation',
+            'userInfo',
         );
         $mobile_detect = new MobileDetect();
         $viewName = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.hub' : 'Mobile.menu.modules.stand.hub';
@@ -202,10 +205,12 @@ class StandController extends Controller
         $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($AuthUser->congregation_id);
 
-        $usersCongregation = User::where('congregation_id', $congregation->id)->get();
+//        if ($AuthUser->hasRole('Developer')) {
+//            $usersCongregation = User::where('congregation_id', $congregation->id)->orderby('last_name', 'asc')->get();
+//        } else {
+            $usersCongregation = User::where('congregation_id', $congregation->id)->orderby('last_name', 'asc')->get();
+//        }
 
-
-        $usersCongregation = User::where('congregation_id', $congregation->id)->orderby('last_name', 'asc')->get();
         $permissionsPublishers = Permission::whereIn('name', ['module.stand', 'stand.make_entry', 'stand.delete_entry', 'stand.change_entry'])->get();
 
         $compact = compact(
@@ -270,15 +275,47 @@ class StandController extends Controller
             $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
         }
 
+
+
         $StandTemplate_settings = json_decode($StandTemplate->settings, true);
         $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
+
+        $week_schedule = $StandTemplate->week_schedule;
+        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
+        $StandTemplate_settings = json_decode($StandTemplate->settings, true);
+        $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
+
+        $activation = $StandTemplate_settings['activation']; // трехзначное число
+        $activation_value = explode("-", $activation);
+
+        $daysOfWeek = [
+            1 => trans('text.Понедельник'),
+            2 => trans('text.Вторник'),
+            3 => trans('text.Среда'),
+            4 => trans('text.Четверг'),
+            5 => trans('text.Пятница'),
+            6 => trans('text.Суббота'),
+            7 => trans('text.Воскресенье'),
+        ];
+
+        $dayNumber = $activation_value[0];
+        $dayName = $daysOfWeek[$dayNumber];
+        $currentDateTime = date('N-H:i');
+        $activationDateTime = $activation_value[1];
 
         $compact = compact(
             'StandTemplates',
             'users',
             'stands',
             'valuePublishers_at_stand',
-            'standPublishers'
+            'standPublishers',
+            'activation_value',
+            'standPublishers',
+            'activation',
+            'dayName',
+            'valuePublishers_at_stand',
+            'currentDateTime',
+            'activationDateTime',
         );
 
         $allowedCongregationIds = $stands->pluck('congregation_id')->toArray();
@@ -385,14 +422,15 @@ class StandController extends Controller
         $activation_value = explode("-", $activation);
 
         $daysOfWeek = [
-            1 => 'Понедельник',
-            2 => 'Вторник',
-            3 => 'Среда',
-            4 => 'Четверг',
-            5 => 'Пятница',
-            6 => 'Суббота',
-            7 => 'Воскресенье',
+            1 => trans('text.Понедельник'),
+            2 => trans('text.Вторник'),
+            3 => trans('text.Среда'),
+            4 => trans('text.Четверг'),
+            5 => trans('text.Пятница'),
+            6 => trans('text.Суббота'),
+            7 => trans('text.Воскресенье'),
         ];
+
         $dayNumber = $activation_value[0];
         $dayName = $daysOfWeek[$dayNumber];
         $currentDateTime = date('N-H:i');

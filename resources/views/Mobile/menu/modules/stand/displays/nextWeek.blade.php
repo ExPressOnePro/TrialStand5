@@ -30,7 +30,10 @@
                                 <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
                                     <h2 class="card-header-title">
                                         {{ \App\Enums\WeekDaysEnum::getWeekDay($day) }}
-                                        {{ $gwe = \App\Enums\WeekDaysEnum::getNextWeekDayDate($day) }}
+                                        @php
+                                            $gwe = \App\Enums\WeekDaysEnum::getNextWeekDayDate($day)
+                                        @endphp
+                                        {{ \Carbon\Carbon::parse($gwe)->format('d.m.Y') }}
                                     </h2>
                                     @php
                                         $standPublishers = App\Models\StandPublishers::where('day', $day)
@@ -111,7 +114,7 @@
                                                                     </h3>
                                                                 @endif
                                                             @else
-                                                                <h3><span class="badge bg-secondary">Свободно</span></h3>
+                                                                <h3><span class="badge bg-secondary">{{ __('text.Свободно') }}</span></h3>
                                                             @endif
                                                         @endfor
                                                     </div>

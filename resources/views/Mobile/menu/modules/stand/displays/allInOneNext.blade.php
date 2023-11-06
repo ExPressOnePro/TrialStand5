@@ -623,6 +623,9 @@
     <div class="content container-fluid">
         @include('Mobile.includes.alerts.alerts')
         @include('Mobile.menu.modules.stand.components.switchWeek')
+
+
+        @if(date('N') . '-'. date('H:i') >= $activation)
         <div class="row">
             @php
                 // Создаем временный массив для хранения данных о сортировке
@@ -673,11 +676,11 @@
                         <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
                             <div class="flex-grow-1">
                                 <h2 class="dd">
-                                    {{ $entry['day_of_week'] }} {{ $entry['date'] }}
+                                    {{ $entry['day_of_week'] }} {{ \Carbon\Carbon::parse($entry['date'])->format('d.m.Y') }}
                                 </h2>
-                                <h4 class="dd">
+                                <h3 class="dd">
                                     {{ $entry['stand_name'] }}
-                                </h4>
+                                </h3>
                             </div>
                             @php
                                 $standPublishers = App\Models\StandPublishers::where('day', $day)
@@ -774,6 +777,15 @@
             </div>
             @endforeach
         </div>
+        @else
+            @if($currentDateTime >= $activationDateTime)
+                <div class="not-found-wrap text-center">
+                    <h1 class="heading">Следующая неделя будет доступна</h1>
+                    <h1 class="mb-5 text-muted text-20">{{ $dayName }} {{ $activation_value[1] }}</h1>
+                </div>
+            @endif
+        @endif
+
     </div>
 @endcan
 

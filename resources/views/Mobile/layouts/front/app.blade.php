@@ -26,6 +26,8 @@
     @include('Mobile.includes.headers.header-menu')
 @elseif(Request::is('*home'))
     @include('Mobile.includes.headers.header-home')
+@elseif(Request::is('*contacts*'))
+    @include('Mobile.includes.headers.header-contacts')
 @endif
 {{--@if(Request::is('dev*'))--}}
 {{--    @include('Mobile.includes.headers.header-developer')--}}
@@ -34,6 +36,7 @@
 {{--@unless(Request::is('dev*'))--}}
 {{--    @include('Mobile.includes.headers.header-home')--}}
 {{--@endunless--}}
+@include('Mobile.includes.menuBarPhone')
 <main id="content" role="main" class="main mb-7">
 
     @yield('content')
@@ -45,6 +48,6 @@
 
 
 </main>
-@include('Mobile.includes.menuBarPhone')
+
 </body>
 </html>

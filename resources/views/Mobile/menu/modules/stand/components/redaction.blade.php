@@ -23,12 +23,14 @@
         }
     </style>
     <div class="content container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 mb-lg-5 mx-auto">
         <div class="alert alert-info mb-5 mb-lg-7" role="alert">
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1 ms-3">
-                    <h3 class="alert-heading mb-1">Информация о записи</h3>
-                    <p class="mb-0">Дата:  {{ $standPublisher->date }}</p>
-                    <p class="mb-0">Время:  {{ date('H:i', strtotime($standPublisher->time)) }}</p>
+                    <h3 class="alert-heading mb-1">{{ __('text.Информация о записи') }}</h3>
+                    <p class="mb-0">{{ __('text.Дата') }}:  {{ $standPublisher->date }}</p>
+                    <p class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($standPublisher->time)) }}</p>
                 </div>
             </div>
         </div>
@@ -39,14 +41,14 @@
                 $isUserEmpty = empty($publishers[$userKey]);
                 $currentUser = auth()->id();
                 $isCurrentUser = ($currentUser == $publishers[$userKey] && !$publishers[$userKey]);
-                $userLabel = $isUserEmpty ? 'Пусто' : 'Записан';
+                $userLabel = $isUserEmpty ?  __('text.Пусто')  : __('text.Записан');
             @endphp
 
             <div class="card card-hover-shadow border-secondary mt-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
                         <div class="flex-grow-1">
-                            <h3 class="text-inherit mb-1">{{ $i === 1 ? 'Первый' : ($i === 2 ? 'Второй' : ($i === 3 ? 'Третий' : 'Четвертый')) }} возвещатель
+                            <h3 class="text-inherit mb-1">{{ $i === 1 ? __('text.Первый') : ($i === 2 ? __('text.Второй') : ($i === 3 ? __('text.Третий') : __('text.Четвертый') )) }} {{ __('text.возвещатель') }}
                                 @if($isUserEmpty)
                                     <span class="badge bg-secondary">{{ $userLabel }}</span>
                                 @else
@@ -86,7 +88,7 @@
                                    onclick="event.preventDefault();
                                         document.getElementById('changeForm{{ $i }}').submit();
                                         document.getElementById('loadingOverlay').style.display = 'flex';">
-                                    Записать
+                                    {{ __('text.Записать') }}
                                 </a>
                             </div>
                         </div>
@@ -98,7 +100,7 @@
                                     <div class="d-grid gap-2">
                                         <a class="btn btn-outline-danger m-1" type="button" href="{{ route('recordRedactionDelete', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $publishers[$userKey]]) }}"
                                         onclick="document.getElementById('loadingOverlay').style.display = 'flex';">
-                                            Выписать
+                                            {{ __('text.Выписать') }}
                                         </a>
                                     </div>
                                 </div>
@@ -120,5 +122,7 @@
                 </div>
             </div>
         @endfor
+            </div>
+        </div>
     </div>
 @endsection

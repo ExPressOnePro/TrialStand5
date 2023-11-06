@@ -121,8 +121,7 @@ Route::group(['middleware' => 'auth'], function() {
         ], function () {
             Route::get('/{id}', [StandController::class, 'settings'])->name('stand.settings');
 
-            Route::post('/timeUpdateNext/{id}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
-            Route::post('/{id}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
+            Route::post('/timeUpdateNext/{id}/{day}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
             Route::post('/publishersAtStand/{id}', [StandTemplateController::class, 'publishersAtStand'])->name('stand.publishersAtStand.update');
             Route::post('/timeActivation/{id}', [StandTemplateController::class, 'timeActivation'])->name('stand.timeActivation');
             Route::post('/activeTimeCustom/{id}', [StandController::class, 'timeActivation'])->name('stand.activeTimeCustom');

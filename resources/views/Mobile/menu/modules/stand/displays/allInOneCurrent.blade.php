@@ -673,11 +673,11 @@
                         <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
                             <div class="flex-grow-1">
                                 <h2 class="dd">
-                                    {{ $entry['day_of_week'] }} {{ $entry['date'] }}
+                                    {{ trans('text.' . $entry['day_of_week']) }} {{ \Carbon\Carbon::parse($entry['date'])->format('d.m.Y') }}
                                 </h2>
-                                <h4 class="dd">
+                                <h3 class="dd">
                                     {{ $entry['stand_name'] }}
-                                </h4>
+                                </h3>
                             </div>
                             @php
                                 $standPublishers = App\Models\StandPublishers::where('day', $day)
@@ -758,7 +758,7 @@
                                                                 </h3>
                                                             @endif
                                                         @else
-                                                            <h3><span class="badge bg-secondary">Свободно</span></h3>
+                                                            <h3><span class="badge bg-secondary">{{ __('text.Свободно') }}</span></h3>
                                                         @endif
                                                     @endfor
                                                 </div>

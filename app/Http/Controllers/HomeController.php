@@ -75,13 +75,13 @@ class HomeController extends Controller {
         }
         $compact = compact(
             'standPublishersCountAll',
-                    'stand',
-                    'user_congregation_id',
-                    'congregationRequestsCount',
-                    'standPublishersCount',
-                    'congregationRequests',
-                    'userInfo',
-                    'active_day'
+            'stand',
+            'user_congregation_id',
+            'congregationRequestsCount',
+            'standPublishersCount',
+            'congregationRequests',
+            'userInfo',
+            'active_day'
         );
 
         $detect = new MobileDetect;

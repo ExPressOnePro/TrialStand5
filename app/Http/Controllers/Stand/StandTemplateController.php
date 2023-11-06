@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 
 class StandTemplateController extends Controller {
+
     public function index(StandRequest $request): JsonResource
     {
         $templates = StandTemplate::with([
@@ -98,17 +99,17 @@ class StandTemplateController extends Controller {
         return redirect()->back();
     }
 
-    public function timeUpdateNext(Request $request, $id){
-
+    public function timeUpdateNext(Request $request, $id, $day){
 
         $stand_id = Stand::find($id);
         $congregation_id = $stand_id->congregation_id;
         $template = StandTemplate::where('stand_id', $id)->where('type', '=','next')->first();
         $templateSchedule = $template->week_schedule;
 
+
         // Получите данные из формы
-        $time = $request->input('time'); // Значение для записи
-        $day = $request->input('day');   // Ключ, под которым нужно записать данные
+        $time= $request->input('time'); // Значение для записи
+//        $day = $request->input('day');   // Ключ, под которым нужно записать данные
 
         // Если есть часы для дня, то сохраните его в массиве, иначе удалите его из массива
         if (!empty($time)) {
@@ -120,6 +121,8 @@ class StandTemplateController extends Controller {
         $updatedJsonString = json_encode($templateSchedule);
 
 
+
+        // Обновите базу данных новой строкой JSON
         StandTemplate::where('type', 'next')
             ->where('stand_id', $id)
             ->where('congregation_id', $congregation_id)
@@ -129,6 +132,7 @@ class StandTemplateController extends Controller {
 
         return redirect()->back();
     }
+
 
     public function StandTimeNextToCurrent($id) {
 

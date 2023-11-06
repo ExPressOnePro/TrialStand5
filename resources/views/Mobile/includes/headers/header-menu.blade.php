@@ -6,14 +6,48 @@
     <div class="container">
         <div class="navbar-nav-wrap mt-2">
             <div class="navbar">
-                <h1>Меню</h1>
+                <h1>{{ __('text.Меню') }}</h1>
             </div>
 
             <div class="navbar ms-auto">
+                <!-- Language Dropdown -->
+                <div class="dropdown dropstart me-2">
+                    <button type="button" class="btn btn-ghost-secondary btn-icon rounded-circle" id="selectLanguageDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-dropdown-animation>
+                        <i class="fa-solid fa-language"></i>
+                    </button>
+
+                    <div class="dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="selectLanguageDropdown">
+                        <span class="dropdown-header">{{ __('text.Выберите язык') }}</span>
+                        @foreach (Config::get('languages') as $lang => $language)
+                            @if ($lang != App::getLocale())
+                                @if($language == 'English')
+                                    <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{{asset('front/vendor/flag-icon-css/flags/1x1/us.svg')}}" alt="Flag">
+                                        <span class="text-truncate" title="English">English</span>
+                                    </a>
+                                @elseif ($language == 'Română')
+                                    <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{{asset('front/vendor/flag-icon-css/flags/1x1/ro.svg')}}" alt="Flag">
+                                        <span class="text-truncate" title="English">Română</span>
+                                    </a>
+                                @elseif ($language == 'Русский')
+                                    <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{{asset('front/vendor/flag-icon-css/flags/1x1/ru.svg')}}" alt="Flag">
+                                        <span class="text-truncate" title="English">Русский</span>
+                                    </a>
+                                @endif
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Dark Mode Switch -->
                 <div class="form-check form-switch form-switch-dark">
                     <input class="form-check-input me-0" type="checkbox" id="darkSwitch">
                 </div>
             </div>
+
         </div>
     </div>
 </header>

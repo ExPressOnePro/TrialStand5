@@ -9,8 +9,8 @@
                                 <span class="avatar-initials">{{$standPublishersCountAll}}</span>
                             </div>
                             <div class="ms-3">
-                                <span class="d-block h1 text-inherit mb-0">Мои записи со стендом</span>
-                                <span class="d-block h5 text-inherit text-body mb-0">Просмотрите когда вы записались</span>
+                                <span class="d-block h1 text-inherit mb-0">{{ __('text.Мои записи со стендом') }}</span>
+                                <span class="d-block h5 text-inherit text-body mb-0">{{ __('text.Просмотрите когда вы записались') }}</span>
                             </div>
                         </div>
                     </a>
@@ -26,8 +26,8 @@
 @endif">
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
-                                    <span class="d-block h1 text-inherit mb-0">Нет записей</span>
-                                    <span class="d-block h5 text-inherit text-body mb-0">Запишитесь в служение со стендом</span>
+                                    <span class="d-block h1 text-inherit mb-0">{{ __('text.Нет записей') }}</span>
+                                    <span class="d-block h5 text-inherit text-body mb-0">{{ __('text.Запишитесь в служение со стендом') }}</span>
                                 </div>
                             </div>
                         </a>

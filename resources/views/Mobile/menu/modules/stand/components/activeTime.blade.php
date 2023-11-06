@@ -5,7 +5,7 @@
 {{--        $scheduleData    --}}
         @foreach ($daysOfWeek as $dayNumber => $dayName)
             <div class="card-body">
-                <form id="StandTimeNext" method="POST" action="{{ route('StandTimeNext', $id = $stand->id) }}" class="mb-4">
+                <form id="StandTimeNext{{ $dayNumber }}" method="POST" action="{{ route('StandTimeNext', ['id' => $stand->id, 'day' => $dayNumber]) }}" class="mb-4">
                     @csrf
                     <input type="hidden" name="day" value="{{ $dayNumber }}">
                     <h2>День {{ $dayName }}</h2>
@@ -19,10 +19,44 @@
                     @endif
                     <div class="d-flex justify-content-between mb-3"> <!-- Перемещаем этот контейнер внутрь формы -->
                         <button type="button" class="btn btn-primary add-time">Добавить время</button>
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalCenterStandTimeNext">Сохранить</button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalCenterStandTimeNext{{ $dayNumber }}">Сохранить</button>
                     </div>
                 </form>
             </div>
+            <!-- Modal -->
+            <div id="exampleModalCenterStandTimeNext{{ $dayNumber }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterStandTimeNext" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">{{ __('Изменения со следующей недели') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-soft-primary" role="alert">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi-exclamation-triangle-fill"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-2">
+                                        Информация: Пожалуйста прочтите
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Нажимая на кнопку сохранить изменения, график служения со стендом на следующую неделю будет обновлен в соответсвии с выбранными вами часами.</p>
+                            <p>Учтите! Если следующая неделя уже доступна для записей и возвещатели записывались они не увидят своих записей!</p>
+                            <p>Рекомендация! Изменяйте время до того момента как следующая неделя будет отображена.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Закрыть</button>
+                            <a type="button" class="btn btn-primary" href="{{ route('StandTimeNext', ['id' => $stand->id, 'day' => $dayNumber] ) }}"
+                               onclick="event.preventDefault();
+                                   document.getElementById('StandTimeNext{{ $dayNumber }}').submit();">
+                                {{ __('Сохранить изменения') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- End Modal -->
         @endforeach
         <div class="card-footer">
             <div class="row">
@@ -82,42 +116,43 @@
 
 
 
+{{--        <!-- Modal -->--}}
+{{--<div id="exampleModalCenterStandTimeNext" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterStandTimeNext" aria-hidden="true">--}}
+{{--    <div class="modal-dialog modal-dialog-centered" role="document">--}}
+{{--        <div class="modal-content">--}}
+{{--            <div class="modal-header">--}}
+{{--                <h5 class="modal-title" id="exampleModalCenterTitle">{{ __('Изменения со следующей недели') }}</h5>--}}
+{{--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>--}}
+{{--            </div>--}}
+{{--            <div class="modal-body">--}}
+{{--                <div class="alert alert-soft-primary" role="alert">--}}
+{{--                    <div class="d-flex">--}}
+{{--                        <div class="flex-shrink-0">--}}
+{{--                            <i class="bi-exclamation-triangle-fill"></i>--}}
+{{--                        </div>--}}
+{{--                        <div class="flex-grow-1 ms-2">--}}
+{{--                            Информация: Пожалуйста прочтите--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <p>Нажимая на кнопку сохранить изменения, график служения со стендом на следующую неделю будет обновлен в соответсвии с выбранными вами часами.</p>--}}
+{{--                <p>Учтите! Если следующая неделя уже доступна для записей и возвещатели записывались они не увидят своих записей!</p>--}}
+{{--                <p>Рекомендация! Изменяйте время до того момента как следующая неделя будет отображена.</p>--}}
+{{--            </div>--}}
+{{--            <div class="modal-footer">--}}
+{{--                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Закрыть</button>--}}
+{{--                <a type="button" class="btn btn-primary" href="{{ route('StandTimeNext', ['id' => $stand->id, 'day' => $dayNumber] ) }}"--}}
+{{--                   onclick="event.preventDefault();--}}
+{{--                                   document.getElementById('StandTimeNext{{ $dayNumber }}').submit();">--}}
+{{--                    {{ __('Сохранить изменения') }}--}}
+{{--                </a>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--</div><!-- End Modal -->--}}
 
 
-        <!-- Modal -->
-<div id="exampleModalCenterStandTimeNext" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterStandTimeNext" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">{{ __('Изменения со следующей недели') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-soft-primary" role="alert">
-                    <div class="d-flex">
-                        <div class="flex-shrink-0">
-                            <i class="bi-exclamation-triangle-fill"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-2">
-                            Информация: Пожалуйста прочтите
-                        </div>
-                    </div>
-                </div>
-                <p>Нажимая на кнопку сохранить изменения, график служения со стендом на следующую неделю будет обновлен в соответсвии с выбранными вами часами.</p>
-                <p>Учтите! Если следующая неделя уже доступна для записей и возвещатели записывались они не увидят своих записей!</p>
-                <p>Рекомендация! Изменяйте время до того момента как следующая неделя будет отображена.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Закрыть</button>
-                <a type="button" class="btn btn-primary" href="{{ route('StandTimeNext',['id' => $stand->id] ) }}"
-                   onclick="event.preventDefault();
-                                   document.getElementById('StandTimeNext').submit();">
-                    {{ __('Сохранить изменения') }}
-                </a>
-            </div>
-        </div>
-    </div>
-</div><!-- End Modal -->
+
 <div id="exampleModalCenterStandTimeNextToCurrent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterStandTimeNextToCurrent" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

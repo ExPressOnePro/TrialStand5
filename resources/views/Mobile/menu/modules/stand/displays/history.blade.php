@@ -330,10 +330,11 @@
                 </div>
                 <!-- End Col -->
 
+
                 <div class="col-sm-auto">
                     <div class="d-flex justify-content-center justify-content-sm-end">
                         <!-- Pagination -->
-                        <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                        <nav id="datatableEntriesPagination" aria-label="Activity pagination"></nav>
                     </div>
                 </div>
                 <!-- End Col -->
