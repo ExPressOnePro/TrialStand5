@@ -25,15 +25,15 @@
     <div class="content container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-4 mb-lg-5 mx-auto">
-        <div class="alert alert-info mb-5 mb-lg-7" role="alert">
-            <div class="d-flex align-items-center">
-                <div class="flex-grow-1 ms-3">
-                    <h3 class="alert-heading mb-1">{{ __('text.Информация о записи') }}</h3>
-                    <p class="mb-0">{{ __('text.Дата') }}:  {{ $standPublisher->date }}</p>
-                    <p class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($standPublisher->time)) }}</p>
+                <div class="alert alert-info mb-5 mb-lg-7" role="alert">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="alert-heading mb-1">{{ __('text.Информация о записи') }}</h3>
+                            <p class="mb-0">{{ __('text.Дата') }}:  {{ $standPublisher->date }}</p>
+                            <p class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($standPublisher->time)) }}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
         @for($i = 1; $i <= $settings['publishers_at_stand']; $i++)
             @php

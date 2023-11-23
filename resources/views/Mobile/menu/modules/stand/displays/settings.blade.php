@@ -1,7 +1,5 @@
 @extends('Mobile.layouts.front.profile')
-@section('title')
-    Meeper | Мой аккаунт
-@endsection
+@section('title') Meeper @endsection
 @section('content')
     @include('Mobile.includes.headers.header-stand')
     @include('Mobile.includes.alerts.alerts')

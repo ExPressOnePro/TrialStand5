@@ -41,7 +41,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <h3 class="text-inherit mb-4">{{ __('text.Первый возвещатель') }}</h3>
+                        <h3 class="text-inherit mb-4">{{ __('text.возвещатель') }}</h3>
 
                         <form id="recordStandFirst" method="post" action="{{ route('NewRecordStand') }}">
                             @csrf

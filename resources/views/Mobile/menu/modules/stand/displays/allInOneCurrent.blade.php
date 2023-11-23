@@ -649,10 +649,11 @@
                         if (!isset($sortedData[$day][$StandTemplate->id])) {
                             $sortedData[$day][$StandTemplate->id] = [];
                         }
-
+                        $standType = request()->is('*aio_current*') ? 'current' : 'next';
                         // Добавляем данные для текущего StandTemplate
                         $sortedData[$day][$StandTemplate->id][] = [
                             'stand_name' => $StandTemplate->stand->name,
+                            'date' => ($standType === 'current') ? \App\Enums\WeekDaysEnum::getWeekDayDate($day) : \App\Enums\WeekDaysEnum::getNextWeekDayDate($day),
                             'date' => \App\Enums\WeekDaysEnum::getWeekDayDate($day),
                             'day_of_week' => \App\Enums\WeekDaysEnum::getWeekDay($day),
                             'times' => $times,
@@ -726,9 +727,9 @@
                                 <div class="col-sm-12 mt-1">
                                     <a class="card card-hover-shadow border border-secondary h-100 {{ isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'] && (!$standPublisher || $canEdit) ? 'is-editable' : '' }}"
                                        @if($standPublisher && $canEdit)
-                                           href="{{ route('recordRedactionPageMobile', ['stand_publishers_id'=> $standPublisher->id]) }}"
+                                           href="{{ route('stand.record_redaction', ['stand_publishers_id'=> $standPublisher->id]) }}"
                                        @elseif(!$standPublisher && $canEdit)
-                                           href="{{ route('recordRecordPage', ['day' => $day, 'time' => $time, 'date' => $entry['date'], 'stand_template_id'=> $entry['template_id']]) }}"
+                                           href="{{ route('stand.record_create', ['day' => $day, 'time' => $time, 'date' => $entry['date'], 'stand_template_id'=> $entry['template_id']]) }}"
                                        @endif
                                        style="background-color: @if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2']) #5BB5A9 @elseif($standPublisher && $canEdit) #D5976B @endif;">
                                         <div class="row align-items-center">

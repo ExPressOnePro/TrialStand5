@@ -36,10 +36,10 @@
                                     @foreach ($standPublisher->standTemplates as $standTemplate)
                                         <li class="list-group-item">
                                             <a class="list-group-item-action border-primary" href="
-                                            @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 0)
-    {{ route('currentWeekTableFront', $standTemplate->stand_id) }}
+                                            @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
+                                            {{ route('stand.aio_current') }}
 @else
-    {{ route('stand.allInOneCurrent') }}
+    {{ route('stand.current', $standTemplate->stand_id) }}
 @endif">
 
                                             <div class="row">
@@ -68,10 +68,10 @@
                                     @foreach ($standPublisherNextWeek->standTemplates as $standTemplateNextWeek)
                                         <li class="list-group-item">
                                             <a class="list-group-item-action border-primary" href="
-                                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 0)
-    {{ route('nextWeekTableFront', $standTemplateNextWeek->stand_id) }}
+                                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
+    {{ route('stand.aio_next') }}
 @else
-    {{ route('stand.allInOneNext') }}
+{{ route('stand.next', $standTemplateNextWeek->stand_id) }}
 @endif">
                                                 <div class="row">
                                                     <div class="col-sm mb-2 mb-sm-0">

@@ -18,11 +18,10 @@
             @else
                 <div class="list-group d-flex align-items-center border border-primary">
                         <a class="list-group-item list-group-item-action" href="
-                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 0)
-
-    {{ route('stand.hub') }}
+                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
+{{ route('stand.aio_current') }}
 @else
-    {{ route('stand.allInOneCurrent') }}
+    {{ route('stand.hub') }}
 @endif">
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">

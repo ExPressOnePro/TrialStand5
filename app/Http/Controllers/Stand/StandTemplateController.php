@@ -90,7 +90,6 @@ class StandTemplateController extends Controller {
             // Замените ключи на соответствующие значения, которые вы хотите изменить
             $settings['activation'] = $request->input('dayOfWeek') .'-'.$request->input('time');
 
-
             $standTemplate->settings = json_encode($settings);
             $standTemplate->save();
 

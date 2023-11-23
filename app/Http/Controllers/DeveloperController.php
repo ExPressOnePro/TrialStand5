@@ -30,18 +30,14 @@ class DeveloperController extends Controller{
         $permissionModule = Permission::where('name', 'module.schedule')->first();
 
         $lastWeek = Carbon::now()->subWeek();
-        // Получить текущую дату и время
         $now = Carbon::now();
 
-        // Определить начало и конец текущей недели
         $startOfCurrentWeek = $now->startOfWeek();
         $endOfCurrentWeek = $now->endOfWeek();
 
-        // Определить начало и конец прошлой недели
         $startOfLastWeek = $now->subWeek()->startOfWeek();
         $endOfLastWeek = $now->endOfWeek();
 
-        // Выборка пользователей, зарегистрировавшихся за прошлую неделю
         $usersLastWeekCount = User::whereBetween('created_at', [$startOfLastWeek, $endOfLastWeek])->count();
         $usersCurrentWeekCount = User::whereBetween('created_at', [$startOfCurrentWeek, $endOfCurrentWeek])->count();
 
@@ -52,7 +48,6 @@ class DeveloperController extends Controller{
             $userCountPercent = 0; // Защита от деления на ноль
         }
 
-        // Количество пользователей
         $usersCount = User::count();
 
         $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->count();

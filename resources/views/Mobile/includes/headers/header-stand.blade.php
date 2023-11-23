@@ -103,7 +103,7 @@
                         </div>
                     </div>
                 </div>
-            @elseif(Request::is('*currentWeekFront*', '*nextWeekFront*'))
+            @elseif(Request::is('*stand/current*', '*stand/next*'))
                 <div class="navbar">
                     <a class="text-center text-dark h1" href="{{route('stand.hub')}}">
                         <div class="rounded">

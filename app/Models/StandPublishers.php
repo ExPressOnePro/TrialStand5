@@ -57,7 +57,6 @@ class StandPublishers extends Model implements Auditable {
         return $this->hasMany(StandTemplate::class, 'id', 'stand_template_id');
     }
 
-
     /**
      * Get the user associated with the StandPublishers
      *
@@ -84,8 +83,12 @@ class StandPublishers extends Model implements Auditable {
     /**
      * Get the user associated with the StandPublishers
      */
+    public function stand(){
+        return $this->hasMany(User::class, 'id', 'stand_id');
+    }
+
     public function users(){
-        return $this->hasMany(User::class, '');
+        return $this->hasMany(stand::class, '');
     }
 
     public function standReports(){

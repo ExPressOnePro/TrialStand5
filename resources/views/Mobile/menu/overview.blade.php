@@ -13,7 +13,7 @@
                             @if(auth()->user()->can('stand.settings'))
                                 {{ route('stand.hub')}}
                             @elseif(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
-                                {{ route('stand.allInOneCurrent') }}
+                                {{ route('stand.aio_current') }}
                             @else
                                 {{ route('stand.hub')}}
                             @endif">

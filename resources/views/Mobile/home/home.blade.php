@@ -2,6 +2,8 @@
 @section('title') Meeper @endsection
 @section('content')
 
+
+
     <div class="content container-fluid">
 
         @include('Mobile.home.components.congregationRequest')

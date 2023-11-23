@@ -25,7 +25,21 @@ use function Symfony\Component\Console\Style\table;
 
 class StandController extends Controller
 {
+    public function update(Request $request, $id)
+    {
 
+        $name = $request->input('name');
+        $location = $request->input('location');
+
+
+        $stand = Stand::findOrFail($id);
+
+        $stand->name = $name;
+        $stand->location = $location;
+        $stand->save();
+
+        return redirect()->back()->with('success', 'Изменения сохранены успешно.');
+    }
 
     // views start
     public function hub()
@@ -57,7 +71,7 @@ class StandController extends Controller
             'userInfo',
         );
         $mobile_detect = new MobileDetect();
-        $viewName = $mobile_detect->isMobile() ? 'Mobile.menu.modules.stand.hub' : 'Mobile.menu.modules.stand.hub';
+        $viewName = $mobile_detect->isMobile() ? 'Modules.stand.hub' : 'Modules.stand.hub';
 
         if ($user->hasRole('Developer') || $user->hasRole('HS')) {
             return view($viewName, $compact);
@@ -65,7 +79,7 @@ class StandController extends Controller
             foreach ($accessible_stands_for_the_user as $one) {
                 $stand_id = $one->id;
             }
-            return redirect()->route('currentWeekTableFront', $stand_id);
+            return redirect()->route('stand.current', $stand_id);
         } else {
             return view($viewName, $compact);
         }
@@ -103,7 +117,7 @@ class StandController extends Controller
         $compact = compact('audits');
 
         if ($AuthUser->hasRole('Developer') || $AuthUser->congregation_id == $stand->congregation_id) {
-            $view = 'Mobile.menu.modules.stand.displays.history';
+            $view = 'Modules.stand.displays.history';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');
@@ -161,7 +175,7 @@ class StandController extends Controller
         );
 
         if ($AuthUser->hasRole('Developer') || $AuthUser->congregation_id == $stand->congregation_id) {
-            $view = 'Mobile.menu.modules.stand.displays.settings';
+            $view = 'Modules.stand.displays.settings';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');
@@ -199,7 +213,6 @@ class StandController extends Controller
         return redirect()->back()->with('success', 'Разрешения успешно обновлены.');
     }
 
-
     public function permUserStand(Request $request)
     {
         $AuthUser = User::find(Auth::id());
@@ -223,59 +236,94 @@ class StandController extends Controller
 
     }
 
-    /*Страницы текущей и следующей недели стенда*/
-    public function allInOneCurrent() {
-        $stands = Stand::query()->where('congregation_id', Auth::user()->congregation_id)->get();
 
-        $users = User::where('congregation_id', Auth::user()->congregation_id)->get();
+    public function table(Request $request, $id){
+        $AuthUser = User::find(Auth::id());
+        $stand = Stand::find($id);
 
-        $StandTemplates = StandTemplate::with('stand', 'congregation')
-            ->where('type', '=', 'current')
-            ->where('congregation_id', '=', Auth::user()->congregation_id)
-            ->groupBy(['stand_id', 'congregation_id'])
-            ->get();
+        $users = User::where('congregation_id', $stand->congregation_id)->get();
 
-        foreach ($StandTemplates as $StandTemplate) {
-            $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
+        $standType = $request->is('*current*') ? 'current' : 'next';
+
+        $query = StandTemplate::where('stand_id', $id)
+            ->where('type', '=', $standType);
+
+        if (!$AuthUser->hasRole('Developer')) {
+            $query->where('congregation_id', '=', $AuthUser->congregation_id);
         }
 
+        $StandTemplate = $query->groupBy(['stand_id', 'congregation_id'])
+            ->first();
+
+
+        $week_schedule = $StandTemplate->week_schedule;
+        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
         $StandTemplate_settings = json_decode($StandTemplate->settings, true);
         $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
+
+        $activation = $StandTemplate_settings['activation']; // трехзначное число
+        $activation_value = explode("-", $activation);
+
+        $daysOfWeek = [
+            1 => trans('text.Понедельник'),
+            2 => trans('text.Вторник'),
+            3 => trans('text.Среда'),
+            4 => trans('text.Четверг'),
+            5 => trans('text.Пятница'),
+            6 => trans('text.Суббота'),
+            7 => trans('text.Воскресенье'),
+        ];
+
+        $dayNumber = $activation_value[0];
+        $dayName = $daysOfWeek[$dayNumber];
+        $currentDateTime = date('N-H:i');
+        $activationDateTime = $activation_value[1];
 
         $compact = compact(
-            'StandTemplates',
+            'StandTemplate',
+            'week_schedule',
             'users',
-            'stands',
+            'stand',
+            'tested',
+            'userInfo',
             'valuePublishers_at_stand',
-            'standPublishers'
+            'standPublishers',
+            'activation',
+            'activation_value',
+            'dayName',
+            'valuePublishers_at_stand',
+            'currentDateTime',
+            'activationDateTime',
         );
 
-        $allowedCongregationIds = $stands->pluck('congregation_id')->toArray();
-
-        if (Auth::user()->hasRole('Developer') || in_array(Auth::user()->congregation_id, $allowedCongregationIds)) {
-            $view = 'Mobile.menu.modules.stand.displays.allInOneCurrent';
+        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $stand->congregation_id)) {
+            $view = 'Modules.stand.displays.weekly_schedule';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');
         }
     }
 
-    public function allInOneNext() {
+    public function aioTable(Request $request,){
+        $AuthUser = User::find(Auth::id());
         $stands = Stand::query()->where('congregation_id', Auth::user()->congregation_id)->get();
 
         $users = User::where('congregation_id', Auth::user()->congregation_id)->get();
+        $user = User::find(Auth::id());
+
+        $standType = $request->is('*current*') ? 'current' : 'next';
 
         $StandTemplates = StandTemplate::with('stand', 'congregation')
-            ->where('type', '=', 'next')
-            ->where('congregation_id', '=', Auth::user()->congregation_id)
+            ->where('type', '=', $standType)
+            ->where('congregation_id', '=', $AuthUser->congregation_id)
             ->groupBy(['stand_id', 'congregation_id'])
             ->get();
 
         foreach ($StandTemplates as $StandTemplate) {
             $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
         }
-
-
 
         $StandTemplate_settings = json_decode($StandTemplate->settings, true);
         $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
@@ -303,6 +351,8 @@ class StandController extends Controller
         $currentDateTime = date('N-H:i');
         $activationDateTime = $activation_value[1];
 
+        $userInfo = json_decode($user->info, true);
+
         $compact = compact(
             'StandTemplates',
             'users',
@@ -316,212 +366,21 @@ class StandController extends Controller
             'valuePublishers_at_stand',
             'currentDateTime',
             'activationDateTime',
+            'userInfo',
         );
 
         $allowedCongregationIds = $stands->pluck('congregation_id')->toArray();
 
         if (Auth::user()->hasRole('Developer') || in_array(Auth::user()->congregation_id, $allowedCongregationIds)) {
-            $view = 'Mobile.menu.modules.stand.displays.allInOneNext';
+            $view = 'Modules.stand.displays.weekly_schedule';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');
         }
     }
 
-    /*Страницы текущей и следующей недели стенда*/
-    public function currentWeekTableFront($id) {
-
-        $AuthUser = User::find(Auth::id());
-        $congregation = Congregation::find($AuthUser->congregation_id);
-        $stand = Stand::find($id);
-
-        $users = User::where('congregation_id', $stand->congregation_id)->get();
-
-        if($AuthUser->hasRole('Developer')){
-            $StandTemplate = StandTemplate::where('stand_id', $id)
-                ->where('type', '=', 'current')
-                ->groupBy(['stand_id', 'congregation_id'])
-                ->first();
-        } else{
-            $StandTemplate = StandTemplate::where('stand_id', $id)
-                ->where('type', '=', 'current')
-                ->where('congregation_id', '=', $AuthUser->congregation_id)
-                ->groupBy(['stand_id', 'congregation_id'])
-                ->first();
-        }
-
-        $week_schedule = $StandTemplate->week_schedule;
-        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
-        $StandTemplate_settings = json_decode($StandTemplate->settings, true);
-        $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
-
-
-        $templates = StandTemplate::with([
-            'stand',
-            'congregation',
-        ])
-            ->where('stand_id', $id)
-            ->where('type', '=', 'current')
-            ->groupBy(['stand_id', 'congregation_id'])
-            ->get(); // `->get()` because model doesn't have `->map()` method
-
-        $compact = compact(
-            'StandTemplate',
-            'week_schedule',
-            'users',
-            'stand',
-            'valuePublishers_at_stand',
-            'standPublishers'
-        );
-
-        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $stand->congregation_id)) {
-            $view = 'Mobile.menu.modules.stand.displays.currentWeek';
-            return view($view, $compact);
-        } else {
-            return view('errors.423Locked');
-
-
-//            return view('Desktop.stand.front.currentWeekTable', compact(
-//                'StandTemplate',
-//                'week_schedule',
-//                'users',
-//                'stand',
-//                'standPublishers'));
-        }
-    }
-
-    public function nextWeekTableFront($id)
+    public function recordCreate($day, $time, $date, $stand_template_id)
     {
-        $AuthUser = User::find(Auth::id());
-        $congregation = Congregation::find($AuthUser->congregation_id);
-        $stand = Stand::find($id);
-
-        $users = User::where('congregation_id', $stand->congregation_id)->get();
-
-        if($AuthUser->hasRole('Developer')){
-            $StandTemplate = StandTemplate::where('stand_id', $id)
-                ->where('type', '=', 'next')
-                ->groupBy(['stand_id', 'congregation_id'])
-                ->first();
-        } else{
-            $StandTemplate = StandTemplate::where('stand_id', $id)
-                ->where('type', '=', 'next')
-                ->where('congregation_id', '=', $AuthUser->congregation_id)
-                ->groupBy(['stand_id', 'congregation_id'])
-                ->first();
-        }
-
-        $settings = json_decode($StandTemplate->settings, true);
-
-        $week_schedule = $StandTemplate->week_schedule;
-        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
-        $StandTemplate_settings = json_decode($StandTemplate->settings, true);
-        $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
-
-        $activation = $settings['activation']; // трехзначное число
-        $activation_value = explode("-", $activation);
-
-        $daysOfWeek = [
-            1 => trans('text.Понедельник'),
-            2 => trans('text.Вторник'),
-            3 => trans('text.Среда'),
-            4 => trans('text.Четверг'),
-            5 => trans('text.Пятница'),
-            6 => trans('text.Суббота'),
-            7 => trans('text.Воскресенье'),
-        ];
-
-        $dayNumber = $activation_value[0];
-        $dayName = $daysOfWeek[$dayNumber];
-        $currentDateTime = date('N-H:i');
-        $activationDateTime = $activation_value[1];
-
-        $templates = StandTemplate::with([
-            'stand',
-            'congregation',
-        ])
-            ->where('stand_id', $id)
-            ->where('type', '=', 'next')
-            ->groupBy(['stand_id', 'congregation_id'])
-            ->get(); // `->get()` because model doesn't have `->map()` method
-
-        $theme = [
-//                'background' => '#8496a2',
-//                'background-color' => '#8496a2',
-            'background' => '#608b93',
-            'background-color' => '#6e988f',
-        ];
-        $templates = $templates->map(static function ($relations) {
-            $relations->standPublishers = $relations->standPublishers->keyBy(static function ($standPublishers) {
-                return $standPublishers->day . '_' . $standPublishers->time;
-            });
-
-            return $relations;
-        });
-
-        $var1 = 1;
-
-        $array = [
-            'standTemplate' => $var1,
-
-        ];
-
-
-        $data = compact(
-            'StandTemplate',
-            'week_schedule',
-            'users',
-            'stand',
-            'theme',
-            'activation_value',
-            'standPublishers',
-            'activation',
-            'dayName',
-            'valuePublishers_at_stand',
-            'currentDateTime',
-            'activationDateTime',
-        );
-
-        $mobile_detect = new MobileDetect();
-        if ($AuthUser->hasRole('Developer') || $AuthUser->congregation_id == $stand->congregation_id) {
-            $view = 'Mobile.menu.modules.stand.displays.nextWeek';
-            return view($view, $data);
-        } else {
-            return view('errors.423Locked');
-        }
-    }
-
-    public function recordRedactionPage($id)
-    {
-
-        $standPublisher = StandPublishers::find($id);
-        $standTemplate = StandTemplate::find($standPublisher->stand_template_id);
-        $stand = Stand::find($standTemplate->stand_id);
-        $congregation = Congregation::find($stand->congregation_id);
-        $roleHS = Role::where('name', 'HS')->first();
-        $roleDeveloper = Role::where('name', 'Developer')->first();
-
-        $users = User::where('congregation_id', $stand->congregation_id)
-            ->where(function ($query) use ($roleHS, $roleDeveloper) {
-                $query->whereHas('usersPermissions', function ($subquery) {
-                    $subquery->where('permission_id', 1);
-                })->orWhereHas('usersRoles', function ($subquery) use ($roleHS, $roleDeveloper) {
-                    $subquery->whereIn('role_id', [$roleHS->id, $roleDeveloper->id]);
-                });
-            })
-            ->orderBy('last_name', 'asc')
-            ->get();
-
-
-        return view('Mobile.menu.modules.stand.components.redaction')
-            ->with(['standPublisher' => $standPublisher])
-            ->with(['users' => $users])
-            ->with(['stand' => $stand]);
-    }
-
-    public function recordRecordPage($day, $time, $date, $stand_template_id)
-    {
-
         $standTemplate = StandTemplate::find($stand_template_id);
         $stand = Stand::find($standTemplate->stand_id);
         $users = User::where('congregation_id', $stand->congregation_id)->get();
@@ -542,17 +401,20 @@ class StandController extends Controller
             ->orderBy('last_name', 'asc')
             ->get();
 
+        $compact = compact('day',
+            'time',
+            'date',
+            'standTemplate',
+            'users',
+            'stand');
 
-        return view('Mobile.menu.modules.stand.components.record', compact(
-            'day', 'time',
-            'date', 'standTemplate', 'users',
-            'stand'));
+        return view('Modules.stand.displays.record', $compact);
     }
 
-    public function recordRedactionPageMobile($stand_publishers_id)
+    public function recordRedaction($stand_publishers_id)
     {
 
-        $standPublisher = StandPublishers::find($stand_publishers_id);
+        $standPublisher = StandPublishers::with('standTemplates.stand')->find($stand_publishers_id);
         $standTemplate = StandTemplate::find($standPublisher->stand_template_id);
         $settings = json_decode($standTemplate->settings, true);
 
@@ -570,124 +432,13 @@ class StandController extends Controller
                 $query->where('role_id', '=', 'HS');
             })->orderby('last_name', 'asc')
             ->get();
-        return view('Mobile.menu.modules.stand.components.redaction', compact(
+        return view('Modules.stand.displays.record_redaction', compact(
             'standPublisher',
             'users',
             'settings',
             'publishers',
             'stand'));
 
-    }
-
-    public function reportPage($stand_publishers_id)
-    {
-        $authorizedUserId = auth()->user()->id;
-        $standPublisher = StandPublishers::find($stand_publishers_id);
-        $standPublisherJ = json_decode($standPublisher->publishers, true);
-        $standPublisherTimes = StandPublishers::where('date', $standPublisher->date)
-            ->where(function ($query) use ($standPublisherJ, $authorizedUserId) {
-                $query->where('publishers->user_1', $authorizedUserId)
-                    ->orWhere('publishers->user_2', $authorizedUserId)
-                    ->orWhere('publishers->user_3', $authorizedUserId)
-                    ->orWhere('publishers->user_4', $authorizedUserId);
-            })
-            ->orderBy('time', 'asc')
-            ->get();
-
-
-        $standTemplate = StandTemplate::find($standPublisher->stand_template_id);
-        $settings = json_decode($standTemplate->settings, true);
-
-        if ($standPublisher) {
-            $publishers = json_decode($standPublisher->publishers, true);
-        } else {
-            $publishers = [];
-        }
-
-        $stand = Stand::find($standTemplate->stand_id);
-        $users = User::where('congregation_id', $stand->congregation_id)->orderby('last_name', 'asc')->get();
-
-        $authorizedUserId = auth()->user()->id; // Идентификатор авторизованного пользователя
-
-        $hasUserInPublishers = false;
-        foreach (['user_1', 'user_2', 'user_3', 'user_4'] as $userKey) {
-            if (isset($publishers[$userKey]) && $publishers[$userKey] == $authorizedUserId) {
-                $hasUserInPublishers = true;
-                break;
-            }
-        }
-
-        return view('Mobile.menu.modules.stand.displays.report', compact(
-            'standPublisher',
-            'standPublisherTimes',
-            'users',
-            'settings',
-            'publishers',
-            'stand',
-            'hasUserInPublishers'));
-    }
-
-    /*POST отправка отчета стенда*/
-    public function standReportSend(StandReportRequest $request, $id)
-    {
-
-        $day = $request->input('day');
-        $time = $request->input('time');
-        $date = $request->input('date');
-        $publications = $request->input('publications');
-        $videos = $request->input('videos');
-        $return_visits = $request->input('return_visits');
-        $bible_studies = $request->input('bible_studies');
-
-// Проверяем, существует ли уже запись с такими данными
-        $existingReport = StandReports::where('user_id', Auth()->user()->id)
-            ->whereJsonContains('standPublisherInfo', [
-                'StandPublishers_id' => $id,
-                'day' => $day,
-                'time' => $time,
-                'date' => $date,
-            ])
-            ->first();
-
-
-        if (!$existingReport) {
-            // Создание новой записи
-            $standReport = new StandReports();
-            $standReport->user_id = Auth()->user()->id;
-            $standReport->standPublisherInfo = json_encode([
-                'StandPublishers_id' => $id,
-                'day' => $day,
-                'time' => $time,
-                'date' => $date,
-            ]);
-            $standReport->reportInfo = json_encode([
-                'publications' => $publications,
-                'videos' => $videos,
-                'return_visits' => $return_visits,
-                'bible_studies' => $bible_studies,
-            ]);
-            $standReport->save();
-        } else {
-            echo 'No';
-        }
-
-//            if ($StandTemplate->type == 'next') {
-//                return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])
-//                    ->with('success', 'Отчет успешно отправлен');
-//            } else {
-//                return redirect()->route('currentWeekTable', ['id' => $StandTemplate->stand_id])
-//                    ->with('success', 'Отчет успешно отправлен');
-//            }
-//        } else {
-//
-//            if($StandTemplate->type == 'next') {
-//                return redirect()->route('nextWeekTable', ['id' => $StandTemplate->stand_id])
-//                    ->with('error', 'Отчет уже был отправлен!');
-//            } else {
-//                return redirect()->route('currentWeekTable',  ['id' => $StandTemplate->stand_id])
-//                    ->with('error', 'Отчет уже был отправлен!');
-//            }
-//        }
     }
 
     public function createNewStand(Request $request)

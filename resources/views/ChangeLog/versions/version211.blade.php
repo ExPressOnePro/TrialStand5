@@ -12,8 +12,10 @@
             @endcan
         </div>
         <div class="mb-3">
-            <span class="badge bg-soft-info text-info py-2 px-3 me-2">Обновление</span>
-
+            <span class="badge bg-soft-info text-info py-2 px-3 me-2">Новое</span>
+            @can('stand.settings')
+                Добавлен журнал ошибок
+            @endcan
         </div>
     </div>
 </div>

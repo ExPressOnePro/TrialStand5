@@ -8,19 +8,7 @@
         <div class="content container-fluid">
             {{--<div class="main-content pt-4">--}}
 
-            @if (session('error'))
-                <div class="alert alert-soft-danger" role="alert">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @if (session('success'))
-                <div class="alert alert-soft-success" role="alert">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <!-- текущая следующая неделя кнопки -->
+            @include('Mobile.includes.alerts.alerts')
             @include('Mobile.menu.modules.stand.components.switchWeek')
 
             @if(date('N') . '-'. date('H:i') >= $activation)

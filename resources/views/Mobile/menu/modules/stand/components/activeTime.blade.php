@@ -1,10 +1,12 @@
 
-        <div class="card-header d-flex align-items-center">
-            <h1 class="heading float-left card-title m-0">Активное время</h1>
-        </div>
-{{--        $scheduleData    --}}
-        @foreach ($daysOfWeek as $dayNumber => $dayName)
-            <div class="card-body">
+<div class="row">
+    <div class="card-header d-flex align-items-center">
+        <h1 class="heading float-left card-title m-0">Активное время</h1>
+    </div>
+    {{--        $scheduleData    --}}
+    @foreach ($daysOfWeek as $dayNumber => $dayName)
+        <div class="col-lg-4">
+            <div class="card card-body border-secondary mb-3">
                 <form id="StandTimeNext{{ $dayNumber }}" method="POST" action="{{ route('StandTimeNext', ['id' => $stand->id, 'day' => $dayNumber]) }}" class="mb-4">
                     @csrf
                     <input type="hidden" name="day" value="{{ $dayNumber }}">
@@ -23,6 +25,7 @@
                     </div>
                 </form>
             </div>
+
             <!-- Modal -->
             <div id="exampleModalCenterStandTimeNext{{ $dayNumber }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterStandTimeNext" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -50,21 +53,24 @@
                             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Закрыть</button>
                             <a type="button" class="btn btn-primary" href="{{ route('StandTimeNext', ['id' => $stand->id, 'day' => $dayNumber] ) }}"
                                onclick="event.preventDefault();
-                                   document.getElementById('StandTimeNext{{ $dayNumber }}').submit();">
+                                       document.getElementById('StandTimeNext{{ $dayNumber }}').submit();">
                                 {{ __('Сохранить изменения') }}
                             </a>
                         </div>
                     </div>
                 </div>
             </div><!-- End Modal -->
-        @endforeach
-        <div class="card-footer">
-            <div class="row">
-                <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModalCenterStandTimeNextToCurrent">
-                    {{ __('Изменения с текущей недели') }}
-                </button>
-            </div>
         </div>
+    @endforeach
+    <div class="card-footer">
+        <div class="row">
+            <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModalCenterStandTimeNextToCurrent">
+                {{ __('Изменения с текущей недели') }}
+            </button>
+        </div>
+    </div>
+</div>
+
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {

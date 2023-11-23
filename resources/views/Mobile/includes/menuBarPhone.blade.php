@@ -21,7 +21,7 @@
         <li class="nav-item">
             <a class="nav-link{{ request()->is('*dev*') ? ' active bg-primary' : '' }}"
                href="{{ route('developer.hub') }}">
-                <i class="fa-brands fa-connectdevelop display-4"></i>
+                <i class="fa-solid fa-code display-6"></i>
             </a>
         </li>
         @endrole

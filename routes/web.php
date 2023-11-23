@@ -19,6 +19,7 @@ use App\Http\Controllers\Stand\StandTemplateController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Opcodes\LogViewer\Http\Controllers\LogsController;
 
 Route::get('lang/{lang}', ['as' => 'lang.switch', 'uses' => 'App\Http\Controllers\LanguageController@switchLang']);
 
@@ -28,6 +29,7 @@ Auth::routes();
 // CRON
 Route::get('/run-cron-task/{token}', [CronController::class, 'publishersUpdateThisWeekFromNextWeekVersion1']);
 // CRON
+
 
 Route::get('/', [LoginController::class, 'view'])->name('auth.login');
 Route::get('/login', [LoginController::class, 'view'])->name('login');
@@ -64,12 +66,20 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::group([
         'middleware' => 'can:module.stand',
-        'prefix' => 'menu/stand',
+        'prefix' => 'stand',
     ], function () {
         // Stand Controller
+        Route::get('/current/{id}', [StandController::class, 'table'])->name('stand.current');
+        Route::get('/next/{id}', [StandController::class, 'table'])->name('stand.next');
+
         Route::get('/', [StandController::class, 'hub'])->name('stand.hub');
-        Route::get('/aio_current', [StandController::class, 'allInOneCurrent'])->name('stand.allInOneCurrent');
-        Route::get('/aio_next', [StandController::class, 'allInOneNext'])->name('stand.allInOneNext');
+
+        Route::get('/aio_current', [StandController::class, 'aioTable'])->name('stand.aio_current');
+        Route::get('/aio_next', [StandController::class, 'aioTable'])->name('stand.aio_next');
+
+        Route::post('/defaultUpdate/{id}', [StandController::class, 'update'])->name('stand.default.update');
+
+
 
 
         Route::get('/currentWeekFront/{id}', [StandController::class, 'currentWeekTableFront'])->name('currentWeekTableFront');
@@ -100,8 +110,13 @@ Route::group(['middleware' => 'auth'], function() {
 
 
 
-        Route::get('/record/{day}/{time}/{date}/{stand_template_id}', [StandController::class, 'recordRecordPage'])->name('recordRecordPage');
-        Route::get('/recordRedaction/{stand_publishers_id}', [StandController::class, 'recordRedactionPageMobile'])->name('recordRedactionPageMobile');
+//        Route::get('/record/{day}/{time}/{date}/{stand_template_id}', [StandController::class, 'recordRecordPage'])->name('recordRecordPage');
+
+        Route::get('/record_create/{day}/{time}/{date}/{stand_template_id}', [StandController::class, 'recordCreate'])->name('stand.record_create');
+        Route::get('/record_redaction/{stand_publishers_id}', [StandController::class, 'recordRedaction'])->name('stand.record_redaction');
+
+
+
         Route::get('/report/{stand_publishers_id}', [StandController::class, 'reportPage'])->name('stand.reportPage');
 
 
@@ -255,6 +270,13 @@ Route::group(['middleware' => 'auth'], function() {
     });
 
     Route::group([
+        'middleware' => ['role:Developer', 'log-viewer'],
+    ], function () {
+        Route::get('/log-viewer*', [LogsController::class, 'index']);
+    });
+
+
+    Route::group([
         'middleware' => 'role:Developer',
         'prefix' => 'dev',
     ], function () {
@@ -267,7 +289,6 @@ Route::group(['middleware' => 'auth'], function() {
 
         Route::get('/test1', [DeveloperController::class, 'testViewButtons'])->name('testViewButtons');
         Route::get('/test1button', [DeveloperController::class, 'test1button'])->name('test1button');
-
 
 
 

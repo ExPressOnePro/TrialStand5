@@ -20,7 +20,7 @@
 {{--@if(Request::is('home*'))--}}
 {{--    @include('Mobile.includes.headers.header-home')--}}
 {{--@endif--}}
-@if(Request::is('menu/stand*'))
+@if(Request::is('stand*'))
     @include('Mobile.includes.headers.header-stand')
 @elseif(Request::is('*menu'))
     @include('Mobile.includes.headers.header-menu')
@@ -39,6 +39,7 @@
 @include('Mobile.includes.menuBarPhone')
 <main id="content" role="main" class="main mb-7">
 
+
     @yield('content')
     @if(Request::is('*stand/current*', '*stand/next*', '*menu/stand'))
         @include('Mobile.layouts.components.scripts.stand')
@@ -48,6 +49,5 @@
 
 
 </main>
-
 </body>
 </html>

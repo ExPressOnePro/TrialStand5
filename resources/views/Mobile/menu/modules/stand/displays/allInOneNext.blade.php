@@ -777,13 +777,11 @@
             </div>
             @endforeach
         </div>
-        @else
-            @if($currentDateTime >= $activationDateTime)
+        @elseif($currentDateTime >= $activationDateTime)
                 <div class="not-found-wrap text-center">
                     <h1 class="heading">Следующая неделя будет доступна</h1>
                     <h1 class="mb-5 text-muted text-20">{{ $dayName }} {{ $activation_value[1] }}</h1>
                 </div>
-            @endif
         @endif
 
     </div>

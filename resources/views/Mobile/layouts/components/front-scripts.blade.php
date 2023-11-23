@@ -14,12 +14,16 @@
 <script src="{{ asset('front/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('front/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
 <script src="{{ asset('front/vendor/datatables.net.extensions/dataTables.fixedColumns.min.js') }}"></script>
-<script src="{{ asset('front/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+{{--<script src="{{ asset('front/datatables/media/js/jquery.dataTables.min.js') }}"></script>--}}
 <script src="{{ asset('front/vendor/appear/dist/appear.min.js') }}"></script>
 
 <script src="{{ asset('front/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js')}}"></script>
 <script src="{{ asset('front/vendor/hs-sticky-block/dist/hs-sticky-block.min.js')}}"></script>
+@if(Request::is('hommm*'))
 <script src="{{ asset('front/vendor/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
+<script src="{{ asset('front/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+
+@endif
 <script src="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.js')}}"></script>
 
 <script src="{{ asset('front/vendor/clipboard/dist/clipboard.min.js')}}"></script>
