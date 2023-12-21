@@ -13,7 +13,7 @@
                                 <div class="input-group-prepend input-group-text">
                                     <i class="bi-search"></i>
                                 </div>
-                                <input id="datatableSearch" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
+                                <input id="datatableWithSearchInput" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
                             </div>
                             <!-- End Search -->
                         </form>

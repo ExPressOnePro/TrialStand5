@@ -55,7 +55,7 @@
                             </a>
 
                             <div id="navbarVerticalMenuPagesUserProfileMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                <a class="nav-link " href="{{ route('congregation.hub') }}">Все собрания</a>
+                                <a class="nav-link " href="{{ route('congregation.hub.blade.php') }}">Все собрания</a>
                                 <a class="nav-link " href="{{ route('congregationView', ['id' =>auth()->user()->congregation_id ]) }}">Мое собрание</a>
                             </div>
                         </div>

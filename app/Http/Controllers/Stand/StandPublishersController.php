@@ -71,7 +71,6 @@ class StandPublishersController extends Controller
         $stand_template_id = $request->input('stand_template_id1');
         $stand_template = StandTemplate::find($stand_template_id);
 
-        $stand_template = StandTemplate::find($stand_template_id);
 
         // Распарсите JSON из settings и получите publishers_at_stand
         $settings = json_decode($stand_template->settings, true);
@@ -98,6 +97,8 @@ class StandPublishersController extends Controller
             'time' => $time,
             'stand_template_id' => $stand_template_id,
         ])->first();
+
+
 
         // Если запись уже существует, выбросить исключение
         if ($existingRecord) {
@@ -156,6 +157,102 @@ class StandPublishersController extends Controller
         return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', __('text.Вы успешно записаны'));
 
     }
+    public function NewRecordStand2(Request $request)
+    {
+
+        $user_1 = $request->input('user_1');
+        $date = $request->input('date1');
+        $day = $request->input('day1');
+        $time = $request->input('time1');
+        $stand_template_id = $request->input('stand_template_id1');
+        $stand_template = StandTemplate::find($stand_template_id);
+
+
+        // Распарсите JSON из settings и получите publishers_at_stand
+        $settings = json_decode($stand_template->settings, true);
+        $publishersCount = $settings['publishers_at_stand'];
+
+        // Создайте массив для хранения данных о пользователях
+        $publishersData = [];
+
+        // Заполните массив нужным количеством полей
+        for ($i = 1; $i <= $publishersCount; $i++) {
+            // Генерируйте ключи в формате 'user_X', где X - номер пользователя
+            $key = 'user_' . $i;
+
+            // Инициализируйте каждого пользователя пустой строкой
+            $publishersData[$key] = "";
+        }
+
+        // Присвойте значение $user_1 первому индексу 'user_1'
+        $publishersData['user_1'] = $user_1;
+
+        $existingRecord = StandPublishers::where([
+            'date' => $date,
+            'day' => $day,
+            'time' => $time,
+            'stand_template_id' => $stand_template_id,
+        ])->first();
+
+
+
+        // Если запись уже существует, выбросить исключение
+        if ($existingRecord) {
+            $user = User::find(Auth::id());
+            $userInfo = json_decode($user->info, true);
+
+            if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+                $routeName = $stand_template->type === 'current' ? 'stand.aio_current2' : 'stand.aio_next2';
+            } else {
+                $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
+            }
+
+            return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('error', 'Запись уже существует');
+        }
+
+        // Создать новую запись
+        $new = StandPublishers::create([
+            'date' => $date,
+            'day' => $day,
+            'time' => $time,
+            'stand_template_id' => $stand_template_id,
+            'publishers' => json_encode($publishersData),
+        ]);
+
+        // Создайте запись в базе данных
+//        $new = StandPublishers::firstOrCreate([
+//            'date' => $date,
+//            'day' => $day,
+//            'time' => $time,
+//            'stand_template_id' => $stand_template_id,
+//            'publishers' => json_encode($publishersData),
+//        ]);
+
+
+        $StandPublishersHistory = new StandPublishersHistory();
+
+        $StandPublishersHistory->publishers = json_encode($publishersData);
+
+        $StandPublishersHistory->date = $date;
+        $StandPublishersHistory->day = $day;
+        $StandPublishersHistory->time = $time;
+        $StandPublishersHistory->stand_publishers_id = $new->id;
+        $StandPublishersHistory->stand_id = $stand_template->stand_id;
+        $StandPublishersHistory->save();
+
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
+
+
+        if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+            $routeName = $stand_template->type === 'current' ? 'stand.aio_current2' : 'stand.aio_next2';
+        } else {
+            $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
+        }
+
+        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', __('text.Вы успешно записаны'));
+
+    }
 
 
     // May be BUG to do 😊
@@ -207,6 +304,54 @@ class StandPublishersController extends Controller
         return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно записаны');
 
     }
+    public function AddPublisherToStand2(Request $request, $id = null) {
+        $user_id = $request->input('user_id');
+
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
+
+        $standPublisher = StandPublishers::find($id);
+        $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $standPublisher->id)->first();
+        $stand_template = StandTemplate::find($standPublisher->stand_template_id);
+        $standPublishersDecode = json_decode($standPublisher->publishers, true);
+
+        $foundEmpty = false;
+        foreach ($standPublishersDecode as $key => $value) {
+            if ($value == $user_id) {
+                $errorMessage = __('text.Пользователь уже записан в выбранное время и дату!');
+                if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+                    $routeName = $stand_template->type === 'current' ? 'stand.aio_current2' : 'stand.aio_next2';
+                } else {
+                    $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
+                }
+                return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('error', $errorMessage);
+            }
+
+            if (empty($value) && !$foundEmpty) {
+                $standPublishersDecode[$key] = $user_id;
+                $standPublishersHistory->publishers = json_encode($standPublishersDecode);
+                $standPublishersHistory->save();
+                $foundEmpty = true;
+            }
+        }
+
+        $standPublisher->publishers = $standPublishersHistory->publishers;
+        $standPublisher->save();
+
+
+        if (!$foundEmpty) {
+            // Если не было найдено пустых значений, вы можете выполнить другие действия
+        }
+
+        if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+            $routeName = $stand_template->type === 'current' ? 'stand.aio_current2' : 'stand.aio_next2';
+        } else {
+            $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
+        }
+
+        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно записаны');
+
+    }
 
 
     /*выписаться со стенда*/
@@ -251,9 +396,56 @@ class StandPublishersController extends Controller
             $routeName = $stand_template->type === 'current' ? 'stand.current' : 'stand.next';
         }
 
-        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно записаны');
+        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно выписали');
 
     }
+    public function recordRedactionDelete2($id, $stand, $user_id) {
+        $standPublisher = StandPublishers::findOrFail($id);
+        $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
+        $publishers = json_decode($standPublisher->publishers, true);
+
+        foreach ($publishers as $key => $value) {
+            if($value === $user_id) {
+                $publishers[$key] = "";
+                $standPublishersHistory->publishers = json_encode($publishers);
+                $standPublishersHistory->save();
+                break;
+            }
+        }
+
+        $standPublisher->publishers = $standPublishersHistory->publishers;
+        $standPublisher->save();
+
+        $stand_template = StandTemplate::find($standPublisher->stand_template_id);
+
+
+        $allEmpty = true;
+        foreach ($publishers as $key => $value) {
+            if (!empty($value)) {
+                $allEmpty = false;
+                break;
+            }
+        }
+        if ($allEmpty) {
+            $standPublisher->delete();
+            $standPublishersHistory->delete();
+        }
+
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
+
+        if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
+            $routeName = $stand_template->type === 'current' ? 'stand.aio_current2' : 'stand.aio_next2';
+        } else {
+            $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
+        }
+
+        return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно выписали');
+
+    }
+
+
+
 
 
     /*Перезаписать пользователя на стенд*/

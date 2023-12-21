@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@include('Mobile.layouts.components.hub-head')
+@include('Mobile.layouts.components.front-head')
 
 <body class="mt-3">
 

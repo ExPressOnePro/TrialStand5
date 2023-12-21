@@ -33,5 +33,11 @@ class Congregation extends Model
         return $this->hasMany(User::class, 'congregation_id', 'id');
     }
 
+    public function permissions(): HasMany
+    {
+        return $this->hasMany(Permission::class, 'permission_id', 'id');
+    }
+
+
 
 }

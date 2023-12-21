@@ -45,7 +45,7 @@
                                             <div class="row">
                                                 <div class="col-sm mb-2 mb-sm-0">
                                                     <h2 class="fw-normal mb-1">
-                                                        {{ \Carbon\Carbon::parse($standPublisher->date)->format('m.d.Y') }}
+                                                        {{ \Carbon\Carbon::parse($standPublisher->date)->format('d.m.Y') }}
                                                         {{ trans('text.' . \App\Enums\WeekDaysEnum::getWeekDay($standPublisher->day)) }}
                                                         {{$standPublisher->time}}
                                                     </h2>
@@ -76,7 +76,7 @@
                                                 <div class="row">
                                                     <div class="col-sm mb-2 mb-sm-0">
                                                         <h2 class="fw-normal mb-1">
-                                                            {{ \Carbon\Carbon::parse($standPublisherNextWeek->date)->format('m.d.Y') }}
+                                                            {{ \Carbon\Carbon::parse($standPublisherNextWeek->date)->format('d.m.Y') }}
                                                             {{ \App\Enums\WeekDaysEnum::getWeekDay($standPublisherNextWeek->day) }}
                                                             {{ $standPublisherNextWeek->time }}</h2>
                                                         <h5 class="text-inherit mb-0">{{__('text.Стенд - ')}} {{ $standTemplateNextWeek->Stand->location }}</h5>

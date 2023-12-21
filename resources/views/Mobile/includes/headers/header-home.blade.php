@@ -1,9 +1,19 @@
-<header class="navbar-fixed navbar-height navbar-bordered bg-white navbar-shadow">
-    <div class="container">
-        <div class="navbar-nav-wrap mt-2">
-            <div class="navbar ms-auto me-auto">
-                <h1>Meeper</h1>
+<header id="header" class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-container navbar-bordered">
+
+    <div class="navbar-nav-wrap">
+
+        <div class="navbar-nav-wrap-content-start">
+
+        </div>
+
+        <div class="navbar-nav-wrap-content-left ms-auto">
+            <div class="dropdown">
+                <span class="d-lg-none h2">Meeper</span>
             </div>
         </div>
+
+        <div class="navbar-nav-wrap-content-end">
+        </div>
+
     </div>
 </header>

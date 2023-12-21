@@ -10,6 +10,17 @@
         @include('Mobile.home.components.firstTimeOnTheSite')
 {{--        @include('Mobile.home.components.update204')--}}
         @include('Mobile.home.components.myStandRecordings')
+        @role('Developer')
+        <div class="list-group d-flex align-items-center border border-primary">
+            <a class="list-group-item list-group-item-action" href="/home1">
+                <div class="d-flex align-items-center">
+                    <div class="ms-3">
+                        <span class="d-block h1 text-inherit mb-0">Home1</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        @endrole
 
 {{--        <div class="row">--}}
 {{--            <div class="col-lg-4 mb-3 mb-lg-5">--}}
@@ -30,7 +41,7 @@
 {{--                            </div>--}}
 {{--                        @else--}}
 {{--                            <div class="list-group d-flex align-items-center border border-primary">--}}
-{{--                                <a class="list-group-item list-group-item-action" href="{{ route('stand.hub') }}">--}}
+{{--                                <a class="list-group-item list-group-item-action" href="{{ route('stand.hub.blade.php') }}">--}}
 {{--                                    <div class="d-flex align-items-center">--}}
 {{--                                        <div class="ms-3">--}}
 {{--                                            <span class="d-block h1 text-inherit mb-0">Мои назначения в собрании</span>--}}

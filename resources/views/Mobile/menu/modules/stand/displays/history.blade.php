@@ -65,6 +65,9 @@
                     <tbody>
                     @foreach($audits as $audit)
                         @php
+                            dd($audit)
+                        @endphp
+                        @php
                             $standPublisher = \App\Models\StandPublishers::find($audit->auditable_id);
                         @endphp
                         <tr>

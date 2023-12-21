@@ -32,7 +32,8 @@ class CongregationsController extends Controller {
         $compact = compact('congregation');
         if($AuthUser->hasRole('Developer')){
             $view = 'Mobile.menu.modules.congregation.hub';
-            return view($view, $compact);
+            $view2 = 'BootstrapApp.Modules.congregations.hub';
+            return view($view2, $compact);
         } else {
             return view('errors.423Locked');
         }
@@ -51,11 +52,21 @@ class CongregationsController extends Controller {
 
         return redirect()->back();
     }
+
     public function view($id) {
 
         // Coutns
         $countUsers = User::where('congregation_id', $id)->count();
         $countGroups = Group::where('congregation_id', $id)->count();
+        $countStands = Stand::where('congregation_id', $id)->count();
+        $countCongregationsPermissions = CongregationsPermissions::with('permission')
+            ->whereHas('permission', function ($query) {
+                $query->where('name', 'like', 'module%');
+            })
+            ->where('congregation_id', $id)
+            ->count();
+
+
         $usersRoleOverseers = UsersRoles::where('role_id', 'Overseer')->get();
 
         $lastWeek = Carbon::now()->subWeek();
@@ -107,6 +118,7 @@ class CongregationsController extends Controller {
         }
 
         $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
+        $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
 
         $users = User::where('congregation_id', $id)->get();
 
@@ -114,10 +126,17 @@ class CongregationsController extends Controller {
         $permissions = Permission::where('name', 'LIKE', 'module%')->get();
         foreach ($permissions as $permission) {
             $permission->has_permission = DB::table('congregations_permissions')
-                ->where('congregation_id', $congregation->id)
+                ->where('congregation_id', $id)
                 ->where('permission_id', $permission->id)
                 ->exists();
         }
+
+        $connectedModules = CongregationsPermissions::with('permission')
+            ->whereHas('permission', function ($query) {
+                $query->where('name', 'like', 'module%');
+            })
+            ->where('congregation_id', $id)
+            ->get();
 
         $congregationRequests = CongregationRequests::with('user')
             ->where('congregation_id', $id)
@@ -127,30 +146,48 @@ class CongregationsController extends Controller {
             ->where('congregation_id', $id)
             ->count();
 
+        $metrics = [
+            [
+                'title' => 'Количество возвещателей',
+                'route' => route('congregation.publishers', $id),
+                'count' => $usersCongregationCount,
+                'percent' => null,
+            ],
+            [
+                'title' => 'Активных за неделю',
+                'route' =>  route('congregation.ActiveUsersPerWeek', $id),
+                'count' => $usersActiveCount,
+                'percent' => $usersActiveCountPercent,
+            ],
+            [
+                'title' => 'Работающих стендов',
+                'route' => route('congregation.stands', $id),
+                'count' => $countStands,
+                'percent' => null, // Здесь процент не указан
+            ],
+            [
+                'title' => 'Подключено модулей',
+                'route' => route('congregation.modules', $id),
+                'count' => $countCongregationsPermissions,
+                'percent' => null, // Здесь процент не указан
+            ],
+        ];
+
+
 
         $compact = compact(
             'congregation',
+            'metrics',
             'congregationRequests',
             'congregationRequestsCount',
-            'usersCongregationCount',
-            'usersActiveCount',
-            'usersActiveCountPercent',
-            'users',
-            'permission_stands',
-            'permission_Overseer',
-            'groups',
-            'countGroups',
-            'countOverseers',
-            'countUsers',
-            'congregationModules',
-            'permissions'
         );
 
         $mobile_detect = new MobileDetect();
 
         if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
-            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.congregation.main' : 'Mobile.menu.modules.congregation.main';
-            return view($view, $compact);
+            $view = $mobile_detect->isMobile() ? 'Modules.congregation.overview' : 'Modules.congregation.overview';
+            $view2 = 'BootstrapApp.Modules.congregations.overview';
+            return view($view2, $compact);
         } else {
             return view('errors.423Locked');
         }
@@ -346,7 +383,7 @@ class CongregationsController extends Controller {
         );
         $mobile_detect = new MobileDetect();
         if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
-            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.congregation.display.modules' : 'Mobile.menu.modules.congregation.display.modules';
+            $view = 'Modules.congregation.displays.modules';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');
@@ -380,7 +417,7 @@ class CongregationsController extends Controller {
 
         $mobile_detect = new MobileDetect();
         if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
-            $view = $mobile_detect->isMobile() ? 'Mobile.menu.modules.congregation.display.requests' : 'Mobile.menu.modules.congregation.display.requests';
+            $view =  'Modules.congregation.displays.requests';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');
@@ -403,7 +440,10 @@ class CongregationsController extends Controller {
                 ->exists();
         }
 
-        return view('Mobile.menu.modules.congregation.display.publishers',compact(
+        $view1 = 'Modules.congregation.displays.publishers';
+        $view2 = 'BootstrapApp.Modules.congregations.displays.publishers';
+
+        return view($view2,compact(
             'congregation',
             'users',
             'permissions','congregationRequestsCount'));
@@ -452,6 +492,22 @@ class CongregationsController extends Controller {
             'users',
             'permissions','congregationRequestsCount'));
     }
+
+    public function displayActiveUsersPerWeek($congregation_id) {
+
+        $lastWeekTimestamp = now()->subWeek();
+        $users = User::whereRaw('JSON_EXTRACT(info, "$.last_login") IS NOT NULL')
+            ->where('congregation_id', $congregation_id)
+            ->where(DB::raw('info->>"$.last_login"'), '>=', $lastWeekTimestamp)
+            ->orderByDesc('info->last_login')
+            ->get();
+
+        $congregation = Congregation::query()->find($congregation_id);
+        $compact = compact('users',
+            'congregation');
+        return view('Modules.congregation.displays.ActiveUsersPerWeek', $compact);
+    }
+
     public function displayStands($congregation_id) {
 
         $user = User::find(Auth::id());
@@ -489,7 +545,7 @@ class CongregationsController extends Controller {
             'congregationRequestsCount'
         );
 
-        return view('Mobile.menu.modules.congregation.display.stands', $compact);
+        return view('Modules.congregation.displays.stands', $compact);
     }
 
     public function infoSave($congregation_id) {
@@ -526,6 +582,34 @@ class CongregationsController extends Controller {
 
         return redirect()->route('congregationView', $id);
     }
+
+    public function updateProfile(Request $request, $id)
+    {
+        // Валидация данных
+        $request->validate([
+            'editFirstNameModal' => 'required|string|max:255',
+            'editLastNameModal' => 'required|string|max:255',
+            'userIdInput' => 'required',
+        ]);
+
+        // Получение текущего пользователя
+        $user = User::find($request->input('userIdInput'));
+
+        // Обновление данных пользователя
+        $user->update([
+            'first_name' => $request->input('editFirstNameModal'),
+            'last_name' => $request->input('editLastNameModal'),
+        ]);
+
+        // Редирект или возврат ответа
+        return redirect()->back();
+    }
+
+
+
+
+
+
 
     public function reject($id, $conReq) {
 

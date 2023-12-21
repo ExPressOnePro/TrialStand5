@@ -53,6 +53,9 @@ Route::get('/password/reset/{login}/{token}', [ForgotPasswordController::class, 
 Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/guest', [HomeController::class, 'guest'])->name('guest');
+    Route::get('/home1', [HomeController::class, 'home1'])->name('home1');
+    Route::get('/help', [HomeController::class, 'helpfaq'])->name('helpfaq');
+
     Route::get('/changeLog', [HomeController::class, 'changeLog'])->name('changeLog');
 
 
@@ -60,7 +63,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
     Route::get('/meetingSchedules', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
 
+
     Route::get('/menu', [HomeController::class, 'menu'])->name('menu.overview');
+    Route::get('/menu2', [HomeController::class, 'menu2'])->name('menu.overview2');
 
 
 
@@ -69,13 +74,24 @@ Route::group(['middleware' => 'auth'], function() {
         'prefix' => 'stand',
     ], function () {
         // Stand Controller
+
         Route::get('/current/{id}', [StandController::class, 'table'])->name('stand.current');
         Route::get('/next/{id}', [StandController::class, 'table'])->name('stand.next');
 
+        //Bootstrap
+
+        Route::get('/current2/{id}', [StandController::class, 'table2'])->name('stand.current2');
+        Route::get('/next2/{id}', [StandController::class, 'table2'])->name('stand.next2');
+
+        //****
+
         Route::get('/', [StandController::class, 'hub'])->name('stand.hub');
+        Route::get('/Boot/', [StandController::class, 'hub2'])->name('stand.hub2');
 
         Route::get('/aio_current', [StandController::class, 'aioTable'])->name('stand.aio_current');
+        Route::get('/aio_current2', [StandController::class, 'aioTable2'])->name('stand.aio_current2');
         Route::get('/aio_next', [StandController::class, 'aioTable'])->name('stand.aio_next');
+        Route::get('/aio_next2', [StandController::class, 'aioTable2'])->name('stand.aio_next2');
 
         Route::post('/defaultUpdate/{id}', [StandController::class, 'update'])->name('stand.default.update');
 
@@ -86,8 +102,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/nextWeekFront/{id}', [StandController::class, 'nextWeekTableFront'])->name('nextWeekTableFront');
 
         Route::post('/NewRecordStand', [StandPublishersController::class, 'NewRecordStand'])->name('NewRecordStand');
+        Route::post('/NewRecordStand2', [StandPublishersController::class, 'NewRecordStand2'])->name('NewRecordStand2');
         Route::post('/record/add/{id}', [StandPublishersController::class, 'AddPublisherToStand'])->name('AddPublisherToStand');
+        Route::post('/record2/add/{id}', [StandPublishersController::class, 'AddPublisherToStand2'])->name('AddPublisherToStand2');
         Route::get('/record/delete/{id}/{stand}/{user_id}', [StandPublishersController::class, 'recordRedactionDelete'])->name('recordRedactionDelete');
+        Route::get('/record2/delete/{id}/{stand}/{user_id}', [StandPublishersController::class, 'recordRedactionDelete2'])->name('recordRedactionDelete2');
         Route::post('/record/change/{id}/{stand}/{user_id}', [StandPublishersController::class, 'recordRedactionChange'])->name('recordRedactionChange');
 
 
@@ -168,7 +187,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     });
 
-    Route::get('/permUser323', [StandController::class, 'permUserStand'])->name('permUserStand');
+    Route::get('/permUser323/{id}', [StandController::class, 'permUserStand'])->name('permUserStand');
     Route::post('/updatePerm', [StandController::class, 'updatePerm'])->name('updatePerm');
 
     Route::group([
@@ -189,6 +208,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/modules/{congregation_id}/', [CongregationsController::class, 'displayModules'])->name('congregation.modules');
         Route::get('/requests/{congregation_id}/', [CongregationsController::class, 'displayRequests'])->name('congregation.requests');
         Route::get('/publishers/{congregation_id}/', [CongregationsController::class, 'displayPublishers'])->name('congregation.publishers');
+        Route::get('/ActiveUsersPerWeek/{congregation_id}/', [CongregationsController::class, 'displayActiveUsersPerWeek'])->name('congregation.ActiveUsersPerWeek');
         Route::get('/appointed/{congregation_id}/', [CongregationsController::class, 'displayAppointed'])->name('congregation.appointed');
         Route::get('/settings/{congregation_id}/', [CongregationsController::class, 'displaySettings'])->name('congregation.settings');
         Route::get('/stands/{congregation_id}/', [CongregationsController::class, 'displayStands'])->name('congregation.stands');
@@ -196,7 +216,8 @@ Route::group(['middleware' => 'auth'], function() {
 
 
 
-    Route::get('/contacts/{congregation_id}/', [ContactsController::class, 'index'])->name('contacts.hub');
+    Route::get('/contacts', [ContactsController::class, 'index'])->name('contacts.hub');
+    Route::get('/contacts2', [ContactsController::class, 'index2'])->name('contacts.hub2');
 
     Route::post('/profile/basicInfo', [ProfileController::class, 'basicInfoSave'])->name('profile.basicInfoSave');
     Route::post('/profile/contactInfo', [ProfileController::class, 'contactsInfoSave'])->name('profile.contactsInfoSave');
@@ -261,7 +282,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::group([
         'middleware' => 'role:Developer',
-        'prefix' => 'congregation',
+        'prefix' => 'cons',
     ], function () {
 
         Route::get('/', [CongregationsController::class, 'hub'])->name('congregation.hub');
@@ -272,7 +293,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::group([
         'middleware' => ['role:Developer', 'log-viewer'],
     ], function () {
-        Route::get('/log-viewer*', [LogsController::class, 'index']);
+        Route::get('/log-viewer*', [LogsController::class, 'index'])->name('log');
     });
 
 
@@ -303,6 +324,7 @@ Route::group(['middleware' => 'auth'], function() {
             'prefix' => 'congregation',
         ], function () {
 
+        Route::post('/congregation/{id}', [CongregationsController::class, 'updateProfile'])->name('update.profile.congr');
         Route::get('/congregation/{id}/User/{user_id}', [CongregationsController::class, 'allow'])->name('congregationAllow');
         Route::get('/congregation{id}/congregationRequest{conReq}', [CongregationsController::class, 'reject'])->name('congregationReject');
         Route::get('/{congregation_id}/group{group_id}', [CongregationsController::class, 'groupView'])->name('groupView');

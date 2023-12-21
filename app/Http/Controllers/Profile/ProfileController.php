@@ -30,8 +30,6 @@ class ProfileController extends Controller
         }
     }
 
-
-
     public function info() {
 
         $array = [
@@ -127,6 +125,7 @@ class ProfileController extends Controller
     }
 
     public function basicInfoSave(Request $request) {
+
         $first_name = $request->input('first_name');
         $last_name = $request->input('last_name');
         $gender = $request->input('inputGroupMergeGenderSelect');
@@ -135,17 +134,15 @@ class ProfileController extends Controller
         $user = User::find($id);
         $userInfo = json_decode($user->info, true);
 
-// Обновляем информацию в JSON-массиве
+
         $userInfo['gender'] = $gender;
 
-// Обновляем данные в одноименных столбцах
+
         $user->first_name = $first_name;
         $user->last_name = $last_name;
 
-// Обновляем JSON-поле в базе данных
         $user->info = json_encode($userInfo);
 
-// Сохраняем изменения
         $user->save();
 
 

@@ -43,8 +43,8 @@
                             <th>Имя фамилия</th>
                         </tr>
                     </thead>
-
                     <tbody>
+
                     @foreach($users as $user)
                         <tr>
                             <td>
@@ -70,37 +70,10 @@
                                                 @endif
                                             @endif
                                         </div>
-                                        <!-- End Col -->
                                     </div>
-                                    <!-- End Row -->
                                 </div>
                             </div>
                             </td>
-{{--                            <td class="mb-0">--}}
-{{--                                <div class="row">--}}
-{{--                                    <div class="col-9">--}}
-{{--                                        <dd>--}}
-{{--                                            <dd class="badge bg-secondary">{{ $user->last_name }} {{ $user->first_name }}</dd>--}}
-
-{{--                                            @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))--}}
-{{--                                                @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))--}}
-{{--                                                   <span class="badge bg-secondary">{{ $decodedInfo['mobile_phone'] }}</span>--}}
-{{--                                                @endif--}}
-{{--                                            @endif--}}
-{{--                                        </dd>--}}
-
-{{--                                    </div>--}}
-{{--                                    <div class="col-3">--}}
-{{--                                        @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))--}}
-{{--                                            @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))--}}
-{{--                                                <button class="btn btn-outline-primary" onclick="callNumber('{{$decodedInfo['mobile_phone']}}')">--}}
-{{--                                                    <i class="fa-solid fa-phone"></i>--}}
-{{--                                                </button>--}}
-{{--                                            @endif--}}
-{{--                                        @endif--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </td>--}}
                         </tr>
                     @endforeach
                     </tbody>

@@ -5,6 +5,7 @@
 
 <!-- JS Implementing Plugins -->
 <script src="{{ asset('front/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js')}}"></script>
+<script src="{{ asset('front/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js')}}"></script>
 <script src="{{ asset('front/vendor/hs-form-search/dist/hs-form-search.min.js')}}"></script>
 
 <script src="{{ asset('front/vendor/chart.js/dist/Chart.min.js') }}"></script>
@@ -25,7 +26,6 @@
 
 @endif
 <script src="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.js')}}"></script>
-
 <script src="{{ asset('front/vendor/clipboard/dist/clipboard.min.js')}}"></script>
 <script src="{{ asset('front/vendor/hs-toggle-password/dist/js/hs-toggle-password.js')}}"></script>
 <script src="{{ asset('front/vendor/fslightbox/index.js')}}"></script>
@@ -40,6 +40,19 @@
 <!-- JS Front -->
 <script src="{{ asset('front/js/theme.min.js') }}"></script>
 <script src="{{ asset('front/js/hs.theme-appearance-charts.js')}}"></script>
+
+
+<!-- JS Implementing Plugins -->
+<script src="{{asset('front/vendor/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('front/vendor/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{asset('front/vendor/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{asset('front/vendor/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{asset('front/vendor/pdfmake/build/vfs_fonts.js')}}"></script>
+<script src="{{asset('front/vendor/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset('front/vendor/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{asset('front/vendor/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
+
+
 
 
 <!-- JS Front -->

@@ -1,5 +1,6 @@
 @section('menuBarPhone')
-
+    @inject('mobile_detect', 'Mobile_Detect')
+    @if ($mobile_detect->isMobile())
     <ul class="nav nav-sm nav-pills nav-fill fixed-bottom navbar-bordered bg-white navbar-shadow" style="position: fixed">
         <li class="nav-item">
             <a class="nav-link{{ request()->is('home*') ? ' active bg-primary' : '' }}" href="{{ route('home') }}">
@@ -26,7 +27,7 @@
         </li>
         @endrole
     </ul>
-
+    @endif
 
 
 

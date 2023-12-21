@@ -18,7 +18,7 @@
     <!-- End Navbar Toggle -->
 
     <!-- Navbar Collapse -->
-    <div id="navbarVerticalNavMenuCardPills" class="collapse navbar-collapse rounded-3 collapse show">
+    <div id="navbarVerticalNavMenuCardPills" class="collapse navbar-collapse rounded-3 collapse">
         <div id="navbarSettingsCardWithNav" class="card card-navbar-nav nav nav-pills nav-vertical">
             @if(Request::is('*congregation/requests/*'))
                 <a class="nav-link active" href="{{route('congregation.requests', $congregation->id)}}">

@@ -42,16 +42,15 @@ class DeveloperController extends Controller{
         $usersCurrentWeekCount = User::whereBetween('created_at', [$startOfCurrentWeek, $endOfCurrentWeek])->count();
 
 
-        if ($usersLastWeekCount > 0 && $usersCurrentWeekCount > 0) {
-            $userCountPercent = ($usersLastWeekCount / $usersCurrentWeekCount) * 100;
-        } else {
-            $userCountPercent = 0; // Защита от деления на ноль
-        }
+        $userCountPercent = ($usersLastWeekCount / max(1, $usersCurrentWeekCount)) * 100;
 
         $usersCount = User::count();
+        $lastWeekTimestamp = now()->subWeek()->timestamp;
 
+        $usersActiveCount = User::where('info->last_login', '>=', $lastWeekTimestamp)->count();
         $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->count();
-        $usersActiveCountPercent = ($usersActiveCount / $usersCount) * 100;
+
+        $usersActiveCountPercent = ($usersActiveCount / max(1, $usersCount)) * 100;
         $usersRegistrationsCount = User::whereDate('created_at', '>=', Carbon::now()->subDays(2))->count();
         $usersRequestsCongregationsCount = CongregationRequests::count();
         $congregationCount = Congregation::where('id','!=', 1)->count();
@@ -167,143 +166,6 @@ class DeveloperController extends Controller{
 
         $compact = compact('users');
         return view('Mobile.menu.modules.developer.displays.registeredUser', $compact);
-    }
-
-
-
-    public function testViewButtons() {
-
-        $roleDeveloper = Role::where('name', 'Developer')->first();
-        $usersDeveloper = UsersRoles::where('role_id', $roleDeveloper->id)->get();
-
-
-        $array = [
-            'Cretugena1969@gmail.com' => 'gena1969',
-            '1scoscodan@gmail.com' => '4685583275',
-            'eddimir@gmail.com' => 'A60651668',
-            'popovici1233@gmail.com' => 'popovici1233',
-            'tatiana.suiu@gmail.com' => 'SuperPassword123',
-            'BabanAliona' => '7834793757',
-            'BabichLilia' => '1545324046',
-            'BalabanAnna' => '2615807742',
-            'BalabanEfim' => '2732849306',
-            'BalabanEvgenii' => '069102199',
-            'BalabanNatalia' => '7798182396',
-            'BalabanSvetlana' => '5674819727',
-            'BalabanVladimir' => '2579718787',
-            'JarkovaInna' => '9836781067',
-            'BurlacuRaisa' => '9616022948',
-            'viktor.mishukov@mail.ru' => 'sanson456',
-            'Viktoria' => '1620602402',
-            'VoitikValentina' => '5057176759',
-            'GaletskiiInna' => '4704253264',
-            'GaletskiiDmitrii' => '30720919',
-            'GolovkoNikita' => '7685304705',
-            'GolovkoOlga' => '1227470989',
-            'DeleuValentina' => '1033403404',
-            'DolgincevaO' => '9810819955',
-            'JarkovaKarina' => '3235647564',
-            'JosanLudmila' => '5211429353',
-            'ZaitsevSergei' => '148705229',
-            'ZaitsevaNatalia' => '6025607188',
-            'KazakSergei' => '3310365155',
-            'KarasevaNadezhda' => '5532948394',
-            'KoshelevaIrina' => '5787241726',
-            'KoshkodanIana' => '3956258518',
-            'KoshkodanSergei' => '918632814',
-            'KretsuGennadii' => '6849378970',
-            'KulinskiiAnna' => '9855756434',
-            'KulinskiiAlexandr' => '5293512935',
-            'LupanovaRaisa' => '4640505498',
-            'LupanovaSvetlana' => '6476140857',
-            'MatiescuRuslana' => '7223265720',
-            'MatkovskaiaAnna' => '3613338158',
-            'deeanlife@gmail.com' => 's00705119',
-            'MironEduard' => '8333814408',
-            'MironEmil' => '4066143982',
-            'MironIvan' => '4574994738',
-            'MironMaria' => '2025588819',
-            'MironVioletta' => '6268258813',
-            'MironovaDina' => '3963756881',
-            'dnepr-dnestr90@mail.ru' => 'sanson456sanson',
-            'NebesniiEkaterina' => '3264600605',
-            'NebesniiStanislav' => '3381499139',
-            'OberstEvdokia' => '4882471667',
-            'PasecinicNina' => '848325905',
-            'PatrascuSvetlana' => '436302186',
-            'PogonetOlga' => '5421147073',
-            'PogonetRodeon' => '3052635655',
-            'PopoviciAliona' => '8953274337',
-            'PopoviciVictor' => '4163975641',
-            'PustiiMaria' => '3280230034',
-            'RotariNatalia' => '760532205',
-            'RusnacMamlikat' => '8287580992',
-            'RusnakGalina' => '4908037149',
-            'RusnakValerii' => '6710810419',
-            'ValeriiRusnaс' => '8648250208',
-            'SajinEvgenii' => '6849871813',
-            'SajinOlesia' => '2081512181',
-            'SajinTatiana' => '5460404569',
-            'SkobelkinaValentina' => '5450263207',
-            'SmirnovEvgenii' => 'petro0202',
-            'SmirnovaElena' => '431904836',
-            'StingachZinaida' => '7146248686',
-            'TkaciIulia' => '9115055722',
-            'UrsatiiLudmila' => '9806345224',
-            'UrsatiiPavel' => '4428030913',
-            'HodjaevaTamara' => '5038245716',
-            'SaragovIvan' => '7686636835',
-            'SaragovaAlina' => '76729292',
-            'SAlex' => '8049830835',
-            'Taniaspac1987@gmail.com' => 'Sp69630804',
-            'SergiuSuiu' => '24372041',
-            'SuiuTatiana' => '8627591465',
-            'IakushevaOlga' => '9312075579',
-        ];
-
-
-        foreach ($array as $login => $password) {
-            // Ищем пользователя по логину
-            $user = User::where('login', $login)->first();
-
-            if ($user) {
-                // Обновляем поле password
-                $user->password = Hash::make($password);
-                $user->save();
-                Astart::updateOrInsert(
-                    ['user_id' => $user->id],
-                    ['password' => $password]
-                );
-            }
-        }
-    }
-
-    public function test1button() {
-
-        $roleDeveloper = Role::where('name', 'Developer')->first();
-        $permissionModule = Permission::where('name', 'module.stand')->first();
-        $congregation = '2';
-        $usersCongregation = User::where('congregation_id', $congregation)->get();
-
-        $usersPermissionModule = UsersPermissions::
-        whereIn('user_id', User::where('congregation_id', '2')->pluck('id'))
-            ->where('permission_id', $permissionModule->id)->get();
-
-
-        foreach($usersCongregation as $userCongregation) {
-            $RolesPermissions = new UsersPermissions();
-            $RolesPermissions->user_id = $userCongregation->id;
-            $RolesPermissions->permission_id = $permissionModule->id;
-            $RolesPermissions->save();
-        }
-
-        $congregationPermission = new CongregationsPermissions();
-        $congregationPermission->congregation_id = $congregation;
-        $congregationPermission->permission_id = $permissionModule->id;
-        $congregationPermission->save();
-
-        return redirect()->route('testViewButtons');
-
     }
 
     public function rolesPermissionsPage() {

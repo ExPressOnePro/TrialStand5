@@ -31,9 +31,14 @@
 {{--    <link rel="stylesheet" href="{{ asset('front/css/themes.css') }}" data-hs-appearance="default" as="style">--}}
 {{--    <link rel="stylesheet" href="{{ asset('front/css/components/theme-home.min.css') }}" data-hs-appearance="default" as="style">--}}
 
+
+    <link rel="stylesheet" href="{{ asset('front/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/vendor/flatpickr/dist/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/vendor/bootstrap-icons/font/bootstrap-icons.css') }}">
+
+
     <link rel="stylesheet" href="{{ asset('front/css/theme.min.css') }}" data-hs-appearance="default" as="style">
     <link rel="stylesheet" href="{{ asset('front/css/theme-dark.min.css') }}" data-hs-appearance="dark" as="style">
-
 
 
     <style data-hs-appearance-onload-styles>
@@ -47,7 +52,6 @@
             opacity: 0;
         }
     </style>
-
 
 
     <script>

@@ -27,22 +27,12 @@
                                 <!-- End Col -->
                                 <div class="col-auto">
                                     <!-- Circle -->
-                                    <div class="js-counter h1 mb-1">{{$metric['count']}}</div>
-{{--                                    <div class="js-circle"--}}
-{{--                                         data-hs-circles-options='{--}}
-{{--                                    "value": {{ $metric['count'] }},--}}
-{{--                                    "maxValue": 500,--}}
-{{--                                    "duration": 1000,--}}
-{{--                                    "isViewportInit": true,--}}
-{{--                                    "colors": ["rgba(55, 125, 255, 0.1)", "#377dff"],--}}
-{{--                                    "radius": 25,--}}
-{{--                                    "width": 3,--}}
-{{--                                    "textFontSize": 22,--}}
-{{--                                    "additionalText": "",--}}
-{{--                                    "textClass": "circles-chart-content",--}}
-{{--                                    "textColor": "#377dff"--}}
-{{--                                }'></div>--}}
-                                    <!-- End Circle -->
+                                    <div class="js-counter h1 mb-1">
+                                        @if(isset($metric['count']))
+                                            {{$metric['count']}}
+                                        @endif
+                                    </div>
+
                                 </div>
                                 <!-- End Col -->
                             </div>
@@ -52,7 +42,17 @@
                 </div>
             @endforeach
         </div>
-
+        <div class="col mb-3 mb-lg-5">
+            <div class="list-group d-flex align-items-center">
+                <a class="list-group-item list-group-item-action border border-1 border-danger" href="/log-viewer">
+                    <div class="d-flex align-items-center m-2">
+                        <div class="ms-3">
+                            <span class="d-block h1 text-inherit mb-0">Log-viewer</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 
 @endsection

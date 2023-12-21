@@ -57,7 +57,7 @@ Route::get('/generate-token/{id}', [UsersController::class, 'generateToken'])->n
 //
 //
 //
-//    Route::get('/contacts/{congregation_id}/', [ContactsController::class, 'index'])->name('contacts.hub');
+//    Route::get('/contacts/{congregation_id}/', [ContactsController::class, 'index'])->name('contacts.hub.blade.php');
 //
 //    Route::post('/profile/basicInfo', [ProfileController::class, 'basicInfoSave'])->name('profile.basicInfoSave');
 //    Route::post('/profile/contactInfo', [ProfileController::class, 'contactsInfoSave'])->name('profile.contactsInfoSave');

@@ -11,7 +11,7 @@
 
 <main id="content" role="main" class="main mb-7">
     @yield('content')
-{{--    @include('Mobile.layouts.components.hub-scripts')--}}
+{{--    @include('Mobile.layouts.components.hub.blade.php-scripts')--}}
 </main>
 {{--    @include('Mobile.includes.menuBarPhone')--}}
 </body>

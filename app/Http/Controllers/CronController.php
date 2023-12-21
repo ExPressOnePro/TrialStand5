@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Congregation;
+use App\Models\Stand;
 use App\Models\StandPublishers;
 use App\Models\StandTemplate;
 use Illuminate\Http\Request;
@@ -94,16 +95,18 @@ class CronController extends Controller
             $expectedToken = 'aBcD1234EfGh5678iJkLmN9oPqRsT0123uVwXyZ';
 
             if ($token === $expectedToken) {
-                $congregations = Congregation::with('stand')->get();
-
+                $congregations = Congregation::get();
                 foreach ($congregations as $congregation) {
-                    foreach ($congregation->stand as $stand) {
+                    $stands = Stand::query()->where('congregation_id', $congregation->id)->get();
+                    foreach ($stands as $stand) {
                         $stand_template_id_next = $stand->standTemplate()->where('type', 'next')->first();
                         $stand_template_id_current = $stand->standTemplate()->where('type', 'current')->first();
 
                         if ($stand_template_id_next && $stand_template_id_current) {
                             $week_schedule_next = $stand_template_id_next->week_schedule;
                             $stand_template_id_current->update(['week_schedule' => $week_schedule_next]);
+
+                            Log::channel('cron')->info('Обновление week_schedule выполнено успешно для стенда ID ' . $stand->id);
                         }
 
                         if ($stand_template_id_next) {
@@ -111,10 +114,11 @@ class CronController extends Controller
                                 ->update([
                                     'stand_template_id' => optional($stand_template_id_current)->id
                                 ]);
+
+                            Log::channel('cron')->info('Обновление StandPublishers выполнено успешно для стенда ID ' . $stand->id);
                         }
                     }
                 }
-
                 Log::channel('cron')->info('Задача cron выполнена успешно.');
                 return "Задача cron выполнена успешно.";
             } else {
