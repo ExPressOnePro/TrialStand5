@@ -1,7 +1,7 @@
 @can('module.stand')
     @php
         $link2 = (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
-            ? route('stand.aio_current2')
+            ? route('stand.hub2')
             : route('stand.hub2');
     @endphp
 

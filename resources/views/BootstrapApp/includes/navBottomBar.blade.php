@@ -26,6 +26,13 @@
                 <p class="h3"><i class="fa-solid fa-bars"></i></p>
             </a>
         </li>
+        @role('Developer')
+        <li class="nav-item" role="presentation">
+            <a class="nav-link text-decoration-none" id="home-tab2" href="{{route('developer.hub')}}">
+                <p class="h3"><i class="fa-solid fa-globe"></i></p>
+            </a>
+        </li>
+        @endrole
 {{--        <li class="nav-item position-relative">--}}
 {{--            <a class="nav-link text-decoration-none position-relative {{ request()->is('congregation*') ? ' active' : '' }}" href="{{ route('congregationView', Auth()->user()->congregation_id) }}">--}}
 

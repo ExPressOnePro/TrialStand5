@@ -17,12 +17,12 @@
                 </div>
             @else
                 <div class="list-group d-flex align-items-center border border-primary">
-                        <a class="list-group-item list-group-item-action" href="
-                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
-{{ route('stand.aio_current') }}
-@else
-    {{ route('stand.hub') }}
-@endif">
+                        <a class="list-group-item list-group-item-action" href="{{ route('stand.hub') }}">
+{{--                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)--}}
+{{--{{ route('stand.hub') }}--}}
+{{--@else--}}
+{{--    {{ route('stand.hub') }}--}}
+{{--@endif">--}}
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
                                     <span class="d-block h1 text-inherit mb-0">{{ __('text.Нет записей') }}</span>

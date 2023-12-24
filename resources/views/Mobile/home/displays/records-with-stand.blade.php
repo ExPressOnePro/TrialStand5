@@ -35,12 +35,12 @@
                                 @foreach ($standPublishers as $standPublisher)
                                     @foreach ($standPublisher->standTemplates as $standTemplate)
                                         <li class="list-group-item">
-                                            <a class="list-group-item-action border-primary" href="
-                                            @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
-                                            {{ route('stand.aio_current') }}
-@else
-    {{ route('stand.current', $standTemplate->stand_id) }}
-@endif">
+                                            <a class="list-group-item-action border-primary" href="{{ route('stand.current', $standTemplate->stand_id) }}">
+{{--                                            @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)--}}
+{{--                                            {{ route('stand.aio_current') }}--}}
+{{--@else--}}
+{{--    {{ route('stand.current', $standTemplate->stand_id) }}--}}
+{{--@endif">--}}
 
                                             <div class="row">
                                                 <div class="col-sm mb-2 mb-sm-0">
@@ -67,12 +67,12 @@
                                 @foreach ($standPublishersNextWeek as $standPublisherNextWeek)
                                     @foreach ($standPublisherNextWeek->standTemplates as $standTemplateNextWeek)
                                         <li class="list-group-item">
-                                            <a class="list-group-item-action border-primary" href="
-                                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
-    {{ route('stand.aio_next') }}
-@else
-{{ route('stand.next', $standTemplateNextWeek->stand_id) }}
-@endif">
+                                            <a class="list-group-item-action border-primary" href="{{ route('stand.next', $standTemplateNextWeek->stand_id) }}">
+{{--                                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)--}}
+{{--    {{ route('stand.aio_next') }}--}}
+{{--@else--}}
+{{--{{ route('stand.next', $standTemplateNextWeek->stand_id) }}--}}
+{{--@endif">--}}
                                                 <div class="row">
                                                     <div class="col-sm mb-2 mb-sm-0">
                                                         <h2 class="fw-normal mb-1">

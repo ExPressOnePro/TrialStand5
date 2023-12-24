@@ -33,8 +33,6 @@ class UsersController extends Controller{
                 ->get();
         }
 
-
-
         $detect = new MobileDetect;
         if ($detect->isMobile()) {
             return view('Mobile.menu.modules.users.users')
@@ -42,7 +40,22 @@ class UsersController extends Controller{
         } else {
             return view('Mobile.menu.modules.users.users')
                 ->with(['users' => $users]);
+        }
+    }
 
+    public function getUserName(Request $request)
+    {
+        $userId = $request->input('user_id');
+
+        // Retrieve the user based on user_id
+        $user = User::find($userId);
+
+        if ($user) {
+            // If user is found, return the first name
+            return response()->json(['data' => ['first_name' => $user->first_name]], 200);
+        } else {
+            // If user is not found, return an error response
+            return response()->json(['error' => 'User not found.'], 404);
         }
     }
 

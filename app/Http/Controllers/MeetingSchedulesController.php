@@ -10,7 +10,9 @@ class MeetingSchedulesController extends Controller {
 
     public function overview() {
 
-        $array = [
+        $type_day = 1-7;
+        $congregation_id = 1;
+        $schedule = [
             'entry_manager' => '1',
             'lobby_manager' => '1',
             'hall_manager' => '1',

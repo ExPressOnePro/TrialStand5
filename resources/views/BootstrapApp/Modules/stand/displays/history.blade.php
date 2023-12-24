@@ -1,4 +1,5 @@
-@extends('Mobile.layouts.front.app')
+{{--@extends('Mobile.layouts.front.app')--}}
+@extends('BootstrapApp.layouts.bootstrapApp')
 @section('title') Meeper @endsection
 @section('content')
 
@@ -18,48 +19,21 @@
                         <!-- End Search -->
                     </form>
                 </div>
-
-                <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-                    <!-- Datatable Info -->
-                    <div id="datatableCounterInfo" style="display: none;">
-                        <div class="d-flex align-items-center">
-                <span class="fs-5 me-3">
-                  <span id="datatableCounter">0</span>
-                  Selected
-                </span>
-                            <a class="btn btn-outline-danger btn-sm" href="javascript:;">
-                                <i class="bi-trash"></i> Delete
-                            </a>
-                        </div>
-                    </div>
-                    <!-- End Datatable Info -->
-
-
-                </div>
             </div>
             <!-- End Header -->
 
             <!-- Table -->
             <div class="table-responsive datatable-custom position-relative">
-                <table class="js-datatable table table-borderless table-bordered table-thead-bordered table-nowrap table-align-middle card-table"
-                       data-hs-datatables-options='{
-                   "order": [],
-                   "search": "#datatableWithSearchInput",
-                   "entries": "#datatableEntries",
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatableWithSearchPagination"
-
-                 }'>
+                <table id="example" class="display nowrap">
                     <thead class="thead-light">
                     <tr>
                         <th>ID</th>
-                        <th>Дата изменения</th>
-                        <th>Кто изменил</th>
-                        <th>Какой день изменен</th>
-                        <th>Какое время изменено</th>
-                        <th>Старые значения</th>
-                        <th>Новые Значения</th>
+                        <th>Когда изменено</th>
+                        <th>Кем изменено</th>
+                        <th>День</th>
+                        <th>Время</th>
+                        <th>Было</th>
+                        <th>Стало</th>
                     </tr>
                     </thead>
 
@@ -69,22 +43,20 @@
                             $standPublisher = \App\Models\StandPublishers::find($audit->auditable_id);
                         @endphp
                         <tr>
-                            <td class="table-column-ps-0">
-                                <div class="ms-3">
-                                    <span class="d-block h5 text-inherit mb-0">{{ $standPublisher->id }}</span>
-                                </div>
+                            <td>
+                               {{ $standPublisher->id }}
                             </td>
                             <td>
-                                <span class="d-block h5 text-inherit mb-0">{{ $audit->created_at }}</span>
+                                {{ $audit->created_at }}
                             </td>
                             <td>
-                                <span class="d-block h5 text-inherit mb-0">{{ $audit->user->last_name }} {{ $audit->user->first_name }}</span>
+                              {{ $audit->user->last_name }} {{ $audit->user->first_name }}
                             </td>
                             <td>
-                                <span class="d-block h5 text-inherit mb-0">{{ $standPublisher->date }}</span>
+                                {{ $standPublisher->date }}
                             </td>
                             <td>
-                                <span class="d-block h5 text-inherit mb-0">{{ $standPublisher->time }}</span>
+                                {{ $standPublisher->time }}
                             </td>
                             <td>
                                 @if (is_array($audit->old_values) && empty($audit->old_values))
@@ -95,7 +67,6 @@
                                         $new_value = $audit->new_values[$key] ?? null;
                                     @endphp
                                     @if ($old_value !== $new_value)
-                                        <span class="d-block h5 text-inherit mb-0">
                                         @php
                                             $old_value_pairs = explode(',', preg_replace('/[^\d:,\s]/', '', $old_value));
                                         @endphp
@@ -109,7 +80,7 @@
                                                 @if (is_array($audit->old_values) && empty($audit->old_values))
                                                     Нет данных
                                                 @elseif ($field == 1)
-                                                    1 возвещатель
+                                                    1 возвещатель:
                                                 @elseif ($field == 2)
                                                     2 возвещатель:
                                                 @elseif ($field == 3)
@@ -133,14 +104,12 @@
                                                 @endif
                                                 <br>
                                             @endforeach
-                                        </span>
                                     @endif
                                 @endforeach
                                 @endif
                             </td>
                             <td>
                                 @foreach($audit->new_values as $key => $new_values)
-                                    <span class="d-block h5 text-inherit mb-0">
                                     @php
                                         preg_match('/\{.*\}/', $new_values, $matches);
                                         $userValues = isset($matches[0]) ? $matches[0] : null;
@@ -162,7 +131,6 @@
                                                 <br>
                                         @endforeach
                                     @endif
-                                    </span>
                                 @endforeach
                             </td>
                         </tr>
@@ -170,49 +138,135 @@
                     </tbody>
                 </table>
             </div>
-            <!-- End Table -->
-
-            <!-- Footer -->
-            <div class="card-footer">
-                <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-                    <div class="col-sm mb-2 mb-sm-0">
-                        <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                            <span class="me-2">Показать:</span>
-
-                            <!-- Select -->
-                            <div class="tom-select-custom">
-                                <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off"
-                                        data-hs-tom-select-options='{
-                            "searchInDropdown": false,
-                            "hideSearch": true
-                          }'>
-                                    <option value="10" selected>10</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                </select>
-                            </div>
-                            <!-- End Select -->
-
-                            <span class="text-secondary me-2">из</span>
-
-                            <!-- Pagination Quantity -->
-                            <span id="datatableWithPaginationInfoTotalQty"></span>
-                        </div>
-                    </div>
-
-
-
-                    <div class="col-sm-auto">
-                        <div class="d-flex justify-content-center justify-content-sm-end">
-                            <!-- Pagination -->
-                            <nav id="datatableWithSearchPagination" aria-label="Activity pagination"></nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+{{--<div class="content container-fluid">--}}
+{{--    <div class="card">--}}
+{{--        <!-- Header and Search Form -->--}}
+{{--        <div class="card-header card-header-content-md-between">--}}
+{{--            <div class="mb-2 mb-md-0">--}}
+{{--                <form>--}}
+{{--                    <!-- Search -->--}}
+{{--                    <div class="input-group input-group-merge input-group-flush">--}}
+{{--                        <div class="input-group-prepend input-group-text">--}}
+{{--                            <i class="bi-search"></i>--}}
+{{--                        </div>--}}
+{{--                        <input id="datatableWithSearchInput" type="search" class="form-control" placeholder="Поиск" aria-label="Search users">--}}
+{{--                    </div>--}}
+{{--                    <!-- End Search -->--}}
+{{--                </form>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <!-- End Header and Search Form -->--}}
+
+{{--        <!-- Table -->--}}
+{{--        <div class="table-responsive datatable-custom position-relative">--}}
+{{--            <table id="example" class="display nowrap">--}}
+{{--                <thead class="thead-light">--}}
+{{--                <tr>--}}
+{{--                    <th>ID</th>--}}
+{{--                    <th>Дата изменения</th>--}}
+{{--                    <th>Кто изменил</th>--}}
+{{--                    <th>Какой день изменен</th>--}}
+{{--                    <th>Какое время изменено</th>--}}
+{{--                    <th>Старые значения</th>--}}
+{{--                    <th>Новые Значения</th>--}}
+{{--                    <!--                                             Add more table headers as needed -->--}}
+{{--                </tr>--}}
+{{--                </thead>--}}
+
+{{--                <tbody>--}}
+{{--                <!-- Table body will be populated dynamically with JavaScript -->--}}
+{{--                </tbody>--}}
+{{--            </table>--}}
+{{--        </div>--}}
+{{--        <!-- End Table -->--}}
+{{--    </div>--}}
+{{--</div>--}}
 
 
+{{--<script>--}}
+{{--    // Fetch data using AJAX--}}
+{{--    $(document).ready(function () {--}}
+{{--        $('#example').DataTable({--}}
+{{--            "ajax": "{{ route('history.data', ['id' => $id]) }}",--}}
+{{--            "columns": [--}}
+{{--                {"data": "id"},--}}
+{{--                {--}}
+{{--                    "data": "created_at",--}}
+{{--                    "render": function (data) {--}}
+{{--                        // Parse the ISO date string and format it--}}
+{{--                        var date = new Date(data);--}}
+{{--                        return date.toLocaleString(); // Adjust the format as needed--}}
+{{--                    }--}}
+{{--                },--}}
+{{--                {--}}
+{{--                    "data": "user_id",--}}
+{{--                    // "render": function (data) {--}}
+{{--                    //     return getUserFirstName(data);--}}
+{{--                    // }--}}
+{{--                },--}}
+{{--                {"data": "url"},--}}
+{{--                {--}}
+{{--                    "data": "created_at",--}}
+{{--                    "render": function (data) {--}}
+{{--                        var date = new Date(data);--}}
+{{--                        return date.toLocaleString();--}}
+{{--                    }--}}
+{{--                },--}}
+{{--                {--}}
+{{--                    "data": "old_values.publishers",--}}
+{{--                    "render": function (data) {--}}
+{{--                        return data ? data : 'N/A';--}}
+{{--                    }--}}
+{{--                },--}}
+{{--                {--}}
+{{--                    "data": "new_values.publishers",--}}
+{{--                    "render": function (data) {--}}
+{{--                        return data ? data : 'N/A';--}}
+{{--                    }--}}
+{{--                }--}}
+{{--                // Add more columns as needed--}}
+{{--            ]--}}
+{{--        });--}}
+{{--        function getUserFirstName(userId) {--}}
+{{--            // Perform AJAX request to fetch user details--}}
+{{--            $.ajax({--}}
+{{--                url: "{{ route('getUserName') }}", // Replace with your route for fetching user details--}}
+{{--                type: 'GET',--}}
+{{--                data: {user_id: userId},--}}
+{{--                success: function (response) {--}}
+{{--                    // Assuming the response contains user details including the first name--}}
+{{--                    if (response && response.data && response.data.first_name) {--}}
+{{--                        return response.data.first_name;--}}
+{{--                    } else {--}}
+{{--                        return 'N/A';--}}
+{{--                    }--}}
+{{--                },--}}
+{{--                error: function () {--}}
+{{--                    return 'N/A';--}}
+{{--                }--}}
+{{--            });--}}
+{{--        }--}}
+{{--    });--}}
+{{--</script>--}}
 
+<script>
+    $(document).ready(function() {
+        $(document).ready(function() {
+            $('#example').DataTable( {
+                dom: 'Bltip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                searching: true
+            } );
+            // Ваш поиск DataTables
+            $('#datatableWithSearchInput').on('keyup', function () {
+                $('#example').DataTable().search($(this).val()).draw();
+            });
+        } );
+
+    });
+</script>
 @endsection

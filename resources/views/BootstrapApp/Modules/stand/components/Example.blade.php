@@ -1,37 +1,19 @@
 <style>
     .border-left-full {
-        border-left: 4px solid #28a745; /* Светлый цвет для светлой темы */
+        border-left: 4px solid #28a745; /* Используйте нужный вам цвет вместо #28a745 */
     }
-
     .border-left-half {
-        border-left: 4px solid #CAA830; /* Светлый цвет для светлой темы */
+        border-left: 4px solid #CAA830; /* Используйте нужный вам цвет вместо #28a745 */
     }
-
     .border-left-empty {
-        border-left: 4px solid rgba(123, 123, 123, 0.7); /* Светлый цвет для светлой темы */
-    }
-
-    /* Кастомные цвета для темной темы */
-    body.dark .border-left-full {
-        border-left: 4px solid #ff0000; /* Темный цвет для темной темы */
-    }
-    dark .border-left-full {
-        border-left: 4px solid #ff0000; /* Темный цвет для темной темы */
-    }
-
-    body.dark .border-left-half {
-        border-left: 4px solid #CAA830; /* Темный цвет для темной темы */
-    }
-
-    body.dark .border-left-empty {
-        border-left: 4px solid rgba(123, 123, 123, 0.7); /* Темный цвет для темной темы */
+        border-left: 4px solid rgba(123, 123, 123, 0.7); /* Используйте нужный вам цвет вместо #28a745 */
     }
 </style>
 
 <div class="row">
     @foreach ($week_schedule as $day => $times)
         <div class="col-sm-12 col-md-6 col-lg-4 mb-5 mb-lg-5">
-            <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
+            <div class="card card-header card-header-content-between rounded text-center" style="background: rgba(153,102,204,0.5)">
                 <p class="card-header-title h5 dd">
                     {{ trans('text.' . \App\Enums\WeekDaysEnum::getWeekDay($day)) }}
                     @php
@@ -41,16 +23,9 @@
                     {{ \Carbon\Carbon::parse($gwe)->format('d.m.Y') }}
                 </p>
                 @php
-                    $standPublishers = App\Models\StandPublishers::where('day', $day)
-                    ->where('date', $gwe)
-                    ->where('stand_template_id', $StandTemplate->id)
-                    ->get();
-                    $canEdit = auth()->user()->can('stand.make_entry');
+                    $standPublishers = App\Models\StandPublishers::where('day', $day)->where('date', $gwe)->get();
                     $hasUserIcon = false;
-                @endphp
-
-                @foreach ($standPublishers as $standPublisher)
-                    @php
+                    foreach ($standPublishers as $standPublisher){
                         $publishers = json_decode($standPublisher->publishers, true);
                         foreach (['user_1', 'user_2', 'user_3', 'user_4'] as $userKey) {
                             if (isset($publishers[$userKey]) && $publishers[$userKey] == auth()->user()->id) {
@@ -58,22 +33,21 @@
                                 break;
                             }
                         }
-                    @endphp
-                @endforeach
-
+                    }
+                @endphp
             </div>
-
             @foreach ($times as $time)
                 @php
-                    $standPublisher = App\Models\StandPublishers::where('day', $day)
+                    $standPublisher = App\Models\StandPublishers::query()
+                    ->where('day', $day)
                     ->where('time', $time)
                     ->where('date', $gwe)
                     ->where('stand_template_id', $StandTemplate->id)
                     ->first();
                     $publishers = $standPublisher ? json_decode($standPublisher->publishers, true) : [];
                 @endphp
-                    <div class="col-sm-12 mt-1">
-                        <a class="card @if(!$standPublisher && $canEdit)
+                <div class="col-sm-12 mt-1">
+                    <a class="card @if(!$standPublisher && $canEdit)
                                         border-left-empty
                                         @elseif(isset($publishers['user_1']) &&
 isset($publishers['user_2'])
@@ -84,13 +58,13 @@ isset($publishers['user_2'])
     border-left-half
     @endif
                          rounded-3 text-decoration-none shadow {{ isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'] && (!$standPublisher || $canEdit) ? 'is-editable' : '' }}"
-                           @if($standPublisher && $canEdit)
-                               onclick="openModalRedaction('{{$day}}', '{{$time}}', '{{$gwe}}', '{{$standPublisher->id}}')"
-{{--                           href="{{ route('stand.record_redaction', ['stand_publishers_id'=> $standPublisher->id]) }}"--}}
-                           @elseif(!$standPublisher && $canEdit)
-                               onclick="openModal('{{$day}}', '{{$time}}', '{{$gwe}}')"
-                           @endif
-                           style="background-color:
+                       @if($standPublisher && $canEdit)
+                           onclick="openModalRedaction('{{$day}}', '{{$time}}', '{{$gwe}}', '{{$standPublisher->id}}')"
+                       {{--                           href="{{ route('stand.record_redaction', ['stand_publishers_id'=> $standPublisher->id]) }}"--}}
+                       @elseif(!$standPublisher && $canEdit)
+                           onclick="openModal('{{$day}}', '{{$time}}', '{{$gwe}}')"
+                       @endif
+                       style="background-color:
                            @if(isset($publishers['user_1']) &&
 isset($publishers['user_2'])
 && $publishers['user_1']
@@ -102,70 +76,68 @@ rgba(255,210,52,0.29)
 
 
                         <div class="d-flex align-items-center">
-                                <!-- time -->
-                                <div class="col-3 text-center">
-                                    <p class="h5"><strong>{{ $time }}</strong></p>
-                                </div>
-                                <!-- publishers -->
-                                <div class="col ms-0 d-flex" style="height: 50px;" data-max-width="1px">
-                                    <div class="vr"></div>
-                                </div>
-                                <div class="col-8">
-                                    <div class="mt-1 mb-0">
+                            <!-- time -->
+                            <div class="col-3 text-center">
+                                <p class="h5"><strong>{{ $time }}</strong></p>
+                            </div>
+                            <!-- publishers -->
+                            <div class="col ms-0 d-flex" style="height: 50px;" data-max-width="1px">
+                                <div class="vr"></div>
+                            </div>
+                            <div class="col-8">
+                                <div class="mt-1 mb-0">
 
-                                        @for($i = 1; $i <= $valuePublishers_at_stand; $i++)
-                                            @php
-                                                $userKey = 'user_' . $i;
-                                                $user = $publishers[$userKey] ?? null;
-                                            @endphp
-                                            @if ($standPublisher && $standPublisher->date == $gwe)
-                                                @if ($user)
-                                                    @if ($user == Auth()->user()->id)
-                                                        <p class="h5 dd">
-                                                            <strong>
+                                    @for($i = 1; $i <= $valuePublishers_at_stand; $i++)
+                                        @php
+                                            $userKey = 'user_' . $i;
+                                            $user = $publishers[$userKey] ?? null;
+                                        @endphp
+                                        @if ($standPublisher && $standPublisher->date == $gwe)
+                                            @if ($user)
+                                                @if ($user == Auth()->user()->id)
+                                                    <p class="h5 dd">
+                                                        <strong>
                                                             {{ $users->where('id', $user)->pluck('last_name')->first() }}
                                                             {{ $users->where('id', $user)->pluck('first_name')->first() }}
-                                                            </strong>
-                                                        </p>
-                                                    @else
-                                                        <p class="h5 text-muted">
-                                                            {{ $users->where('id', $user)->pluck('last_name')->first() }}
-                                                            {{ $users->where('id', $user)->pluck('first_name')->first() }}
-                                                        </p>
-                                                    @endif
+                                                        </strong>
+                                                    </p>
                                                 @else
-                                                    <p class="h5"><span class="badge bg-secondary">{{ __('text.Свободно') }}</span></p>
+                                                    <p class="h5 text-muted">
+                                                        {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                        {{ $users->where('id', $user)->pluck('first_name')->first() }}
+                                                    </p>
                                                 @endif
                                             @else
-                                                @if ($user)
-                                                    @if ($user == Auth()->user()->id)
-                                                        <p class="h5 dd">
-                                                            <strong>
-                                                                {{ $users->where('id', $user)->pluck('last_name')->first() }}
-                                                                {{ $users->where('id', $user)->pluck('first_name')->first() }}
-                                                            </strong>
-                                                        </p>
-                                                    @else
-                                                        <p class="h5 text-muted">
-                                                            <strong>
-                                                                {{ $users->where('id', $user)->pluck('last_name')->first() }}
-                                                                {{ $users->where('id', $user)->pluck('first_name')->first() }}
-                                                            </strong>
-                                                        </p>
-                                                    @endif
-                                                @else
-                                                    <p class="h5"><span class="badge bg-secondary">{{ __('text.Свободно') }}</span></p>
-                                                @endif
+                                                <p class="h5"><span class="badge bg-secondary">{{ __('text.Свободно') }}</span></p>
                                             @endif
-                                        @endfor
-                                    </div>
+                                        @else
+                                            @if ($user)
+                                                @if ($user == Auth()->user()->id)
+                                                    <p class="h5 dd">
+                                                        <strong>
+                                                            {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                            {{ $users->where('id', $user)->pluck('first_name')->first() }}
+                                                        </strong>
+                                                    </p>
+                                                @else
+                                                    <p class="h5 text-muted">
+                                                        <strong>
+                                                            {{ $users->where('id', $user)->pluck('last_name')->first() }}
+                                                            {{ $users->where('id', $user)->pluck('first_name')->first() }}
+                                                        </strong>
+                                                    </p>
+                                                @endif
+                                            @else
+                                                <p class="h5"><span class="badge bg-secondary">{{ __('text.Свободно') }}</span></p>
+                                            @endif
+                                        @endif
+                                    @endfor
                                 </div>
                             </div>
-                        </a>
-
-
-                        @can('stand.make_entry')
-                            <div class="modal fade" id="exampleModalFullscreen{{$day}}{{$time}}{{$gwe}}" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel"
+                        </div>
+                    </a>
+                    @can('stand.make_entry')
+                        <div class="modal fade" id="exampleModalFullscreen{{$day}}{{$time}}{{$gwe}}" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel"
                              aria-hidden="true">
                             <div class="modal-dialog modal-fullscreen-sm-down">
                                 <div class="modal-content">
@@ -258,7 +230,7 @@ rgba(255,210,52,0.29)
                                 </div>
                             </div>
                         </div>
-                            @if($standPublisher && $canEdit)
+                        @if($standPublisher && $canEdit)
                             <div class="modal fade" id="ModalFullscreenRedaction{{$day}}{{$time}}{{$gwe}}{{$standPublisher->id}}" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel"
                                  aria-hidden="true">
                                 <div class="modal-dialog modal-fullscreen-sm-down">
@@ -268,6 +240,27 @@ rgba(255,210,52,0.29)
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
+                                            @include('Mobile.includes.loadingOverlay')
+
+                                            <style>
+                                                .overlay {
+                                                    position: fixed;
+                                                    top: 0;
+                                                    left: 0;
+                                                    width: 100%;
+                                                    height: 100%;
+                                                    background: rgba(255, 255, 255, 0.7);
+                                                    display: flex;
+                                                    justify-content: center;
+                                                    align-items: center;
+                                                    z-index: 9999;
+                                                }
+
+                                                .spinner-border {
+                                                    width: 3rem;
+                                                    height: 3rem;
+                                                }
+                                            </style>
                                             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                                                 <div class="col p-4 d-flex flex-column position-static">
                                                     <h3 class="mb-0">{{ __('text.Дата') }}:  {{ $gwe }}</h3>
@@ -317,13 +310,13 @@ rgba(255,210,52,0.29)
                                                                         </select>
                                                                     </div>
                                                                     @if($isUserEmpty)
-                                                                    <div class="col-12 mt-2">
-                                                                        <div class="d-grid gap-2">
-                                                                            <button class="btn btn-success" type="submit">
-                                                                                {{ __('text.Записать') }}
-                                                                            </button>
+                                                                        <div class="col-12 mt-2">
+                                                                            <div class="d-grid gap-2">
+                                                                                <button class="btn btn-success" type="submit">
+                                                                                    {{ __('text.Записать') }}
+                                                                                </button>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
                                                                     @endif
                                                                 </form>
                                                             </div>
@@ -334,16 +327,16 @@ rgba(255,210,52,0.29)
 
                                                             @endif
                                                         @else
-                                                                @can('stand.delete_entry')
-                                                                    <div class="col-12">
-                                                                        <div class="d-grid gap-2">
-                                                                            <a class="btn btn-outline-danger" type="button" href="{{ route('recordRedactionDelete2', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $publishers[$userKey] ?? null]) }}"
-                                                                               onclick="document.getElementById('loadingOverlay').style.display = 'flex';">
-                                                                                {{ __('text.Выписать') }}
-                                                                            </a>
-                                                                        </div>
+                                                            @can('stand.delete_entry')
+                                                                <div class="col-12">
+                                                                    <div class="d-grid gap-2">
+                                                                        <a class="btn btn-outline-danger" type="button" href="{{ route('recordRedactionDelete2', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $publishers[$userKey] ?? null]) }}"
+                                                                           onclick="document.getElementById('loadingOverlay').style.display = 'flex';">
+                                                                            {{ __('text.Выписать') }}
+                                                                        </a>
                                                                     </div>
-                                                                @endcan
+                                                                </div>
+                                                            @endcan
                                                         @endif
                                                     </div>
                                                 </div>
@@ -355,16 +348,15 @@ rgba(255,210,52,0.29)
                                     </div>
                                 </div>
                             </div>
-                            @endif
-                        @endcan
-                    </div>
+                        @endif
+                    @endcan
+                </div>
             @endforeach
         </div>
     @endforeach
 </div>
-
-
 <script>
+
     function openModal(day, time, gwe) {
         var modalId = 'exampleModalFullscreen' + day + time + gwe;
         var myModal = new bootstrap.Modal(document.getElementById(modalId));
@@ -372,10 +364,6 @@ rgba(255,210,52,0.29)
     }
 
     function openModalRedaction(day, time, gwe, standPublisherId) {
-        console.log('Day:', day);
-        console.log('Time:', time);
-        console.log('Gwe:', gwe);
-        console.log('StandPublisherId:', standPublisherId);
         var modalId = 'ModalFullscreenRedaction' + day + time + gwe + standPublisherId;
         var myModal = new bootstrap.Modal(document.getElementById(modalId));
         myModal.show();

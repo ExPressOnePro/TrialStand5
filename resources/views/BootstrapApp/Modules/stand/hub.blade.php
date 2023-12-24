@@ -17,62 +17,44 @@
         @can('module.stand')
                 <div class="row py-3 row-cols-1 row-cols-lg-3">
                     @foreach($accessible_stands_for_the_user as $asfu)
-                        <div class="col mb-3 mb-lg-3">
-                            <a class="card border-left-empty rounded-3 text-decoration-none shadow p-4" href="
+                        <div class="col mb-3  mb-lg-3">
+
+                            <div class="card border-left-empty rounded-3 text-decoration-none shadow p-4" href="{{ route('stand.current2', $asfu->id) }}
                             @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
-                {{ route('stand.aio_current2') }}
+               {{ route('stand.aio_current2') }}
             @else
                 {{ route('stand.current2', $asfu->id) }}
             @endif">
                                 <div class="d-flex justify-content-left">
+                                    <a class="text-decoration-none" href="@if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
+                {{ route('stand.aio_current2') }}
+            @else
+                {{ route('stand.current2', $asfu->id) }}
+            @endif">
                                     <div class="col align-items-center m-auto">
                                         <h4 class="fw-bold mb-0 text-body-emphasis">{{ $asfu->name }}</h4>
                                         <p class="m-auto">{{ $asfu->location }}</p>
                                     </div>
+                                    </a>
+                                    @can('stand.settings')
+                                        <div class="dropdown ms-auto">
+                                            <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm card-dropdown-btn rounded-circle" id="projectsListDropdown3" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="projectsListDropdown3">
+                                                @can('stand.settings')
+                                                    <a class="dropdown-item" href="{{ route('stand.settings', $asfu->id) }}">{{ __('text.Настройки') }}</a>
+                                                @endcan
+                                                @can('stand.history')
+                                                    <a class="dropdown-item" href="{{ route('stand.history', $asfu->id) }}">{{ __('text.История') }}</a>
+                                                @endcan
+                                                <div class="dropdown-divider"></div>
+{{--                                                <a class="dropdown-item text-danger" href="#">Delete</a>--}}
+                                            </div>
+                                        </div>
+                                    @endcan
                                 </div>
-                            </a>
-{{--                            <div class="list-group d-flex justify-content-between align-items-start mt-3">--}}
-{{--                                <div class="list-group-item list-group-item-action border-secondary">--}}
-{{--                                    <div class="d-flex align-items-center">--}}
-{{--                                        <a class="text-decoration-none" href="--}}
-{{--                                        @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)--}}
-{{--                {{ route('stand.aio_current') }}--}}
-{{--            @else--}}
-{{--                {{ route('stand.current', $asfu->id) }}--}}
-{{--            @endif">--}}
-
-{{--                            @if(auth()->user()->can('stand.settings') && isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)--}}
-{{--                                {{ route('stand.allInOneCurrent') }}--}}
-{{--                            @elseif(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)--}}
-{{--                                {{ route('stand.allInOneCurrent') }}--}}
-{{--                            @else--}}
-{{--                                {{ route('currentWeekTableFront', $asfu->id) }}--}}
-{{--                            @endif">--}}
-{{--                                            <div class="ms-1">--}}
-{{--                                                <span class="d-block h1 text-inherit mb-0">{{ $asfu->name }}</span>--}}
-{{--                                                <span class="d-block h5 text-inherit text-body mb-0">{{ $asfu->location }}</span>--}}
-{{--                                            </div>--}}
-{{--                                        </a>--}}
-{{--                                        @can('stand.settings')--}}
-{{--                                            <div class="dropdown ms-auto">--}}
-{{--                                                <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm card-dropdown-btn rounded-circle" id="projectsListDropdown3" data-bs-toggle="dropdown" aria-expanded="false">--}}
-{{--                                                    <i class="fa-solid fa-ellipsis-vertical"></i>--}}
-{{--                                                </button>--}}
-{{--                                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="projectsListDropdown3">--}}
-{{--                                                    @can('stand.settings')--}}
-{{--                                                        <a class="dropdown-item" href="{{ route('stand.settings', $asfu->id) }}">{{ __('text.Настройки') }}</a>--}}
-{{--                                                    @endcan--}}
-{{--                                                    @can('stand.history')--}}
-{{--                                                        <a class="dropdown-item" href="{{ route('stand.history', $asfu->id) }}">{{ __('text.История') }}</a>--}}
-{{--                                                    @endcan--}}
-{{--                                                    <div class="dropdown-divider"></div>--}}
-{{--                                                    --}}{{--                                    <a class="dropdown-item text-danger" href="#">Delete</a>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        @endcan--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
+                            </div>
                         </div>
                     @endforeach
                 </div>

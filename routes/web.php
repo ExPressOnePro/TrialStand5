@@ -78,6 +78,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/current/{id}', [StandController::class, 'table'])->name('stand.current');
         Route::get('/next/{id}', [StandController::class, 'table'])->name('stand.next');
 
+        Route::get('table/{id}', [StandController::class, 'tableJson'])->name('stand.table_json');
+
         //Bootstrap
 
         Route::get('/current2/{id}', [StandController::class, 'table2'])->name('stand.current2');
@@ -93,7 +95,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/aio_next', [StandController::class, 'aioTable'])->name('stand.aio_next');
         Route::get('/aio_next2', [StandController::class, 'aioTable2'])->name('stand.aio_next2');
 
-        Route::post('/defaultUpdate/{id}', [StandController::class, 'update'])->name('stand.default.update');
 
 
 
@@ -155,6 +156,8 @@ Route::group(['middleware' => 'auth'], function() {
         ], function () {
             Route::get('/{id}', [StandController::class, 'settings'])->name('stand.settings');
 
+
+            Route::post('/defaultUpdate/{id}', [StandController::class, 'update'])->name('stand.default_update');
             Route::post('/timeUpdateNext/{id}/{day}', [StandTemplateController::class, 'timeUpdateNext'])->name('StandTimeNext');
             Route::post('/publishersAtStand/{id}', [StandTemplateController::class, 'publishersAtStand'])->name('stand.publishersAtStand.update');
             Route::post('/timeActivation/{id}', [StandTemplateController::class, 'timeActivation'])->name('stand.timeActivation');
@@ -176,6 +179,8 @@ Route::group(['middleware' => 'auth'], function() {
             'prefix' => '/history',
         ], function () {
             Route::get('/{id}', [StandController::class, 'history'])->name('stand.history');
+            Route::get('/data/{id}', [StandController::class, 'getHistoryData'])->name('history.data');
+            Route::get('/getUserName', [UsersController::class, 'getUserName'])->name('getUserName');
         });
 
         // создавать запись в стенде (для пользователя)
@@ -207,6 +212,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/overview/{id}', [CongregationsController::class, 'view'])->name('congregationView');
         Route::get('/modules/{congregation_id}/', [CongregationsController::class, 'displayModules'])->name('congregation.modules');
         Route::get('/requests/{congregation_id}/', [CongregationsController::class, 'displayRequests'])->name('congregation.requests');
+        Route::get('/publishers/{congregation_id}/', [CongregationsController::class, 'displayPublishers'])->name('congregation.publishers');
         Route::get('/publishers/{congregation_id}/', [CongregationsController::class, 'displayPublishers'])->name('congregation.publishers');
         Route::get('/ActiveUsersPerWeek/{congregation_id}/', [CongregationsController::class, 'displayActiveUsersPerWeek'])->name('congregation.ActiveUsersPerWeek');
         Route::get('/appointed/{congregation_id}/', [CongregationsController::class, 'displayAppointed'])->name('congregation.appointed');
@@ -306,6 +312,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/registeredUsers', [DeveloperController::class, 'registeredUsersDisplay'])->name('developer.registeredUsersDisplay');
         Route::get('/uReqCon', [DeveloperController::class, 'usersRequestsCongregation'])->name('developer.usersRequestsCongregation');
         Route::get('/roles', [DeveloperController::class, 'roles'])->name('developer.roles');
+        Route::get('/allUsers/', [DeveloperController::class, 'allUsers'])->name('Developer.allUsers');
         Route::post('/role/{roleId}', [DeveloperController::class, 'updatePermissionsForRole'])->name('developer.updatePermissionsForRole');
 
         Route::get('/test1', [DeveloperController::class, 'testViewButtons'])->name('testViewButtons');

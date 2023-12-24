@@ -21,13 +21,47 @@
         }
     </style>
     @include('Mobile.includes.loadingOverlay')
-
     @can('module.stand')
-
         <div class="content container-fluid">
             @include('Mobile.includes.alerts.alerts')
             @include('Modules.stand.components.switch_week')
-            @include('Modules.stand.components.table')
+
+            @if(isset($userInfo["stand_settings"]))
+                @if($userInfo["stand_settings"] == 1)
+                    @if(Request::is('*aio_current*'))
+                        @include('Modules.stand.components.aio_table')
+                    @elseif(date('N') . '-' . date('H:i') >= $activation)
+                        @include('Modules.stand.components.aio_table')
+                    @else
+                        <div class="not-found-wrap text-center">
+                            <h1 class="heading">Следующая неделя будет доступна</h1>
+                            <h1 class="mb-5 text-muted text-20">{{ $dayName }} {{ $activation_value[1] }}</h1>
+                        </div>
+                    @endif
+                @else
+                    @if(Request::is('/current*'))
+                        @include('Modules.stand.components.table')
+                    @elseif(date('N') . '-' . date('H:i') >= $activation)
+                        @include('Modules.stand.components.table')
+                    @else
+                        <div class="not-found-wrap text-center">
+                            <h1 class="heading">Следующая неделя будет доступна</h1>
+                            <h1 class="mb-5 text-muted text-20">{{ $dayName }} {{ $activation_value[1] }}</h1>
+                        </div>
+                    @endif
+                @endif
+            @else
+                @if(Request::is('/current*'))
+                    @include('Modules.stand.components.table')
+                @elseif(date('N') . '-' . date('H:i') >= $activation)
+                    @include('Modules.stand.components.table')
+                @else
+                    <div class="not-found-wrap text-center">
+                        <h1 class="heading">Следующая неделя будет доступна</h1>
+                        <h1 class="mb-5 text-muted text-20">{{ $dayName }} {{ $activation_value[1] }}</h1>
+                    </div>
+                @endif
+            @endif
 
 {{--            @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)--}}
 {{--                @if(Request::is('*aio_next*') && $currentDateTime >= $activationDateTime)--}}

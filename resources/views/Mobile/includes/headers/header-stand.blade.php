@@ -1,21 +1,21 @@
 <style>
     .scrolling-container {
-        max-width: 300px; /* Фиксированная ширина контейнера */
-        overflow: hidden; /* Скрыть содержимое, которое выходит за пределы контейнера */
-        position: relative; /* Положение относительно для внутреннего контейнера */
+        max-width: 400px;
+        overflow: hidden;
+        position: relative;
     }
 
     .scrolling-text {
-        white-space: nowrap; /* Предотвратите перенос текста на следующую строку */
-        animation: scrollText 1s linear forwards; /* Анимация горизонтальной прокрутки текста */
+        white-space: nowrap;
+        animation: scrollText 5s linear; /* Removed "infinite" */
     }
 
     @keyframes scrollText {
         0% {
-            transform: translateX(0); /* Начните с начала */
+            transform: translateX(0);
         }
         100% {
-            transform: translateX(-100%); /* Завершите на правой границе */
+            transform: translateX(-30%);
         }
     }
 </style>
@@ -136,14 +136,26 @@
 
 
 <script>
-    // Получите элемент с классом "scrolling-text"
+    // Get the element with the class "scrolling-text"
     const scrollingText = document.querySelector(".scrolling-text");
 
-    // Остановите анимацию
+    // Function to handle animation
+    function startAnimation() {
+        scrollingText.style.animation = "scrollText 5s linear infinite"; // Infinite animation
+    }
+
+    // Stop the animation initially
     scrollingText.style.animation = "none";
 
-    // Запустите анимацию после некоторой задержки
-    setTimeout(() => {
-        scrollingText.style.animation = "scrollText 10s linear infinite";
-    }, 5000); // Задержка в 5 секунд
+    // Start the animation after a short delay
+    setTimeout(startAnimation, 0); // Delay in milliseconds
+
+    // Function to pause the animation for 3 seconds when it reaches the end
+    function pauseAnimation() {
+        scrollingText.style.animation = "none";
+        setTimeout(startAnimation, 3000); // Pause for 3 seconds
+    }
+
+    // Add an event listener to detect when the animation iteration ends
+    scrollingText.addEventListener("animationiteration", pauseAnimation);
 </script>

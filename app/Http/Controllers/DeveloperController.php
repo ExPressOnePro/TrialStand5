@@ -16,7 +16,9 @@ use App\Models\User;
 use App\Models\UsersPermissions;
 use App\Models\UsersRoles;
 use Carbon\Carbon;
+use Detection\MobileDetect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use OwenIt\Auditing\Facades\Auditor;
@@ -61,7 +63,7 @@ class DeveloperController extends Controller{
         $metrics = [
             [
                 'title' => 'Пользователей',
-                'route' => route('users'),
+                'route' => route('Developer.allUsers'),
                 'count' => $usersCount,
                 'percent' => $userCountPercent,
             ],
@@ -106,7 +108,14 @@ class DeveloperController extends Controller{
             'congregations',
         );
 
-        return view ('Mobile.menu.modules.developer.hub', $compact);
+        return view ('BootstrapApp.Modules.developer.hub', $compact);
+
+    }
+
+    public function allUsers() {
+        $users = User::get();
+
+        return view('BootstrapApp.Modules.developer.displays.users')->with(['users' => $users]);
 
     }
 
@@ -155,7 +164,7 @@ class DeveloperController extends Controller{
             ->get();
 
         $compact = compact('users');
-        return view('Mobile.menu.modules.developer.displays.activeUsersDisplay', $compact);
+        return view('BootstrapApp.Modules.developer.displays.activeUsersDisplay', $compact);
     }
 
     public function registeredUsersDisplay() {

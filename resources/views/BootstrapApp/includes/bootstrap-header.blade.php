@@ -21,7 +21,9 @@
                             @can('congregation.open_congregation')
                             <li><a href="{{route('congregationView', Auth()->user()->congregation_id)}}" class="nav-link px-2"><h5>Собрание</h5></a></li>
                             @endcan
-
+                            @role('Developer')
+                            <li><a href="{{route('developer.hub')}}" class="nav-link px-2"><h5>Developer</h5></a></li>
+                            @endrole
                         </ul>
                     </div>
 

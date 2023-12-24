@@ -202,7 +202,7 @@ class StandPublishersController extends Controller
             $userInfo = json_decode($user->info, true);
 
             if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
-                $routeName = $stand_template->type === 'current' ? 'stand.aio_current2' : 'stand.aio_next2';
+                $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
             } else {
                 $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
             }
@@ -320,7 +320,7 @@ class StandPublishersController extends Controller
             if ($value == $user_id) {
                 $errorMessage = __('text.Пользователь уже записан в выбранное время и дату!');
                 if (isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1) {
-                    $routeName = $stand_template->type === 'current' ? 'stand.aio_current2' : 'stand.aio_next2';
+                    $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
                 } else {
                     $routeName = $stand_template->type === 'current' ? 'stand.current2' : 'stand.next2';
                 }
@@ -400,6 +400,7 @@ class StandPublishersController extends Controller
 
     }
     public function recordRedactionDelete2($id, $stand, $user_id) {
+
         $standPublisher = StandPublishers::findOrFail($id);
         $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
         $publishers = json_decode($standPublisher->publishers, true);
@@ -441,7 +442,6 @@ class StandPublishersController extends Controller
         }
 
         return redirect()->route($routeName, isset($stand_template->stand_id) ? ['id' => $stand_template->stand_id] : null)->with('success', 'Вы успешно выписали');
-
     }
 
 

@@ -9,14 +9,14 @@
             @can('module.stand')
                 <div class="col mb-3 mb-lg-5">
                     <div class="list-group d-flex align-items-center">
-                        <a class="list-group-item list-group-item-action border border-3 border-secondary" href="
-                            @if(auth()->user()->can('stand.settings'))
-                                {{ route('stand.hub')}}
-                            @elseif(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
-                                {{ route('stand.aio_current') }}
-                            @else
-                                {{ route('stand.hub')}}
-                            @endif">
+                        <a class="list-group-item list-group-item-action border border-3 border-secondary" href="{{ route('stand.hub')}}">
+{{--                            @if(auth()->user()->can('stand.settings'))--}}
+{{--                                {{ route('stand.hub')}}--}}
+{{--                            @elseif(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)--}}
+{{--                                {{ route('stand.aio_current') }}--}}
+{{--                            @else--}}
+{{--                                {{ route('stand.hub')}}--}}
+{{--                            @endif">--}}
 
                             <div class="d-flex align-items-center m-2">
                                 <div class="avatar">

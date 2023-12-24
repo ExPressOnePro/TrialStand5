@@ -31,6 +31,7 @@ class HomeController extends Controller {
      */
     public function index() {
 
+        $AuthUser = User::query()->find(Auth::id());
         $user = User::find(Auth::id());
         $congregations = Congregation::where('id', '>', 1)->get();
         $congregationRequests = CongregationRequests::get();
@@ -86,24 +87,17 @@ class HomeController extends Controller {
         );
 
         $detect = new MobileDetect;
-        if ($detect->isMobile()) { //Mobile
-            if( $user->congregation_id === 1) {
+        if ($AuthUser->hasRole('Developer')) {
+            return $this->home1();
+//            return view('BootstrapApp.Modules.home.home', $compact);
+        } else {
+            if ($user->congregation_id === 1) {
                 return view('Mobile.guest', ['congregations' => $congregations], ['congregationRequests' => $congregationRequests]);
             } else {
                 return view('Mobile.home.home', $compact);
             }
-        } else { //Desktop
-            if( $user->congregation_id === 1) {
-                return view('Mobile.guest', ['congregations' => $congregations], ['congregationRequests' => $congregationRequests]);
-            } else {
-                return view('Mobile.home.home', $compact);
-            }
-//            if ($user->congregation_id === 1) {
-//                return view('Desktop.guest', ['congregation' => $congregation], ['congregationRequests' => $congregationRequests]);
-//            } else {
-//                return view('Desktop.home.home',  $compact);
-//            }
         }
+
     }
 
     public function menu(){
@@ -132,7 +126,6 @@ class HomeController extends Controller {
 
 
     public function home1(){
-
 
         $user = User::find(Auth::id());
         $userInfo = json_decode($user->info, true);
@@ -265,6 +258,7 @@ class HomeController extends Controller {
 
         return view('welcome');
     }
+
     public function changeLog() {
 
         return view('ChangeLog.changeLog');

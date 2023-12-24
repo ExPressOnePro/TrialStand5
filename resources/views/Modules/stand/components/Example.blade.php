@@ -13,7 +13,7 @@
 <div class="row">
     @foreach ($week_schedule as $day => $times)
         <div class="col-sm-12 col-md-6 col-lg-4 mb-5 mb-lg-5">
-            <div class="card card-header card-header-content-between rounded text-center" style="background: #749FBA">
+            <div class="card card-header card-header-content-between rounded text-center"  style="background: rgba(153,102,204,0.5)">
                 <p class="card-header-title h5 dd">
                     {{ trans('text.' . \App\Enums\WeekDaysEnum::getWeekDay($day)) }}
                     @php
@@ -48,7 +48,7 @@
 //                    $publishers = $standPublisher ? json_decode($standPublisher->publishers, true) : [];
                 @endphp
                     <div class="col-sm-12 mt-1">
-                        <a class="card @if(!$standPublisher && $canEdit)
+                        <a class="card rounded-3 text-decoration-none shadow @if(!$standPublisher && $canEdit)
                                         border-left-empty
                                         @elseif(isset($publishers['user_1']) &&
 isset($publishers['user_2'])
@@ -58,7 +58,8 @@ isset($publishers['user_2'])
     @elseif($standPublisher && $canEdit)
     border-left-half
     @endif
-                         rounded-3 text-decoration-none shadow {{ isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'] && (!$standPublisher || $canEdit) ? 'is-editable' : '' }}"
+
+                         {{ isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'] && (!$standPublisher || $canEdit) ? 'is-editable' : '' }}"
                            @if($standPublisher && $canEdit)
                                onclick="openModalRedaction('{{$day}}', '{{$time}}', '{{$gwe}}', '{{$standPublisher->id}}')"
 {{--                           href="{{ route('stand.record_redaction', ['stand_publishers_id'=> $standPublisher->id]) }}"--}}
@@ -87,7 +88,6 @@ rgba(255,210,52,0.29)
                                 </div>
                                 <div class="col-8">
                                     <div class="mt-1 mb-0">
-
                                         @for($i = 1; $i <= $valuePublishers_at_stand; $i++)
                                             @php
                                                 $userKey = 'user_' . $i;

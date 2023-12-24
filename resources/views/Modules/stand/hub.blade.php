@@ -23,7 +23,7 @@
                                     <div class="d-flex align-items-center">
                                         <a class="text-decoration-none" href="
                                         @if(isset($userInfo["stand_settings"]) && $userInfo["stand_settings"] == 1)
-                {{ route('stand.aio_current') }}
+                {{ route('stand.current',$asfu->id) }}
             @else
                 {{ route('stand.current', $asfu->id) }}
             @endif">

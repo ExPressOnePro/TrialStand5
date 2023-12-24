@@ -69,8 +69,6 @@ class StandTemplateController extends Controller {
                 $standTemplate->save();
             }
         }
-
-        return redirect()->back();
     }
 
     public function timeActivation(Request $request, $id){
@@ -78,21 +76,22 @@ class StandTemplateController extends Controller {
         $stand_id = Stand::find($id);
         $congregation_id = $stand_id->congregation_id;
 
-
-        $standTemplate = StandTemplate::where('type', 'next')
-            ->where('stand_id', $id)
+        $standTemplates = StandTemplate::where('type', 'next')
             ->where('congregation_id', $congregation_id)
-            ->first();
+            ->get();
 
-        if ($standTemplate) {
-            $settings = json_decode($standTemplate->settings, true);
 
-            // Замените ключи на соответствующие значения, которые вы хотите изменить
-            $settings['activation'] = $request->input('dayOfWeek') .'-'.$request->input('time');
 
-            $standTemplate->settings = json_encode($settings);
-            $standTemplate->save();
+        if ($standTemplates) {
+            foreach ($standTemplates as $standTemplate) {
+                $settings = json_decode($standTemplate->settings, true);
 
+                // Замените ключи на соответствующие значения, которые вы хотите изменить
+                $settings['activation'] = $request->input('dayOfWeek') .'-'.$request->input('time');
+
+                $standTemplate->settings = json_encode($settings);
+                $standTemplate->save();
+            }
         }
 
         return redirect()->back();
@@ -106,9 +105,9 @@ class StandTemplateController extends Controller {
         $templateSchedule = $template->week_schedule;
 
 
-        // Получите данные из формы
-        $time= $request->input('time'); // Значение для записи
-//        $day = $request->input('day');   // Ключ, под которым нужно записать данные
+
+        $time= $request->input('time');
+//        $day = $request->input('day');
 
         // Если есть часы для дня, то сохраните его в массиве, иначе удалите его из массива
         if (!empty($time)) {
