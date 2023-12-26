@@ -27,11 +27,12 @@
 
             <!-- Table -->
             <div class="table-responsive datatable-custom mb-5">
-                <table id="example" class=" table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                <table id="example" class="cell-border nowrap table-align-middle card-table">
 
                     <thead class="thead-light">
                     <tr>
                         <th>Фамилия Имя</th>
+                        <th>Вход</th>
                         <th class="d-none d-sm-table-cell">Почта</th>
                         <th class="d-none d-sm-table-cell">Номер телефона</th>
                         <th class="d-none d-sm-table-cell">Адрес</th>
@@ -42,35 +43,42 @@
                     <tbody>
                     @foreach($users as $user)
                         @php
-                            $user_id = $user->id
+                            $user_id = $user->id;
+                            $userInfo = json_decode($user->info, true);
                         @endphp
                         <tr>
                             <td>
                                 {{--                        <a class="d-flex align-items-center" href="{{route('userCard', $user->id)}}">--}}
                                 <div class="ms-3">
-                                    <span class="d-block h5 text-inherit mb-0">{{$user->last_name}} {{ $user->first_name}}</span>
+                                    {{$user->last_name}} {{ $user->first_name}}
                                 </div>
                                 {{--                        </a>--}}
                             </td>
+                            <td>
+                                @isset($userInfo['last_login'])
+                                    {{ $userInfo['last_login'] }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="d-none d-sm-table-cell">
-                                <span class="d-block h5 mb-0">{{ $user->email}}</span>
-
+                                {{ $user->email}}
                             </td>
                             <td class="d-none d-sm-table-cell">
                                 @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
                                     @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
-                                        <span class="d-block h5 mb-0">{{ $decodedInfo['mobile_phone'] }}</span>
+                                        {{ $decodedInfo['mobile_phone'] }}
                                     @else
-                                        <span class="d-block h5 mb-0">-</span>
+                                        -
                                     @endif
                                 @endif
                             </td>
                             <td class="d-none d-sm-table-cell">
                                 @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
                                     @if (isset($decodedInfo['address']) && !empty($decodedInfo['address']))
-                                        <span class="d-block h5 mb-0">{{ $decodedInfo['address'] }}</span>
+                                        {{ $decodedInfo['address'] }}
                                     @else
-                                        <span class="d-block h5 mb-0">-</span>
+                                        -
                                     @endif
                                 @endif
                             </td>
@@ -79,7 +87,7 @@
                                     <div class="col-auto">
                                         @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
                                             @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
-                                                <button class="btn btn-outline-primary" onclick="callNumber('{{$decodedInfo['mobile_phone']}}')">
+                                                <button class="btn btn-outline-primary btn-sm" onclick="callNumber('{{$decodedInfo['mobile_phone']}}')">
                                                     <i class="fa-solid fa-phone"></i>
                                                 </button>
                                             @endif
@@ -87,7 +95,7 @@
                                         {{--                                            <a class="btn btn-white ms-2" data-bs-toggle="modal" data-bs-target="#editUserModal{{$user->id}}">--}}
                                         {{--                                            <i class="fa-solid fa-gear"></i>--}}
                                         {{--                                        </a>--}}
-                                        <button class="btn btn-white ms-2" onclick="openModal('{{$user->id}}', '{{$user->last_name}}', '{{$user->first_name}}')">
+                                        <button class="btn btn-white ms-2 btn-sm" onclick="openModal('{{$user->id}}', '{{$user->last_name}}', '{{$user->first_name}}')">
                                             <i class="fa-solid fa-gear"></i>
                                         </button>
                                     </div>
@@ -186,6 +194,7 @@
             modal.hide();
         }
     </script>
+
     <script>
 
         $(document).ready(function() {
@@ -194,7 +203,11 @@
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
-                searching: true
+                searching: true,
+                order: [
+                    // Указываем, что сортировка будет по столбцу с индексом 0 (первый столбец) в порядке убывания
+                    [1, 'desc']
+                ]
             } );
             // Ваш поиск DataTables
             $('#datatableWithSearchInput').on('keyup', function () {

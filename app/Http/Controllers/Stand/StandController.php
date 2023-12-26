@@ -724,7 +724,7 @@ class StandController extends Controller
         $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
 
         $week_schedule = $StandTemplate->week_schedule;
-        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
+//        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
         $StandTemplate_settings = json_decode($StandTemplate->settings, true);
         $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
 

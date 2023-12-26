@@ -47,33 +47,70 @@
                     $publishers = $standPublisher ? json_decode($standPublisher->publishers, true) : [];
                 @endphp
                 <div class="col-sm-12 mt-1">
-                    <a class="card @if(!$standPublisher && $canEdit)
-                                        border-left-empty
-                                        @elseif(isset($publishers['user_1']) &&
-isset($publishers['user_2'])
-&& $publishers['user_1']
-&& $publishers['user_2'])
-    border-left-full
-    @elseif($standPublisher && $canEdit)
-    border-left-half
-    @endif
-                         rounded-3 text-decoration-none shadow {{ isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'] && (!$standPublisher || $canEdit) ? 'is-editable' : '' }}"
+                    <a class="card
+                    @if (
+                            isset($publishers['user_1']) && $publishers['user_1'] && $publishers['user_1'] !== '' &&
+                            isset($publishers['user_2']) && $publishers['user_2'] && $publishers['user_2'] !== ''
+                            )
+                    border-left-full
+                    @endif
+
+                    @if (
+                        (isset($publishers['user_1']) && $publishers['user_1'] == '' && isset($publishers['user_2']) && $publishers['user_2'] !== '') ||
+                        (isset($publishers['user_2']) && $publishers['user_2'] == '' && isset($publishers['user_1']) && $publishers['user_1'] !== '')
+                    )
+                        border-left-half
+                    @endif
+
+                    @if (!$standPublisher || $standPublisher && (!$publishers['user_1'] && !$publishers['user_2']))
+                        border-left-empty
+                    @endif
+
+{{--                    @if(!$standPublisher && $canEdit)--}}
+{{--                                        border-left-empty--}}
+{{--                                        @elseif (isset($publishers['user_1']) && $publishers['user_1'] !== '' &&--}}
+{{--          isset($publishers['user_2']) && $publishers['user_2'] !== '')--}}
+{{--&& $publishers['user_1']--}}
+{{--&& $publishers['user_2'])--}}
+{{--    border-left-full--}}
+{{--    @elseif($standPublisher && $canEdit)--}}
+{{--    border-left-half--}}
+{{--    @endif--}}
+                         rounded-3 text-decoration-none shadow
+                         {{ isset($publishers['user_1']) && isset($publishers['user_2'])
+&& $publishers['user_1'] && $publishers['user_2']
+ && (!$standPublisher || $canEdit) ? 'is-editable' : '' }}"
                        @if($standPublisher && $canEdit)
                            onclick="openModalRedaction('{{$day}}', '{{$time}}', '{{$gwe}}', '{{$standPublisher->id}}')"
                        {{--                           href="{{ route('stand.record_redaction', ['stand_publishers_id'=> $standPublisher->id]) }}"--}}
                        @elseif(!$standPublisher && $canEdit)
                            onclick="openModal('{{$day}}', '{{$time}}', '{{$gwe}}')"
                        @endif
-                       style="background-color:
-                           @if(isset($publishers['user_1']) &&
-isset($publishers['user_2'])
-&& $publishers['user_1']
-&& $publishers['user_2'])
-rgba(30,114,227,0.15)
-@elseif($standPublisher && $canEdit)
-rgba(255,210,52,0.29)
-@endif;">
+                       style="
 
+{{--@if(isset($publishers['user_1']) && isset($publishers['user_2']) && $publishers['user_1'] && $publishers['user_2'])--}}
+{{--rgba(30,114,227,0.15)--}}
+{{--@elseif (isset($publishers['user_1']) && $publishers['user_1'] !== '' && isset($publishers['user_2']) && $publishers['user_2'] !== '')--}}
+{{--rgba(255,255,255)--}}
+{{--@elseif($standPublisher && $canEdit)--}}
+{{--rgba(255,210,52,0.29)--}}
+{{--@endif;">--}}
+
+
+@if (isset($publishers['user_1']) && $publishers['user_1'] && $publishers['user_1'] !== '' &&
+        isset($publishers['user_2']) && $publishers['user_2'] && $publishers['user_2'] !== ''
+        )
+    background-color: rgba(30, 114, 227, 0.15);
+@endif
+@if (
+    (isset($publishers['user_1']) && $publishers['user_1'] == '' && isset($publishers['user_2']) && $publishers['user_2'] !== '') ||
+    (isset($publishers['user_2']) && $publishers['user_2'] == '' && isset($publishers['user_1']) && $publishers['user_1'] !== '')
+)
+    background-color: rgba(255, 210, 52, 0.29);
+@endif">
+{{--@elseif(!$standPublisher)--}}
+{{--    background-color: rgba(255, 255, 255);--}}
+{{--@endif">--}}
 
                         <div class="d-flex align-items-center">
                             <!-- time -->
@@ -171,6 +208,7 @@ rgba(255,210,52,0.29)
 
                                         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                                             <div class="col p-4 d-flex flex-column position-static">
+                                                <h3 class="mb-0">{{$stand->name}}</h3>
                                                 <h3 class="mb-0">{{ __('text.Дата') }}:  {{ $gwe }}</h3>
                                                 <h3 class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($time)) }}</h3>
                                             </div>
@@ -261,8 +299,10 @@ rgba(255,210,52,0.29)
                                                     height: 3rem;
                                                 }
                                             </style>
+
                                             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                                                 <div class="col p-4 d-flex flex-column position-static">
+                                                    <h3 class="mb-0">{{$stand->name}}</h3>
                                                     <h3 class="mb-0">{{ __('text.Дата') }}:  {{ $gwe }}</h3>
                                                     <h3 class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($time)) }}</h3>
                                                 </div>

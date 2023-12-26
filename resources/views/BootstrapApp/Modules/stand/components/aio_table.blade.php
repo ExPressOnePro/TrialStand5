@@ -104,16 +104,24 @@
                             $canEdit = auth()->user()->can('stand.make_entry');
                         @endphp
                         <div class="col-sm-12 mt-1">
-                            <a class="card rounded-3 text-decoration-none shadow @if(!$standPublisher && $canEdit)
-                                        border-left-empty
-                                        @elseif(isset($publishers['user_1']) &&
-isset($publishers['user_2'])
-&& $publishers['user_1']
-&& $publishers['user_2'])
-    border-left-full
-    @elseif($standPublisher && $canEdit)
-    border-left-half
-    @endif
+                            <a class="card rounded-3 text-decoration-none shadow
+                            @if (
+                                    isset($publishers['user_1']) && $publishers['user_1'] && $publishers['user_1'] !== '' &&
+                                    isset($publishers['user_2']) && $publishers['user_2'] && $publishers['user_2'] !== ''
+                                    )
+                            border-left-full
+                            @endif
+
+                            @if (
+                                (isset($publishers['user_1']) && $publishers['user_1'] == '' && isset($publishers['user_2']) && $publishers['user_2'] !== '') ||
+                                (isset($publishers['user_2']) && $publishers['user_2'] == '' && isset($publishers['user_1']) && $publishers['user_1'] !== '')
+                            )
+                                border-left-half
+                            @endif
+
+                            @if (!$standPublisher || $standPublisher && (!$publishers['user_1'] && !$publishers['user_2']))
+                                border-left-empty
+                            @endif
 {{--                               @if($standPublisher && $canEdit)--}}
 {{--                                   href="{{ route('stand.record_redaction', ['stand_publishers_id'=> $standPublisher->id]) }}"--}}
 {{--                               @elseif(!$standPublisher && $canEdit)--}}
@@ -132,15 +140,19 @@ isset($publishers['user_2'])
                                @elseif(!$standPublisher && $canEdit)
                                    onclick="openModal('{{$day}}', '{{$time}}', '{{$entry['date']}}', {{$StandTemplate->id}})"
                                @endif
-                               style="background-color:
-                           @if(isset($publishers['user_1']) &&
-isset($publishers['user_2'])
-&& $publishers['user_1']
-&& $publishers['user_2'])
-rgba(30,114,227,0.15)
-@elseif($standPublisher && $canEdit)
-rgba(255,210,52,0.29)
-@endif;">
+
+                               style="
+@if (isset($publishers['user_1']) && $publishers['user_1'] && $publishers['user_1'] !== '' &&
+        isset($publishers['user_2']) && $publishers['user_2'] && $publishers['user_2'] !== ''
+        )
+    background-color: rgba(30, 114, 227, 0.15);
+@endif
+@if (
+    (isset($publishers['user_1']) && $publishers['user_1'] == '' && isset($publishers['user_2']) && $publishers['user_2'] !== '') ||
+    (isset($publishers['user_2']) && $publishers['user_2'] == '' && isset($publishers['user_1']) && $publishers['user_1'] !== '')
+)
+    background-color: rgba(255, 210, 52, 0.29);
+@endif">
                                 <div class="row align-items-center">
                                     <!-- time -->
                                     <div class="col-3 text-center">
@@ -216,6 +228,7 @@ rgba(255,210,52,0.29)
 
                                             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                                                 <div class="col p-4 d-flex flex-column position-static">
+
                                                     <h3 class="mb-0">{{ __('text.Дата') }}:  {{$entry['date']}}</h3>
                                                     <h3 class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($time)) }}</h3>
                                                 </div>
@@ -308,6 +321,7 @@ rgba(255,210,52,0.29)
                                                 </style>
                                                 <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                                                     <div class="col p-4 d-flex flex-column position-static">
+
                                                         <h3 class="mb-0">{{ __('text.Дата') }}:  {{$entry['date']}}</h3>
                                                         <h3 class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($time)) }}</h3>
                                                     </div>

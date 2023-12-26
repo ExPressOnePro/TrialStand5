@@ -94,7 +94,8 @@ class HomeController extends Controller {
             if ($user->congregation_id === 1) {
                 return view('Mobile.guest', ['congregations' => $congregations], ['congregationRequests' => $congregationRequests]);
             } else {
-                return view('Mobile.home.home', $compact);
+                return $this->home1();
+//                return view('Mobile.home.home', $compact);
             }
         }
 

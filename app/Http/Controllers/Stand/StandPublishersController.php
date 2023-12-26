@@ -403,6 +403,7 @@ class StandPublishersController extends Controller
 
         $standPublisher = StandPublishers::findOrFail($id);
         $standPublishersHistory = StandPublishersHistory::where('stand_publishers_id', $id)->first();
+
         $publishers = json_decode($standPublisher->publishers, true);
 
         foreach ($publishers as $key => $value) {
@@ -428,8 +429,8 @@ class StandPublishersController extends Controller
             }
         }
         if ($allEmpty) {
-            $standPublisher->delete();
-            $standPublishersHistory->delete();
+            $standPublisher->publishers = null;
+            $standPublishersHistory->publishers = null;
         }
 
         $user = User::find(Auth::id());

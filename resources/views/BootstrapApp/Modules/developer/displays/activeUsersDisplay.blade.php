@@ -41,7 +41,6 @@
                         @php
                             $user_id = $user->id;
                             $userInfo = json_decode($user->info, true);
-
                         @endphp
                         <tr>
                             <td>

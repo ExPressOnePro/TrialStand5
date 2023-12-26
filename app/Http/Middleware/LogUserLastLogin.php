@@ -36,16 +36,9 @@ class LogUserLastLogin
 
             $user = User::find(Auth::id());
             $info = json_decode($user->info, true);
-            // Обновляем поле last_login в массиве info
             $info['last_login'] = Carbon::now()->format('Y-m-d H:i:s');
-
-// Конвертируем массив обратно в JSON-строку
             $infoJson = json_encode($info);
-
-// Сохраняем измененную JSON-строку в поле info
             $user->info = $infoJson;
-
-
             $user->user_agent = $userAgent;
             $user->ip = $ip;
             $user->save();

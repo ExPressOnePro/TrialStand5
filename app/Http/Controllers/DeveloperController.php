@@ -65,15 +65,15 @@ class DeveloperController extends Controller{
                 'title' => 'Пользователей',
                 'route' => route('Developer.allUsers'),
                 'count' => $usersCount,
-                'percent' => $userCountPercent,
-            ],
-
-            [
-                'title' => 'Активных за неделю',
-                'route' => route('developer.activeUsersDisplay'),
-                'count' => $usersActiveCount,
                 'percent' => $usersActiveCountPercent,
             ],
+
+//            [
+//                'title' => 'Активных за неделю',
+//                'route' => route('developer.activeUsersDisplay'),
+//                'count' => $usersActiveCount,
+//                'percent' => $usersActiveCountPercent,
+//            ],
 
             [
                 'title' => 'Новые регистрации',

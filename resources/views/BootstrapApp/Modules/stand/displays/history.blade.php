@@ -114,7 +114,9 @@
                                         preg_match('/\{.*\}/', $new_values, $matches);
                                         $userValues = isset($matches[0]) ? $matches[0] : null;
                                     @endphp
-
+                                    @if (empty($new_values))
+                                        Нет данных
+                                    @endif
                                     @if (isset($userValues) && json_last_error() === JSON_ERROR_NONE)
                                         @php
                                             $decodedValues = json_decode($userValues, true);
