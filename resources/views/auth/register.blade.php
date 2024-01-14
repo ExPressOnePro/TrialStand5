@@ -1,304 +1,134 @@
-@extends('layouts.auth')
-@section('title') Meeper | Регистрация @endsection
-@section('content')
+@extends('BootstrapApp.layouts.guest')
+@section('title') Meeper @endsection
+@section('registration')
 
-    @inject('mobile_detect', 'Mobile_Detect')
-    @if ($mobile_detect->isMobile())
-asdas
-        <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-        <h1 class="mb-3 text-36 text-center">Регистрация</h1>
-        <p class="heading mb-30 text-center">Создайте новый аккаунт чтобы пользоваться возможностями Meeper</p>
-        <form method="POST" action="{{ route('register') }}">
-        @csrf
-            <!--Email-->
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <input class="form-control form-control-rounded @error('email') is-invalid @enderror"  name="email" placeholder="Эл. адрес ( ваша почта )" type="email">
-                    <div class="col-md-6">
-                        @error('email')
-                        <div class="alert alert-card alert-danger">Email не заполнен или занят</div>
-                        @enderror
-                    </div>
-                </div>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .form-signup {
+            max-width: 330px;
+
+        }
+
+        .form-signup .form-floating:focus-within {
+            z-index: 2;
+        }
+
+        .form-signup input[type="email"] {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .form-signup input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+    </style>
+    <main class="form-signup w-100 m-auto mt-5">
+
+        <form id="register-user">
+            <div class="text-center align-items-center">
+                <img class="mb-4" src="{{asset('/android-chrome-512x512.png')}}" alt="" width="128" height="128s">
+                <h1 class="h3 mb-3 text-36 text-center">Создайте ваш аккаунт</h1>
+                <h1 class="h6 mb-3 fw-normal">Создайте новый аккаунт чтобы пользоваться возможностями Meeper</h1>
             </div>
-            <!--first_name-->
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <input class="form-control form-control-rounded @error('name') is-invalid @enderror" name="first_name" placeholder="Ваше имя ( будут видеть все пользователи )" value="" type="text">
-                    <div class="col-md-6">
-                        @error('name')
-                        <div class="alert alert-card alert-danger">Имя пользователя не заполнено</div>
-                        @enderror
-                </div>
-                </div>
-            </div>
-            <!--last_name-->
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <input class="form-control form-control-rounded @error('name') is-invalid @enderror" name="last_name" placeholder="Ваша фамилия ( будут видеть все пользователи )" value="" type="text">
-                    <div class="col-md-6">
-                        @error('name')
-                        <div class="alert alert-card alert-danger">Фамилия пользователя не заполнена</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <!--login-->
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <input class="form-control form-control-rounded @error('login') is-invalid @enderror" name="login" placeholder="Логин (можно использовать для входа)" value="" type="text">
-                    <div class="col-md-6">
-                        @error('login')
-                        <div class="alert alert-card alert-danger">Логин пользователя не заполнен или занят</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <!--Password-->
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <div class="input-group mb-3">
-                        <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" placeholder="Пароль (минимум 6 символов)" required autocomplete="current-password" aria-describedby="basic-addon1">
-                        <div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa-regular fa-eye-slash" id="show-password"></i></span></div>
-                    </div>
-                    <div class="col-md-6">
-                        @error('password')
-                        <div class="alert alert-card alert-danger">Пароль некорректно введен (минимум 6 символов)</div>
-                        @enderror
-                    </div>
-                </div>
+            <div class="form-floating mb-2">
+                <input type="email" class="form-control rounded-2" name="email" id="email" placeholder="Эл. адрес ( ваша почта )">
+                <label for="email">Эл. адрес (ваша почта)</label>
             </div>
 
-            <button class="btn btn-rounded btn-primary btn-block mt-2" type="submit">Зарегистрироваться</button>
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control rounded-2" id="first_name" name="first_name" placeholder="Ваше имя ( будут видеть все пользователи )">
+                <label for="first_name">Имя (видно всем)</label>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control rounded-2" id="last_name" name="last_name" placeholder="Ваша фамилия ( будут видеть все пользователи )">
+                <label for="last_name">Фамилия (видно всем)</label>
+            </div>
+
+
+            <div class="form-floating mb-2">
+                <input type="login" class="form-control rounded-2" name="login" id="login" placeholder="{{ __('text.Email or Login') }}">
+                <label for="login">{{ __('text.Email or Login') }}</label>
+            </div>
+
+            <div class="form-floating position-relative">
+                <input type="password" class="form-control rounded-2" name="passw" id="password" placeholder="{{ __('Пароль') }}">
+                <label for="passw">{{ __('Пароль') }}</label>
+                <i class="bi bi-eye-slash password-toggle me-2" id="passwordToggle"
+                   style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;">
+                </i>
+            </div>
+
+            <div class="form-check text-start my-3">
+                <input class="form-check-input" type="checkbox" value="remember-me" name="remember" id="remember">
+                <label class="form-check-label" for="remember">
+                    {{ __('Запомнить меня') }}
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2" onclick="registerUser()">{{ __('text.Registration') }}</button>
         </form>
-        <br>
-        <p class="text-center">Уже есть аккаунт ? <a href="{{ route('login') }}"> <button class="btn btn-info">Войдите</button></a></p>
-
-    @elseif ($mobile_detect->isTablet())
-
-        <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-        <h1 class="mb-3 text-36 text-center">Регистрация</h1>
-        <p class="heading mb-30 text-center">Создайте новый аккаунт чтобы пользоваться возможностями Meeper</p>
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
-            <!--Email-->
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <input class="form-control form-control-rounded @error('email') is-invalid @enderror"  name="email" placeholder="Эл. адрес ( ваша почта )" type="email">
-                        <div class="col-md-6">
-                            @error('email')
-                            <div class="alert alert-card alert-danger">Email не заполнен или занят</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <!--first_name-->
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <input class="form-control form-control-rounded @error('name') is-invalid @enderror" name="first_name" placeholder="Ваше имя ( будут видеть все пользователи )" value="" type="text">
-                        <div class="col-md-6">
-                            @error('name')
-                            <div class="alert alert-card alert-danger">Имя пользователя не заполнено</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <!--last_name-->
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <input class="form-control form-control-rounded @error('name') is-invalid @enderror" name="last_name" placeholder="Ваша фамилия ( будут видеть все пользователи )" value="" type="text">
-                        <div class="col-md-6">
-                            @error('name')
-                            <div class="alert alert-card alert-danger">Фамилия пользователя не заполнена</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <!--login-->
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <input class="form-control form-control-rounded @error('login') is-invalid @enderror" name="login" placeholder="Логин (можно использовать для входа)" value="" type="text">
-                        <div class="col-md-6">
-                            @error('login')
-                            <div class="alert alert-card alert-danger">Логин пользователя не заполнен или занят</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <!--Password-->
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <input class="form-control form-control-rounded @error('password') is-invalid @enderror"  name="password" placeholder="Пароль (минимум 6 символов)" type="password">
-                        <div class="col-md-6">
-                            @error('password')
-                            <div class="alert alert-card alert-danger">Пароль некорректно введен (минимум 6 символов)</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-            <button class="btn btn-rounded btn-primary btn-block mt-2" type="submit">Зарегистрироваться</button>
-        </form>
-        <br>
-        <p class="text-center">Уже есть аккаунт ? <a href="{{ route('login') }}"> <button class="btn btn-info">Войдите</button></a></p>
-
-    @else
-        <div class="auth-layout-wrap" style="background-image: url(../../dist-assets/images/log2.jpg)">
-            <div class="auth-content">
-                <div class="card o-hidden align-items-center">
-                    <div class="row">
-                        <div class="col">
-                            <div class="p-4">
-                                <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-                                <h1 class="mb-3 text-36 text-center">Регистрация</h1>
-                                <p class="mb-30 text-center">Создайте новый аккаунт чтобы пользоваться возможностями Meeper</p>
-                                <form method="POST" action="{{ route('register') }}">
-                                    @csrf
-                                    <!--Email-->
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <input class="form-control form-control-rounded @error('email') is-invalid @enderror"  name="email" placeholder="Эл. адрес ( ваша почта )" type="email">
-                                                <div class="col-md-6">
-                                                    @error('email')
-                                                    <div class="alert alert-card alert-danger">Email не заполнен или занят</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--first_name-->
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <input class="form-control form-control-rounded @error('name') is-invalid @enderror" name="first_name" placeholder="Ваше имя ( будут видеть все пользователи )" value="" type="text">
-                                                <div class="col-md-6">
-                                                    @error('name')
-                                                    <div class="alert alert-card alert-danger">Имя пользователя не заполнено</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--last_name-->
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <input class="form-control form-control-rounded @error('name') is-invalid @enderror" name="last_name" placeholder="Ваша фамилия ( будут видеть все пользователи )" value="" type="text">
-                                                <div class="col-md-6">
-                                                    @error('name')
-                                                    <div class="alert alert-card alert-danger">Фамилия пользователя не заполнена</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--login-->
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <input class="form-control form-control-rounded @error('login') is-invalid @enderror" name="login" placeholder="Логин (можно использовать для входа)" value="" type="text">
-                                                <div class="col-md-6">
-                                                    @error('login')
-                                                    <div class="alert alert-card alert-danger">Логин пользователя не заполнен или занят</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--Password-->
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <input class="form-control form-control-rounded @error('password') is-invalid @enderror"  name="password" placeholder="Пароль (минимум 6 символов)" type="password">
-                                                <div class="col-md-6">
-                                                    @error('password')
-                                                    <div class="alert alert-card alert-danger">Пароль некорректно введен (минимум 6 символов)</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <button class="btn btn-rounded btn-primary btn-block mt-2" type="submit">Зарегистрироваться</button>
-                                </form>
-                                <br>
-                                <p class="text-center">Уже есть аккаунт ? <a href="{{ route('login') }}"> <button class="btn btn-info">Войдите</button></a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+    </main>
     <script>
-        document.getElementById('show-password').addEventListener('click', () => {
-            const passwordInput = document.getElementById('password');
-
-            if (passwordInput.getAttribute('type') === 'password') {
-                passwordInput.setAttribute('type', 'text');
+        document.getElementById('passwordToggle').addEventListener('click', function () {
+            var passwordInput = document.getElementById('password');
+            var toggleIcon = document.getElementById('passwordToggle');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
             } else {
-                passwordInput.setAttribute('type', 'password');
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
             }
         });
     </script>
 
-    {{--<div class="auth-layout-wrap" style="background-image: url(../../dist-assets/images/log2.jpg)">
-    <div class="auth-content">
-        <div class="card o-hidden align-items-center">
-            <div class="row">
-                <div class="col">
-                    <div class="p-4">
-                        <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-                            <h1 class="mb-3 text-36 text-center">Регистрация</h1>
-                            <p class="mb-30 text-center">Создайте новый аккаунт чтобы пользоваться возможностями стенда</p>
-                            <form method="POST" action="{{ route('register') }}">
-                                @csrf
-                                <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <input class="form-control form-control-rounded @error('email') is-invalid @enderror"  name="email" placeholder="Эл. адрес" type="email">
-                                        <div class="col-md-6">
-                                            @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <input class="form-control form-control-rounded @error('name') is-invalid @enderror" name="name" placeholder="Имя и фамилия" value="" type="text">
-                                        <div class="col-md-6">
-                                            @error('name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <input class="form-control form-control-rounded @error('login') is-invalid @enderror" name="login" placeholder="Логин (Имя пользователя)" value="" type="text">
-                                        <div class="col-md-6">
-                                            @error('login')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <input class="form-control form-control-rounded @error('password') is-invalid @enderror"  name="password" placeholder="Password" type="password">
-                                        <div class="col-md-6">
-                                            @error('password')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="btn btn-rounded btn-primary btn-block mt-2" type="submit">Зарегистрироваться</button>
-                                <p class="text-center">Уже есть аккаунт <a href="{{ route('login') }}">Войдите</a></p>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>--}}
+    <script>
+        function registerUser() {
+            const formElement = document.getElementById('register-user');
+            var formData = new FormData(formElement);
+            const password =  formElement.passw.value;
+            formElement.passw.value = '';
+            formData.append('_token', '{{ csrf_token() }}');
+            event.preventDefault();
+            $.ajax({
+                url: '{{ route('register') }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.error) {
+                        console.log('Server error:', response.error);
+                    } else {
+                        console.log('Success:', true);
+                        location.reload();
+                        window.location.href = "{{ route('home') }}";
+                    }
+                },
+                error: function(xhr) {
+                    var errors = xhr.responseJSON.errors;
 
+                    $(".form-error").remove();
 
+                    for(error in errors) {
+                        // Put back the form password item
+                        formElement.passw.value = password;
+
+                        var input = $('input[name=' + error + ']');
+                        input.parent('.form-floating').after('<span class="form-error text-danger">' + errors[error][0] + '</span>');
+                    }
+                }
+            });
+        }
+    </script>
 @endsection

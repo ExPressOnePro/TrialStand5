@@ -3,7 +3,7 @@
     Meeper
 @endsection
 @section('content')
-
+    @can('module.contacts')
 <style>
     #datatableWithSearchInput {
         width: 300px; /* Замените на нужную ширину */
@@ -91,5 +91,5 @@
 </script>
 
 
-
+    @endcan
 @endsection

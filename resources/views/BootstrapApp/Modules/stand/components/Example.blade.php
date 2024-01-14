@@ -66,16 +66,6 @@
                         border-left-empty
                     @endif
 
-{{--                    @if(!$standPublisher && $canEdit)--}}
-{{--                                        border-left-empty--}}
-{{--                                        @elseif (isset($publishers['user_1']) && $publishers['user_1'] !== '' &&--}}
-{{--          isset($publishers['user_2']) && $publishers['user_2'] !== '')--}}
-{{--&& $publishers['user_1']--}}
-{{--&& $publishers['user_2'])--}}
-{{--    border-left-full--}}
-{{--    @elseif($standPublisher && $canEdit)--}}
-{{--    border-left-half--}}
-{{--    @endif--}}
                          rounded-3 text-decoration-none shadow
                          {{ isset($publishers['user_1']) && isset($publishers['user_2'])
 && $publishers['user_1'] && $publishers['user_2']
@@ -209,7 +199,7 @@
                                         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                                             <div class="col p-4 d-flex flex-column position-static">
                                                 <h3 class="mb-0">{{$stand->name}}</h3>
-                                                <h3 class="mb-0">{{ __('text.Дата') }}:  {{ $gwe }}</h3>
+                                                <h3 class="mb-0">{{ __('text.Дата') }}:  {{ \Carbon\Carbon::parse($gwe)->format('d.m.Y') }}</h3>
                                                 <h3 class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($time)) }}</h3>
                                             </div>
                                         </div>
@@ -303,7 +293,7 @@
                                             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                                                 <div class="col p-4 d-flex flex-column position-static">
                                                     <h3 class="mb-0">{{$stand->name}}</h3>
-                                                    <h3 class="mb-0">{{ __('text.Дата') }}:  {{ $gwe }}</h3>
+                                                    <h3 class="mb-0">{{ __('text.Дата') }}:  {{ \Carbon\Carbon::parse($gwe)->format('d.m.Y') }}</h3>
                                                     <h3 class="mb-0">{{ __('text.Время') }}:  {{ date('H:i', strtotime($time)) }}</h3>
                                                 </div>
                                             </div>
@@ -409,5 +399,4 @@
         myModal.show();
     }
 </script>
-
 

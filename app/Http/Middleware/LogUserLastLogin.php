@@ -42,8 +42,8 @@ class LogUserLastLogin
             $user->user_agent = $userAgent;
             $user->ip = $ip;
             $user->save();
-
         }
         return $response;
+
     }
 }

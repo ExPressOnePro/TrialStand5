@@ -1,8 +1,8 @@
-@extends('Mobile.layouts.front.profile')
+@extends('BootstrapApp.layouts.bootstrapApp')
 @section('title') Meeper @endsection
 @section('content')
 
-    <div class="content container-fluid mt-8">
+    <div class="content container-fluid m-8">
 
         <div class="card">
             <div class="card-header">
@@ -23,85 +23,15 @@
                         </form>
                     </div>
 
-
-                    <div class="col-md-auto">
-                        <!-- Dropdown -->
-                        <div class="dropdown me-2">
-                            <button type="button" class="btn btn-white btn-sm dropdown-toggle" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi-download me-2"></i> Export
-                            </button>
-
-                            <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
-                                <span class="dropdown-header">Options</span>
-                                <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{asset('front/svg/illustrations/copy-icon.svg')}}" alt="Image Description">
-                                    Copy
-                                </a>
-                                <a id="export-print" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{asset('front/svg/illustrations/print-icon.svg')}}" alt="Image Description">
-                                    Print
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <span class="dropdown-header">Download options</span>
-                                <a id="export-excel" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{asset('front/svg/brands/excel-icon.svg')}}" alt="Image Description">
-                                    Excel
-                                </a>
-                                <a id="export-csv" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{asset('front/svg/components/placeholder-csv-format.svg')}}" alt="Image Description">
-                                    .CSV
-                                </a>
-                                <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{asset('front/svg/brands/pdf-icon.svg')}}" alt="Image Description">
-                                    PDF
-                                </a>
-                            </div>
-                        </div>
-                        <!-- End Dropdown -->
-                    </div>
                 </div>
             </div>
 
             <!-- Table -->
-            <div class="table-responsive datatable-custom">
-                <table id="exportDatatable" class="js-datatable table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
-                       data-hs-datatables-options='{
-               "order": [],
-                   "search": "#datatableWithSearchInput",
-                   "info": {
-                     "totalQty": "#datatableEntriesInfoTotalQty"
-                   },
-                   "entries": "#datatableEntries",
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatableEntriesPagination",
-                    "dom": "Bfrtip",
-                    "buttons": [
-                      {
-                        "extend": "copy",
-                        "className": "d-none"
-                      },
-                      {
-                        "extend": "excel",
-                        "className": "d-none"
-                      },
-                      {
-                        "extend": "csv",
-                        "className": "d-none"
-                      },
-                      {
-                        "extend": "pdf",
-                        "className": "d-none"
-                      },
-                      {
-                        "extend": "print",
-                        "className": "d-none"
-                      }
-                   ],
-                   "order": []
-                 }'>
-                    <thead class="thead-light">
-                    <tr role="row">
+            <div class="table-responsive datatable-custom mb-5">
+            <table id="example" class=" table-borderless table-thead-bordered nowrap table-align-middle card-table">
+
+                <thead class="thead-light">
+                    <tr>
                         <th>Возвещатель</th>
                         @foreach($permissionsPublishers as $permission)
                             @if($permission->name == 'module.stand')
@@ -115,7 +45,7 @@
                             @endif
                         @endforeach
                     </tr>
-                    </thead>
+                </thead>
 
                     <tbody>
                     <form method="POST" action="{{ route('updatePerm') }}">
@@ -140,4 +70,23 @@
         </div>
 
     </div>
+
+    <script>
+
+        $(document).ready(function() {
+            $('#example').DataTable( {
+                dom: 'Blt',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                paging: false, // Disable paging
+                searching: true
+            } );
+            // Ваш поиск DataTables
+            $('#datatableWithSearchInput').on('keyup', function () {
+                $('#example').DataTable().search($(this).val()).draw();
+            });
+        } );
+
+    </script>
 @endsection

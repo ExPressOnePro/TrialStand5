@@ -12,7 +12,6 @@
 
 <div class="row">
     @php
-
         $sortedData = [];
         $allDays = collect($StandTemplates)->flatMap(function ($StandTemplate) {
             return array_keys($StandTemplate->week_schedule);

@@ -110,18 +110,18 @@ class ProfileController extends Controller
         $mobile_phone = isset($userInfo['mobile_phone']) ? $userInfo['mobile_phone'] : '';
         $additional_phone = isset($userInfo['additional_phone']) ? $userInfo['additional_phone'] : '';
 
+        $view1 = 'Mobile.profile.settings';
+        $view2 = 'BootstrapApp.Modules.profile.settings';
 
-
-        return view('Mobile.profile.settings',
-                compact('user',
-                    'gender',
+        $compact = compact('user',
+            'gender',
             'country',
             'city',
             'mobile_phone',
             'additional_phone',
-            'userInfo',
-            ));
+            'userInfo');
 
+        return view($view2, $compact);
     }
 
     public function basicInfoSave(Request $request) {

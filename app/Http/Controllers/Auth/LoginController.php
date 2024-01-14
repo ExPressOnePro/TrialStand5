@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\UsersInfos;
-use Carbon\Carbon;
+use App\Http\Requests\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-use Detection\MobileDetect;
-use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -31,28 +29,24 @@ class LoginController extends Controller
         $this->loginType = $this->checkLoginInput();
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $this->validate($request, [
-            'login' => 'required|string',
-            'passw' => 'required|string'
-        ]);
-
-
         $credentials = [
             $this->loginType => $request->login,
-            'password'       => $request->passw
+            'password' => $request->passw
         ];
 
         if (Auth::attempt($credentials, true)) {
-            return redirect()->intended($this->redirectTo);
+            return redirect()->intended('home');
         }
 
-        return redirect()->back()
-            ->withInput()
-            ->withErrors([
-                'login' => 'These credentials don\'t match our records.'
-            ]);
+        return redirect()->back();
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/');
     }
 
     protected function checkLoginInput()
@@ -63,13 +57,14 @@ class LoginController extends Controller
     }
 
     public function view() {
-
-        $detect = new MobileDetect;
-        if ($detect->isMobile()) {
-            return view('Mobile.auth.login');
-        } else {
-            return view('Mobile.auth.login');
-        }
+        return view('auth.login');
     }
+
+
+    public function showLoginForm() {
+        return view('auth.login');
+    }
+
+
 
 }

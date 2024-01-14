@@ -53,41 +53,13 @@
                                     </label>
                                 </div>
                             </div>
-
-{{--                            <div class="form-group">--}}
-{{--                                <div class="input-group mb-3">--}}
-{{--                                    <input id="passw" type="password" class="form-control form-control--}}
-{{--                                    @error('password') is-invalid @enderror" name="passw" required autocomplete="current-password"--}}
-{{--                                           placeholder="{{ __('Пароль') }}" aria-describedby="basic-addon1">--}}
-{{--                                    <div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa-regular fa-eye" id="show-password"></i></span></div>--}}
-{{--                                </div>--}}
-{{--                                <div class="col-md-6">--}}
-{{--                                    @error('password')--}}
-{{--                                    <div class="alert alert-card alert-danger">{{ __('text.password incorrect') }}</div>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-
-{{--                            <span class="d-flex justify-content-end align-items-center">--}}
-{{--                                     @if (Route::has('password.selectLogin'))--}}
-{{--                                    <a class="form-label-link mb-0" href="{{ route('password.selectLogin') }}">{{ __('text.Forgot your password?') }}</a>--}}
-{{--                                @endif--}}
-{{--                            </span>--}}
-
-{{--                            <div class="form-check mb-4">--}}
-{{--                                <input class="form-check-input" type="checkbox" value="" id="termsCheckbox">--}}
-{{--                                <label class="form-check-label" for="termsCheckbox">--}}
-{{--                                    Remember me--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('text.Enter') }}</button>
                             </div>
                     </form>
                     <div class="d-grid mt-9">
-                                <p> Не имеете аккаунта? </p>
-                                    <a class="btn btn-outline-primary btn-sm btn-block" href="{{ route('auth.registration') }}"> Зарегистрироваться</a>
+                        <p> Не имеете аккаунта? </p>
+                        <a class="btn btn-outline-primary btn-sm btn-block" href="{{ route('showRegistrationForm') }}"> Зарегистрироваться</a>
                     </div>
 
                 </div>

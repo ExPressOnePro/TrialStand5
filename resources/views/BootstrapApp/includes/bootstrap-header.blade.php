@@ -16,8 +16,12 @@
 
                         <!-- Меню для десктопов -->
                         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 d-none d-lg-flex">
+                            @can('module.stand')
                             <li><a href="{{route('stand.hub2')}}" class="nav-link px-2"><h5>Стенд</h5></a></li>
-                            <li><a href="{{route('contacts.hub2')}}" class="nav-link px-2"><h5>Контакты</h5></a></li>
+                            @endcan
+                            @can('module.contacts')
+                                <li><a href="{{route('contacts.hub2')}}" class="nav-link px-2"><h5>Контакты</h5></a></li>
+                                @endcan
                             @can('congregation.open_congregation')
                             <li><a href="{{route('congregationView', Auth()->user()->congregation_id)}}" class="nav-link px-2"><h5>Собрание</h5></a></li>
                             @endcan
@@ -32,11 +36,11 @@
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fa fa-user"></i> Профиль</a></li>
+{{--                            <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fa fa-user"></i> Профиль</a></li>--}}
                             <li><a class="dropdown-item" href="{{ route('profile.settings') }}"><i class="fa fa-gear"></i> Настройки</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i> Выйти</a></li>
+                            <li><button class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i> Выйти</button></li>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>

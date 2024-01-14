@@ -303,8 +303,9 @@ class StandController extends Controller
             'usersCongregation',
         );
         $view = 'Modules.congregation.displays.permissionsUsers';
+        $view2 = 'BootstrapApp.Modules.congregations.displays.permissionsUsers';
 
-        return view($view, $compact);
+        return view($view2, $compact);
     }
 
 
@@ -402,81 +403,87 @@ class StandController extends Controller
 //    }
 
     public function table(Request $request, $id){
-        $AuthUser = User::find(Auth::id());
-        $stand = Stand::find($id);
+//        $AuthUser = User::find(Auth::id());
+//        $stand = Stand::find($id);
+//
+//        $users = User::where('congregation_id', $stand->congregation_id)->get();
+//
+//        $standType = $request->is('*current*') ? 'current' : 'next';
+//
+//        $query = StandTemplate::where('stand_id', $id)
+//            ->where('type', '=', $standType);
+//
+//        if (!$AuthUser->hasRole('Developer')) {
+//            $query->where('congregation_id', '=', $AuthUser->congregation_id);
+//        }
+//
+//        $StandTemplate = $query->groupBy(['stand_id', 'congregation_id'])
+//            ->first();
+//
+//        $settings = json_decode($StandTemplate->settings, true);
+//        $week_schedule = $StandTemplate->week_schedule;
+//        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
+//        $StandTemplate_settings = json_decode($StandTemplate->settings, true);
+//        $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
+//        $user = User::find(Auth::id());
+//        $userInfo = json_decode($user->info, true);
+//
+//        $activation = $StandTemplate_settings['activation']; // трехзначное число
+//        $activation_value = explode("-", $activation);
+//
+//        $daysOfWeek = [
+//            1 => trans('text.Понедельник'),
+//            2 => trans('text.Вторник'),
+//            3 => trans('text.Среда'),
+//            4 => trans('text.Четверг'),
+//            5 => trans('text.Пятница'),
+//            6 => trans('text.Суббота'),
+//            7 => trans('text.Воскресенье'),
+//        ];
+//
+//        $dayNumber = $activation_value[0];
+//        $dayName = $daysOfWeek[$dayNumber];
+//        $currentDateTime = date('N-H:i');
+//        $activationDateTime = $activation_value[1];
+//
+//        $compact = compact(
+//            'StandTemplate',
+//            'week_schedule',
+//            'users',
+//            'stand',
+//            'settings',
+//            'userInfo',
+//            'valuePublishers_at_stand',
+//            'standPublishers',
+//            'activation',
+//            'activation_value',
+//            'dayName',
+//            'valuePublishers_at_stand',
+//            'currentDateTime',
+//            'activationDateTime',
+//        );
 
-        $users = User::where('congregation_id', $stand->congregation_id)->get();
-
-        $standType = $request->is('*current*') ? 'current' : 'next';
-
-        $query = StandTemplate::where('stand_id', $id)
-            ->where('type', '=', $standType);
-
-        if (!$AuthUser->hasRole('Developer')) {
-            $query->where('congregation_id', '=', $AuthUser->congregation_id);
-        }
-
-        $StandTemplate = $query->groupBy(['stand_id', 'congregation_id'])
-            ->first();
-
-        $settings = json_decode($StandTemplate->settings, true);
-        $week_schedule = $StandTemplate->week_schedule;
-        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
-        $StandTemplate_settings = json_decode($StandTemplate->settings, true);
-        $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
-        $user = User::find(Auth::id());
-        $userInfo = json_decode($user->info, true);
-
-        $activation = $StandTemplate_settings['activation']; // трехзначное число
-        $activation_value = explode("-", $activation);
-
-        $daysOfWeek = [
-            1 => trans('text.Понедельник'),
-            2 => trans('text.Вторник'),
-            3 => trans('text.Среда'),
-            4 => trans('text.Четверг'),
-            5 => trans('text.Пятница'),
-            6 => trans('text.Суббота'),
-            7 => trans('text.Воскресенье'),
-        ];
-
-        $dayNumber = $activation_value[0];
-        $dayName = $daysOfWeek[$dayNumber];
-        $currentDateTime = date('N-H:i');
-        $activationDateTime = $activation_value[1];
-
-        $compact = compact(
-            'StandTemplate',
-            'week_schedule',
-            'users',
-            'stand',
-            'settings',
-            'userInfo',
-            'valuePublishers_at_stand',
-            'standPublishers',
-            'activation',
-            'activation_value',
-            'dayName',
-            'valuePublishers_at_stand',
-            'currentDateTime',
-            'activationDateTime',
-        );
-
-        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $stand->congregation_id)) {
-            $view = 'Modules.stand.displays.weekly_schedule';
-            return view($view, $compact);
-        } else {
-            return view('errors.423Locked');
-        }
+//        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $stand->congregation_id)) {
+//            $view = 'Modules.stand.displays.weekly_schedule';
+//            return view($view, $compact);
+//        } else {
+//            return view('errors.423Locked');
+//        }
+        return redirect()->route('stand.current2', ['id' => $id]);
     }
 
     public function table2(Request $request, $id) {
 
         $AuthUser = User::find(Auth::id());
         $stand = Stand::find($id);
-        $users = User::query()
-            ->where('congregation_id', $stand->congregation_id)
+
+        $users = User::where('congregation_id', $stand->congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
             ->get(['id', 'first_name', 'last_name']);
+
 
         $canEdit = auth()->user()->can('stand.make_entry');
 
@@ -543,6 +550,92 @@ class StandController extends Controller
         } else {
             return view('errors.423Locked');
         }
+    }
+
+    public function tableEx(Request $request, $id) {
+
+        $AuthUser = User::find(Auth::id());
+        $stand = Stand::find($id);
+//        $users = User::query()
+//            ->where('congregation_id', $stand->congregation_id)
+//            ->get(['id', 'first_name', 'last_name']);
+
+        $users = User::where('congregation_id', $stand->congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->orderBy('last_name', 'asc')
+            ->get(['id', 'first_name', 'last_name']);
+
+
+        $canEdit = auth()->user()->can('stand.make_entry');
+
+        $standType = $request->is('*current*') ? 'current' : 'next';
+
+        $query = StandTemplate::where('stand_id', $id)
+            ->where('type', '=', $standType);
+
+        if (!$AuthUser->hasRole('Developer')) {
+            $query->where('congregation_id', '=', $AuthUser->congregation_id);
+        }
+
+        $StandTemplate = $query->groupBy(['stand_id', 'congregation_id'])
+            ->first();
+
+        $settings = json_decode($StandTemplate->settings, true);
+        $week_schedule = $StandTemplate->week_schedule;
+        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
+        $StandTemplate_settings = json_decode($StandTemplate->settings, true);
+        $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
+        $user = User::find(Auth::id());
+        $userInfo = json_decode($user->info, true);
+
+        $activation = $StandTemplate_settings['activation']; // трехзначное число
+        $activation_value = explode("-", $activation);
+
+
+        $daysOfWeek = [
+            1 => trans('text.Понедельник'),
+            2 => trans('text.Вторник'),
+            3 => trans('text.Среда'),
+            4 => trans('text.Четверг'),
+            5 => trans('text.Пятница'),
+            6 => trans('text.Суббота'),
+            7 => trans('text.Воскресенье'),
+        ];
+
+        $dayNumber = $activation_value[0];
+        $dayName = $daysOfWeek[$dayNumber];
+        $currentDateTime = date('N-H:i');
+        $activationDateTime = $activation_value[1];
+
+        $compact = compact(
+            'StandTemplate',
+            'week_schedule',
+            'users',
+            'stand',
+            'settings',
+            'userInfo',
+            'canEdit',
+            'valuePublishers_at_stand',
+            'standPublishers',
+            'activation',
+            'activation_value',
+            'dayName',
+            'valuePublishers_at_stand',
+            'currentDateTime',
+            'activationDateTime',
+        );
+
+        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $stand->congregation_id)) {
+            $view = 'BootstrapApp.Modules.stand.components.Example';
+            return view($view, $compact);
+        } else {
+            return view('errors.423Locked');
+        }
+
+        //      return response()->json([$compact]);
     }
 
     public function tableJson(Request $request, $id) {
@@ -618,6 +711,101 @@ class StandController extends Controller
 //        } else {
 //            return view('errors.423Locked');
 //        }
+    }
+
+    public function getStandPublishersDataForCurrentWeek($standId) {
+        $stand = Stand::find($standId);
+        $standTemplate = StandTemplate::where('stand_id', $standId)->first();
+        $standTemplateSettings = json_decode($standTemplate->settings, true);
+        $standTemplateId = $standTemplate->id;
+        $weekSchedule = $standTemplate->week_schedule;
+
+        $currentDayOfWeek = date('w'); // 0 (для воскресенья) до 6 (для субботы)
+        $currentDayOfWeek = $currentDayOfWeek == 0 ? 7 : $currentDayOfWeek; // поменять 0 на 7 для воскресенья
+
+        $currentWeekStart = date('Y-m-d', strtotime('-'.$currentDayOfWeek.' days')); // начало текущей недели
+        $currentWeekEnd = date('Y-m-d', strtotime('+'.(7-$currentDayOfWeek).' days')); // конец текущей недели
+
+        // нужные дни текущей недели
+        $weekDays = [];
+        for($i = 1; $i <= 7; $i++){
+            if(isset($weekSchedule[$i]))
+                $weekDays[date('Y-m-d', strtotime($currentWeekStart.' +'.$i.' days'))] = $weekSchedule[$i];
+        }
+
+        // записи из stand_publishers для раннее найденных дней
+        $standPublishersRecords = [];
+        foreach ($weekDays as $date => $times) {
+            foreach ($times as $time) {
+                $standPublishers = StandPublishers::where('stand_template_id', $standTemplateId)
+                    ->whereDate('date', '=', $date)
+                    ->where('time', '=', $time)
+                    ->first();
+
+                if ($standPublishers) {
+                    $publishersData = json_decode($standPublishers->publishers, true);
+
+                    $emptyTime = true;
+
+                    foreach ($publishersData as $key => $userId) {
+                        $user = User::find($userId);
+                        if ($user) {
+                            // Добавление данных пользователя в массив
+                            $standPublishersRecords[$date][$time][$key] = [
+                                'id' => $user->id,
+                                'last_name' => $user->last_name,
+                                'first_name' => $user->first_name,
+                            ];
+
+                            // Если найден хотя бы один пользователь, считаем время не пустым
+                            $emptyTime = false;
+                        } else {
+                            $standPublishersRecords[$date][$time][$key] = [];
+                        }
+                    }
+
+                    // Если все ключи времени пусты, очищаем $time
+                    if ($emptyTime) {
+                        $standPublishersRecords[$date][$time] = [
+                            'standPublishers' => ['standPublishers' => $standPublishers->id]
+                        ];
+                    }
+                    if (!$emptyTime) {
+                        $standPublishersRecords[$date][$time]['standPublishers'] =[
+                            'standPublishers' => $standPublishers->id
+                        ];
+                    }
+                } else {
+                    $standPublishersRecords[$date][$time] = [];
+                }
+            }
+
+        }
+        $publishers = User::where('congregation_id', $stand->congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->orderBy('last_name', 'asc')
+            ->get(['id', 'first_name', 'last_name']);
+
+
+        $newSettings = [];
+
+        foreach ($standTemplateSettings as $SettingsKey => $SettingsValue) {
+            $newSettings[$SettingsKey] = $SettingsValue;
+        }
+
+        $standTemplateSettings = $newSettings;
+        $compact = compact(
+            'standTemplateSettings',
+            'standPublishersRecords',
+            'publishers',
+        );
+
+//        return view('BootstrapApp.Modules.stand.displays.test', $compact);
+        return response()->json([$compact]);
+
     }
 
     public function aioTable(Request $request,){
@@ -703,7 +891,14 @@ class StandController extends Controller
         $AuthUser = User::find(Auth::id());
         $stands = Stand::query()->where('congregation_id', Auth::user()->congregation_id)->get();
 
-        $users = User::where('congregation_id', Auth::user()->congregation_id)->get();
+//        $users = User::where('congregation_id', Auth::user()->congregation_id)->get();
+        $users = User::where('congregation_id', Auth::user()->congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->get();
+
         $user = User::find(Auth::id());
 
         $standType = $request->is('*current*') ? 'current' : 'next';

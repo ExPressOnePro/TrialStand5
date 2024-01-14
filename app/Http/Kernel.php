@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\Language::class,
             \App\Http\Middleware\LogUserLastLogin::class,
+            \App\Http\Middleware\AllowDuringMaintenance::class,
         ],
 
         'api' => [
@@ -83,7 +84,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'role'  =>  \App\Http\Middleware\RoleMiddleware::class, // наш мидлвар роли
+        'role'  =>  \App\Http\Middleware\RoleMiddleware::class,
+        'checkCongregation' => \App\Http\Middleware\CheckCongregation::class,
     ];
 
 

@@ -86,20 +86,19 @@ class HomeController extends Controller {
             'active_day'
         );
 
-        $detect = new MobileDetect;
-        if ($AuthUser->hasRole('Developer')) {
-            return $this->home1();
-//            return view('BootstrapApp.Modules.home.home', $compact);
+        if ($user->congregation_id === 1) {
+            return view('BootstrapApp.Modules.code', ['user' => $user]);
         } else {
-            if ($user->congregation_id === 1) {
-                return view('Mobile.guest', ['congregations' => $congregations], ['congregationRequests' => $congregationRequests]);
-            } else {
-                return $this->home1();
-//                return view('Mobile.home.home', $compact);
-            }
+            return $this->home();
         }
 
     }
+
+    public function guest() {
+        $user = User::find(Auth::id());
+        return view('BootstrapApp.layouts.guest', compact('user'));
+    }
+
 
     public function menu(){
         $user = User::find(Auth::id());
@@ -114,19 +113,33 @@ class HomeController extends Controller {
     }
 
     public function menu2(){
+//        $user = User::find(Auth::id());
+//        $userInfo = json_decode($user->info, true);
+//
+//        $compact = compact('userInfo');
+
+        $view1 = 'Mobile.menu.overview';
+        $view2 = 'BootstrapApp.Modules.menu';
+
+        return view ($view2);
+    }
+    public function menu3(){
         $user = User::find(Auth::id());
         $userInfo = json_decode($user->info, true);
 
         $compact = compact('userInfo');
 
         $view1 = 'Mobile.menu.overview';
-        $view2 = 'BootstrapApp.Modules.menu';
+        $view2 = 'BootstrapApp.Modules.menu2';
 
         return view ($view2, $compact);
     }
 
+    public function home(){
+        return view ('BootstrapApp.Modules.home.home');
+    }
 
-    public function home1(){
+    public function home2(){
 
         $user = User::find(Auth::id());
         $userInfo = json_decode($user->info, true);
@@ -232,27 +245,7 @@ class HomeController extends Controller {
             'standPublishersCount',
         );
 
-        return view ('BootstrapApp.Modules.home.home', $compact);
-    }
-
-    public function guest() {
-
-        $user = User::find(Auth::id());
-        $congregations = Congregation::where('id', '>', 1)->get();
-        $congregationRequests = CongregationRequests::get();
-
-        $detect = new MobileDetect;
-        if ($detect->isMobile()) { //Mobile
-            return view('Mobile.guest', compact('congregations', 'congregationRequests'));
-        } else { //Desktop
-
-            return view('Mobile.guest', compact('congregations', 'congregationRequests'));
-
-//            return view('Desktop.guest')
-//                ->with(['congregations' => $congregations])
-//                ->with(['congregationRequests' => $congregationRequests]);
-        }
-
+        return view ('BootstrapApp.Modules.home.home2', $compact);
     }
 
     public function welcome() {

@@ -1,10 +1,60 @@
 @extends('BootstrapApp.layouts.bootstrapApp')
-{{--@extends('Mobile.layouts.front.app')--}}
-@section('title') Meeper | Собрание @endsection
+@section('title') Meeper @endsection
 @section('content')
 
     <div class="content container-fluid">
+        <!-- Кнопка для открытия модального окна -->
+        <div class="card mb-5">
+            <div class="row">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userCreationModal">
+                    Создать нового пользователя
+                </button>
+            </div>
+        </div>
 
+        <!-- Модальное окно -->
+        <div class="modal fade" id="userCreationModal" tabindex="-1" aria-labelledby="userCreationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userCreationModalLabel">Создание пользователя</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="firstNameInput" class="col-form-label">Имя</label>
+                                <input type="text" class="form-control" id="firstNameInput">
+                            </div>
+                            <div class="mb-3">
+                                <label for="lastNameInput" class="col-form-label">Фамилия</label>
+                                <input type="text" class="form-control" id="lastNameInput">
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginInput" class="col-form-label">Логин</label>
+                                <input type="text" class="form-control" id="loginInput">
+                            </div>
+                            <div class="mb-3">
+                                <label for="emailInput" class="col-form-label">Почта</label>
+                                <input type="email" class="form-control" id="emailInput">
+                            </div>
+                            <div class="mb-3">
+                                <label for="passwordInput" class="col-form-label">Пароль</label>
+                                <input type="password" class="form-control" id="passwordInput">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Закрыть</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary w-100" onclick="createUser()">Создать пользователя</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card mb-5">
             <div class="card-header">
                 <div class="row justify-content-between align-items-center flex-grow-1 mb-3">
@@ -27,14 +77,14 @@
 
             <!-- Table -->
             <div class="table-responsive datatable-custom mb-5">
-                <table id="example" class=" table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                <table id="example" class=" table-borderless table-thead-bordered nowrap table-align-middle card-table">
 
                     <thead class="thead-light">
                     <tr>
                         <th>Фамилия Имя</th>
+                        <th class="d-none d-sm-table-cell">Логин</th>
                         <th class="d-none d-sm-table-cell">Почта</th>
                         <th class="d-none d-sm-table-cell">Номер телефона</th>
-                        <th class="d-none d-sm-table-cell">Адрес</th>
                         <th>Настройки</th>
                     </tr>
                     </thead>
@@ -46,11 +96,15 @@
                         @endphp
                         <tr>
                             <td>
-                                {{--                        <a class="d-flex align-items-center" href="{{route('userCard', $user->id)}}">--}}
                                 <div class="ms-3">
                                     <span class="d-block h5 text-inherit mb-0">{{$user->last_name}} {{ $user->first_name}}</span>
                                 </div>
                                 {{--                        </a>--}}
+                            </td>
+                            <td class="d-none d-sm-table-cell">
+                                <div>
+                                    <span class="d-block h5 mb-0">{{$user->login}}</span>
+                                </div>
                             </td>
                             <td class="d-none d-sm-table-cell">
                                 <span class="d-block h5 mb-0">{{ $user->email}}</span>
@@ -65,31 +119,13 @@
                                     @endif
                                 @endif
                             </td>
-                            <td class="d-none d-sm-table-cell">
-                                @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
-                                    @if (isset($decodedInfo['address']) && !empty($decodedInfo['address']))
-                                        <span class="d-block h5 mb-0">{{ $decodedInfo['address'] }}</span>
-                                    @else
-                                        <span class="d-block h5 mb-0">-</span>
-                                    @endif
-                                @endif
-                            </td>
+
                             <td>
                                 <div class="d-flex flex-grow-1">
                                     <div class="col-auto">
-                                        @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
-                                            @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
-                                                <button class="btn btn-outline-primary" onclick="callNumber('{{$decodedInfo['mobile_phone']}}')">
-                                                    <i class="fa-solid fa-phone"></i>
-                                                </button>
-                                            @endif
-                                        @endif
-{{--                                            <a class="btn btn-white ms-2" data-bs-toggle="modal" data-bs-target="#editUserModal{{$user->id}}">--}}
-{{--                                            <i class="fa-solid fa-gear"></i>--}}
-{{--                                        </a>--}}
-                                            <button class="btn btn-white ms-2" onclick="openModal('{{$user->id}}', '{{$user->last_name}}', '{{$user->first_name}}')">
-                                                <i class="fa-solid fa-gear"></i>
-                                            </button>
+                                        <button class="btn btn-secondary ms-2" onclick="openModal('{{$user->id}}', '{{$user->last_name}}', '{{$user->first_name}}', '{{$decodedInfo['mobile_phone'] ?? ''}}')">
+                                            <i class="fa-solid fa-gear"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </td>
@@ -101,11 +137,12 @@
             </div>
         </div>
 
-        <!-- Модальное окно -->
-        <div class="modal fade mb-5" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal fade  mb-5" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen modal-lg">
                 <div class="modal-content">
-                    <!-- Заголовок модального окна -->
+
+
                     <div class="modal-header">
                         <h5 class="modal-title" id="editUserModalLabel">Изменения пользователя</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -113,28 +150,104 @@
 
                     <!-- Тело модального окна -->
                     <div class="modal-body">
-                        <!-- Тут ваш контент для модального окна -->
-                        <form id="editUserForm">
-                            <!-- Форма для редактирования пользователя -->
-                            <input type="hidden" class="form-control" id="userIdInput" name="userIdInput">
-                            <div class="mb-4">
-                                <label for="editLastNameModal" class="form-label">Фамилия</label>
-                                <input type="text" class="form-control" id="editLastNameModal" name="editLastNameModal">
-                            </div>
-                            <div class="mb-4">
-                                <label for="editFirstNameModal" class="form-label">Имя</label>
-                                <input type="text" class="form-control" id="editFirstNameModal" name="editFirstNameModal">
-                            </div>
-                            <!-- Другие поля для редактирования -->
 
-                            <!-- Кнопки "Отменить" и "Сохранить" -->
-                            <div class="d-flex justify-content-end">
-                                <div class="d-flex gap-3">
-                                    <button type="button" class="btn btn-white" data-bs-dismiss="modal" aria-label="Close">Отменить</button>
-                                    <button type="button" class="btn btn-primary" onclick="saveChanges()">Сохранить</button>
+                        <div class="card-body">
+                            <!-- Form -->
+                            <div class="row mb-4">
+                                <div class="col-sm-9">
+                                    <div class="d-flex align-items-center">
+
+                                        <h1 class="avatar display-1"><i class="fas fa-user"></i></h1>
+                                        <div class="ms-3">
+                                            <h5 class="mb-2"><strong></strong></h5>
+                                            <h5 class="mb-2"><strong></strong></h5>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+
+                            <div class="bd-example m-0 border-0">
+                                <nav>
+                                    <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+                                        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Основные</button>
+                                        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" tabindex="-1">Пароль и вход</button>
+                                        <button class="nav-link text-danger" id="nav-delete-tab" data-bs-toggle="tab" data-bs-target="#nav-delete" type="button" role="tab" aria-controls="nav-delete" aria-selected="false" tabindex="-1">Удаление</button>
+                                    </div>
+                                </nav>
+                                <div class="tab-content" id="nav-tabContent">
+                                    <div class="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                        <form id="editUserForm">
+                                            <input type="hidden" class="form-control" id="userIdInput" name="userIdInput">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="mb-4">
+                                                        <label for="editLastNameModal" class="form-label">Фамилия</label>
+                                                        <input type="text" class="form-control" id="editLastNameModal" name="editLastNameModal">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="mb-4">
+                                                        <label for="editFirstNameModal" class="form-label">Имя</label>
+                                                        <input type="text" class="form-control" id="editFirstNameModal" name="editFirstNameModal">
+                                                    </div>
+                                                </div>
+                                                <div class="form-outline">
+                                                    <label class="form-label" for="typePhone">Номер телефона</label>
+                                                    <input type="tel" id="typePhone" class="form-control" name="typePhone">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-end mt-5">
+                                                <div class="d-flex gap-3">
+                                                    <button type="button" class="btn btn-white" data-bs-dismiss="modal" aria-label="Close">Отменить</button>
+                                                    <button type="button" class="btn btn-primary" onclick="saveChanges()">Сохранить</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+                                        <div id="permissionsList" class="row row-cols-1"></div>
+
+                                        <div class="row row-cols-1">
+                                            <form method="post" action="{{ route('users.updateGeneratePassword') }}">
+                                                @csrf
+                                                <label for="code">Сгенерированный пароль:</label>
+                                                <div class="row mb-4">
+                                                <div class="input-group input-group-merge mb-4">
+                                                    <input id="pinputfield" class="form-control form-control-rounded" name="pinputfield" minlength="6" required>
+                                                </div>
+                                                    <button type="button" class="btn btn-outline-success" onclick="updatePasswordUser()">Обновить пароль</button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="tab-pane fade mb-5" id="nav-delete" role="tabpanel" aria-labelledby="nav-delete">
+                                        <form id="deleteUserForm mb-5">
+                                            <input type="hidden" class="form-control" id="userIdInputDelete" name="userIdInputDelete">
+                                            <div class="alert alert-danger" role="alert">
+                                                <h4 class="alert-heading">ПРЕДУПРЕЖДЕНИЕ: УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ</h4>
+                                                <p>Вы собираетесь удалить пользователя из системы. Пожалуйста, ознакомьтесь с следующей информацией перед продолжением:</p>
+                                                <ul>
+                                                    <li><strong>ПОТЕРЯ ДОСТУПА:</strong> Удаление пользователя приведет к потере его доступа ко всем системным ресурсам и данным. Пользователь больше не сможет входить в систему или использовать свои учетные данные.</li>
+                                                    <li><strong>УДАЛЕНИЕ ДАННЫХ:</strong> Все данные, принадлежащие данному пользователю, будут удалены. Это включает в себя файлы, папки, настройки и другие личные данные.</li>
+                                                    <li><strong>НЕОБРАТИМОСТЬ:</strong> Действие удаления пользователя необратимо. После подтверждения, восстановление учетной записи и данных будет невозможно без предварительного резервного копирования.</li>
+                                                    <li><strong>ПРЕДВАРИТЕЛЬНЫЙ АНАЛИЗ:</strong> Убедитесь, что вы правильно выбрали пользователя для удаления. Предварительно оцените его роль, права доступа и любые связанные аспекты.</li>
+                                                </ul>
+                                                <hr>
+                                                <p class="mb-0">Пожалуйста, подтвердите свое намерение удалить пользователя, введя его имя и фамилию</p>
+                                                <div class="row align-items-center">
+                                                    <input type="text" class="form-control mb-2" id="nameInput" placeholder="фамилия, имя">
+                                                    <button type="button" class="btn btn-danger" onclick="deleteUser()">Подтвердить удаление</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -144,18 +257,30 @@
         {{--            @include('BootstrapApp.Modules.congregations.components.DesktopUsersList')--}}
 
     </div>
-    <script>
-        function openModal(userId, lastName, firstName) {
+
+
+        <script>
+
+        var deleteModalLastName;
+        var deleteModalFirstName;
+
+        function openModal(userId, lastName, firstName, phoneNumber) {
             var modal = new bootstrap.Modal(document.getElementById('editUserModal'));
 
-            // Подставляем данные в форму модального окна
+            deleteModalLastName = lastName;
+            deleteModalFirstName = firstName;
+
             document.getElementById('editLastNameModal').value = lastName;
             document.getElementById('editFirstNameModal').value = firstName;
             document.getElementById('userIdInput').value = userId;
+            document.getElementById('userIdInputDelete').value = userId;
+            document.querySelector('#editUserModal h5.mb-2:first-of-type strong').innerText = lastName;
+            document.querySelector('#editUserModal h5.mb-2:last-of-type strong').innerText = firstName;
+            document.getElementById('typePhone').value = phoneNumber || '';
 
-            // Открываем модальное окно
             modal.show();
         }
+
 
         function saveChanges() {
             // Собираем данные из формы
@@ -181,37 +306,151 @@
                 }
             });
 
+
             // Закрытие модального окна
             var modal = new bootstrap.Modal(document.getElementById('editUserModal'));
             modal.hide();
         }
-    </script>
-    <script>
+        function deleteUser() {
+            // Получаем значение введенного имени и фамилии
+            var enteredName = $("#nameInput").val();
 
-        $(document).ready(function() {
-            $('#example').DataTable( {
-                dom: 'Blt',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ],
-                paging: false, // Disable paging
-                searching: true
-            } );
-            // Ваш поиск DataTables
-            $('#datatableWithSearchInput').on('keyup', function () {
-                $('#example').DataTable().search($(this).val()).draw();
-            });
-        } );
-
-    </script>
+            // Проверяем совпадение имени и фамилии
+            if (enteredName === (deleteModalLastName + " " + deleteModalFirstName)) {
+                // Создаем объект FormData и добавляем данные формы
+                var formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('userIdInputDelete', document.getElementById('userIdInputDelete').value);
 
 
-    <script>
-
-        function callNumber(phoneNumber) {
-            window.location.href = 'tel:' + phoneNumber;
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('delete.profile.congr', $user_id) }}',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        console.log('Профиль успешно удален', document.getElementById('userIdInputDelete').value);
+                        var modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                        modal.hide();
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        // Обработка ошибки
+                        console.error('Ошибка при удалении профиля:', error);
+                    }
+                });
+            } else {
+                // Выводим сообщение об ошибке, если имя и фамилия не совпадают
+                alert("Неверные данные пользователя. Пожалуйста, проверьте имя и фамилию.");
+            }
         }
-    </script>
+
+
+        function updatePasswordUser() {
+            var userId = document.getElementById('userIdInput').value;
+            var newPassword = document.getElementById('pinputfield').value;
+
+            if (pinputfield.value.length < 6) {
+                // Вывести ошибку, если пароль меньше 6 символов
+                alert('Пароль должен содержать не менее 6 символов');
+                return;
+            }
+
+            $.ajax({
+                url: '{{ route('users.updateGeneratePassword') }}',
+                type: 'POST',
+                data: {
+                    userIdInput: userId,
+                    code: newPassword,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    console.log('yeap');
+                },
+                error: function (error) {
+                    console.error('nope');
+                }
+            });
+        }
+        function createUser() {
+
+            var firstName = document.getElementById('firstNameInput').value;
+            var lastName = document.getElementById('lastNameInput').value;
+            var login = document.getElementById('loginInput').value;
+            var email = document.getElementById('emailInput').value;
+            var password = document.getElementById('passwordInput').value;
+
+
+            $.ajax({
+                url: '{{ route('congregation.createUser') }}',
+                type: 'POST',
+                data: {
+                    firstName: firstName,
+                    lastName: lastName,
+                    login: login,
+                    email: email,
+                    password: password,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    console.log('yeap');
+                },
+                error: function (error) {
+                    console.error('nope');
+                }
+            });
+        }
+            {{--$.ajax({--}}
+            {{--    url: '{{ route('congregation.createUser') }}',--}}
+            {{--    type: 'POST',--}}
+            {{--    data: JSON.stringify(userData),--}}
+            {{--    contentType: 'application/json',--}}
+            {{--    headers: {--}}
+            {{--        'X-CSRF-TOKEN': '{{ csrf_token() }}'--}}
+            {{--    },--}}
+            {{--    success: function (response) {--}}
+            {{--        console.log('yeap');--}}
+            {{--        // var modal = new bootstrap.Modal(document.getElementById('userCreationModal'));--}}
+            {{--        // modal.hide();--}}
+            {{--        // location.reload();--}}
+            {{--    },--}}
+            {{--    error: function (error) {--}}
+            {{--        console.error('Error', error);--}}
+            {{--        console.error('nope');--}}
+            {{--    }--}}
+            {{--});--}}
+
+
+        </script>
+
+
+        <script>
+
+            $(document).ready(function() {
+                $('#example').DataTable( {
+                    dom: 'Blt',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
+                    paging: false, // Disable paging
+                    searching: true
+                } );
+                // Ваш поиск DataTables
+                $('#datatableWithSearchInput').on('keyup', function () {
+                    $('#example').DataTable().search($(this).val()).draw();
+                });
+            } );
+
+        </script>
+
+
+        <script>
+
+            function callNumber(phoneNumber) {
+                window.location.href = 'tel:' + phoneNumber;
+            }
+        </script>
 
 
 @endsection

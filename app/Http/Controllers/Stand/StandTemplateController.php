@@ -98,27 +98,22 @@ class StandTemplateController extends Controller {
     }
 
     public function timeUpdateNext(Request $request, $id, $day){
-
         $stand_id = Stand::find($id);
         $congregation_id = $stand_id->congregation_id;
-        $template = StandTemplate::where('stand_id', $id)->where('type', '=','next')->first();
+        $template = StandTemplate::where('stand_id', $id)->where('type', 'next')->first();
         $templateSchedule = $template->week_schedule;
 
-
-
-        $time= $request->input('time');
-//        $day = $request->input('day');
+        $time = $request->input('time');
 
         // Если есть часы для дня, то сохраните его в массиве, иначе удалите его из массива
         if (!empty($time)) {
-            $templateSchedule[$day] = $time;
+            $templateSchedule[$day] = explode(',', $time);
         } else {
             unset($templateSchedule[$day]);
         }
-        // Преобразуйте массив JSON обратно в строку
+
+        // Преобразуйте массив в JSON
         $updatedJsonString = json_encode($templateSchedule);
-
-
 
         // Обновите базу данных новой строкой JSON
         StandTemplate::where('type', 'next')

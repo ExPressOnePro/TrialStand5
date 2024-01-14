@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Congregation;
 
 use App\Http\Controllers\Controller;
+use App\Models\Astart;
 use App\Models\Congregation;
 use App\Models\CongregationRequests;
 use App\Models\CongregationsPermissions;
@@ -21,7 +22,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Log;
 
 class CongregationsController extends Controller {
 
@@ -71,7 +74,12 @@ class CongregationsController extends Controller {
 
         $lastWeek = Carbon::now()->subWeek();
         $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->where('congregation_id', $id)->count();
-        $usersCongregationCount = User::where('congregation_id', $id)->count();
+        $usersCongregationCount = User::where('congregation_id', $id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->count();
 
 // Проверка на пустые значения и присвоение 0
         $usersActiveCount = !empty($usersActiveCount) ? $usersActiveCount : 0;
@@ -153,12 +161,12 @@ class CongregationsController extends Controller {
                 'count' => $usersCongregationCount,
                 'percent' => null,
             ],
-            [
-                'title' => 'Активных за неделю',
-                'route' =>  route('congregation.ActiveUsersPerWeek', $id),
-                'count' => $usersActiveCount,
-                'percent' => $usersActiveCountPercent,
-            ],
+//            [
+//                'title' => 'Активных за неделю',
+//                'route' =>  route('congregation.ActiveUsersPerWeek', $id),
+//                'count' => $usersActiveCount,
+//                'percent' => $usersActiveCountPercent,
+//            ],
             [
                 'title' => 'Работающих стендов',
                 'route' => route('congregation.stands', $id),
@@ -192,6 +200,152 @@ class CongregationsController extends Controller {
             return view('errors.423Locked');
         }
     }
+
+    public function overviewAj($id)
+    {
+
+        $countUsers = User::where('congregation_id', $id)->count();
+        $countGroups = Group::where('congregation_id', $id)->count();
+        $countStands = Stand::where('congregation_id', $id)->count();
+        $countCongregationsPermissions = CongregationsPermissions::with('permission')
+            ->whereHas('permission', function ($query) {
+                $query->where('name', 'like', 'module%');
+            })
+            ->where('congregation_id', $id)
+            ->count();
+
+
+        $usersRoleOverseers = UsersRoles::where('role_id', 'Overseer')->get();
+
+        $lastWeek = Carbon::now()->subWeek();
+        $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->where('congregation_id', $id)->count();
+        $usersCongregationCount = User::where('congregation_id', $id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->count();
+
+// Проверка на пустые значения и присвоение 0
+        $usersActiveCount = !empty($usersActiveCount) ? $usersActiveCount : 0;
+        $usersCongregationCount = !empty($usersCongregationCount) ? $usersCongregationCount : 0;
+
+        // Проверка на ноль перед делением
+        if ($usersCongregationCount !== 0) {
+            $usersActiveCountPercent = ($usersActiveCount / $usersCongregationCount) * 100;
+        } else {
+            $usersActiveCountPercent = 0; // Если $usersCongregationCount равно нулю
+        }
+
+        if ($usersRoleOverseers->isEmpty()) {
+            $countOverseers = '0';
+        } else {
+            foreach ($usersRoleOverseers as $usersRoleOverseer) {
+                $countOverseers[] = User::where('congregation_id', $id)
+                    ->where('id', $usersRoleOverseers->user_id)
+                    ->count();
+            }
+        }
+        $AuthUser = User::find(Auth::id());
+        $congregation = Congregation::find($id);
+        $Developer = Role::where('slug', '=', 'Developer')->first();
+        $Developers_id = UsersRoles::where('role_id', $Developer->id)->get();
+        $permission_Overseers = Permission::where('name', 'like', 'Developer.User manager%')->get();
+
+        $groups = Group::with('responsibleUserId')
+            ->where('congregation_id', $id)
+            ->get();
+
+        foreach ($groups as $group) {
+            $users_groups[] = UsersGroups::with('User')->where('group_id', $group->id)->get();
+        }
+
+        if($permission_Overseers->isEmpty()) {
+            $permission_Overseer = '0';
+        } else {
+            foreach ($permission_Overseers as $permission_Oversee) {
+                $permission_Overseer[] = UsersPermissions::with('User')
+                    ->where('permission_id', $permission_Oversee->id)
+                    ->get();
+            }
+        }
+
+        $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
+        $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
+
+        $users = User::where('congregation_id', $id)->get();
+
+        $congregationModules = CongregationsPermissions::where('congregation_id', $id)->get();
+        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
+        foreach ($permissions as $permission) {
+            $permission->has_permission = DB::table('congregations_permissions')
+                ->where('congregation_id', $id)
+                ->where('permission_id', $permission->id)
+                ->exists();
+        }
+
+        $connectedModules = CongregationsPermissions::with('permission')
+            ->whereHas('permission', function ($query) {
+                $query->where('name', 'like', 'module%');
+            })
+            ->where('congregation_id', $id)
+            ->get();
+
+        $congregationRequests = CongregationRequests::with('user')
+            ->where('congregation_id', $id)
+            ->get();
+
+        $congregationRequestsCount = CongregationRequests::with('user')
+            ->where('congregation_id', $id)
+            ->count();
+
+        $metrics = [
+            [
+                'title' => 'Количество возвещателей',
+                'route' => route('congregation.publishers', $id),
+                'count' => $usersCongregationCount,
+                'percent' => null,
+            ],
+//            [
+//                'title' => 'Активных за неделю',
+//                'route' =>  route('congregation.ActiveUsersPerWeek', $id),
+//                'count' => $usersActiveCount,
+//                'percent' => $usersActiveCountPercent,
+//            ],
+            [
+                'title' => 'Работающих стендов',
+                'route' => route('congregation.stands', $id),
+                'count' => $countStands,
+                'percent' => null, // Здесь процент не указан
+            ],
+            [
+                'title' => 'Подключено модулей',
+                'route' => route('congregation.modules', $id),
+                'count' => $countCongregationsPermissions,
+                'percent' => null, // Здесь процент не указан
+            ],
+        ];
+
+
+
+        $compact = compact(
+            'congregation',
+            'metrics',
+            'congregationRequests',
+            'congregationRequestsCount',
+        );
+
+        $mobile_detect = new MobileDetect();
+
+        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
+            $view = $mobile_detect->isMobile() ? 'Modules.congregation.overview' : 'Modules.congregation.overview';
+            $view2 =  'BootstrapApp.Modules.congregations.ajaxComponents.metrics';
+            return view($view2, $compact);
+        } else {
+            return view('errors.423Locked');
+        }
+    }
+
 
     public function groupView($congregation_id, $group_id) {
 
@@ -429,9 +583,15 @@ class CongregationsController extends Controller {
             ->where('congregation_id', $congregation_id)
             ->count();
 
-        $users = User::where('congregation_id', $congregation_id)->get();
+        $users = User::where('congregation_id', $congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->get();
 
         $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
+
         $permissions = Permission::where('name', 'LIKE', 'module%')->get();
         foreach ($permissions as $permission) {
             $permission->has_permission = DB::table('congregations_permissions')
@@ -440,16 +600,148 @@ class CongregationsController extends Controller {
                 ->exists();
         }
 
+        if(Auth::user()->hasRole('Developer')) {
+            $permissions_users = Permission::get();
+        } else{
+            $permissions_users = Permission::where('name', 'LIKE', 'Stand%')->get();
+        }
+
         $view1 = 'Modules.congregation.displays.publishers';
         $view2 = 'BootstrapApp.Modules.congregations.displays.publishers';
 
         return view($view2,compact(
             'congregation',
+            'permissions_users',
             'users',
             'permissions','congregationRequestsCount'));
     }
+
+
+    public function publishersAj($congregation_id) {
+        $congregation = Congregation::find($congregation_id);
+        $congregationRequestsCount = CongregationRequests::with('user')
+            ->where('congregation_id', $congregation_id)
+            ->count();
+
+        $users = User::where('congregation_id', $congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->get();
+
+        $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
+
+        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
+        foreach ($permissions as $permission) {
+            $permission->has_permission = DB::table('congregations_permissions')
+                ->where('congregation_id', $congregation_id)
+                ->where('permission_id', $permission->id)
+                ->exists();
+        }
+
+        if(Auth::user()->hasRole('Developer')) {
+            $permissions_users = Permission::get();
+        } else{
+            $permissions_users = Permission::where('name', 'LIKE', 'Stand%')->get();
+        }
+
+        $view1 = 'Modules.congregation.displays.publishers';
+        $view2 = 'BootstrapApp.Modules.congregations.ajaxComponents.publishers';
+
+        return view($view2,compact(
+            'congregation',
+            'permissions_users',
+            'users',
+            'permissions','congregationRequestsCount'));
+    }
+
+    public function createUserAj($congregation_id){
+        $congregation = Congregation::query()->find($congregation_id);
+        $compact = compact('congregation');
+        return view('BootstrapApp.Modules.congregations.ajaxComponents.createUser', $compact);
+    }
+
+    public function createUserFromCongregation(Request $request, $id)
+    {
+        $data = $request->all();
+
+        Log::info('Request data received:', ['data' => $data]);
+
+        $messages = [
+            'first_name.required' => 'Пожалуйста, введите имя.',
+            'last_name.required'  => 'Пожалуйста, укажите фамилию.',
+            'email.required' => 'Email уже существует или не имеет формат почты @mail.com!',
+            'email.email' => 'Пожалуйста, укажите правильный формат почты "@mail.com"!',
+            'email.unique' => 'Введенный email уже используется, пожалуйста введите другой.',
+            'login.unique' => 'Такой логин уже существует, укажите логин не существующий в системе',
+            'login.required' => 'Необходимо указать логин',
+            'password.required' => 'Пожалуйста, укажите пароль не меньше 6 символов',
+            'mobile_phone.numeric' => 'Пожалуйста, напишите номер только цифрами.'
+        ];
+
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'login' => ['required', 'string', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:6'],
+            'mobile_phone' => ['nullable','numeric','min:8'],
+        ], $messages);
+
+        Log::info('Data after validation:', ['validated_data' => $validated]);
+
+//        if ($validated->fails())
+//        {
+//            return response()->json(['errors'=>$validated->errors()]);
+//        }
+
+        $new_user = new User;
+        $new_user->first_name = $validated['first_name'];
+        $new_user->last_name = $validated['last_name'];
+        $new_user->email = $validated['email'];
+        $new_user->login = $validated['login'];
+        $new_user->password = Hash::make($validated['password']);
+        $new_user->congregation_id = $id;
+        $new_user->info = json_encode(['registration_date' => Carbon::now()->format('Y-m-d H:i:s'),
+            'account_type' => 'personal',
+            'mobile_phone' => $validated['mobile_phone']]);
+        $new_user->save();
+
+        Log::info('New user:', ['new_user' => $new_user]);
+
+        Astart::create([
+            'user_id' => $new_user->id,
+            'password' => $validated['password'],
+        ]);
+
+        return $this->view($id);
+    }
+
+
+    public function switchPermission(Request $request) {
+        $userId = $request->input('user_id');
+        $permissionId = $request->input('permission_id');
+        $isChecked = $request->input('is_checked');
+
+
+        $existingPermission = UsersPermissions::where('user_id', $userId)
+            ->where('permission_id', $permissionId)
+            ->first();
+
+//        if ($isChecked && !$existingPermission) {
+//            DB::table('users_permissions')::insert([
+//                'user_id' => $userId,
+//                'permission_id' => $permissionId,
+//            ]);
+//        } elseif (!$isChecked && $existingPermission) {
+//            $existingPermission->delete();
+//        }
+    }
+
     public function displayAppointed($congregation_id) {
         $congregation = Congregation::find($congregation_id);
+
         $congregationRequestsCount = CongregationRequests::with('user')
             ->where('congregation_id', $congregation_id)
             ->count();
@@ -590,18 +882,49 @@ class CongregationsController extends Controller {
             'editFirstNameModal' => 'required|string|max:255',
             'editLastNameModal' => 'required|string|max:255',
             'userIdInput' => 'required',
+            'typePhone' => 'string|max:17',
         ]);
 
-        // Получение текущего пользователя
         $user = User::find($request->input('userIdInput'));
+        $user_info = json_decode($user->info, true);
 
-        // Обновление данных пользователя
+        if (isset($user_info['mobile_phone'])) {
+            $user_info['mobile_phone'] = $request->input('typePhone');
+        } else {
+            $user_info['mobile_phone'] = $request->input('typePhone');
+        }
+
         $user->update([
             'first_name' => $request->input('editFirstNameModal'),
             'last_name' => $request->input('editLastNameModal'),
+            'info' => json_encode($user_info),
         ]);
 
-        // Редирект или возврат ответа
+        return redirect()->back();
+    }
+
+    public function deleteProfile(Request $request, $id)
+    {
+        $request->validate([
+            'userIdInputDelete' => 'required',
+        ]);
+
+        $user = User::find($request->input('userIdInputDelete'));
+
+        $user_info = json_decode($user->info, true);
+
+        if (isset($user_info['account_type'])) {
+            $user_info['account_type'] = 'deleted';
+        } else {
+            $user_info['account_type'] = 'deleted';
+        }
+        $user->update([
+            'info' => json_encode($user_info),
+        ]);
+
+        UsersPermissions::where('user_id', $request->input('userIdInputDelete'))->delete();
+
+
         return redirect()->back();
     }
 

@@ -6,35 +6,6 @@
     <div class="content container-fluid mt-8">
         @include('Mobile.includes.alerts.alerts')
         <div class="row">
-            <div class="col-lg-3">
-                <!-- Navbar -->
-                <div class="navbar-expand-lg navbar-vertical mb-3 mb-lg-5">
-                    <!-- Navbar Toggle -->
-                    <!-- Navbar Toggle -->
-                    <div class="d-grid">
-                        <button type="button" class="navbar-toggler btn btn-white mb-3 collapsed"
-                                data-bs-toggle="collapse" data-bs-target="#navbarVerticalNavMenu"
-                                aria-label="Toggle navigation" aria-expanded="false"
-                                aria-controls="navbarVerticalNavMenu">
-                            <span class="d-flex justify-content-between align-items-center">
-                              <span class="text-dark">Меню</span>
-
-                              <span class="navbar-toggler-default">
-                                <i class="bi-list"></i>
-                              </span>
-
-                              <span class="navbar-toggler-toggled">
-                                <i class="bi-x"></i>
-                              </span>
-                            </span>
-                        </button>
-                    </div>
-                    <!-- End Navbar Toggle -->
-                    <!-- End Navbar Toggle -->
-
-                </div>
-                <!-- End Navbar -->
-            </div>
             <div class="col-lg-12s mb-4">
                 <div class="row">
 

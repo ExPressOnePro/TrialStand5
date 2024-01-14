@@ -1,70 +1,6 @@
-@extends('layouts.auth')
-@section('title') Meeper | Авторизация @endsection
-@section('content')
-
-    @inject('mobile_detect', 'Mobile_Detect')
-    @if ($mobile_detect->isMobile())
-
-        <div class="dropdown-toggle dropleft text-right mt-4 mr-4">
-            <i class="fa-solid fa-language text-30" id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @foreach (Config::get('languages') as $lang => $language)
-                    @if ($lang != App::getLocale())
-                        <a class="dropdown-item" href="{{ route('lang.switch', $lang) }}"> {{$language}}</a>
-                    @endif
-                @endforeach
-            </div>
-        </div>
-        <div class="main-content-wrap mobile-menu-content">
-        <div>
-            <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-            <h1 class="mb-3 text-36 text-center">{{ __('text.signin') }}</h1>
-
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="login">{{ __('text.Email or Login') }}</label>
-                    <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
-                    <div class="col-md-6">
-                        @error('login')
-                        <div class="alert alert-card alert-danger">Логин или Email введен неверно!</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="password">{{ __('Пароль') }}</label>
-                    <div class="input-group mb-3">
-                        <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" aria-describedby="basic-addon1">
-                        <div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa-regular fa-eye-slash" id="show-password"></i></span></div>
-                    </div>
-                    <div class="col-md-6">
-                        @error('password')
-                        <div class="alert alert-card alert-danger">{{ __('text.password incorrect') }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('text.Enter') }}</button>
-
-                        @if (Route::has('password.request'))
-                            <a class="btn btn-link" href="{{ route('password.request') }}">
-                                {{ __('text.Forgot your password?') }}
-                            </a>
-                        @endif
-                    </div>
-                </div>
-            </form>
-            <a href="{{ '/registration' }}">
-                <button class="btn btn-rounded btn-primary btn-block mt-2">
-                    {{ __('text.Registration') }}
-                </button>
-            </a>
-        </div>
-
-        </div>
-    @else
+@extends('BootstrapApp.layouts.guest')
+@section('title') Meeper @endsection
+@section('login')
 
 {{--        <div class="dropdown-toggle dropleft text-right mt-4 mr-4">--}}
 {{--            <i class="fa-solid fa-language text-30" id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>--}}
@@ -76,83 +12,120 @@
 {{--                @endforeach--}}
 {{--            </div>--}}
 {{--        </div>--}}
-        <div class="auth-layout-wrap">
-            <div class="auth-content">
-                <div class="row">
-                    <div class="col">
-                        <div class="p-4">
-                            <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-                            <h1 class="mb-3 text-36 text-center">{{ __('constant.signin') }}</h1>
-
-                            <form method="POST" action="{{ route('login') }}">
-                                @csrf
-                                <div class="form-group">
-                                    <label for="login">{{ __('constant.Email or Login') }}</label>
-                                    <input id="login" type="login" name="login" class="form-control form-control-rounded @error('login') is-invalid @enderror"  value="{{ old('login') }}" required autocomplete="email" autofocus>
-                                    <div class="col-md-6">
-                                        @error('login')
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">{{ __('text.Password') }}</label>
-                                    <div class="input-group mb-3">
-                                        <input id="password" type="password" class="form-control form-control-rounded @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" aria-describedby="basic-addon1">
-                                        <div class="input-group-append"><span class="input-group-text" id="basic-addon1"><i class="fa-regular fa-eye-slash" id="show-password"></i></span></div>
-                                    </div>
-                                    <div class="col-md-6">
-
-                                        @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-rounded btn-primary btn-block mt-2">{{ __('constant.Enter') }}</button>
-
-                                        @if (Route::has('password.request'))
-                                            <a class="btn btn-link heading" href="{{ route('password.request') }}">
-                                                {{ __('text.Forgot your password?') }}
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="row">
-                                <div class="col-md-6">
-                                </div>
-                                <div class="col-md-6">
-                                    <a href="{{ '/registration' }}">
-                                        <button class="btn btn-rounded btn-primary btn-block mt-2">
-                                            {{ __('Регистрация') }}
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-
-    <script>
-        document.getElementById('show-password').addEventListener('click', () => {
-            const passwordInput = document.getElementById('password');
-
-            if (passwordInput.getAttribute('type') === 'password') {
-                passwordInput.setAttribute('type', 'text');
-            } else {
-                passwordInput.setAttribute('type', 'password');
+        <style>
+            html,
+            body {
+                height: 100%;
             }
-        });
-    </script>
+
+            .form-signin {
+                max-width: 330px;
+
+            }
+
+            .form-signin .form-floating:focus-within {
+                z-index: 2;
+            }
+
+            .form-signin input[type="email"] {
+                margin-bottom: -1px;
+                border-bottom-right-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+
+            .form-signin input[type="password"] {
+                margin-bottom: 10px;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+
+        </style>
+        <main class="form-signin w-100 m-auto mt-5">
+
+            <form id="authorize-user">
+                <div class="text-center align-items-center">
+                    <img class="mb-4" src="{{asset('/android-chrome-512x512.png')}}" alt="" width="128" height="128s">
+                    <h1 class="h3 mb-3 fw-normal">{{ __('text.signin') }}</h1>
+                </div>
+
+                <div class="form-floating mb-2">
+                    <input type="login" class="form-control rounded-2" name="login" id="login" placeholder="{{ __('text.Email or Login') }}">
+                    <label for="floatingInput">{{ __('text.Email or Login') }}</label>
+                </div>
+                <div class="form-floating position-relative">
+                    <input type="password" class="form-control rounded-2" name="passw" id="passw" placeholder="{{ __('Пароль') }}">
+                    <label for="floatingPassword">{{ __('Пароль') }}</label>
+                    <i class="bi bi-eye-slash password-toggle me-2" id="passwordToggle"
+                       style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;">
+                    </i>
+                </div>
+
+                <div class="form-check text-start my-3">
+                    <input class="form-check-input" type="checkbox" value="remember-me" name="remember" id="remember">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        {{ __('Запомнить меня') }}
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2" onclick="authorizeUser(event)">{{ __('text.Enter') }}</button>
+            </form>
+
+            <div class="d-grid mt-5">
+                <p> Не имеете аккаунта? </p>
+                <a class="btn btn-outline-primary btn-sm btn-block" href="{{ route('showRegistrationForm') }}"> Зарегистрироваться</a>
+            </div>
+            <script>
+                document.getElementById('passwordToggle').addEventListener('click', function () {
+                    var passwordInput = document.getElementById('passw');
+                    var toggleIcon = document.getElementById('passwordToggle');
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        toggleIcon.classList.remove('bi-eye-slash');
+                        toggleIcon.classList.add('bi-eye');
+                    } else {
+                        passwordInput.type = 'password';
+                        toggleIcon.classList.remove('bi-eye');
+                        toggleIcon.classList.add('bi-eye-slash');
+                    }
+                });
+            </script>
+            <script>
+                function authorizeUser(event) {
+                    const formElement = document.getElementById('authorize-user');
+                    var formData = new FormData(formElement);
+                    const password =  formElement.passw.value;
+                    formElement.passw.value = '';
+                    formData.append('_token', '{{ csrf_token() }}');
+                    event.preventDefault();
+                    $.ajax({
+                        url: '{{ route('login') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.error) {
+                                console.log('Server error:', response.error);
+                            } else {
+                                console.log('Success:', true);
+                                window.location.href = "{{ route('home') }}";
+                            }
+                        },
+                        error: function(xhr) {
+                            var errors = xhr.responseJSON.errors;
+
+                            $(".form-error").remove();
+
+                            for(error in errors) {
+                                // Put back the form password item
+                                formElement.passw.value = password;
+
+                                var input = $('input[name=' + error + ']');
+                                input.parent('.form-floating').after('<span class="form-error text-danger">' + errors[error][0] + '</span>');
+                            }
+                        }
+                    });
+                }
+            </script>
+        </main>
 
 @endsection

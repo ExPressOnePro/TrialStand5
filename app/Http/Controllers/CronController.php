@@ -90,37 +90,42 @@ class CronController extends Controller
 //        }
 //    }
 
-    public function publishersUpdateThisWeekFromNextWeekVersion1($token) {
+    public function publishersUpdateThisWeekFromNextWeekVersion1(Request $request, $token) {
         try {
             $expectedToken = 'aBcD1234EfGh5678iJkLmN9oPqRsT0123uVwXyZ';
 
             if ($token === $expectedToken) {
-                $congregations = Congregation::get();
-                foreach ($congregations as $congregation) {
-                    $stands = Stand::query()->where('congregation_id', $congregation->id)->get();
-                    foreach ($stands as $stand) {
-                        $stand_template_id_next = $stand->standTemplate()->where('type', 'next')->first();
-                        $stand_template_id_current = $stand->standTemplate()->where('type', 'current')->first();
 
-                        if ($stand_template_id_next && $stand_template_id_current) {
-                            $week_schedule_next = $stand_template_id_next->week_schedule;
-                            $stand_template_id_current->update(['week_schedule' => $week_schedule_next]);
+                if ($request->ip() == '144.76.182.49') {
+                    Log::channel('cron')->info('IP подтвержден');
+                    $congregations = Congregation::get();
+                    foreach ($congregations as $congregation) {
+                        $stands = Stand::query()->where('congregation_id', $congregation->id)->get();
+                        foreach ($stands as $stand) {
+                            $stand_template_id_next = $stand->standTemplate()->where('type', 'next')->first();
+                            $stand_template_id_current = $stand->standTemplate()->where('type', 'current')->first();
 
-                            Log::channel('cron')->info('Обновление week_schedule выполнено успешно для стенда ID ' . $stand->id);
-                        }
+                            if ($stand_template_id_next && $stand_template_id_current) {
+                                $week_schedule_next = $stand_template_id_next->week_schedule;
+                                $stand_template_id_current->update(['week_schedule' => $week_schedule_next]);
 
-                        if ($stand_template_id_next) {
-                            StandPublishers::where('stand_template_id', $stand_template_id_next->id)
-                                ->update([
-                                    'stand_template_id' => optional($stand_template_id_current)->id
-                                ]);
+                                Log::channel('cron')->info('Обновление week_schedule выполнено успешно для стенда ID ' . $stand->id);
+                            }
 
-                            Log::channel('cron')->info('Обновление StandPublishers выполнено успешно для стенда ID ' . $stand->id);
+                            if ($stand_template_id_next) {
+                                StandPublishers::where('stand_template_id', $stand_template_id_next->id)
+                                    ->update([
+                                        'stand_template_id' => optional($stand_template_id_current)->id
+                                    ]);
+
+                                Log::channel('cron')->info('Обновление StandPublishers выполнено успешно для стенда ID ' . $stand->id);
+                            }
                         }
                     }
+                    Log::channel('cron')->info('Задача cron выполнена успешно.');
+                } else {
+                    Log::channel('cron')->info('Несанкционированный запуск cron', ['ip' => $request->ip()]);
                 }
-                Log::channel('cron')->info('Задача cron выполнена успешно.');
-                return "Задача cron выполнена успешно.";
             } else {
                 Log::channel('cron')->error('Доступ запрещен.');
                 return "Доступ запрещен.";

@@ -12,7 +12,6 @@
             @elseif (Request::is('*stand/aio_next*'))
                 <a class="btn btn-outline-primary" type="button" href="{{ route('stand.aio_current2') }}">{{ __('text.Текущая') }}</a>
             @endif
-
         </div>
     </div>
     <div class="col-6">

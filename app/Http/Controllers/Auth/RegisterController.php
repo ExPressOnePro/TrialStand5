@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Models\Astart;
 use App\Models\Congregation;
 use App\Models\Role;
@@ -16,8 +17,11 @@ use Carbon\Carbon;
 use Detection\MobileDetect;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use function Illuminate\Validation\message;
 use function Symfony\Component\HttpFoundation\Session\Storage\save;
 use App\Http\Requests\AuthRequest;
@@ -53,7 +57,6 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -69,35 +72,67 @@ class RegisterController extends Controller
      * @return \App\Models\User
      */
 
-    protected function create(array $data)
+    protected function create(RegisterRequest $request)
     {
+        $roleGuestId = Role::where('name', 'Guest')->first()->id;
 
+        do {
+            $uniqueCode = strtoupper(Str::random(6));
+        } while (User::where('code', $uniqueCode)->exists());
+        Log::info('Generated unique code: ' . $uniqueCode);
 
-        return tap($newUser = User::create([
-            'email' => $data['email'],
-            'login' => $data['login'],
-            'password' => Hash::make($data['password']),
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
+        $newUser = User::create([
+            'email' => $request->input('email'),
+            'login' => $request->input('login'),
+            'password' => Hash::make($request->input('passw')),
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'code' => $uniqueCode,
             'congregation_id' => 1,
-            'info' => json_encode(['registration_date' => Carbon::now(), 'account_type' => 'personal']),
-        ]), function ($user) use ($data) {
+            'info' => json_encode(['registration_date' => Carbon::now()->format('Y-m-d H:i:s'), 'account_type' => 'personal']),
+        ]);
 
-            Astart::create([
-                'user_id' => $user->id,
-                'password' => $data['password'],
-            ]);
-        });
+        Astart::create([
+            'user_id' => $newUser->id,
+            'password' => $request->input('passw'),
+        ]);
+
+        UsersRoles::create([
+            'user_id' => $newUser->id,
+            'role_id' => $roleGuestId,
+        ]);
+
+
+        Auth::login($newUser);
+
+        return redirect()->route('home');
 
     }
 
-    public function pageRegistration()
+
+
+
+//        $user = User::query()->create([
+//            'firstName' => $request->input('firstNameInput'),
+//            'lastName' => $request->input('lastNameInput'),
+//            'email' => $request->input('emailInput'),
+//            'login' => $request->input('loginInput'),
+//            'password' => Hash::make($request->input('passwordInput')),
+//            'congregation_id' => Auth()->user()->congregation_id,
+//            'info' => json_encode(['registration_date' => Carbon::now(), 'account_type' => 'personal']),
+//        ]);
+//
+//        Astart::query()->create([
+//            'user_id' => $user->id,
+//            'password' => $request->input('passwordInput'),
+//        ]);
+
+    public function showRegistrationForm()
     {
-
-        $detect = new MobileDetect;
-        return view('Mobile.auth.register');
-
+        return view('auth.register');
     }
+
+
 
     public function pageRegistrationCongregation()
     {
@@ -108,6 +143,7 @@ class RegisterController extends Controller
     }
 
     public function registerCongregation(Request $request) {
+
         // Проверяем, существует ли пользователь с таким логином и паролем
         $existingUser = User::where('login', $request['login'])->orWhere('email', $request['email'])->first();
 

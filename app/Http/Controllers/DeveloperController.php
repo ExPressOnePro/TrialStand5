@@ -21,9 +21,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use OwenIt\Auditing\Facades\Auditor;
 
 class DeveloperController extends Controller{
+
+    public function maintenance()
+    {
+        return view('maintenance');
+    }
 
     public function hub() {
 
@@ -174,7 +180,7 @@ class DeveloperController extends Controller{
         $users = User::whereBetween('created_at', [$startDate, $endDate])->get();
 
         $compact = compact('users');
-        return view('Mobile.menu.modules.developer.displays.registeredUser', $compact);
+        return view('BootstrapApp.Modules.developer.displays.registeredUser', $compact);
     }
 
     public function rolesPermissionsPage() {
@@ -323,5 +329,23 @@ class DeveloperController extends Controller{
 
         $usersRoles = UsersRoles::where('role_id', $rolePublisher)->get();
         return redirect()->back();
+    }
+
+    public function generateCodes()
+    {
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $uniqueCode = strtoupper(Str::random(6));
+
+            while (User::where('code', $uniqueCode)->exists()) {
+                $uniqueCode = strtoupper(Str::random(6));
+            }
+
+            $user->code = $uniqueCode;
+            $user->save();
+        }
+
+        return 'Коды успешно сгенерированы!';
     }
 }

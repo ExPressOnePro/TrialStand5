@@ -97,6 +97,7 @@
             <thead class="thead-light">
             <tr>
                 <th>Фамилия Имя</th>
+                <th>Логин</th>
                 <th class="d-sm-table-cell">Почта</th>
                 <th class="d-sm-table-cell">Номер телефона</th>
                 <th class="d-sm-table-cell">Адрес</th>
@@ -113,6 +114,11 @@
                                 <span class="d-block h5 text-inherit mb-0">{{$user->last_name}} {{ $user->first_name}}</span>
                             </div>
 {{--                        </a>--}}
+                    </td>
+                    <td>
+                        <div>
+                            <span class="d-block h5 text-inherit mb-0">{{$user->login}}</span>
+                        </div>
                     </td>
                     <td class="d-sm-table-cell">
                         <span class="d-block h5 mb-0">{{ $user->email}}</span>

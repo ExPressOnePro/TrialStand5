@@ -150,6 +150,7 @@ return [
         // 'store'  => 'redis',
     ],
 
+    'maintenance_mode' => env('MAINTENANCE_MODE', false),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

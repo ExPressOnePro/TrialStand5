@@ -8,7 +8,7 @@
     --bs-nav-pills-link-active-color: var(--bs-white);
     --bs-nav-pills-link-active-bg: var(--bs-secondary);">
         <li class="nav-item" role="presentation">
-            <a class="nav-link text-decoration-none {{ request()->is('home1*') ? ' active' : '' }}" id="home-tab2" href="{{route('home1')}}">
+            <a class="nav-link text-decoration-none {{ request()->is('home*') ? ' active' : '' }}" id="home-tab2" href="{{route('home')}}">
                 <p class="h3"><i class="fa fa-home"></i></p>
             </a>
         </li>

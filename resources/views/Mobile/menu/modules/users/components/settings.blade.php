@@ -36,6 +36,7 @@
         </div>
     </div>
 </div>
+
 <script>
     // Функция для генерации случайного 8-значного числа
     function generateRandomCode() {
