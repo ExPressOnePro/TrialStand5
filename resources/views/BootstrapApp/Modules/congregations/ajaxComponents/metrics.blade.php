@@ -1,15 +1,4 @@
-<div class="page-header">
-    @if($congregationRequestsCount)
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <span class="fw-semibold">{{$congregationRequestsCount}}</span>
-            человек хотят присоединиться к вашему собранию
-            <a class="btn btn-outline-primary" href="{{route('congregation.requests', $congregation->id)}}">Открыть</a>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
 
-    @endif
-    {{--                @include('Mobile.menu.modules.congregation.components.navMenu')--}}
-</div>
 <div class="row">
     @foreach($metrics as $metric)
         <div class="col-md-6">

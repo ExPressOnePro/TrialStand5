@@ -77,7 +77,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 
         Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
-        Route::get('/meetingSchedules', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
+        Route::get('/meetingSchedules/{id}', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
+        Route::get('/meetingSchedulesCreate', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
+        Route::post('/meetingSchedulesCreate', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
 
 
         Route::get('/menu', [HomeController::class, 'menu'])->name('menu.overview');
@@ -93,6 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
             'middleware' => 'can:module.stand',
             'prefix' => 'stand',
         ], function () {
+            // Stand Controller
             // Stand Controller
 
             Route::get('/current/{id}', [StandController::class, 'table'])->name('stand.current');
@@ -229,6 +232,16 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/publishersAj/{id}/', [CongregationsController::class, 'publishersAj'])->name('congregation.publishersAj');
             Route::get('/createUser/{id}', [CongregationsController::class, 'view'])->name('congregation.createU');
             Route::get('/createUserAj/{id}', [CongregationsController::class, 'createUserAj'])->name('congregation.createUserAj');
+
+            Route::get('/settings/{id}', [CongregationsController::class, 'view'])->name('congregation.settings');
+            Route::get('/settingsAj/{id}', [CongregationsController::class, 'settingsAj'])->name('congregation.settingsAj');
+
+
+            Route::post('/meetingTime/{id}', [CongregationsController::class, 'meetingTime'])->name('congregation.meetingTime');
+
+
+
+
             Route::post('/crus/{id}', [CongregationsController::class, 'createUserFromCongregation'])->name('createPublisher');
 
 
@@ -336,7 +349,6 @@ Route::group(['middleware' => 'auth'], function () {
             'middleware' => 'can:congregation.open_congregation',
             'prefix' => 'congregation',
         ], function () {
-
             Route::post('/congregation/{id}', [CongregationsController::class, 'updateProfile'])->name('update.profile.congr');
             Route::post('/congregationdeleteuser/{id}', [CongregationsController::class, 'deleteProfile'])->name('delete.profile.congr');
             Route::get('/congregation/{id}/User/{user_id}', [CongregationsController::class, 'allow'])->name('congregationAllow');

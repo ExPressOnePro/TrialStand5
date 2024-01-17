@@ -226,7 +226,6 @@ class CongregationsController extends Controller {
             })
             ->count();
 
-// Проверка на пустые значения и присвоение 0
         $usersActiveCount = !empty($usersActiveCount) ? $usersActiveCount : 0;
         $usersCongregationCount = !empty($usersCongregationCount) ? $usersCongregationCount : 0;
 
@@ -237,15 +236,7 @@ class CongregationsController extends Controller {
             $usersActiveCountPercent = 0; // Если $usersCongregationCount равно нулю
         }
 
-        if ($usersRoleOverseers->isEmpty()) {
-            $countOverseers = '0';
-        } else {
-            foreach ($usersRoleOverseers as $usersRoleOverseer) {
-                $countOverseers[] = User::where('congregation_id', $id)
-                    ->where('id', $usersRoleOverseers->user_id)
-                    ->count();
-            }
-        }
+
         $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($id);
         $Developer = Role::where('slug', '=', 'Developer')->first();
@@ -661,6 +652,47 @@ class CongregationsController extends Controller {
         $compact = compact('congregation');
         return view('BootstrapApp.Modules.congregations.ajaxComponents.createUser', $compact);
     }
+
+    public function settingsAj($congregation_id){
+
+        $congregation = Congregation::query()->find($congregation_id);
+
+        $compact = compact('congregation');
+        return view('BootstrapApp.Modules.congregations.ajaxComponents.settings', $compact);
+    }
+
+    public function meetingTime(Request $request, $congregation_id){
+
+        // Валидация данных, если необходимо
+//        $request->validate([
+//            'weekday' => 'required|string',
+//            'weekdayTime' => 'required|date_format:H:i',
+//            'weekend' => 'required|string',
+//            'weekendTime' => 'required|date_format:H:i',
+//        ]);
+
+        $congregation = Congregation::query()->find($congregation_id);
+
+        $infoData = [
+            'weekday' => $request->input('weekday'),
+            'weekdayTime' => $request->input('weekdayTime'),
+            'weekend' => $request->input('weekend'),
+            'weekendTime' => $request->input('weekendTime'),
+        ];
+
+        $congregation->info = json_encode($infoData);
+        $congregation->save();
+
+        $compact = compact('congregation');
+        return $this->settings($congregation);
+    }
+
+
+
+
+
+
+
 
     public function createUserFromCongregation(Request $request, $id)
     {

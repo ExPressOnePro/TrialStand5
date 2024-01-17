@@ -337,11 +337,6 @@ class DeveloperController extends Controller{
 
         foreach ($users as $user) {
             $uniqueCode = strtoupper(Str::random(6));
-
-            while (User::where('code', $uniqueCode)->exists()) {
-                $uniqueCode = strtoupper(Str::random(6));
-            }
-
             $user->code = $uniqueCode;
             $user->save();
         }

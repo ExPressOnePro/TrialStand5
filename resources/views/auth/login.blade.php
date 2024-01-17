@@ -52,6 +52,7 @@
                     <input type="login" class="form-control rounded-2" name="login" id="login" placeholder="{{ __('text.Email or Login') }}">
                     <label for="floatingInput">{{ __('text.Email or Login') }}</label>
                 </div>
+
                 <div class="form-floating position-relative">
                     <input type="password" class="form-control rounded-2" name="passw" id="passw" placeholder="{{ __('Пароль') }}">
                     <label for="floatingPassword">{{ __('Пароль') }}</label>

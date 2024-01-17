@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
-class GeneralController extends Controller {
+class  GeneralController extends Controller {
 
 
     public function ads(){

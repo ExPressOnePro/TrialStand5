@@ -73,126 +73,6 @@
                                                         @elseif(empty($userData))
                                                             <p class="h5"><span class="badge bg-secondary">{{ __('text.Свободно') }}</span></p>
                                                         @endif
-                                                            @isset($users['standPublishers']['standPublishers'])
-                                                                <div class="modal fade" id="ModalFullscreenRedaction @isset($users['standPublishers']['standPublishers']){{$users['standPublishers']['standPublishers']}}@endisset" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel"
-                                                                     aria-hidden="true">
-                                                                    <div class="modal-dialog modal-fullscreen-sm-down">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h1 class="modal-title fs-4" id="exampleModalFullscreenLabel">{{ __('text.Информация о записи') }}</h1>
-                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                @include('Mobile.includes.loadingOverlay')
-
-                                                                                <style>
-                                                                                    .overlay {
-                                                                                        position: fixed;
-                                                                                        top: 0;
-                                                                                        left: 0;
-                                                                                        width: 100%;
-                                                                                        height: 100%;
-                                                                                        background: rgba(255, 255, 255, 0.7);
-                                                                                        display: flex;
-                                                                                        justify-content: center;
-                                                                                        align-items: center;
-                                                                                        z-index: 9999;
-                                                                                    }
-
-                                                                                    .spinner-border {
-                                                                                        width: 3rem;
-                                                                                        height: 3rem;
-                                                                                    }
-                                                                                </style>
-
-                                                                                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                                                                                    <div class="col p-4 d-flex flex-column position-static">
-                                                                                        {{--                                                    <h3 class="mb-0">{{$stand->name}}</h3>--}}
-                                                                                        <h3 class="mb-0">{{ __('text.Дата') }}:  {{ $date }}</h3>
-                                                                                        <h3 class="mb-0">{{ __('text.Время') }}:  {{ $time }}</h3>
-                                                                                    </div>
-                                                                                </div>
-                                                                                @for ($i = 1; $i <= $standTemplateSettings['publishers_at_stand']; $i++)
-                                                                                    @php
-                                                                                        $userKey = "user_$i";
-                                                                                        $isUserEmpty = empty($userKey ?? null);
-                                                                                        $currentUser = auth()->id();
-                                                                                        $userLabel = $isUserEmpty ?  __('text.Пусто')  : __('text.Записан');
-                                                                                    @endphp
-
-                                                                                    <div class="card card-hover-shadow border-secondary mt-4">
-                                                                                        <div class="card-body">
-                                                                                            <div class="d-flex align-items-center mb-2">
-                                                                                                <div class="flex-grow-1">
-                                                                                                    <h3 class="text-inherit mb-1">{{ $i === 1 ? __('text.Первый') : ($i === 2 ? __('text.Второй') : ($i === 3 ? __('text.Третий') : __('text.Четвертый') )) }} {{ __('text.возвещатель') }}
-                                                                                                        @if($isUserEmpty)
-                                                                                                            <span class="badge bg-secondary">{{ $userLabel }}</span>
-                                                                                                        @else
-                                                                                                            <span class="badge bg-info">{{ $userLabel }}</span>
-                                                                                                        @endif
-                                                                                                    </h3>
-
-                                                                                                    {{--                                                                <form id="changeForm{{ $i }}" method="post" action="{{ route('AddPublisherToStand2', ['id' => {{$users['standPublishers']['standPublishers']}}]) }}">--}}
-                                                                                                    @csrf
-                                                                                                    <div class="tom-select-custom">
-                                                                                                        <select class="select form-select" autocomplete="off" name="user_id" id="user_id" @if($isUserEmpty) @else disabled readonly @endif>
-                                                                                                            @php
-                                                                                                                $currentUser = auth()->user();
-                                                                                                            @endphp
-
-                                                                                                            <option value="{{ $currentUser->id }}" {{ (isset($publishers[$userKey]) && $publishers[$userKey] == auth()->user()->id) ? 'selected' : '' }}>
-                                                                                                                {{ auth()->user()->last_name }} {{ auth()->user()->first_name }}
-                                                                                                            </option>
-
-                                                                                                            @foreach ($publishers as $publisher)
-                                                                                                                @if ($publisher->id != auth()->user()->id)
-                                                                                                                    <option value="{{ $publisher->id }}" {{ (isset($publisher[$userKey]) && $publisher[$userKey] == $publisher->id) ? 'selected' : '' }}>
-                                                                                                                        {{ $publisher->last_name }} {{ $publisher->first_name }}
-                                                                                                                    </option>
-                                                                                                                @endif
-                                                                                                            @endforeach
-                                                                                                        </select>
-                                                                                                    </div>
-                                                                                                    {{--                                                                    @if($isUserEmpty)--}}
-                                                                                                    {{--                                                                        <div class="col-12 mt-2">--}}
-                                                                                                    {{--                                                                            <div class="d-grid gap-2">--}}
-                                                                                                    {{--                                                                                <button class="btn btn-success" type="submit">--}}
-                                                                                                    {{--                                                                                    {{ __('text.Записать') }}--}}
-                                                                                                    {{--                                                                                </button>--}}
-                                                                                                    {{--                                                                            </div>--}}
-                                                                                                    {{--                                                                        </div>--}}
-                                                                                                    {{--                                                                    @endif--}}
-                                                                                                    </form>
-                                                                                                </div>
-                                                                                            </div>
-
-                                                                                            @if($isUserEmpty)
-                                                                                                @can('stand.make_entry')
-
-                                                                                                @endif
-                                                                                            @else
-                                                                                                @can('stand.delete_entry')
-                                                                                                    <div class="col-12">
-                                                                                                        <div class="d-grid gap-2">
-                                                                                                            {{--                                                                        <a class="btn btn-outline-danger" type="button" href="{{ route('recordRedactionDelete2', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $publishers[$userKey] ?? null]) }}"--}}
-                                                                                                            {{--                                                                           onclick="document.getElementById('loadingOverlay').style.display = 'flex';">--}}
-                                                                                                            {{--                                                                            {{ __('text.Выписать') }}--}}
-                                                                                                            {{--                                                                        </a>--}}
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                @endcan
-                                                                                            @endif
-                                                                                        </div>
-                                                                                    </div>
-                                                                                @endfor
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endisset
                                                     @endforeach
                                                 @endif
                                             </div>
@@ -200,9 +80,130 @@
                                     </div>
                                 </a>
                             </div>
+                            @isset($users['standPublishers']['standPublishers'])
+                                <div class="modal fade" id="ModalFullscreenRedaction @isset($users['standPublishers']['standPublishers']){{$users['standPublishers']['standPublishers']}}@endisset" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-fullscreen-sm-down">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-4" id="exampleModalFullscreenLabel">{{ __('text.Информация о записи') }}</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @include('Mobile.includes.loadingOverlay')
+
+                                                <style>
+                                                    .overlay {
+                                                        position: fixed;
+                                                        top: 0;
+                                                        left: 0;
+                                                        width: 100%;
+                                                        height: 100%;
+                                                        background: rgba(255, 255, 255, 0.7);
+                                                        display: flex;
+                                                        justify-content: center;
+                                                        align-items: center;
+                                                        z-index: 9999;
+                                                    }
+
+                                                    .spinner-border {
+                                                        width: 3rem;
+                                                        height: 3rem;
+                                                    }
+                                                </style>
+
+                                                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                                                    <div class="col p-4 d-flex flex-column position-static">
+                                                        {{--                                                    <h3 class="mb-0">{{$stand->name}}</h3>--}}
+                                                        <h3 class="mb-0">{{ __('text.Дата') }}:  {{ $date }}</h3>
+                                                        <h3 class="mb-0">{{ __('text.Время') }}:  {{ $time }}</h3>
+                                                    </div>
+                                                </div>
+                                                @for ($i = 1; $i <= $standTemplateSettings['publishers_at_stand']; $i++)
+                                                    @php
+                                                        $userKey = "user_$i";
+                                                        $isUserEmpty = empty($userKey ?? null);
+                                                        $currentUser = auth()->id();
+                                                        $userLabel = $isUserEmpty ?  __('text.Пусто')  : __('text.Записан');
+                                                    @endphp
+
+                                                    <div class="card card-hover-shadow border-secondary mt-4">
+                                                        <div class="card-body">
+                                                            <div class="d-flex align-items-center mb-2">
+                                                                <div class="flex-grow-1">
+                                                                    <h3 class="text-inherit mb-1">{{ $i === 1 ? __('text.Первый') : ($i === 2 ? __('text.Второй') : ($i === 3 ? __('text.Третий') : __('text.Четвертый') )) }} {{ __('text.возвещатель') }}
+                                                                        @if($isUserEmpty)
+                                                                            <span class="badge bg-secondary">{{ $userLabel }}</span>
+                                                                        @else
+                                                                            <span class="badge bg-info">{{ $userLabel }}</span>
+                                                                        @endif
+                                                                    </h3>
+
+                                                                    {{--                                                                <form id="changeForm{{ $i }}" method="post" action="{{ route('AddPublisherToStand2', ['id' => {{$users['standPublishers']['standPublishers']}}]) }}">--}}
+                                                                    @csrf
+                                                                    <div class="tom-select-custom">
+                                                                        <select class="select form-select" autocomplete="off" name="user_id" id="user_id" @if($isUserEmpty) @else disabled readonly @endif>
+                                                                            @php
+                                                                                $currentUser = auth()->user();
+                                                                            @endphp
+
+                                                                            <option value="{{ $currentUser->id }}" {{ (isset($publishers[$userKey]) && $publishers[$userKey] == auth()->user()->id) ? 'selected' : '' }}>
+                                                                                {{ auth()->user()->last_name }} {{ auth()->user()->first_name }}
+                                                                            </option>
+
+                                                                            @foreach ($publishers as $publisher)
+                                                                                @if ($publisher->id != auth()->user()->id)
+                                                                                    <option value="{{ $publisher->id }}" {{ (isset($publisher[$userKey]) && $publisher[$userKey] == $publisher->id) ? 'selected' : '' }}>
+                                                                                        {{ $publisher->last_name }} {{ $publisher->first_name }}
+                                                                                    </option>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    @if($isUserEmpty)
+                                                                        <div class="col-12 mt-2">
+                                                                            <div class="d-grid gap-2">
+                                                                                <button class="btn btn-success" type="submit">
+                                                                                    {{ __('text.Записать') }}
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+
+                                                            @if($isUserEmpty)
+                                                                @can('stand.make_entry')
+
+                                                                @endif
+                                                            @else
+                                                                @can('stand.delete_entry')
+                                                                    <div class="col-12">
+                                                                        <div class="d-grid gap-2">
+                                                                            {{--                                                                        <a class="btn btn-outline-danger" type="button" href="{{ route('recordRedactionDelete2', ['id' => $standPublisher->id, 'stand' => $stand->id, 'user_id' => $publishers[$userKey] ?? null]) }}"--}}
+                                                                            {{--                                                                           onclick="document.getElementById('loadingOverlay').style.display = 'flex';">--}}
+                                                                            {{--                                                                            {{ __('text.Выписать') }}--}}
+                                                                            {{--                                                                        </a>--}}
+                                                                        </div>
+                                                                    </div>
+                                                                @endcan
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endfor
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endisset
                         @endforeach
                     </div>
                 @endforeach
+
                             {{--                @foreach($standPublishersRecords as $standPublishersRecord => $time)--}}
 {{--                    <div class="col-sm-12 col-md-6 col-lg-4 mb-5 mb-lg-5">--}}
 {{--                        <div class="card card-header card-header-content-between rounded text-center" style="background: rgba(153,102,204,0.5)">--}}

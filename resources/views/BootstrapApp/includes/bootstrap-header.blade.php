@@ -1,6 +1,4 @@
 
-
-
         <header class="mb-3 sticky-lg-top shadow-sm">
             <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom" aria-label="Light offcanvas navbar">
                 <div class="container-fluid">
@@ -10,12 +8,12 @@
                     </a>
                     <div class="d-flex flex-column flex-md-row align-items-center">
                         <!-- Заголовок для мобильных устройств -->
-                        <div class="me-auto ms-auto d-lg-none">
+                        <div class="me-auto ms-auto d-md-none">
                             <h2>Meeper</h2>
                         </div>
 
                         <!-- Меню для десктопов -->
-                        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 d-none d-lg-flex">
+                        <ul class="nav col-12 col-md-auto me-md-auto mb-2 justify-content-center mb-md-0 d-none d-md-flex">
                             @can('module.stand')
                             <li><a href="{{route('stand.hub2')}}" class="nav-link px-2"><h5>Стенд</h5></a></li>
                             @endcan

@@ -803,8 +803,8 @@ class StandController extends Controller
             'publishers',
         );
 
-//        return view('BootstrapApp.Modules.stand.displays.test', $compact);
-        return response()->json([$compact]);
+        return view('BootstrapApp.Modules.stand.displays.test', $compact);
+//        return response()->json([$compact]);
 
     }
 

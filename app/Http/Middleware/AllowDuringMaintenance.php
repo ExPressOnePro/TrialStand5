@@ -18,9 +18,20 @@ class AllowDuringMaintenance
      */
     public function handle($request, Closure $next)
     {
+        // Проверяем, включен ли режим технических работ
         if (config('app.maintenance_mode')) {
+            // Проверяем роль пользователя
+            $user = Auth::user();
+
+            if ($user && $user->hasRole('developer')) {
+                return $next($request);
+            }
+
+            // Иначе, отображаем страницу с уведомлением
             return response()->view('maintenance');
         }
+
+        // Если режим технических работ выключен, продолжаем выполнение запроса
         return $next($request);
     }
 }

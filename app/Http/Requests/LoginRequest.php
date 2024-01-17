@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 
 class LoginRequest extends FormRequest
 {
@@ -30,7 +31,15 @@ class LoginRequest extends FormRequest
                     }
                 }
             ],
-            'passw' => ['required', 'string', 'min:6'],
+            'passw' => ['required', 'string', 'min:6',
+                function ($attribute, $value, $fail) {
+                    $user = User::where('login', request('login'))->orWhere('email', request('login'))->first();
+
+                    if (!$user || !Hash::check($value, $user->password)) {
+                        $fail('Пароль неверен');
+                    }
+                }
+                ],
         ];
     }
 
