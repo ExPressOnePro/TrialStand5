@@ -78,8 +78,16 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
         Route::get('/meetingSchedules/{id}', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
-        Route::get('/meetingSchedulesCreate', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
-        Route::post('/meetingSchedulesCreate', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
+        Route::get('/meetingSchedules/schedule/{weekday_id}/{weekend_id}', [MeetingSchedulesController::class, 'schedule'])->name('meetingSchedules.schedule');
+
+
+        Route::post('/meetingSchedulesCreate/{congregation_id}/{ms_template_id}', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
+        Route::get('/meetingSchedules/{id}/redaction', [MeetingSchedulesController::class, 'redaction'])->name('meetingSchedules.redaction');
+        Route::post('/meetingSchedules/{id}/save_responsibles', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
+        Route::post('/meetingSchedules/{id}/save_treasures', [MeetingSchedulesController::class, 'save_treasures'])->name('meetingSchedules.save_treasures');
+        Route::post('/meetingSchedules/{id}/save_field_ministry', [MeetingSchedulesController::class, 'save_field_ministry'])->name('meetingSchedules.save_field_ministry');
+        Route::post('/meetingSchedules/{id}/save_living', [MeetingSchedulesController::class, 'save_living'])->name('meetingSchedules.save_living');
+        Route::post('/meetingSchedules/{id}/save_songs', [MeetingSchedulesController::class, 'save_songs'])->name('meetingSchedules.save_songs');
 
 
         Route::get('/menu', [HomeController::class, 'menu'])->name('menu.overview');

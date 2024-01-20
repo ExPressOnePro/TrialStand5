@@ -1,5 +1,12 @@
 
-        <header class="mb-3 sticky-lg-top shadow-sm">
+<style>
+    @media print {
+        .header {
+            display: none;
+        }
+    }
+</style>
+        <header class="mb-3 header sticky-lg-top shadow-sm">
             <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom" aria-label="Light offcanvas navbar">
                 <div class="container-fluid">
                     <a href="/home1" class="d-flex align-items-center link-body-emphasis text-decoration-none">

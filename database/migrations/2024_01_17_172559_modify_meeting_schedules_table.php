@@ -14,11 +14,14 @@ class ModifyMeetingSchedulesTable extends Migration
     public function up()
     {
         Schema::table('meeting_schedules', function (Blueprint $table) {
-            $table->dropColumn(['type_day', 'start_of_week', 'end_of_week']);
-            $table->unsignedBigInteger('ms_template_id');
+            $table->dropForeign(['congregation_id']);
+            $table->dropColumn(['start_of_week', 'end_of_week', 'congregation_id', 'type_day']);
+
+
+            $table->date('date')->after('id');
+            $table->unsignedBigInteger('ms_template_id')->after('date');
+
             $table->foreign('ms_template_id')->references('id')->on('meeting_schedule_templates');
-            $table->date('date')->after('congregation_id')->format('Y-m-d');
-            $table->json('schedule')->after('date');
         });
     }
 
@@ -30,10 +33,15 @@ class ModifyMeetingSchedulesTable extends Migration
     public function down()
     {
         Schema::table('meeting_schedules', function (Blueprint $table) {
-            $table->string('type_day');
-            $table->date('start_of_week')->format('Y-m-d');
-            $table->date('end_of_week')->format('Y-m-d');
-            $table->dropColumn(['ms_template_id', 'date', 'schedule']);
+            // Откатываем изменения
+            $table->dropForeign(['ms_template_id']);
+            $table->dropColumn(['date', 'ms_template_id']);
+            $table->unsignedBigInteger('congregation_id')->after('id');
+            $table->date('start_of_week')->format('Y-m-d')->after('congregation_id');
+            $table->date('end_of_week')->format('Y-m-d')->after('start_of_week');
+            $table->string('type_day')->after('end_of_week');
+
+            // Восстанавливаем внешний ключ
             $table->foreign('congregation_id')->references('id')->on('congregations');
         });
     }

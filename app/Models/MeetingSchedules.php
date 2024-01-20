@@ -11,11 +11,13 @@ class MeetingSchedules extends Model
 
 
     protected $fillable = [
-        'congregation_id',
-        'start_of_week',
-        'end_of_week',
-        'type_day',
+        'date',
+        'ms_template_id',
         'schedule',
     ];
 
+    public function meetingScheduleTemplate()
+    {
+        return $this->belongsTo(MeetingScheduleTemplate::class, 'ms_template_id');
+    }
 }

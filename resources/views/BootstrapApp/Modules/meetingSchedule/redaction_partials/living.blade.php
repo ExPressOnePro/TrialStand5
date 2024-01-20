@@ -1,0 +1,73 @@
+
+<div class="card">
+        <div class="card-header">
+            <h4 class="pb-1 mb-1 d-flex align-items-center" style="color: #BF2F13">
+                <div class="icon-square d-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 p-2 rounded-2" style="background-color: #BF2F13; width: 1.5em; height: 1.5em;">
+                    <img class="rounded-2" src="{{ asset('front/img/sheep.svg') }}" style="width: 1.5em; height: 1.5em;">
+                </div>
+                ХРИСТИАНСКАЯ ЖИЗНЬ
+            </h4>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('meetingSchedules.save_living', $ms->id) }}" method="post">
+                @csrf
+                <div id="living-container">
+                    @foreach($living as $key => $livingItem)
+                        <div class="row mb-2 d-flex justify-content-between" data-key="{{ $key }}">
+                            <div class="col-md-4">
+                                <div class="form-floating mb-2">
+                                    <input type="text" name="living[{{ $key }}][name]" id="living_name_{{ $key }}" class="form-control" value="{{ $livingItem['name'] }}" required>
+                                    <label for="living_name_{{ $key }}">Название:</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating mb-2">
+                                    <input type="text" name="living[{{ $key }}][value]" id="living_value_{{ $key }}" class="form-control" value="{{ $livingItem['value'] }}" required>
+                                    <label for="living_value_{{ $key }}">Значение:</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-danger" onclick="removeLiving(this)">Удалить</button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="addLiving()">Добавить момент</button>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
+
+<script>
+    let nextLivingKey = {{ count($living) }};
+
+    function addLiving() {
+        nextLivingKey++;
+        const container = document.getElementById('living-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'row mb-2';
+        newRow.setAttribute('data-key', nextLivingKey);
+        newRow.innerHTML = `
+            <div class="col-md-4">
+                <label for="living_name_${nextLivingKey}">Название:</label>
+                <input type="text" name="living[${nextLivingKey}][name]" id="living_name_${nextLivingKey}" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label for="living_value_${nextLivingKey}">Значение:</label>
+                <input type="text" name="living[${nextLivingKey}][value]" id="living_value_${nextLivingKey}" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-danger" onclick="removeLiving(this)">Удалить</button>
+            </div>
+        `;
+        container.appendChild(newRow);
+    }
+
+    function removeLiving(button) {
+        const container = document.getElementById('living-container');
+        const rowToRemove = button.closest('.row');
+        container.removeChild(rowToRemove);
+    }
+</script>
