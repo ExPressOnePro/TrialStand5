@@ -27,14 +27,20 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <button type="button" class="btn btn-danger" onclick="removeTreasure(this)">Удалить</button>
+                                <button type="button" class="col btn btn-outline-danger" onclick="removeTreasure(this)">Удалить</button>
                             </div>
                         </div>
                     @endforeach
                 </div>
 
-                <button type="button" class="btn btn-success" onclick="addTreasure()">Добавить сокровище</button>
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="col btn btn-success" onclick="addTreasure()">Добавить</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="col btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -51,15 +57,19 @@
         newRow.setAttribute('data-key', nextTreasureKey);
         newRow.innerHTML = `
             <div class="col-md-4">
-                <label for="treasure_name_${nextTreasureKey}">Название:</label>
+                 <div class="form-floating mb-2">
                 <input type="text" name="treasures[${nextTreasureKey}][name]" id="treasure_name_${nextTreasureKey}" class="form-control" required>
+                <label for="treasure_name_${nextTreasureKey}">Название:</label>
+            </div>
             </div>
             <div class="col-md-4">
-                <label for="treasure_value_${nextTreasureKey}">Значение:</label>
+                 <div class="form-floating mb-2">
                 <input type="text" name="treasures[${nextTreasureKey}][value]" id="treasure_value_${nextTreasureKey}" class="form-control" required>
+                <label for="treasure_value_${nextTreasureKey}">Значение:</label>
+            </div>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-danger" onclick="removeTreasure(this)">Удалить</button>
+                <button type="button" class="col btn btn-outline-danger" onclick="removeTreasure(this)">Удалить</button>
             </div>
         `;
         container.appendChild(newRow);

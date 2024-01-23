@@ -28,8 +28,22 @@
                                 <li><a href="{{route('contacts.hub2')}}" class="nav-link px-2"><h5>Контакты</h5></a></li>
                                 @endcan
                             @can('congregation.open_congregation')
-                            <li><a href="{{route('congregationView', Auth()->user()->congregation_id)}}" class="nav-link px-2"><h5>Собрание</h5></a></li>
-                            @endcan
+{{--                            <li><a href="{{route('congregationView', Auth()->user()->congregation_id)}}" class="nav-link px-2"><h5>Собрание</h5></a></li>--}}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <h5>Собрание <i class="bi bi-caret-down-fill"></i></h5>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Обзор</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('congregation.publishers', Auth()->user()->congregation_id) }}">Возвещатели</a></li>
+                                            <li><a class="dropdown-item" href="#">Стенд (ы)</a></li>
+                                            <li><a class="dropdown-item" href="#">Расписание втреч</a></li>
+                                            <li><a class="dropdown-item" href="#">Модули</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="#">Настройки</a></li>
+                                        </ul>
+                                    </li>
+                                @endcan
                             @role('Developer')
                             <li><a href="{{route('developer.hub')}}" class="nav-link px-2"><h5>Developer</h5></a></li>
                             @endrole

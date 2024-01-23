@@ -23,7 +23,9 @@
 @endif
 
 
-<div class="container py-3">
+
+
+<div class="container-xxl py-3">
 
 @include('BootstrapApp.includes.bootstrap-header')
 

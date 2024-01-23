@@ -11,6 +11,7 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MeetingSchedulesController;
+use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\RolesAndPermissionsController;
 use App\Http\Controllers\Stand\StandController;
@@ -78,16 +79,21 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
         Route::get('/meetingSchedules/{id}', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
-        Route::get('/meetingSchedules/schedule/{weekday_id}/{weekend_id}', [MeetingSchedulesController::class, 'schedule'])->name('meetingSchedules.schedule');
+        Route::get('/presentation/meetingSchedules', [PresentationController::class, 'presentMeetingSchedules'])->name('meetingSchedules.presentation');
+        Route::get('/meetingSchedules/schedule/{weekday_id}', [MeetingSchedulesController::class, 'schedule'])->name('meetingSchedules.schedule');
 
 
-        Route::post('/meetingSchedulesCreate/{congregation_id}/{ms_template_id}', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
+        Route::post('/meetingSchedules/create/{congregation_id}', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
         Route::get('/meetingSchedules/{id}/redaction', [MeetingSchedulesController::class, 'redaction'])->name('meetingSchedules.redaction');
         Route::post('/meetingSchedules/{id}/save_responsibles', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
+        Route::post('/meetingSchedules/{id}/save_responsibles_weekend', [MeetingSchedulesController::class, 'save_responsibles_weekend'])->name('meetingSchedules.save_responsibles_weekend');
         Route::post('/meetingSchedules/{id}/save_treasures', [MeetingSchedulesController::class, 'save_treasures'])->name('meetingSchedules.save_treasures');
         Route::post('/meetingSchedules/{id}/save_field_ministry', [MeetingSchedulesController::class, 'save_field_ministry'])->name('meetingSchedules.save_field_ministry');
         Route::post('/meetingSchedules/{id}/save_living', [MeetingSchedulesController::class, 'save_living'])->name('meetingSchedules.save_living');
         Route::post('/meetingSchedules/{id}/save_songs', [MeetingSchedulesController::class, 'save_songs'])->name('meetingSchedules.save_songs');
+        Route::post('/meetingSchedules/{id}/save_songs_weekend', [MeetingSchedulesController::class, 'save_songs_weekend'])->name('meetingSchedules.save_songs_weekend');
+        Route::post('/meetingSchedules/{id}/save_public_speech', [MeetingSchedulesController::class, 'save_public_speech'])->name('meetingSchedules.save_public_speech');
+        Route::post('/meetingSchedules/{id}/save_watchtower', [MeetingSchedulesController::class, 'save_watchtower'])->name('meetingSchedules.save_watchtower');
 
 
         Route::get('/menu', [HomeController::class, 'menu'])->name('menu.overview');
@@ -138,26 +144,6 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/record2/delete/{id}/{stand}/{user_id}', [StandPublishersController::class, 'recordRedactionDelete2'])->name('recordRedactionDelete2');
             Route::post('/record/change/{id}/{stand}/{user_id}', [StandPublishersController::class, 'recordRedactionChange'])->name('recordRedactionChange');
 
-
-//        Route::post('/record1/{id}', [StandPublishersController::class, 'AddPublisherToStand1'])->name('AddPublisherToStand1');
-//        Route::post('/record2/{id}', [StandPublishersController::class, 'AddPublisherToStand2'])->name('AddPublisherToStand2');
-//        Route::post('/record3/{id}', [StandPublishersController::class, 'AddPublisherToStand3'])->name('AddPublisherToStand3');
-//        Route::post('/record4/{id}', [StandPublishersController::class, 'AddPublisherToStand4'])->name('AddPublisherToStand4');
-//
-//
-//        Route::post('/record/change1/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange1'])->name('recordRedactionChange1');
-//        Route::post('/record/change2/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange2'])->name('recordRedactionChange2');
-//        Route::post('/record/change3/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange3'])->name('recordRedactionChange3');
-//        Route::post('/record/change4/{id}/{stand}', [StandPublishersController::class, 'recordRedactionChange4'])->name('recordRedactionChange4');
-//
-//
-//        Route::get('/record/delete1/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete1'])->name('recordRedactionDelete1');
-//        Route::get('/record/delete2/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete2'])->name('recordRedactionDelete2');
-//        Route::get('/record/delete3/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete3'])->name('recordRedactionDelete3');
-//        Route::get('/record/delete4/{id}/{stand}', [StandPublishersController::class, 'recordRedactionDelete4'])->name('recordRedactionDelete4');
-
-
-//        Route::get('/record/{day}/{time}/{date}/{stand_template_id}', [StandController::class, 'recordRecordPage'])->name('recordRecordPage');
 
             Route::get('/record_create/{day}/{time}/{date}/{stand_template_id}', [StandController::class, 'recordCreate'])->name('stand.record_create');
             Route::get('/record_redaction/{stand_publishers_id}', [StandController::class, 'recordRedaction'])->name('stand.record_redaction');

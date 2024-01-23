@@ -7,7 +7,8 @@
             <form action="{{route('meetingSchedules.save_responsibles',$ms->id )}}" method="post">
                 @csrf
                 <div id="responsibles-container">
-                    @foreach($responsibles as $key => $responsible)
+                    @if (!is_null($responsibles))
+                        @foreach($responsibles as $key => $responsible)
                         <div class="row mb-2 d-flex justify-content-between" data-key="{{ $key }}">
                             <div class="col-md-4">
                                 <div class="form-floating mb-2">
@@ -22,21 +23,27 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <button type="button" class="btn btn-danger" onclick="removeResponsible({{ $key }})">Удалить</button>
+                                <button type="button" class="col btn btn-outline-danger" onclick="removeResponsible({{ $key }})">Удалить</button>
                             </div>
                         </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div>
-
-                <button type="button" class="btn btn-success" onclick="addResponsible()">Добавить службу</button>
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="col btn btn-success" onclick="addResponsible()">Добавить</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="col btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
 
 
 <script>
-    let nextKey = {{ count($responsibles) }};
+    let nextKey = {{ is_array($responsibles) ? count($responsibles) : 0 }};
 
     function addResponsible() {
         nextKey++;
@@ -46,15 +53,19 @@
         newRow.setAttribute('data-key', nextKey);
         newRow.innerHTML = `
             <div class="col-md-4">
-                <label for="name_${nextKey}">Название:</label>
-                <input type="text" name="responsibles[${nextKey}][name]" id="name_${nextKey}" class="form-control" required>
+                 <div class="form-floating mb-2">
+                    <input type="text" name="responsibles[${nextKey}][name]" id="name_${nextKey}" class="form-control" required>
+                    <label for="name_${nextKey}">Название:</label>
+                </div>
             </div>
             <div class="col-md-4">
-                <label for="value_${nextKey}">Ведущий:</label>
-                <input type="text" name="responsibles[${nextKey}][value]" id="value_${nextKey}" class="form-control" required>
+                <div class="form-floating mb-2">
+                    <input type="text" name="responsibles[${nextKey}][value]" id="value_${nextKey}" class="form-control" required>
+                    <label for="value_${nextKey}">Ведущий:</label>
+                </div>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-danger" onclick="removeResponsible(${nextKey})">Удалить</button>
+                <button type="button" class="col btn btn-outline-danger" onclick="removeResponsible(${nextKey})">Удалить</button>
             </div>
         `;
         container.appendChild(newRow);
@@ -66,3 +77,4 @@
         container.removeChild(rowToRemove);
     }
 </script>
+

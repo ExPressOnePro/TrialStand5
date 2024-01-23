@@ -1,52 +1,62 @@
 @extends('BootstrapApp.layouts.bootstrapApp')
-@section('title') Meeper @endsection
+@section('title') Meeper | расписание {{$ms->id}} @endsection
 @section('content')
     <style>
-        .my-custom-class.shadow-sm:hover {
-            background-color: #e6f7ff;
-            transition: background-color 0.3s ease;
-            transform: scale(1.05);
-        }
-
-        .my-custom-class.shadow-sm {
-            transition: transform 0.3s ease;
-        }
-        .meeting-schedule-card:hover {
-            border-color: #8a2be2;
-            transition: border-color 0.01s ease;
-        }
-        .meeting-schedule-template:hover {
-            border-color: #8a2be2;
-            transition: border-color 0.01s ease;
-        }
-        .no-select {
-            user-select: none;
-        }
-        .custom-dropdown-icon {
-            outline: none; /* Отключение стандартной обводки */
-            border: none; /* Отключение границы */
-            background-color: transparent; /* Прозрачный фон */
-            cursor: pointer; /* Задание курсора */
+        @media print {
+            .nav {
+                display: none;
+            }
         }
     </style>
-    <div class="content container-fluid">
-        <div class="container">
+{{--    <div class="content container-fluid">--}}
+    <ul class="nav nav-pills row mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item col-2" role="presentation">
+            <a class="btn btn-outline-primary col" href="{{route('meetingSchedules.overview', $ms->meetingScheduleTemplate->congregation_id)}}">
+                <i class="fa-solid fa-arrow-left fs-3"></i>
+                Вернуться
+            </a>
+        </li>
+        <li class="nav-item col-5" role="presentation" >
+            <button id="downloadButton" class="col btn btn-danger">
+                <i class="fa-solid fa-file-pdf fs-3"></i> Скачать
+            </button>
+        </li>
+        <li class="nav-item col-5" role="presentation" >
+            <a class="col btn btn-secondary" href="{{route('meetingSchedules.redaction', $ms->id)}}">
+                <i class="fa-solid fa-pencil fs-3"></i> Редактировать
+            </a>
+        </li>
+    </ul>
+        <div class=" py-5">
             <div class="col-lg-10 col-md-12 col-sm-12 mb-5 mx-auto">
                 @include('BootstrapApp.Modules.meetingSchedule.schedule_types.weekday')
-
-
-                <div class="row card meeting-schedule-template mb-4">
-                    <div class="px-4 py-5 my-5 text-center text-muted">
-                        <h1 class="">нет данных</h1>
-                        <div class="col-lg-6 mx-auto">
-                            <p class="lead mb-4">расписание для сторожевой башни на выбранную неделю не создано</p>
-                        </div>
-                    </div>
-                </div>
-
-
+                @include('BootstrapApp.Modules.meetingSchedule.schedule_types.weekend')
             </div>
         </div>
-    </div>
+{{--    </div>--}}
+    <script>
+        // При загрузке страницы
+        $(document).ready(function () {
+            // При клике на кнопку
+            $('#downloadButton').on('click', function () {
+                // Скачать страницу
+                downloadPage();
+
+                // Открыть для печати
+                printPage();
+            });
+        });
+
+        function downloadPage() {
+            // Ваш код для скачивания страницы
+            // Например, можно использовать библиотеку jsPDF для создания PDF
+        }
+
+        function printPage() {
+            // Открывает страницу для печати
+            window.print();
+        }
+    </script>
+
 
 @endsection

@@ -40,14 +40,17 @@
                             </div>
                             @endif
                             <div class="col-md-4">
-                                <button type="button" class="btn btn-danger" onclick="removeSong(this)">Удалить</button>
+{{--                                <button type="button" class="col btn btn-outline-danger" onclick="removeSong(this)">Удалить</button>--}}
                             </div>
                         </div>
                     @endforeach
                 </div>
-
-                <button type="button" class="btn btn-success" onclick="addSong()">Добавить песню</button>
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <div class="row d-flex justify-content-end">
+                    <div class="col-6">
+                        <button type="submit" class="col btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+{{--                <button type="button" class="btn btn-success" onclick="addSong()">Добавить песню</button>--}}
             </form>
         </div>
     </div>
@@ -63,16 +66,20 @@
         newRow.className = 'row mb-2';
         newRow.setAttribute('data-key', nextSongKey);
         newRow.innerHTML = `
-            <div class="col-md-4">
-                <label for="song_name_${nextSongKey}">Название:</label>
+             <div class="col-md-4">
+                 <div class="form-floating mb-2">
                 <input type="text" name="songs[${nextSongKey}][name]" id="song_name_${nextSongKey}" class="form-control" required>
+                <label for="song_name_${nextSongKey}">Название:</label>
+</div>
             </div>
-            <div class="col-md-4">
-                <label for="song_value_${nextSongKey}">Значение:</label>
+             <div class="col-md-4">
+                 <div class="form-floating mb-2">
                 <input type="text" name="songs[${nextSongKey}][value]" id="song_value_${nextSongKey}" class="form-control" required>
+                <label for="song_value_${nextSongKey}">Значение:</label>
             </div>
-            <div class="col-md-4">
-                <button type="button" class="btn btn-danger" onclick="removeSong(this)">Удалить</button>
+</div>
+             <div class="col-md-4">
+                <button type="button" class="col btn btn-outline-danger" onclick="removeSong(this)">Удалить</button>
             </div>
         `;
         container.appendChild(newRow);

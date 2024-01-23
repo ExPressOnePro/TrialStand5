@@ -11,7 +11,9 @@ class MeetingSchedules extends Model
 
 
     protected $fillable = [
-        'date',
+        'week_from',
+        'weekday_time',
+        'weekend_time',
         'ms_template_id',
         'schedule',
     ];

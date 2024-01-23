@@ -18,8 +18,12 @@ class ModifyMeetingSchedulesTable extends Migration
             $table->dropColumn(['start_of_week', 'end_of_week', 'congregation_id', 'type_day']);
 
 
-            $table->date('date')->after('id');
-            $table->unsignedBigInteger('ms_template_id')->after('date');
+            $table->date('week_from')->after('id');
+            $table->dateTime('weekday_time')->after('week_from');
+            $table->dateTime('weekend_time')->after('weekday_time');
+            $table->unsignedBigInteger('ms_template_id')->after('weekend_time');
+            $table->boolean('published')->default(false)->after('ms_template_id'); // опубликованно ли расписание?
+            $table->json('viewed_by_users')->default(json_encode([]))->after('published'); // пользователи просмотревшие
 
             $table->foreign('ms_template_id')->references('id')->on('meeting_schedule_templates');
         });

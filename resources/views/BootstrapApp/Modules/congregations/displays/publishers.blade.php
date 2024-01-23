@@ -77,7 +77,7 @@
 
             <!-- Table -->
             <div class="table-responsive datatable-custom mb-5">
-                <table id="example" class=" table-borderless table-thead-bordered nowrap table-align-middle card-table">
+                <table id="example" class="table-borderless table-thead-bordered nowrap table-align-middle card-table">
 
                     <thead class="thead-light">
                     <tr>

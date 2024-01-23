@@ -27,14 +27,20 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <button type="button" class="btn btn-danger" onclick="removeLiving(this)">Удалить</button>
+                                <button type="button" class="col btn btn-outline-danger" onclick="removeLiving(this)">Удалить</button>
                             </div>
                         </div>
                     @endforeach
                 </div>
 
-                <button type="button" class="btn btn-success" onclick="addLiving()">Добавить момент</button>
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="col btn btn-success" onclick="addLiving()">Добавить</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="col btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -51,15 +57,20 @@
         newRow.setAttribute('data-key', nextLivingKey);
         newRow.innerHTML = `
             <div class="col-md-4">
-                <label for="living_name_${nextLivingKey}">Название:</label>
+                 <div class="form-floating mb-2">
                 <input type="text" name="living[${nextLivingKey}][name]" id="living_name_${nextLivingKey}" class="form-control" required>
+<label for="living_name_${nextLivingKey}">Название:</label>
+</div>
             </div>
             <div class="col-md-4">
-                <label for="living_value_${nextLivingKey}">Значение:</label>
+                 <div class="form-floating mb-2">
+
                 <input type="text" name="living[${nextLivingKey}][value]" id="living_value_${nextLivingKey}" class="form-control" required>
+<label for="living_value_${nextLivingKey}">Ведущий:</label>
+</div>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-danger" onclick="removeLiving(this)">Удалить</button>
+                <button type="button" class="col btn btn-outline-danger" onclick="removeLiving(this)">Удалить</button>
             </div>
         `;
         container.appendChild(newRow);
