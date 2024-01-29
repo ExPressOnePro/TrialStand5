@@ -64,7 +64,6 @@ class StandController extends Controller
             'congregation',
             'userInfo',
         );
-        $mobile_detect = new MobileDetect();
 
         $viewName2 = 'BootstrapApp.Modules.stand.hub';
         $viewName = 'Modules.stand.hub';
@@ -228,28 +227,29 @@ class StandController extends Controller
 
     public function updatePerm(Request $request)
     {
-        $permissions = $request->input('permissions');
+        $userId = $request->input('userId');
+        $permissionId = $request->input('permissionId');
+        $isChecked = $request->input('isChecked');
 
-        foreach ($permissions as $userId => $userPermissions) {
-            $user = User::find($userId);
+        $user = User::find($userId);
 
-            // Проверяем, найден ли пользователь
-            if ($user) {
-                foreach ($userPermissions as $permissionId => $isChecked) {
-                    $permission = Permission::find($permissionId);
+        // Проверяем, найден ли пользователь
+        if ($user) {
+            $permission = Permission::find($permissionId);
 
-                    // Проверяем, найдено ли разрешение
-                    if ($permission) {
-                        $hasPermission = $user->hasPermission($permission->name);
+            // Проверяем, найдено ли разрешение
+            if ($permission) {
+                $hasPermission = $user->hasPermission($permission->name);
 
-                        // Если состояние чекбокса изменилось, обновляем разрешение
-                        if ($isChecked && !$hasPermission) {
-                            $user->givePermissionsTo($permission->name);
-                        } elseif (!$isChecked && $hasPermission) {
-                            $user->deletePermissions($permission->name);
-                        }
-                    }
+                // Если состояние чекбокса изменилось, обновляем разрешение
+                if ($isChecked && !$hasPermission) {
+                    $user->givePermissionsTo($permission->name);
+                } elseif (!$isChecked && $hasPermission) {
+                    $user->deletePermissions($permission->name);
                 }
+
+                // Вернуть ответ (например, успешный ответ в формате JSON)
+                return response()->json(['message' => 'Permission updated successfully']);
             }
         }
 

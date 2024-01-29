@@ -28,9 +28,9 @@
 
             <!-- Table -->
             <div class="table-responsive datatable-custom mb-5">
-            <table id="example" class=" table-borderless table-thead-bordered nowrap table-align-middle card-table">
+                <table id="example" class=" table-borderless table-thead-bordered nowrap table-align-middle card-table">
 
-                <thead class="thead-light">
+                    <thead class="thead-light">
                     <tr>
                         <th>Возвещатель</th>
                         @foreach($permissionsPublishers as $permission)
@@ -45,11 +45,9 @@
                             @endif
                         @endforeach
                     </tr>
-                </thead>
+                    </thead>
 
                     <tbody>
-                    <form method="POST" action="{{ route('updatePerm') }}">
-                        @csrf
                     @foreach($usersCongregation as $user)
                         <tr class="border-bottom">
                             <td>{{ $user->last_name }} {{ $user->first_name }}</td>
@@ -57,7 +55,7 @@
                                 <td>
                                     <label class="form-check form-switch m-1">
                                         <input type="hidden" name="permissions[{{ $user->id }}][{{ $permission->id }}]" value="0">
-                                        <input type="checkbox" class="form-check-input" name="permissions[{{ $user->id }}][{{ $permission->id }}]" value="1" {{ $user->hasPermission($permission->name) ? 'checked' : '' }}>
+                                        <input type="checkbox" class="form-check-input update-perm-checkbox" data-user-id="{{ $user->id }}" data-permission-id="{{ $permission->id }}" value="1" {{ $user->hasPermission($permission->name) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="formSwitch{{ $permission->id }}"></label>
                                     </label>
                                 </td>
@@ -68,7 +66,6 @@
                 </table>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -79,14 +76,42 @@
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
-                paging: false, // Disable paging
+                paging: false,
                 searching: true
             } );
-            // Ваш поиск DataTables
             $('#datatableWithSearchInput').on('keyup', function () {
                 $('#example').DataTable().search($(this).val()).draw();
             });
         } );
-
     </script>
+    <script>
+        $(document).ready(function() {
+            $('.update-perm-checkbox').change(function() {
+                var userId = $(this).data('user-id');
+                var permissionId = $(this).data('permission-id');
+                var isChecked = $(this).prop('checked') ? 1 : 0;
+
+                // Отправить данные на сервер при изменении чекбокса
+                $.ajax({
+                    url: '{{ route("updatePermission") }}', // Убедитесь, что маршрут существует
+                    type: 'POST',
+                    data: {
+                        userId: userId,
+                        permissionId: permissionId,
+                        isChecked: isChecked,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        // Обработка успешного ответа
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        // Обработка ошибки
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+
 @endsection

@@ -3,19 +3,19 @@
 @section('content')
     <div class="content container-fluid">
         <div class="container">
-            <ul class="nav nav-pills row mb-3" id="pills-tab" role="tablist">
-                <li class="nav-item col-2" role="presentation">
+            <ul class="nav nav-pills row mb-3 row-cols-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
                     <a class="nav-link col border" href="{{route('meetingSchedules.schedule', $ms->id)}}">
                         <i class="bi bi-arrow-return-left"></i>
                         Вернуться
                     </a>
                 </li>
-                <li class="nav-item col-5" role="presentation" >
+                <li class="nav-item" role="presentation" >
                     <button class="nav-link col border active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
                         <img class="bd-placeholder-img" height="30" src="{{ asset('images/workbook.svg') }}">
                     </button>
                 </li>
-                <li class="nav-item col-5" role="presentation">
+                <li class="nav-item" role="presentation">
                     <button class="nav-link col border" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
                         <img class="bd-placeholder-img" height="30" src="{{ asset('images/watchtower.svg') }}"><br>
                     </button>

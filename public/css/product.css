@@ -37,7 +37,7 @@
   height: 540px;
   background-color: #333;
   border-radius: 21px;
-  transform: rotate(20deg);
+  transform: rotate(0deg);
 }
 
 .product-device::before {
@@ -73,4 +73,39 @@
   .flex-md-equal > * {
     flex: 1;
   }
+}
+.laptop-container {
+    position: relative;
+    max-width: 600px; /* Максимальная ширина блока */
+    margin: 50px auto; /* Центрирование блока */
+    padding: 20px;
+    background-color: #f8f9fa; /* Цвет фона блока */
+    border: 1px solid #dee2e6; /* Цвет границы блока */
+    border-radius: 10px; /* Закругление углов блока */
+}
+
+.laptop {
+    position: relative;
+    border: 1px solid #ddd; /* Цвет границы ноутбука */
+    border-radius: 10px; /* Закругление углов ноутбука */
+    overflow: hidden;
+}
+
+.laptop-screen {
+    position: relative;
+    background-color: #fff; /* Цвет фона экрана */
+    padding-top: 60%; /* Высота экрана как 60% от ширины блока ноутбука */
+}
+
+.laptop-img {
+    width: 100%; /* 100% ширины изображения на экране */
+    height: auto; /* Автоматическая высота изображения */
+}
+
+.laptop-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #343a40; /* Цвет фона нижней части ноутбука */
+    height: 40px; /* Высота нижней части ноутбука */
 }

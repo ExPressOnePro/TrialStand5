@@ -22,8 +22,9 @@ class ModifyMeetingSchedulesTable extends Migration
             $table->dateTime('weekday_time')->after('week_from');
             $table->dateTime('weekend_time')->after('weekday_time');
             $table->unsignedBigInteger('ms_template_id')->after('weekend_time');
-            $table->boolean('published')->default(false)->after('ms_template_id'); // опубликованно ли расписание?
-            $table->json('viewed_by_users')->default(json_encode([]))->after('published'); // пользователи просмотревшие
+            $table->json('viewed_by_users')->after('ms_template_id'); // пользователи просмотревшие
+            $table->boolean('published')->default(false)->after('viewed_by_users'); // опубликованно ли расписание?
+            $table->boolean('deleted')->default(false)->after('viewed_by_users'); // удален/нет
 
             $table->foreign('ms_template_id')->references('id')->on('meeting_schedule_templates');
         });
@@ -39,7 +40,7 @@ class ModifyMeetingSchedulesTable extends Migration
         Schema::table('meeting_schedules', function (Blueprint $table) {
             // Откатываем изменения
             $table->dropForeign(['ms_template_id']);
-            $table->dropColumn(['date', 'ms_template_id']);
+            $table->dropColumn(['week_from', 'weekday_time', 'weekend_time', 'published', 'viewed_by_users', 'deleted', 'ms_template_id']);
             $table->unsignedBigInteger('congregation_id')->after('id');
             $table->date('start_of_week')->format('Y-m-d')->after('congregation_id');
             $table->date('end_of_week')->format('Y-m-d')->after('start_of_week');

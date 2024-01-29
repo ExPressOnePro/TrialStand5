@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Congregation;
 use App\Models\MeetingSchedules;
 use App\Models\MeetingScheduleTemplate;
 use App\Models\User;
+use App\Services\MeetingSchedulesService;
+use App\Services\UserService;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MeetingSchedulesController extends Controller {
 
@@ -40,6 +44,8 @@ class MeetingSchedulesController extends Controller {
                     'weekend' => $meetingScheduleWeekendTime,
                     'template_name' => $meetingSchedule->meetingScheduleTemplate->template_name,
                     'updated' => $meetingSchedule->updated_at->isoformat('D MMM YYYY, HH:mm'),
+                    'published' => $meetingSchedule->published,
+                    'deleted' => $meetingSchedule->deleted,
                 ];
             }
         }
@@ -56,30 +62,22 @@ class MeetingSchedulesController extends Controller {
     }
 
     public function create(Request $request, $congregation_id) {
-
-//        $request->validate([
-//            'congregation_id' => 'required|exists:congregations,id',
-//            'weekPicker' => ['required', 'date_format:Y-W', 'after_or_equal:now', function ($attribute, $value, $fail) use ($congregation_id) {
-//                $startDate = Carbon::parse($value)->startOfWeek()->format('Y-m-d');
-//
-//                // Проверка существования записи с указанной датой и congregation_id
-//                $existingSchedule = MeetingSchedules::where('date', $startDate)
-//                    ->whereHas('meetingScheduleTemplate', function ($query) use ($congregation_id) {
-//                        $query->where('congregation_id', $congregation_id);
-//                    })
-//                    ->first();
-//
-//                if ($existingSchedule) {
-//                    // Возвращаем ошибку, такая запись уже существует
-//                    $fail('Выбранная неделя уже существует.');
-//                }
-//            }],
-//        ]);
-
         $inputdate = $request->input('weekPicker');
-
         $ms_template_id = $request->input('ms_template_id');
         $startDate = Carbon::parse($inputdate)->startOfWeek();
+
+        // Проверка на существование записи в шаблонах
+        $existingTemplate = MeetingSchedules::with('meetingScheduleTemplate')
+            ->whereHas('meetingScheduleTemplate', function ($query) use ($congregation_id) {
+                $query->where('congregation_id', $congregation_id);
+            })
+            ->where('week_from', $startDate)
+            ->first();
+
+        if ($existingTemplate) {
+            return redirect()->route('meetingSchedules.overview', $congregation_id)
+                ->with('error', 'Расписание уже существует для выбранной недели!');
+        }
         $congregation = Congregation::query()->find($congregation_id);
         $congregationInfo = json_decode($congregation->info,true);
         $weekdayTime = $congregationInfo['weekdayTime'];
@@ -106,28 +104,26 @@ class MeetingSchedulesController extends Controller {
         return redirect()->route('meetingSchedules.redaction', $meetingSchedule->id);
     }
 
-    public function schedule($id) {
-
-        $ms = MeetingSchedules::query()->find($id);
-
-        $data = json_decode($ms->schedule, true);
-
-
-        $compact = compact(
-            'data',
-            'ms',
-        );
-        return view ('BootstrapApp.Modules.meetingSchedule.week_schedule', $compact);
-    }
-
     public function redaction($id) {
 
-        $ms = MeetingSchedules::query()->find($id);
+        $ms = MeetingSchedules::query()->with('meetingScheduleTemplate')->find($id);
+        $formattedUsers = User::query()
+            ->where('congregation_id', $ms->meetingScheduleTemplate->congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->orderBy('last_name', 'asc')
+            ->get();
 
-        if (!$ms) {
-            // Handle the case where the MeetingSchedules record is not found.
-            // You might want to redirect or show an error message.
-        }
+        $users = $formattedUsers->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+            ];
+        });
+
 
         $data = json_decode($ms->schedule, true);
 
@@ -145,6 +141,7 @@ class MeetingSchedulesController extends Controller {
         $songs_weekend = $data['weekend']['songs'] ?? [];
 
         $compact = compact(
+            'users',
             'data',
             'responsibles',
             'responsibles_weekend',
@@ -159,6 +156,87 @@ class MeetingSchedulesController extends Controller {
         );
 
         return view('BootstrapApp.Modules.meetingSchedule.redaction_weekday', $compact);
+    }
+
+    public function publish($id)
+    {
+        $schedule = MeetingSchedules::findOrFail($id);
+        $schedule->published = !$schedule->published;
+        $schedule->save();
+        // Дополнительная логика, если необходимо
+        return redirect()->back();
+    }
+
+    public function delete($id)
+    {
+        $schedule = MeetingSchedules::findOrFail($id);
+        $schedule->deleted = !$schedule->deleted;
+        $schedule->save();
+        // Дополнительная логика, если необходимо
+        return redirect()->back();
+    }
+
+    public function schedule($id) {
+        $AuthUserId = Auth::id();
+        $ms = MeetingSchedules::query()->find($id);
+
+        $data = $ms ? json_decode($ms->schedule, true) : [];
+        $data = json_decode($ms->schedule, true);
+        $treasures = $data['weekday']['treasures'] ?? [];
+
+        $responsibles = $data['weekday']['responsible_users'] ?? [];
+        $songs = $data['weekday']['songs'] ?? [];
+        $songs_weekend = $data['weekend']['songs'] ?? [];
+        $fieldMinistry = $data['weekday']['field_ministry'] ?? [];
+        $living = $data['weekday']['living'] ?? [];
+
+        $public_speech = $data['weekend']['public_speech'] ?? [];
+        $watchtower = $data['weekend']['watchtower'] ?? [];
+        $responsibles_weekend = $data['weekend']['responsible_users'] ?? [];
+
+        $processedResponsibles = MeetingSchedulesService::processUsersData($responsibles);
+        $processedSongs = MeetingSchedulesService::processUsersData($songs);
+        $processedTreasures = MeetingSchedulesService::processUsersData($treasures);
+        $processedFieldMinistry = MeetingSchedulesService::processUsersData($fieldMinistry);
+        $processedLiving = MeetingSchedulesService::processUsersData($living);
+
+
+        $processedSongs_weekend = MeetingSchedulesService::processUsersData($songs_weekend);
+        $processedResponsiblesWeekend = MeetingSchedulesService::processUsersData($responsibles_weekend);
+        $processedWatchtower = MeetingSchedulesService::processUsersData($watchtower);
+        $processedPublicSpeech = MeetingSchedulesService::processUsersData($public_speech);
+
+
+        $datas = [
+            'weekday' => [
+                'responsible_users' => $processedResponsibles?? [],
+                'songs' => $processedSongs ?? [],
+                'treasures' => $processedTreasures ?? [],
+                'field_ministry' => $processedFieldMinistry ?? [],
+                'living' => $processedLiving ?? [],
+            ],
+            'weekend'=> [
+                'responsible_users' => $processedResponsiblesWeekend?? [],
+                'songs' => $processedSongs_weekend ?? [],
+                'public_speech' => $processedPublicSpeech ?? [],
+                'watchtower' => $processedWatchtower ?? [],
+            ]
+        ];
+
+//        dd($datas);
+
+        $public_speech = $data['weekend']['public_speech'] ?? [];
+
+
+
+
+        $compact = compact(
+            'data',
+            'AuthUserId',
+            'datas',
+            'ms',
+        );
+        return view ('BootstrapApp.Modules.meetingSchedule.week_schedule', $compact);
     }
 
 

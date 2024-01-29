@@ -3,7 +3,7 @@
 {{--@if ($mobile_detect->isMobile())--}}
 
 <div class="d-md-none fixed-bottom">
-    <ul class="nav nav-pills nav-fill small bg-secondary shadow-sm" id="pillNav2" role="tablist" style="
+    <ul class="nav nav-control nav-pills nav-fill small bg-secondary shadow-sm" id="pillNav2" role="tablist" style="
     --bs-nav-link-color: var(--bs-black);
     --bs-nav-pills-link-active-color: var(--bs-white);
     --bs-nav-pills-link-active-bg: var(--bs-secondary);">

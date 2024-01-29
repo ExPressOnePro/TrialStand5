@@ -9,18 +9,24 @@
                 <div id="responsibles-container">
                     @if (!is_null($responsibles))
                         @foreach($responsibles as $key => $responsible)
-                        <div class="row mb-2 d-flex justify-content-between" data-key="{{ $key }}">
+                        <div class="row mb-2 d-flex justify-content-between align-items-end border p-1" data-key="{{ $key }}">
+
                             <div class="col-md-4">
-                                <div class="form-floating mb-2">
-                                    <input type="text" name="responsibles[{{ $key }}][name]" id="name_{{ $key }}" class="form-control" value="{{ $responsible['name'] }}" required>
+                                <div class="form">
                                     <label for="name_{{ $key }}">Название:</label>
+                                    <input type="text" name="responsibles[{{ $key }}][name]" id="name_{{ $key }}" class="form-control" value="{{ $responsible['name'] }}" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-floating mb-2">
-                                    <input type="text" name="responsibles[{{ $key }}][value]" id="value_{{ $key }}" class="form-control" value="{{ $responsible['value'] }}" required>
-                                    <label for="value_{{ $key }}">Ведущий:</label>
-                                </div>
+                                <label for="responsibles_value_{{ $key }}">Ответственный</label>
+                                <select name="responsibles[{{ $key }}][value]" id="responsibles_value_{{ $key }}" class="form-control" required>
+                                    <option value="" selected disabled>- Выберите пользователя -</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user['id'] }}" @if($user['id'] == $responsible['value']) selected @endif>
+                                            {{ $user['last_name'] }} {{ $user['first_name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-4">
                                 <button type="button" class="col btn btn-outline-danger" onclick="removeResponsible({{ $key }})">Удалить</button>
@@ -49,21 +55,29 @@
         nextKey++;
         const container = document.getElementById('responsibles-container');
         const newRow = document.createElement('div');
-        newRow.className = 'row mb-2';
+        newRow.className = 'row mb-2 align-items-end border p-1';
         newRow.setAttribute('data-key', nextKey);
         newRow.innerHTML = `
             <div class="col-md-4">
-                 <div class="form-floating mb-2">
-                    <input type="text" name="responsibles[${nextKey}][name]" id="name_${nextKey}" class="form-control" required>
+                <div class="form">
                     <label for="name_${nextKey}">Название:</label>
+                    <input type="text" name="responsibles[${nextKey}][name]" id="name_${nextKey}" class="form-control" required>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-floating mb-2">
-                    <input type="text" name="responsibles[${nextKey}][value]" id="value_${nextKey}" class="form-control" required>
-                    <label for="value_${nextKey}">Ведущий:</label>
-                </div>
-            </div>
+                <label for="responsibles_value_${nextKey}">
+                    Ответственный
+                </label>
+                <select name="responsibles[${nextKey}][value]" id="responsibles_value_${nextKey}" class="form-control" required>
+                    <option value="" selected disabled>- Выберите пользователя -</option>
+                    @foreach ($users as $user)
+        <option value="{{ $user['id'] }}">
+                            {{ $user['last_name'] }} {{ $user['first_name'] }}
+        </option>
+@endforeach
+        </select>
+    </div>
+
             <div class="col-md-4">
                 <button type="button" class="col btn btn-outline-danger" onclick="removeResponsible(${nextKey})">Удалить</button>
             </div>
@@ -76,5 +90,14 @@
         const rowToRemove = document.querySelector(`[data-key="${key}"]`);
         container.removeChild(rowToRemove);
     }
+</script>
+<script>
+    $(document).ready(function() {
+        $('#responsibles_value_{{ $key }}').select2({
+            placeholder: 'Введите имя пользователя',
+            allowClear: true,
+            tags: true,
+        });
+    });
 </script>
 

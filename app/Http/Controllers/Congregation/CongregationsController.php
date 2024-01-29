@@ -508,27 +508,33 @@ class CongregationsController extends Controller {
     public function displayModules($congregation_id) {
         $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($congregation_id);
-        $congregationRequestsCount = CongregationRequests::with('user')
-            ->where('congregation_id', $congregation_id)
-            ->count();
-
-        $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
         $permissions = Permission::where('name', 'LIKE', 'module%')->get();
+
+        $data = [
+            'congregation' => [
+                'id' => $congregation->id,
+                'name' => $congregation->name,
+            ],
+            'permissions' => [],
+        ];
         foreach ($permissions as $permission) {
-            $permission->has_permission = DB::table('congregations_permissions')
+            $has_permission = CongregationsPermissions::query()
                 ->where('congregation_id', $congregation_id)
                 ->where('permission_id', $permission->id)
                 ->exists();
+
+            $data['permissions'][] = [
+                'id' => $permission->id,
+                'name' => $permission->name,
+                'has_permission' => $has_permission,
+            ];
         }
 
-        $compact = compact(
-            'congregation',
-            'permissions',
-            'congregationRequestsCount'
-        );
-        $mobile_detect = new MobileDetect();
+
+        $compact = compact('data');
+
         if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
-            $view = 'Modules.congregation.displays.modules';
+            $view = 'BootstrapApp.Modules.congregations.displays.modules';
             return view($view, $compact);
         } else {
             return view('errors.423Locked');

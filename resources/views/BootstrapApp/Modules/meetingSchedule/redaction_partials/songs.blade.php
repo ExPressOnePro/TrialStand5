@@ -11,37 +11,51 @@
                 @csrf
                 <div id="songs-container">
                     @foreach($songs as $key => $song)
-                        <div class="row mb-2 d-flex justify-content-between" data-key="{{ $key }}">
+                        <div class="row mb-2 d-flex justify-content-between align-items-end border p-1" data-key="{{ $key }}">
                             <div class="col-md-4">
-                                <div class="form-floating mb-2">
-                                    <select name="songs[{{ $key }}][name]" id="song_name_{{ $key }}" class="form-control" required>
-                                        <option value="">-номер песни-</option>
-                                        @for ($i = 1; $i <= 151; $i++)
-                                            <option value="{{ $i }}" @if($i == $song['name']) selected @endif>{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                    <label for="song_name_{{ $key }}">номер песни</label>
-                                </div>
+                                <label for="song_name_{{ $key }}">Номер песни</label>
+                                <select name="songs[{{ $key }}][name]" id="song_name_{{ $key }}" class="form-control" required>
+                                    <option value="" selected disabled>- Номер песни -</option>
+                                    @for ($i = 1; $i <= 151; $i++)
+                                        <option value="{{ $i }}" @if($i == $song['name']) selected @endif>{{ $i }}</option>
+                                    @endfor
+                                </select>
                             </div>
-
-                        @if($key == 2)
+                            @if($key == 2)
                             @else
                             <div class="col-md-4">
-                                <div class="form-floating mb-2">
-                                    <input type="text" name="songs[{{ $key }}][value]" id="song_value_{{ $key }}" class="form-control" value="{{ $song['value'] }}" required>
-                                    <label for="song_value_{{ $key }}">
-                                        @if($key == 1)
-                                            Председатель
-                                        @elseif($key == 3)
-                                            Молитва
-                                        @endif
-                                    </label>
-                                </div>
+                                <label for="song_value_{{ $key }}">
+                                    @if($key == 1)
+                                        Председатель
+                                    @elseif($key == 3)
+                                        Молитва
+                                    @endif
+                                </label>
+                                <select name="songs[{{ $key }}][value]" id="song_value_{{ $key }}" class="form-control" required>
+                                    <option value="" selected disabled>- Выберите пользователя -</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user['id'] }}" @if($user['id'] == $song['value']) selected @endif>
+                                            {{ $user['last_name'] }} {{ $user['first_name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             @endif
-                            <div class="col-md-4">
-{{--                                <button type="button" class="col btn btn-outline-danger" onclick="removeSong(this)">Удалить</button>--}}
-                            </div>
+                            <script>
+                                $(document).ready(function() {
+                                    $('#song_name_{{ $key }}').select2({
+                                        placeholder: 'Номер песни',
+                                        allowClear: true,
+                                        tags: true,
+                                    });
+                                    $('#song_value_{{ $key }}').select2({
+                                        placeholder: 'Введите имя пользователя',
+                                        allowClear: true,
+                                        tags: true,
+                                    });
+                                });
+                            </script>
+                            <div class="col-md-4"></div>
                         </div>
                     @endforeach
                 </div>
@@ -50,44 +64,6 @@
                         <button type="submit" class="col btn btn-primary">Сохранить</button>
                     </div>
                 </div>
-{{--                <button type="button" class="btn btn-success" onclick="addSong()">Добавить песню</button>--}}
             </form>
         </div>
     </div>
-
-
-<script>
-    let nextSongKey = {{ count($songs) }};
-
-    function addSong() {
-        nextSongKey++;
-        const container = document.getElementById('songs-container');
-        const newRow = document.createElement('div');
-        newRow.className = 'row mb-2';
-        newRow.setAttribute('data-key', nextSongKey);
-        newRow.innerHTML = `
-             <div class="col-md-4">
-                 <div class="form-floating mb-2">
-                <input type="text" name="songs[${nextSongKey}][name]" id="song_name_${nextSongKey}" class="form-control" required>
-                <label for="song_name_${nextSongKey}">Название:</label>
-</div>
-            </div>
-             <div class="col-md-4">
-                 <div class="form-floating mb-2">
-                <input type="text" name="songs[${nextSongKey}][value]" id="song_value_${nextSongKey}" class="form-control" required>
-                <label for="song_value_${nextSongKey}">Значение:</label>
-            </div>
-</div>
-             <div class="col-md-4">
-                <button type="button" class="col btn btn-outline-danger" onclick="removeSong(this)">Удалить</button>
-            </div>
-        `;
-        container.appendChild(newRow);
-    }
-
-    function removeSong(button) {
-        const container = document.getElementById('songs-container');
-        const rowToRemove = button.closest('.row');
-        container.removeChild(rowToRemove);
-    }
-</script>

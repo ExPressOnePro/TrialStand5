@@ -16,6 +16,7 @@ class CongregationSeeder extends Seeder
 
         $congregation = new Congregation();
         $congregation->name = 'Бельцы - Пэмынтены';
+        $congregation->info = json_encode(['weekday' => '3', 'weekend' =>  '6', 'weekdayTime' =>  '19:00', 'weekendTime' =>  '18:00']);
 //        $congregation->address = 'Дософтей 20';
 //        $congregation->district = '5';
 //        $congregation->country = 'Молдова';

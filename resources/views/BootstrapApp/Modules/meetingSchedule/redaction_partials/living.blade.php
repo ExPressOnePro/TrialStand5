@@ -13,20 +13,40 @@
                 @csrf
                 <div id="living-container">
                     @foreach($living as $key => $livingItem)
-                        <div class="row mb-2 d-flex justify-content-between" data-key="{{ $key }}">
-                            <div class="col-md-4">
-                                <div class="form-floating mb-2">
-                                    <input type="text" name="living[{{ $key }}][name]" id="living_name_{{ $key }}" class="form-control" value="{{ $livingItem['name'] }}" required>
+                        <div class="row mb-2 d-flex justify-content-between align-items-end border p-1" data-key="{{ $key }}">
+                            <div class="col-md-3">
+                                <div class="form mb-2">
                                     <label for="living_name_{{ $key }}">Название:</label>
+                                    <input type="text" name="living[{{ $key }}][name]" id="living_name_{{ $key }}" class="form-control" value="{{ $livingItem['name'] }}" required>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-floating mb-2">
-                                    <input type="text" name="living[{{ $key }}][value]" id="living_value_{{ $key }}" class="form-control" value="{{ $livingItem['value'] }}" required>
-                                    <label for="living_value_{{ $key }}">Значение:</label>
+                            <div class="col-md-3">
+                                <div class="form">
+                                    <label for="living_value_{{ $key }}">Ведущий</label>
+                                    <select name="living[{{ $key }}][value]" id="living_value_{{ $key }}" class="form-control" required>
+                                        <option value="" selected disabled>- Выберите пользователя -</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user['id'] }}" @if(isset($livingItem['value']) && $user['id'] == $livingItem['value']) selected @endif>
+                                                {{ $user['last_name'] }} {{ $user['first_name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="form">
+                                    <label for="living_value_{{ $key }}">Чтец</label>
+                                    <select name="living[{{ $key }}][value_2]" id="living_value_2_{{ $key }}" class="form-control">
+                                        <option value="" selected disabled>- Выберите пользователя -</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user['id'] }}" @if(isset($livingItem['value_2']) && $user['id'] == $livingItem['value_2']) selected @endif>
+                                                {{ $user['last_name'] }} {{ $user['first_name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <button type="button" class="col btn btn-outline-danger" onclick="removeLiving(this)">Удалить</button>
                             </div>
                         </div>
@@ -45,7 +65,6 @@
         </div>
     </div>
 
-
 <script>
     let nextLivingKey = {{ count($living) }};
 
@@ -53,26 +72,47 @@
         nextLivingKey++;
         const container = document.getElementById('living-container');
         const newRow = document.createElement('div');
-        newRow.className = 'row mb-2';
+        newRow.className = 'row mb-2 align-items-end border p-1';
         newRow.setAttribute('data-key', nextLivingKey);
         newRow.innerHTML = `
-            <div class="col-md-4">
-                 <div class="form-floating mb-2">
-                <input type="text" name="living[${nextLivingKey}][name]" id="living_name_${nextLivingKey}" class="form-control" required>
-<label for="living_name_${nextLivingKey}">Название:</label>
+            <div class="col-md-3">
+    <div class="form mb-2">
+        <label for="living_name_${nextLivingKey}">Название:</label>
+        <input type="text" name="living[${nextLivingKey}][name]" id="living_name_${nextLivingKey}" class="form-control" required>
+    </div>
 </div>
-            </div>
-            <div class="col-md-4">
-                 <div class="form-floating mb-2">
+<div class="col-md-3">
+    <label for="treasure_value_${nextLivingKey}">
+        Ведущий
+    </label>
+    <select name="living_name_[${nextLivingKey}][value]" id="living_name_${nextLivingKey}" class="form-control" required>
+        <option value="" selected disabled>- Выберите пользователя -</option>
+        @foreach ($users as $user)
+        <option value="{{ $user['id'] }}">
+                {{ $user['last_name'] }} {{ $user['first_name'] }}
+        </option>
+@endforeach
+        </select>
+    </div>
+    <div class="col-md-3">
 
-                <input type="text" name="living[${nextLivingKey}][value]" id="living_value_${nextLivingKey}" class="form-control" required>
-<label for="living_value_${nextLivingKey}">Ведущий:</label>
+            <label for="treasure_value_${nextFieldMinistryKey}">
+            Чтец
+        </label>
+        <select name="field_ministry[${nextFieldMinistryKey}][value]" id="field_ministry_value_${nextFieldMinistryKey}" class="form-control" required>
+            <option value="" selected disabled>- Выберите пользователя -</option>
+            @foreach ($users as $user)
+        <option value="{{ $user['id'] }}">
+                    {{ $user['last_name'] }} {{ $user['first_name'] }}
+        </option>
+@endforeach
+        </select>
+
 </div>
-            </div>
-            <div class="col-md-4">
-                <button type="button" class="col btn btn-outline-danger" onclick="removeLiving(this)">Удалить</button>
-            </div>
-        `;
+<div class="col-md-3">
+    <button type="button" class="col btn btn-outline-danger" onclick="removeLiving(this)">Удалить</button>
+</div>
+`;
         container.appendChild(newRow);
     }
 

@@ -79,22 +79,28 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
         Route::get('/meetingSchedules/{id}', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
-        Route::get('/presentation/meetingSchedules', [PresentationController::class, 'presentMeetingSchedules'])->name('meetingSchedules.presentation');
-        Route::get('/meetingSchedules/schedule/{weekday_id}', [MeetingSchedulesController::class, 'schedule'])->name('meetingSchedules.schedule');
+        Route::get('/presentation/meetingSchedules', [PresentationController::class, 'presentMeetingSchedules'])->name('presentation.meetingSchedules');
 
 
-        Route::post('/meetingSchedules/create/{congregation_id}', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
-        Route::get('/meetingSchedules/{id}/redaction', [MeetingSchedulesController::class, 'redaction'])->name('meetingSchedules.redaction');
-        Route::post('/meetingSchedules/{id}/save_responsibles', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
-        Route::post('/meetingSchedules/{id}/save_responsibles_weekend', [MeetingSchedulesController::class, 'save_responsibles_weekend'])->name('meetingSchedules.save_responsibles_weekend');
-        Route::post('/meetingSchedules/{id}/save_treasures', [MeetingSchedulesController::class, 'save_treasures'])->name('meetingSchedules.save_treasures');
-        Route::post('/meetingSchedules/{id}/save_field_ministry', [MeetingSchedulesController::class, 'save_field_ministry'])->name('meetingSchedules.save_field_ministry');
-        Route::post('/meetingSchedules/{id}/save_living', [MeetingSchedulesController::class, 'save_living'])->name('meetingSchedules.save_living');
-        Route::post('/meetingSchedules/{id}/save_songs', [MeetingSchedulesController::class, 'save_songs'])->name('meetingSchedules.save_songs');
-        Route::post('/meetingSchedules/{id}/save_songs_weekend', [MeetingSchedulesController::class, 'save_songs_weekend'])->name('meetingSchedules.save_songs_weekend');
-        Route::post('/meetingSchedules/{id}/save_public_speech', [MeetingSchedulesController::class, 'save_public_speech'])->name('meetingSchedules.save_public_speech');
-        Route::post('/meetingSchedules/{id}/save_watchtower', [MeetingSchedulesController::class, 'save_watchtower'])->name('meetingSchedules.save_watchtower');
+    Route::group([
+        'prefix' => 'meetingSchedules',
+    ], function () {
+        Route::get('/schedule/{weekday_id}', [MeetingSchedulesController::class, 'schedule'])->name('meetingSchedules.schedule');
+        Route::post('/create/{congregation_id}', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
+        Route::get('/{id}/redaction', [MeetingSchedulesController::class, 'redaction'])->name('meetingSchedules.redaction');
+        Route::post('/{id}/save_responsibles', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
+        Route::post('/{id}/save_responsibles_weekend', [MeetingSchedulesController::class, 'save_responsibles_weekend'])->name('meetingSchedules.save_responsibles_weekend');
+        Route::post('/{id}/save_treasures', [MeetingSchedulesController::class, 'save_treasures'])->name('meetingSchedules.save_treasures');
+        Route::post('/{id}/save_field_ministry', [MeetingSchedulesController::class, 'save_field_ministry'])->name('meetingSchedules.save_field_ministry');
+        Route::post('/{id}/save_living', [MeetingSchedulesController::class, 'save_living'])->name('meetingSchedules.save_living');
+        Route::post('/{id}/save_songs', [MeetingSchedulesController::class, 'save_songs'])->name('meetingSchedules.save_songs');
+        Route::post('/{id}/save_songs_weekend', [MeetingSchedulesController::class, 'save_songs_weekend'])->name('meetingSchedules.save_songs_weekend');
+        Route::post('/{id}/save_public_speech', [MeetingSchedulesController::class, 'save_public_speech'])->name('meetingSchedules.save_public_speech');
+        Route::post('/{id}/save_watchtower', [MeetingSchedulesController::class, 'save_watchtower'])->name('meetingSchedules.save_watchtower');
+        Route::post('/publish/{id}', [MeetingSchedulesController::class, 'publish'])->name('meetingSchedules.publish');
+        Route::post('/delete/{id}', [MeetingSchedulesController::class, 'delete'])->name('meetingSchedules.delete');
 
+    });
 
         Route::get('/menu', [HomeController::class, 'menu'])->name('menu.overview');
         Route::get('/menu2', [HomeController::class, 'menu2'])->name('menu.overview2');
@@ -105,13 +111,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/stand-publishers/{id}', function () {
             return view('stand_publishers');
         });
+
+
         Route::group([
             'middleware' => 'can:module.stand',
             'prefix' => 'stand',
         ], function () {
-            // Stand Controller
-            // Stand Controller
-
             Route::get('/current/{id}', [StandController::class, 'table'])->name('stand.current');
             Route::get('/next/{id}', [StandController::class, 'table'])->name('stand.next');
 
@@ -204,7 +209,7 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::get('/permUser323/{id}', [StandController::class, 'permUserStand'])->name('permUserStand');
-        Route::post('/updatePerm', [StandController::class, 'updatePerm'])->name('updatePerm');
+        Route::post('/updatePerm', [StandController::class, 'updatePerm'])->name('updatePermission');
 
         Route::group([
 //        'middleware' => 'can:module.add',

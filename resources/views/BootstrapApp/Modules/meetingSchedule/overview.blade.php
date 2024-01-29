@@ -16,6 +16,7 @@
     </style>
 
     <div class="content container-fluid">
+        @include('BootstrapApp.includes.alerts')
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="px-4 py-3 rounded-2 bg-body-secondary text-end mb-3">
@@ -80,6 +81,7 @@
 
                         </div>
                     </div>
+                    @if(!empty($weeklySchedule))
                     <div class="tab-content" id="profileTeamsTabContent">
                         <div class="tab-pane fade active show" id="grid" role="tabpanel" aria-labelledby="grid-tab">
                             <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
@@ -88,9 +90,13 @@
                                     <div class="card rounded-4 h-100">
                                         <div class="card-header rounded-top-4">
                                             <div class="row d-flex align-items-center">
-                                                <div class="col-9">
-                                                    <h4>{{ $weekData['week_start'] }} - {{ $weekData['week_end'] }}
-                                                    </h4>
+                                                <div class="col-9 lh-1">
+                                                    <h4>{{ $weekData['week_start'] }} - {{ $weekData['week_end'] }}</h4>
+                                                    @if($weekData['published'])
+                                                        <small class="text-success"><i class="fa-solid fa-circle"></i> Опубликовано</small>
+                                                    @else
+                                                        <small class="text-secondary"><i class="fa-solid fa-circle-dot"></i> Не опубликовано</small>
+                                                    @endif
                                                 </div>
                                                 <div class="col-3 text-end">
                                                     <div class="dropdown">
@@ -98,10 +104,19 @@
                                                             <i class="bi-three-dots-vertical"></i>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="teamsDropdown1">
-                                                            <a class="dropdown-item" href="#">Опубликовать</a>
-                                                            <a class="dropdown-item" href="#">Редактировать</a>
+                                                                <form method="post" action="{{ route('meetingSchedules.publish', $weekData['id']) }}">
+                                                                    @csrf
+                                                                    <button type="submit" class="dropdown-item">
+                                                                        {{ $weekData['published'] ? 'Снять с публикации' : 'Опубликовать' }}
+                                                                    </button>
+                                                                </form>
                                                             <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item text-danger" href="#">Удалить</a>
+                                                                <form method="post" action="{{ route('meetingSchedules.delete', $weekData['id']) }}">
+                                                                    @csrf
+                                                                    <button type="submit" class="dropdown-item text-danger">
+                                                                        {{ $weekData['deleted'] ? 'Показать' : 'Скрыть' }}
+                                                                    </button>
+                                                                </form>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -231,217 +246,12 @@
                             </div>
                         </div>
                     </div>
-{{--                    <div class="row text-start">--}}
-{{--                        @foreach($weeklySchedule as $week => $weekData)--}}
-{{--                            <div class="col-lg-4 col-md-6 col-sm-12">--}}
-{{--                                <div class="card mb-3">--}}
-{{--                                    <div class="card-header">--}}
-{{--                                        <div class="d-flex justify-content-between align-items-center py-1">--}}
-{{--                                            <div class="col">--}}
-{{--                                                <h4>{{ $weekData['week_start'] }} - {{ $weekData['week_end'] }}</h4>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="col-auto">--}}
-{{--                                                <a class="btn btn-outline-secondary" >--}}
-{{--                                                    <i class="bi bi-pencil"></i>--}}
-{{--                                                </a>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                    <a class="card rounded-bottom rounded-0 meeting-schedule-template text-decoration-none" href="{{ route('meetingSchedules.schedule', $weekData['id']) }}">--}}
-{{--                                        <div class="card-body bg">--}}
-{{--                                            <div class="d-flex border-hover border-bottom gap-3 p-2 align-items-center justify-content-between py-3">--}}
-{{--                                                <img class="bd-placeholder-img  ms-3" height="50" src="{{ asset('images/workbook.svg') }}">--}}
-{{--                                                <div class="col">--}}
-{{--                                                    <h4 class="text-muted">Жизнь и служение</h4>--}}
-{{--                                                    <h6 class="mb-0 text-muted">{{$weekData['weekday']}}</h6>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="d-flex border-hover gap-3 p-2 align-items-center justify-content-between py-3">--}}
-{{--                                                <img class="bd-placeholder-img ms-3" height="50" src="{{ asset('images/watchtower.svg') }}">--}}
-{{--                                                <div class="col">--}}
-{{--                                                    <h4 class="text-muted">Сторожевая башня</h4>--}}
-{{--                                                    <h6 class="mb-0 text-muted">{{$weekData['weekend']}}</h6>--}}
-{{--                                                    <p></p>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="card-footer">--}}
-{{--                                            <div class="d-flex justify-content-between">--}}
-{{--                                                <small class="text-body-secondary">Тип недели</small>--}}
-{{--                                                @if($weekData['template_name'] == 'Посещение районного старейшины')--}}
-{{--                                                 <small class="text-danger fw-bold">{{$weekData['template_name']}}</small>--}}
-{{--                                                @else--}}
-{{--                                                    <small class="text-body-secondary">{{$weekData['template_name']}}</small>--}}
-{{--                                                @endif--}}
-{{--                                            </div>--}}
-{{--                                            <div class="d-flex justify-content-between">--}}
-{{--                                                <small class="text-body-secondary">Последнее обновление </small>--}}
-{{--                                                <small class="text-body-secondary">{{$weekData['updated']}}</small>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                                <a class="card no-select mb-3 text-decoration-none meeting-schedule-card" >--}}
-{{--                                    <div class="card-header h4 text-center">--}}
-{{--                                        {{ $weekData['week_start'] }} - {{ $weekData['week_end'] }}--}}
-{{--                                    </div>--}}
-{{--                                        <div class="card mb-3">--}}
-{{--                                            <div class="card-body shadow link-body-emphasis text-decoration-none">--}}
-{{--                                                <div class="d-flex border-hover no-select gap-3 p-2 align-items-center justify-content-between py-3">--}}
-{{--                                                    <img class="bd-placeholder-img" height="96" src="{{ asset('images/workbook.svg') }}">--}}
-{{--                                                    <div class="col">--}}
-{{--                                                        <h4 class="text-muted">Жизнь и служение</h4>--}}
-{{--                                                        <h5 class="mb-0">{{$weekData['weekday']}}, {{$weekData['weekday_time']}}</h5>--}}
-{{--                                                        <p></p>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-
-
-
-
-{{--                                        <div class="card">--}}
-{{--                                            <div class="card-body shadow link-body-emphasis text-decoration-none">--}}
-{{--                                                <div class="d-flex border-hover no-select gap-3 p-2 align-items-center justify-content-between py-3">--}}
-{{--                                                    <img class="bd-placeholder-img" height="96" src="{{ asset('images/watchtower.svg') }}">--}}
-{{--                                                    <div class="col-8">--}}
-{{--                                                        <h4 class="text-muted">Сторожевая башня</h4>--}}
-{{--                                                        <h5 class="mb-0">{{$weekData['weekend']}}, {{$weekData['weekend_time']}}</h5>--}}
-{{--                                                        <p></p>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                        @endforeach--}}
-{{--                    </div>--}}
-
-{{--                    @else--}}
-{{--                        <div class="py-3 shadow-sm text-center">--}}
-{{--                            <p class="lead text-body-emphasis">Ничего не найдено.</p>--}}
-{{--                            <p class="small">Чтобы начать, выберите один из шаблонов выше</p>--}}
-{{--                        </div>--}}
-{{--                    @endif--}}
-
-                                        {{--                    <div class="row text-start">--}}
-{{--                        @if(!$meetingSchedules->isEmpty())--}}
-{{--                            <div class="col-4">--}}
-{{--                                <div class="card mb-3">--}}
-{{--                                    <div class="card-header h3 text-center">15-21 Января</div>--}}
-{{--                                    <div class="card no-select mb-3">--}}
-{{--                                        <a class="card-body shadow link-body-emphasis text-decoration-none">--}}
-{{--                                            <div class="d-flex border-hover no-select gap-3 p-2 align-items-center justify-content-between py-3">--}}
-{{--                                                <img class="bd-placeholder-img" height="96" src="{{ asset('images/workbook.svg') }}">--}}
-{{--                                                <div class="col-8">--}}
-{{--                                                    <h4 class="text-muted">Жизнь и служение</h4>--}}
-{{--                                                    <h5 class="mb-0">январь 18, 2023</h5>--}}
-{{--                                                    <p></p>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-
-{{--                                    <div class="d-flex border-hover no-select gap-3 p-2 align-items-center py-3">--}}
-{{--                                        <div class="py-3 shadow-sm text-center">--}}
-{{--                                            <h4 class="fw-bold text-body-emphasis">нет расписания</h4>--}}
-{{--                                            <p class="lead mb-4">Расписания сторожевой башни не добавлено для этой недели</p>--}}
-{{--                                        </div>--}}
-
-
-
-
-{{--                                        --}}{{--                                            <img class="bd-placeholder-img" height="96" src="{{ asset('images/watchtower.svg') }}">--}}
-{{--                                        --}}{{--                                            <div class="col-8">--}}
-{{--                                        --}}{{--                                                <h4 class="text-muted">Сторожевая башня</h4>--}}
-{{--                                        --}}{{--                                                <h5 class="mb-0">январь 18, 2023</h5>--}}
-{{--                                        --}}{{--                                                <p></p>--}}
-{{--                                        --}}{{--                                            </div>--}}
-{{--                                    </div>--}}
-
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-4">--}}
-{{--                                <div class="card mb-3">--}}
-{{--                                    <div class="card-header h3 text-center">15-21 Января</div>--}}
-{{--                                    <div class="card no-select mb-3">--}}
-{{--                                        <a class="card-body shadow link-body-emphasis text-decoration-none">--}}
-{{--                                            <div class="d-flex border-hover no-select gap-3 p-2 align-items-center justify-content-between py-3">--}}
-{{--                                                <img class="bd-placeholder-img" height="96" src="{{ asset('images/workbook.svg') }}">--}}
-{{--                                                <div class="col-8">--}}
-{{--                                                    <h4 class="text-muted">Жизнь и служение</h4>--}}
-{{--                                                    <h5 class="mb-0">январь 18, 2023</h5>--}}
-{{--                                                    <p></p>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="d-flex border-hover no-select gap-3 p-2 align-items-center py-3">--}}
-{{--                                        <div class="py-3 shadow-sm text-center">--}}
-{{--                                            <h4 class="fw-bold text-body-emphasis">нет расписания</h4>--}}
-{{--                                            <p class="lead mb-4">Расписания сторожевой башни не добавлено для этой недели</p>--}}
-{{--                                        </div>--}}
-
-
-
-
-{{--                                        --}}{{--                                            <img class="bd-placeholder-img" height="96" src="{{ asset('images/watchtower.svg') }}">--}}
-{{--                                        --}}{{--                                            <div class="col-8">--}}
-{{--                                        --}}{{--                                                <h4 class="text-muted">Сторожевая башня</h4>--}}
-{{--                                        --}}{{--                                                <h5 class="mb-0">январь 18, 2023</h5>--}}
-{{--                                        --}}{{--                                                <p></p>--}}
-{{--                                        --}}{{--                                            </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                            --}}{{--                    <div class="row row-cols-1 row-cols-md-3 g-4 text-start mb-5">--}}
-{{--                            --}}{{--                        @foreach($meetingSchedules as $meetingSchedule)--}}
-{{--                            --}}{{--                            <div class="col">--}}
-{{--                            --}}{{--                                <div class="card meeting-schedule-card no-select">--}}
-{{--                            --}}{{--                                        <a class="card-body rounded-2 shadow link-body-emphasis text-decoration-none" href="{{ route('meetingSchedules.schedule', $meetingSchedule->id) }}">--}}
-{{--                            --}}{{--                                        <div class="d-flex border-hover no-select gap-3 p-2 align-items-center justify-content-between py-3">--}}
-{{--                            --}}{{--                                            @if (date('N', strtotime($meetingSchedule->date)) < 6)--}}
-{{--                            --}}{{--                                                <img class="bd-placeholder-img" height="96" src="{{ asset('images/workbook.svg') }}">--}}
-{{--                            --}}{{--                                                <div class="col-8">--}}
-{{--                            --}}{{--                                                    <h4 class="text-muted">{{$meetingSchedule->meetingScheduleTemplate->template_name}}</h4>--}}
-{{--                            --}}{{--                                                    <h5 class="mb-0">{{ \Carbon\Carbon::parse($meetingSchedule->date)->isoFormat('MMMM D, YYYY') }}</h5>--}}
-{{--                            --}}{{--                                                    <p>{{ __('text.' . $weekday) }}  {{ $weekdayTime }}</p>--}}
-{{--                            --}}{{--                                                </div>--}}
-{{--                            --}}{{--                                            @else--}}
-{{--                            --}}{{--                                                <img class="bd-placeholder-img" height="96" src="{{ asset('images/watchtower.svg') }}">--}}
-{{--                            --}}{{--                                                <div class="col-8">--}}
-{{--                            --}}{{--                                                    <h4 class="text-muted">{{$meetingSchedule->meetingScheduleTemplate->template_name}}</h4>--}}
-{{--                            --}}{{--                                                    <h5 class="mb-0">{{ \Carbon\Carbon::parse($meetingSchedule->date)->isoFormat('MMMM D, YYYY') }}</h5>--}}
-{{--                            --}}{{--                                                    <p>{{ __('text.' . $weekend) }}  {{ $weekendTime }}</p>--}}
-{{--                            --}}{{--                                                </div>--}}
-{{--                            --}}{{--                                            @endif--}}
-{{--                            --}}{{--                                        </div>--}}
-{{--                            --}}{{--                                    </a>--}}
-{{--                            --}}{{--                                    <div class="card-footer">--}}
-{{--                            --}}{{--                                        <div class="d-flex justify-content-between align-items-center">--}}
-{{--                            --}}{{--                                            <small class="text-body-secondary">Создан: {{ \Carbon\Carbon::parse($meetingSchedule->updated_at)->isoFormat('MMMM D, YYYY') }}</small>--}}
-{{--                            --}}{{--                                            <div class="dropdown">--}}
-{{--                            --}}{{--                                                <i class="bi bi-three-dots-vertical dropdown custom-dropdown-icon btn btn-outline-secondary rounded-5" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>--}}
-{{--                            --}}{{--                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">--}}
-{{--                            --}}{{--                                                    <a class="dropdown-item" href="#">Редактировать</a>--}}
-{{--                            --}}{{--                                                    <a class="dropdown-item" href="#">Удалить</a>--}}
-{{--                            --}}{{--                                                </div>--}}
-{{--                            --}}{{--                                            </div>--}}
-{{--                            --}}{{--                                        </div>--}}
-{{--                            --}}{{--                                    </div>--}}
-{{--                            --}}{{--                                </div>--}}
-{{--                            --}}{{--                            </div>--}}
-{{--                            --}}{{--                        @endforeach--}}
-{{--                            --}}{{--                    </div>--}}
-{{--                        @else--}}
-{{--                            <div class="py-3 shadow-sm text-center">--}}
-{{--                                <h4 class="fw-bold text-body-emphasis">Форм нет</h4>--}}
-{{--                                <p class="lead mb-4">Чтобы начать, выберите пустую форму или один из шаблонов выше</p>--}}
-{{--                            </div>--}}
-{{--                        @endif--}}
-{{--                    </div>--}}
+                    @else
+                    <div class="py-3 shadow-sm text-center">
+                        <h4 class="fw-bold text-body-emphasis">Расписаний нет</h4>
+                        <p class="lead mb-4">Чтобы начать, выберите новое расписание или один из шаблонов выше</p>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
