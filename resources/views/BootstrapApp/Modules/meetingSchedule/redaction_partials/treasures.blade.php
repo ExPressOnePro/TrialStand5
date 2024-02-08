@@ -96,14 +96,15 @@
 </script>
 <script>
     $(document).ready(function() {
+        @if(isset($key))
         $('#treasure_value_{{ $key }}').select2({
             placeholder: 'Введите имя пользователя',
             allowClear: true,
             tags: true,
         });
+        @endif
     });
     $(document).ready(function() {
-        // Инициализация Select2 для существующих элементов при загрузке страницы
         $('[id^="treasure_value_"]').each(function() {
             $(this).select2({
                 placeholder: 'Введите имя пользователя',

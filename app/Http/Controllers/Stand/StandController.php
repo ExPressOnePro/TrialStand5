@@ -1092,6 +1092,6 @@ class StandController extends Controller
         }
 
 
-        return redirect()->route('currentWeekTableFront', $stand_id);
+        return redirect()->route('stand.current2', $stand_id);
     }
 }

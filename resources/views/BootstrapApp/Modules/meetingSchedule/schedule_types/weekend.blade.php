@@ -11,7 +11,7 @@
         @if(isset($datas['weekend']['responsible_users']) && count($datas['weekend']['responsible_users']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.responsibles_table_weekend')
         @else
-            <p>Нет данных.</p>
+            <p>Ответственные пользователи (выходной) не добавлены</p>
         @endif
     </div>
 
@@ -19,7 +19,7 @@
         @if(isset($datas['weekend']['songs']['1']) && count($datas['weekend']['songs']['1']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.songs', ['key' => 1, 'song' => $datas['weekend']['songs']['1']])
         @else
-            <p>Нет данных.</p>
+            <p>Председатель (выходной) не добавлен</p>
         @endif
     </div>
 
@@ -27,14 +27,14 @@
         @if(isset($datas['weekend']['public_speech']) && count($datas['weekend']['public_speech']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.public_speech')
         @else
-            <p>Нет данных.</p>
+            <p>Публичная речь не добавлена</p>
         @endif
     </div>
     <div class="song_2">
         @if(isset($datas['weekend']['songs']['2']) && count($datas['weekend']['songs']['2']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.songs', ['key' => 2, 'song' => $datas['weekend']['songs']['2']])
         @else
-            <p>Нет данных.</p>
+            <p>Песня не добавлена</p>
         @endif
     </div>
 
@@ -51,7 +51,7 @@
         @if(isset($datas['weekend']['songs']['3']) && count($datas['weekend']['songs']['3']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.songs', ['key' => 3, 'song' => $datas['weekend']['songs']['3']])
         @else
-            <p>Нет данных.</p>
+            <p>Заключительная молитва не добавлена</p>
         @endif
     </div>
 </div>

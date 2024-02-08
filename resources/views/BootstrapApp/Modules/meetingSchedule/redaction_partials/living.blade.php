@@ -1,5 +1,5 @@
 
-<div class="card">
+<div class="card mb-5">
         <div class="card-header">
             <h4 class="pb-1 mb-1 d-flex align-items-center" style="color: #BF2F13">
                 <div class="icon-square d-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 p-2 rounded-2" style="background-color: #BF2F13; width: 1.5em; height: 1.5em;">
@@ -15,7 +15,7 @@
                     @foreach($living as $key => $livingItem)
                         <div class="row mb-2 d-flex justify-content-between align-items-end border p-1" data-key="{{ $key }}">
                             <div class="col-md-3">
-                                <div class="form mb-2">
+                                <div class="form">
                                     <label for="living_name_{{ $key }}">Название:</label>
                                     <input type="text" name="living[{{ $key }}][name]" id="living_name_{{ $key }}" class="form-control" value="{{ $livingItem['name'] }}" required>
                                 </div>
@@ -46,7 +46,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3 mt-3">
                                 <button type="button" class="col btn btn-outline-danger" onclick="removeLiving(this)">Удалить</button>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
         newRow.setAttribute('data-key', nextLivingKey);
         newRow.innerHTML = `
             <div class="col-md-3">
-    <div class="form mb-2">
+    <div class="form">
         <label for="living_name_${nextLivingKey}">Название:</label>
         <input type="text" name="living[${nextLivingKey}][name]" id="living_name_${nextLivingKey}" class="form-control" required>
     </div>
@@ -85,7 +85,7 @@
     <label for="treasure_value_${nextLivingKey}">
         Ведущий
     </label>
-    <select name="living_name_[${nextLivingKey}][value]" id="living_name_${nextLivingKey}" class="form-control" required>
+    <select name="living[${nextLivingKey}][value]" id="living_value_${nextLivingKey}" class="form-control" required>
         <option value="" selected disabled>- Выберите пользователя -</option>
         @foreach ($users as $user)
         <option value="{{ $user['id'] }}">
@@ -96,10 +96,10 @@
     </div>
     <div class="col-md-3">
 
-            <label for="treasure_value_${nextFieldMinistryKey}">
+            <label for="treasure_value_${nextLivingKey}">
             Чтец
         </label>
-        <select name="field_ministry[${nextFieldMinistryKey}][value]" id="field_ministry_value_${nextFieldMinistryKey}" class="form-control" required>
+        <select name="living[${nextLivingKey}][value_2]" id="living_value_2_${nextLivingKey}" class="form-control">
             <option value="" selected disabled>- Выберите пользователя -</option>
             @foreach ($users as $user)
         <option value="{{ $user['id'] }}">
@@ -109,7 +109,7 @@
         </select>
 
 </div>
-<div class="col-md-3">
+<div class="col-md-3 mt-3">
     <button type="button" class="col btn btn-outline-danger" onclick="removeLiving(this)">Удалить</button>
 </div>
 `;

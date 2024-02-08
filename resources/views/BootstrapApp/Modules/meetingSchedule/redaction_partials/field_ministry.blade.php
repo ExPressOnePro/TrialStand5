@@ -35,10 +35,10 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form">
-                                <label for="field_ministry_value_{{ $key }}">Ведущий</label>
-                                <select name="field_ministry[{{ $key }}][value_2]" id="field_ministry_value_2_{{ $key }}" class="form-control" required>
+                                <label for="field_ministry_value_{{ $key }}">Помошник</label>
+                                <select name="field_ministry[{{ $key }}][value_2]" id="field_ministry_value_2_{{ $key }}" class="form-control">
                                     <option value="" selected disabled>- Выберите пользователя -</option>
-                                    @foreach ($users as $user)
+                                    @foreach ($users as $user)ч
                                         <option value="{{ $user['id'] }}" @if(isset($fieldMinistryItem['value_2']) && $user['id'] == $fieldMinistryItem['value_2']) selected @endif>
                                             {{ $user['last_name'] }} {{ $user['first_name'] }}
                                         </option>
@@ -46,7 +46,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 mt-3">
                             <button type="button" class="col btn btn-outline-danger" onclick="removeFieldMinistry(this)">Удалить</button>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                 <label for="field_ministry_value_2_${nextFieldMinistryKey}">
                     Ответственный
                 </label>
-                <select name="field_ministry[${nextFieldMinistryKey}][value_2]" id="field_ministry_value_2_${nextFieldMinistryKey}" class="form-control" required>
+                <select name="field_ministry[${nextFieldMinistryKey}][value_2]" id="field_ministry_value_2_${nextFieldMinistryKey}" class="form-control">
                     <option value="" selected disabled>- Выберите пользователя -</option>
                     @foreach ($users as $user)
             <option value="{{ $user['id'] }}">
@@ -111,7 +111,7 @@
         </div>
                 </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mt-3">
                     <button type="button" class="col btn btn-outline-danger" onclick="removeFieldMinistry(this)">Удалить</button>
                 </div>
 `;

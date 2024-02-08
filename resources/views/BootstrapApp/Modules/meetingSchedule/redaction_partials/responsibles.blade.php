@@ -28,7 +28,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 mt-3">
                                 <button type="button" class="col btn btn-outline-danger" onclick="removeResponsible({{ $key }})">Удалить</button>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
         </select>
     </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 mt-3">
                 <button type="button" class="col btn btn-outline-danger" onclick="removeResponsible(${nextKey})">Удалить</button>
             </div>
         `;
@@ -93,10 +93,24 @@
 </script>
 <script>
     $(document).ready(function() {
+        @if(isset($key))
         $('#responsibles_value_{{ $key }}').select2({
             placeholder: 'Введите имя пользователя',
             allowClear: true,
             tags: true,
+        });
+        @endif
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        // Инициализация Select2 для существующих элементов при загрузке страницы
+        $('[id^="responsibles_value_"]').each(function() {
+            $(this).select2({
+                placeholder: 'Введите имя пользователя',
+                allowClear: true,
+                tags: true,
+            });
         });
     });
 </script>

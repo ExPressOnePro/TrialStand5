@@ -17,7 +17,6 @@
         </div>
     </div>
     <div id="dynamic-content-container-home">
-        <!-- Загрузка содержимого страницы "dynamic.page" при помощи AJAX -->
     </div>
 
     <script>
@@ -42,5 +41,27 @@
             });
         }
     </script>
+{{--<script>--}}
+{{--    $(document).ready(function () {--}}
+{{--        // Загрузка страницы "dynamic.page" при помощи AJAX при загрузке документа--}}
+{{--        loadDynamicContent('dynamic.page');--}}
+{{--    });--}}
+
+{{--    function loadDynamicContent(routeName) {--}}
+{{--        $('#preloader').show();--}}
+{{--        $.ajax({--}}
+{{--            url: "{{ route('checkUserValues', $user_congregation_id) }}",--}}
+{{--            type: "GET",--}}
+{{--            success: function (data) {--}}
+{{--                $('#preloader').hide();--}}
+{{--                $('#dynamic-content-MyConResp').html(data);--}}
+{{--            },--}}
+{{--            error: function (error) {--}}
+{{--                $('#preloader').hide();--}}
+{{--                console.error(error);--}}
+{{--            }--}}
+{{--        });--}}
+{{--    }--}}
+{{--</script>--}}
 
 @endsection

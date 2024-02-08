@@ -19,6 +19,8 @@ class HomeController extends Controller {
      *
      * @return void
      */
+    protected $userValuesResult;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -136,6 +138,9 @@ class HomeController extends Controller {
     }
 
     public function home(){
+        $user = User::find(Auth::id());
+        $user_congregation_id = $user->congregation_id;
+        $compact = compact('user_congregation_id');
         return view ('BootstrapApp.Modules.home.home');
     }
 
@@ -226,7 +231,9 @@ class HomeController extends Controller {
         } else {
             $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
         }
+
         $compact = compact(
+
             'standPublishersCountAll',
             'user',
             'userInfo',

@@ -8,27 +8,9 @@
 {{--@else--}}
 @include('BootstrapApp.includes.bootstrap-head')
 {{--@endif--}}
-
-<body class="bg-body-tertiary">
-@if(session('success'))
-    <script>
-        showToast("{{ session('success') }}", 'success');
-    </script>
-@endif
-
-@if(session('error'))
-    <script>
-        showToast("{{ session('error') }}", 'error');
-    </script>
-@endif
-
-
-
-
-<div class="container-xxl py-3">
-
 @include('BootstrapApp.includes.bootstrap-header')
-
+<body class="bg-body-tertiary">
+<div class="container-xxl py-3">
 {{--@include('Mobile.includes.asides.aside')--}}
 
 {{--@include('Mobile.includes.menuBarPhone')--}}

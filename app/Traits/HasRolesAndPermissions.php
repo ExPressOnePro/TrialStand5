@@ -50,6 +50,7 @@ trait HasRolesAndPermissions
         return Permission::whereIn('slug',$permissions)->get();
     }
 
+
     public function givePermissionsTo(... $permissions)
     {
         // Получите все текущие разрешения пользователя

@@ -6,8 +6,8 @@
     @endphp
 
     @if($standPublishersCountAll > 0)
-            <div class="col-md-6 mt-5 mb-5">
-                <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <div class="col-md-6">
+            <div class="my-3 p-3 bg-body rounded-4 shadow-sm">
                     <h3 class="border-bottom pb-2 mb-0">{{ __('text.Мои записи со стендом') }}</h3>
                     @empty($standPublishersToday)
                         @else
@@ -43,16 +43,16 @@
                         </a>
                     </div>
                 </div>
-            </div>
+        </div>
     @else
-        <div class="col-md-6 mt-5">
+        <div class="col-md-6">
             <a class="list-group-item list-group-item-action" href="{{$link2}}">
-            <div class="my-3 p-3 bg-body rounded shadow-sm border">
+                <div class="my-3 p-3 bg-body rounded-4 shadow-sm">
                     <h1 class="text-body-emphasis">{{ __('text.Нет записей') }}</h1>
                     <p class="lead">
                         {{ __('text.Запишитесь в служение со стендом') }}
                     </p>
-            </div>
+                </div>
             </a>
         </div>
     @endif

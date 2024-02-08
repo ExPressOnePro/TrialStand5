@@ -11,6 +11,7 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MeetingSchedulesController;
+use App\Http\Controllers\Module\ModuleController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\RolesAndPermissionsController;
@@ -79,7 +80,10 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
         Route::get('/meetingSchedules/{id}', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
-        Route::get('/presentation/meetingSchedules', [PresentationController::class, 'presentMeetingSchedules'])->name('presentation.meetingSchedules');
+        Route::get('/meetingSchedulesAjax/{id}', [MeetingSchedulesController::class, 'overviewAjax'])->name('meetingSchedules.overviewAj');
+        Route::get('/presentation/meetingSchedules', [PresentationController::class, 'presentationMeetingSchedules'])->name('presentation.meetingSchedules');
+        Route::get('/documentation/meetingSchedules', [PresentationController::class, 'documentationMeetingSchedules'])->name('documentation.meetingSchedules');
+        Route::get('/checkUserValues/{id}', [MeetingSchedulesController::class, 'checkUserValues'])->name('checkUserValues');
 
 
     Route::group([
@@ -88,6 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/schedule/{weekday_id}', [MeetingSchedulesController::class, 'schedule'])->name('meetingSchedules.schedule');
         Route::post('/create/{congregation_id}', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
         Route::get('/{id}/redaction', [MeetingSchedulesController::class, 'redaction'])->name('meetingSchedules.redaction');
+        Route::post('/{id}/save_responsibles_for_template', [MeetingSchedulesController::class, 'save_responsibles_for_template'])->name('meetingSchedules.save_responsibles_for_template');
         Route::post('/{id}/save_responsibles', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
         Route::post('/{id}/save_responsibles_weekend', [MeetingSchedulesController::class, 'save_responsibles_weekend'])->name('meetingSchedules.save_responsibles_weekend');
         Route::post('/{id}/save_treasures', [MeetingSchedulesController::class, 'save_treasures'])->name('meetingSchedules.save_treasures');
@@ -216,8 +221,8 @@ Route::group(['middleware' => 'auth'], function () {
             'prefix' => 'module',
         ], function () {
             // Stand Controller
-            Route::post('/connect/{congregation}/{permission}', [CongregationsController::class, 'connectModuleToCongregation'])->name('module.connect');
-            Route::post('/delete/{congregation}/{permission}', [CongregationsController::class, 'disconnectModuleToCongregation'])->name('module.disconnect');
+            Route::post('/connect/{congregation}/{permission}', [ModuleController::class, 'connectModuleToCongregation'])->name('module.connect');
+            Route::post('/delete/{congregation}/{permission}', [ModuleController::class, 'disconnectModuleToCongregation'])->name('module.disconnect');
         });
 
         Route::group([
@@ -235,16 +240,16 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/settings/{id}', [CongregationsController::class, 'view'])->name('congregation.settings');
             Route::get('/settingsAj/{id}', [CongregationsController::class, 'settingsAj'])->name('congregation.settingsAj');
 
+            Route::get('/stands/{id}', [CongregationsController::class, 'view'])->name('congregation.stands');
+            Route::get('/standsAj/{id}', [CongregationsController::class, 'standsAj'])->name('congregation.standsAj');
 
-            Route::post('/meetingTime/{id}', [CongregationsController::class, 'meetingTime'])->name('congregation.meetingTime');
+            Route::get('/modules/{id}', [CongregationsController::class, 'view'])->name('congregation.modules');
+            Route::get('/modulesAj/{id}', [CongregationsController::class, 'modulesAj'])->name('congregation.modulesAj');
 
 
-
-
+            Route::post('/saveDateTimeForMeetings/{id}', [CongregationsController::class, 'saveDateTimeForMeetings'])->name('congregation.saveDateTimeForMeetings');
             Route::post('/crus/{id}', [CongregationsController::class, 'createUserFromCongregation'])->name('createPublisher');
 
-
-            Route::get('/modules/{congregation_id}/', [CongregationsController::class, 'displayModules'])->name('congregation.modules');
             Route::get('/requests/{congregation_id}/', [CongregationsController::class, 'displayRequests'])->name('congregation.requests');
 
             Route::get('/ActiveUsersPerWeek/{congregation_id}/', [CongregationsController::class, 'displayActiveUsersPerWeek'])->name('congregation.ActiveUsersPerWeek');
@@ -393,31 +398,7 @@ Route::group([
 
     Route::post('/updateGeneratePassword', [UsersController::class, 'updateGeneratePassword'])->name('users.updateGeneratePassword');
     Route::post('/UIkSTqWyNt3X', [UsersController::class, 'connectUser'])->name('connect.user');
-
-
-
 });
-
-Route::group([
-    'middleware' => 'can:Stand-Create new stand',
-    'prefix' => 'stand',
-], function () {
-
-
-    Route::get('/ExampleNext/{stand_id}/{congregation_id}', [StandController::class, 'ExampleTestVersionOfAddingToPublishersNextWeek'])->name('ExampleNext');
-    Route::get('/ExampleCurrent/{stand_id}/{congregation_id}', [StandController::class, 'ExampleTestVersionOfAddingToPublishersCurrentWeek'])->name('ExampleCurrent');
-    Route::get('/ExampleCurNext/{id}', [StandController::class, 'ExampleTestVersionOfUpdatingPublishersCurrentWeek'])->name('ExampleUpdateCurrentNext');
-
-});
-
-
-/*Route::get('/UserControl', 'App\Http\Controllers\UserControlController@pageUserControl')->name('pageUserControl');
-Route::get('/UserControl/role/{id}', 'App\Http\Controllers\UserControlController@pageRole')->name('UCRole');
-Route::get('/UserControl/user/{id}', 'App\Http\Controllers\UserControlController@pageUser')->name('UCRUser');
-Route::post('/UserControl/user/{id}', 'App\Http\Controllers\DeveloperController@rolesPermissionsChange')->name('rolesPermissionsChange');
-Route::post('/UserControl/user/{id}/delete', 'App\Http\Controllers\DeveloperController@rolesPermissionsDelete')->name('rolesPermissionsDelete');*/
-
-
 
 
 

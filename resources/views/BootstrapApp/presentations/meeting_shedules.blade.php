@@ -13,6 +13,7 @@
         .instuction {
             display: inline-block;
             padding: 8px 16px;
+            border: 1px solid transparent;
             font-size: 1rem;
             text-align: center;
             text-decoration: none;
@@ -24,6 +25,8 @@
         .instuction:hover {
             background-color: #d20000; /* Цвет фона при наведении */
             color: #fff; /* Цвет текста при наведении */
+            transform: translate(-5px, -5px);
+            box-shadow: 5px 5px 0 #fff;
         }
         .begin {
             display: inline-block;
@@ -39,6 +42,8 @@
         .begin:hover {
             background-color: #00c2e3; /* Цвет фона при наведении */
             color: #fff; /* Цвет текста при наведении */
+            transform: translate(-5px, -5px);
+            box-shadow: 5px 5px 0 #fff;
         }
 
     </style>
@@ -50,12 +55,16 @@
             <p class="lead">создан для максимального упрощения процесса формирования встреч.
                 Обеспечивает инструменты и функции для легкого и эффективного создания и управления расписаниями.</p>
             <div class="d-flex gap-3 justify-content-center lead fw-normal mb-5">
-                <a class="btn instuction text-white" href="#">
+                <a class="btn instuction text-white" href="{{ route('documentation.meetingSchedules')}}">
                     Читать инструкцию
                 </a>
-                <a class="btn begin" href="#">
+                    @if($permission > 0)
+                    <a class="btn begin" href="{{ route('meetingSchedules.overview', Auth::user()->congregation_id)}}">
+                    @else
+                    <a class="btn begin" href="{{ route('congregation.modules', Auth::user()->congregation_id)}}">
+                    @endif
                     Начать
-                </a>
+                    </a>
             </div>
         </div>
         <div class="col-lg-4 offset-lg-1 p-4 overflow-hidden" >

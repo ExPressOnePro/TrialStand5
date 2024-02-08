@@ -4,29 +4,6 @@
 <body>
 <main>
     <body class="text-left">
-{{--    --}}{{--@inject('mobile_detect', 'Mobile_Detect')--}}
-{{--    @if ($mobile_detect->isMobile())--}}
-{{--        <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">--}}
-{{--            @include('includes.header')--}}
-{{--            <div class="main-content-wrap mobile-menu-content bg-off-white m-0">--}}
-{{--                @if(Request::is(--}}
-{{--                    'profile*',--}}
-{{--                    'UserControl*',--}}
-{{--                    'stand*',--}}
-{{--                    'users*',--}}
-{{--                    'stand*',--}}
-{{--                    'home*',--}}
-{{--                    'congregation*',--}}
-{{--                    'guest*',--}}
-{{--                    'RolesPermissions*',--}}
-{{--                    'DevTools*'--}}
-{{--                    ))--}}
-{{--                    @yield('content')--}}
-{{--                    @include('includes.menuBarPhone')--}}
-{{--                @endif--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    @else--}}
         <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
             @if(Request::is(
                 'profile*',

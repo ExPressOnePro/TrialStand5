@@ -14,15 +14,15 @@
         @if(isset($datas['weekday']['responsible_users']) && count($datas['weekday']['responsible_users']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.responsibles_table_weekday')
         @else
-            <p>Нет данных.</p>
+            <p>Ответственные пользователи не добавлены</p>
         @endif
     </div>
 
-    <div class="song_1">
+    <div class="song_1 p-2">
         @if(isset($datas['weekday']['songs']['1']) && count($datas['weekday']['songs']['1']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.songs', ['key' => 1, 'song' => $datas['weekday']['songs']['1']])
         @else
-            <p>Нет данных.</p>
+            <p>Председатель не добавлен</p>
         @endif
     </div>
 
@@ -30,7 +30,7 @@
         @if(isset($datas['weekday']['treasures']) && count($datas['weekday']['treasures']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.treasures')
         @else
-            <p>Нет данных.</p>
+            <p>Жемчужины не добавлены</p>
         @endif
     </div>
 
@@ -38,29 +38,29 @@
         @if(isset($datas['weekday']['field_ministry']) && count($datas['weekday']['field_ministry']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.field_ministry')
         @else
-            <p>Нет данных.</p>
+            <p>Навыки не добавлены</p>
         @endif
     </div>
 
-    <div class="song_2">
+    <div class="song_2 p-2">
         @if(isset($datas['weekday']['songs']['2']) && count($datas['weekday']['songs']['2']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.songs', ['key' => 2, 'song' => $datas['weekday']['songs']['2']])
         @else
-            <p>Нет данных.</p>
+            <p>Вторая песня не добавлена</p>
         @endif
     </div>
     <div class="living p-2">
         @if(isset($datas['weekday']['living']) && count($datas['weekday']['living']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.living')
         @else
-            <p>Нет данных.</p>
+            <p>Христианская жизнь не добавлена</p>
         @endif
     </div>
-    <div class="song_3">
+    <div class="song_3 p-2">
         @if(isset($datas['weekday']['songs']['3']) && count($datas['weekday']['songs']['3']) > 0)
             @include('BootstrapApp.Modules.meetingSchedule.schedule_partials.songs', ['key' => 3, 'song' => $datas['weekday']['songs']['3']])
         @else
-            <p>Нет данных.</p>
+            <p>Заключительная песня не добавлена</p>
         @endif
     </div>
 </div>

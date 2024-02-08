@@ -1,41 +1,29 @@
 @extends('BootstrapApp.layouts.bootstrapApp')
 @section('title') Meeper @endsection
 @section('content')
-    <div class="content container-fluid">
 
+    <div class="content container-fluid">
+        @include('BootstrapApp.includes.alerts')
         <div class="row">
             <aside class="col-lg-2 d-none d-lg-block sticky-xl-top text-body-secondary align-self-start" style="top: 6rem;">
-                <div class="list-group list-group-flush rounded-2">
-                    <a href="{{ route('congregationView', $congregation->id) }}" class="list-group-item list-group-item-action lh-sm mb-1 shadow-sm" aria-current="true">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                            <strong class="mb-1">Обзор</strong>
-                        </div>
-                    </a>
-                    <a href="{{ route('congregation.publishers', $congregation->id) }}" class="list-group-item list-group-item-action lh-sm mb-1 shadow-sm" aria-current="true">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                            <strong class="mb-1">Возвещатели</strong>
-                        </div>
-                    </a>
-                    <a href="{{ route('congregation.stands', $congregation->id) }}" class="list-group-item list-group-item-action lh-sm mb-1 shadow-sm" aria-current="true">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                            <strong class="mb-1">Стенд (ы)</strong>
-                        </div>
-                    </a>
-                    <a href="{{ route('meetingSchedules.overview', $congregation->id) }}" class="list-group-item list-group-item-action lh-sm mb-1 shadow-sm" aria-current="true">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                            <strong class="mb-1">Расписание встреч</strong>
-                        </div>
-                    </a>
-                    <a href="{{ route('congregation.modules', $congregation->id) }}" class="list-group-item list-group-item-action lh-sm mb-1 shadow-sm" aria-current="true">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                            <strong class="mb-1">Модули</strong>
-                        </div>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action lh-sm mb-1 shadow-sm" aria-current="true">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                            <strong class="mb-1">Настройки</strong>
-                        </div>
-                    </a>
+                <div class="bd-example m-0 border-0">
+                    <div class="list-group">
+                        <a href="{{ route('congregationView', $congregation->id) }}" class="list-group-item list-group-item-action"><strong class="mb-1">Обзор</strong></a>
+                        <a href="{{ route('congregation.publishers', $congregation->id) }}" class="list-group-item list-group-item-action "><strong class="mb-1">Возвещатели</strong></a>
+                        <a href="{{ route('congregation.modules', $congregation->id) }}" class="list-group-item list-group-item-action "><strong class="mb-1">Модули</strong></a>
+                        <br>
+                        @can('module.stand')
+                        <a href="{{ route('congregation.stands', $congregation->id) }}" class="list-group-item list-group-item-action "><strong class="mb-1">Стенд</strong></a>
+                        @endcan
+                        @can('module.contacts')
+                            <a href="{{ route('contacts.hub2', $congregation->id) }}" class="list-group-item list-group-item-action "><strong class="mb-1">Контакты</strong></a>
+                        @endcan
+                        @can('module.schedule')
+                            <a href="{{ route('meetingSchedules.overview', $congregation->id) }}" class="list-group-item list-group-item-action "><strong class="mb-1">Расписания</strong></a>
+                        @endcan
+                        <br>
+                        <a href="#" class="list-group-item list-group-item-action  list-group-item-secondary"> <strong class="mb-1">Настройки</strong></a>
+                    </div>
                 </div>
             </aside>
 
@@ -150,6 +138,54 @@
                     });
                 }
             </script>
+                @elseif(Request::is('*congregation/stands/*'))
+                    <div id="dynamic-content-stands"></div>
+                    <script>
+                        $(document).ready(function () {
+
+                            loadDynamicContent('menu');
+                        });
+
+                        function loadDynamicContent(page) {
+                            $('#preloader').show();
+                            $.ajax({
+                                url: "{{ route('congregation.standsAj', $congregation->id) }}",
+                                type: "GET",
+                                success: function (data) {
+                                    $('#preloader').hide();
+                                    $('#dynamic-content-stands').html(data);
+                                },
+                                error: function (error) {
+                                    $('#preloader').hide();
+                                    console.error(error);
+                                }
+                            });
+                        }
+                    </script>
+                @elseif(Request::is('*congregation/modules/*'))
+                    <div id="dynamic-content-modules"></div>
+                    <script>
+                        $(document).ready(function () {
+
+                            loadDynamicContent('menu');
+                        });
+
+                        function loadDynamicContent(page) {
+                            $('#preloader').show();
+                            $.ajax({
+                                url: "{{ route('congregation.modulesAj', $congregation->id) }}",
+                                type: "GET",
+                                success: function (data) {
+                                    $('#preloader').hide();
+                                    $('#dynamic-content-modules').html(data);
+                                },
+                                error: function (error) {
+                                    $('#preloader').hide();
+                                    console.error(error);
+                                }
+                            });
+                        }
+                    </script>
         @endif
     </div>
         </div>

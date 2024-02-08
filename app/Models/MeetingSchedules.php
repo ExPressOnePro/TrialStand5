@@ -15,6 +15,9 @@ class MeetingSchedules extends Model
         'weekday_time',
         'weekend_time',
         'ms_template_id',
+        'viewed_by_users',
+        'deleted',
+        'published',
         'schedule',
     ];
 

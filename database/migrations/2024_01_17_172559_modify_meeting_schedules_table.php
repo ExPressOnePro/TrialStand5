@@ -14,17 +14,15 @@ class ModifyMeetingSchedulesTable extends Migration
     public function up()
     {
         Schema::table('meeting_schedules', function (Blueprint $table) {
-            $table->dropForeign(['congregation_id']);
-            $table->dropColumn(['start_of_week', 'end_of_week', 'congregation_id', 'type_day']);
-
+            $table->dropColumn(['start_of_week', 'end_of_week', 'type_day']);
 
             $table->date('week_from')->after('id');
             $table->dateTime('weekday_time')->after('week_from');
             $table->dateTime('weekend_time')->after('weekday_time');
             $table->unsignedBigInteger('ms_template_id')->after('weekend_time');
-            $table->json('viewed_by_users')->after('ms_template_id'); // пользователи просмотревшие
+            $table->json('viewed_by_users')->after('schedule'); // пользователи просмотревшие
             $table->boolean('published')->default(false)->after('viewed_by_users'); // опубликованно ли расписание?
-            $table->boolean('deleted')->default(false)->after('viewed_by_users'); // удален/нет
+            $table->boolean('deleted')->default(false)->after('published'); // опубликованно ли расписание?
 
             $table->foreign('ms_template_id')->references('id')->on('meeting_schedule_templates');
         });
@@ -46,8 +44,6 @@ class ModifyMeetingSchedulesTable extends Migration
             $table->date('end_of_week')->format('Y-m-d')->after('start_of_week');
             $table->string('type_day')->after('end_of_week');
 
-            // Восстанавливаем внешний ключ
-            $table->foreign('congregation_id')->references('id')->on('congregations');
         });
     }
 };

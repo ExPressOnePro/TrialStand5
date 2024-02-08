@@ -14,15 +14,21 @@ class MeetingSchedulesService
             // Проверяем наличие 'name' и 'value'
             if (!empty($items['name'])) {
                 $userId = $items['value'] ?? null;
-                $userName = UserService::getUserNameById($userId);
+                if (!User::find($userId)) {
+                    $processedValue = [
+                        'user_id' => $userId,
+                        'user_name' => $items['value'],
+                    ];
+                } else {
+                    $userName = UserService::getUserNameById($userId);
 
-                // Собираем массив для 'value'
-                $processedValue = [
-                    'user_id' => $userId,
-                    'user_name' => $userName,
-                ];
-
-                // Добавляем элемент в 'responsible_users'
+                    // Собираем массив для 'value'
+                    $processedValue = [
+                        'user_id' => $userId,
+                        'user_name' => $userName,
+                    ];
+                }
+                // Добавляем элемент
                 $processedData[$key] = [
                     'name' => $items['name'],
                     'value' => $processedValue,
@@ -45,4 +51,9 @@ class MeetingSchedulesService
 
         return $processedData;
     }
+
+
+
+
+
 }
