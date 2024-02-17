@@ -35,6 +35,7 @@ Route::get('/maintenance', [DeveloperController::class, 'maintenance'])->name('m
 
 Route::get('/', [LoginController::class, 'view'])->name('auth.login');
 
+
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLoginForm');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
@@ -79,33 +80,43 @@ Route::group(['middleware' => 'auth'], function () {
 
 
         Route::post('/guest/{id}', [CongregationRequestsController::class, 'joinCongregation'])->name('joinCongregation');
-        Route::get('/meetingSchedules/{id}', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
-        Route::get('/meetingSchedulesAjax/{id}', [MeetingSchedulesController::class, 'overviewAjax'])->name('meetingSchedules.overviewAj');
+        Route::get('/{id}', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
         Route::get('/presentation/meetingSchedules', [PresentationController::class, 'presentationMeetingSchedules'])->name('presentation.meetingSchedules');
         Route::get('/documentation/meetingSchedules', [PresentationController::class, 'documentationMeetingSchedules'])->name('documentation.meetingSchedules');
         Route::get('/checkUserValues/{id}', [MeetingSchedulesController::class, 'checkUserValues'])->name('checkUserValues');
 
 
     Route::group([
+        'middleware' => 'can:module.schedule',
         'prefix' => 'meetingSchedules',
     ], function () {
+        Route::get('/{id}', [MeetingSchedulesController::class, 'overview'])->name('meetingSchedules.overview');
+        Route::get('/Ajax/{id}', [MeetingSchedulesController::class, 'overviewAjax'])->name('meetingSchedules.overviewAj');
         Route::get('/schedule/{weekday_id}', [MeetingSchedulesController::class, 'schedule'])->name('meetingSchedules.schedule');
-        Route::post('/create/{congregation_id}', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
-        Route::get('/{id}/redaction', [MeetingSchedulesController::class, 'redaction'])->name('meetingSchedules.redaction');
-        Route::post('/{id}/save_responsibles_for_template', [MeetingSchedulesController::class, 'save_responsibles_for_template'])->name('meetingSchedules.save_responsibles_for_template');
-        Route::post('/{id}/save_responsibles', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
-        Route::post('/{id}/save_responsibles_weekend', [MeetingSchedulesController::class, 'save_responsibles_weekend'])->name('meetingSchedules.save_responsibles_weekend');
-        Route::post('/{id}/save_treasures', [MeetingSchedulesController::class, 'save_treasures'])->name('meetingSchedules.save_treasures');
-        Route::post('/{id}/save_field_ministry', [MeetingSchedulesController::class, 'save_field_ministry'])->name('meetingSchedules.save_field_ministry');
-        Route::post('/{id}/save_living', [MeetingSchedulesController::class, 'save_living'])->name('meetingSchedules.save_living');
-        Route::post('/{id}/save_songs', [MeetingSchedulesController::class, 'save_songs'])->name('meetingSchedules.save_songs');
-        Route::post('/{id}/save_songs_weekend', [MeetingSchedulesController::class, 'save_songs_weekend'])->name('meetingSchedules.save_songs_weekend');
-        Route::post('/{id}/save_public_speech', [MeetingSchedulesController::class, 'save_public_speech'])->name('meetingSchedules.save_public_speech');
-        Route::post('/{id}/save_watchtower', [MeetingSchedulesController::class, 'save_watchtower'])->name('meetingSchedules.save_watchtower');
-        Route::post('/publish/{id}', [MeetingSchedulesController::class, 'publish'])->name('meetingSchedules.publish');
-        Route::post('/delete/{id}', [MeetingSchedulesController::class, 'delete'])->name('meetingSchedules.delete');
+        Route::get('/sss/{weekday_id}', [MeetingSchedulesController::class, 'sss']);
+        Route::group([
+            'middleware' => 'can:schedule.redaction', 'can:schedule.template',
+        ], function () {
+            Route::post('/create/{congregation_id}', [MeetingSchedulesController::class, 'create'])->name('meetingSchedules.create');
+            Route::get('/{id}/redaction', [MeetingSchedulesController::class, 'redaction'])->name('meetingSchedules.redaction');
+            Route::post('/{id}/save_responsibles_for_template', [MeetingSchedulesController::class, 'save_responsibles_for_template'])->name('meetingSchedules.save_responsibles_for_template');
+            Route::post('/{id}/save_responsibles', [MeetingSchedulesController::class, 'save_responsibles'])->name('meetingSchedules.save_responsibles');
+            Route::post('/{id}/save_responsibles_weekend', [MeetingSchedulesController::class, 'save_responsibles_weekend'])->name('meetingSchedules.save_responsibles_weekend');
+            Route::post('/{id}/save_treasures', [MeetingSchedulesController::class, 'save_treasures'])->name('meetingSchedules.save_treasures');
+            Route::post('/{id}/save_field_ministry', [MeetingSchedulesController::class, 'save_field_ministry'])->name('meetingSchedules.save_field_ministry');
+            Route::post('/{id}/save_living', [MeetingSchedulesController::class, 'save_living'])->name('meetingSchedules.save_living');
+            Route::post('/{id}/save_songs', [MeetingSchedulesController::class, 'save_songs'])->name('meetingSchedules.save_songs');
+            Route::post('/{id}/save_songs_weekend', [MeetingSchedulesController::class, 'save_songs_weekend'])->name('meetingSchedules.save_songs_weekend');
+            Route::post('/{id}/save_public_speech', [MeetingSchedulesController::class, 'save_public_speech'])->name('meetingSchedules.save_public_speech');
+            Route::post('/{id}/save_watchtower', [MeetingSchedulesController::class, 'save_watchtower'])->name('meetingSchedules.save_watchtower');
+            Route::post('/publish/{id}', [MeetingSchedulesController::class, 'publish'])->name('meetingSchedules.publish');
+            Route::post('/delete/{id}', [MeetingSchedulesController::class, 'delete'])->name('meetingSchedules.delete');
+        });
+    }); // module.schedule
 
-    });
+
+
+
 
         Route::get('/menu', [HomeController::class, 'menu'])->name('menu.overview');
         Route::get('/menu2', [HomeController::class, 'menu2'])->name('menu.overview2');
@@ -127,10 +138,10 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get('table/{id}', [StandController::class, 'tableJson'])->name('stand.table_json');
 
-            //Bootstrap
 
             Route::get('/current2/{id}', [StandController::class, 'table2'])->name('stand.current2');
-            Route::get('/current2ex/{id}', [StandController::class, 'tableEx'])->name('stand.tableEx');
+            Route::get('/AJAX/current2/{id}', [StandController::class, 'tableEx'])->name('stand.tableEx');
+
             Route::get('/next2/{id}', [StandController::class, 'table2'])->name('stand.next2');
 
 
@@ -331,6 +342,7 @@ Route::group(['middleware' => 'auth'], function () {
             'middleware' => 'role:Developer',
             'prefix' => 'dev',
         ], function () {
+            Route::get('/createBackupAndDownload', [DeveloperController::class, 'createBackupAndDownload'])->name('createBackupAndDownload');
             Route::get('/hub', [DeveloperController::class, 'hub'])->name('developer.hub');
             Route::get('/activeUsers', [DeveloperController::class, 'activeUsersDisplay'])->name('developer.activeUsersDisplay');
             Route::get('/registeredUsers', [DeveloperController::class, 'registeredUsersDisplay'])->name('developer.registeredUsersDisplay');

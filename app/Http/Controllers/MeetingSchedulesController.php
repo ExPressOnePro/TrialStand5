@@ -13,25 +13,30 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+
 
 class MeetingSchedulesController extends Controller {
 
     public function overview($id) {
-
         $congregation = Congregation::query()->find($id);
         $compact = compact('congregation');
         return view ('BootstrapApp.Modules.meetingSchedule.overview', $compact);
     }
+    public function sss($id) {
+            $congregation = Congregation::query()->find($id);
+
+
+            $compact = compact('congregation');
+            return view ('BootstrapApp.Modules.meetingSchedule.schedule', $compact);
+        }
 
 
     public function overviewAjax($congregation_id) {
         $congregation = Congregation::query()->find($congregation_id);
         $meeting_schedule_templates = MeetingScheduleTemplate::query()->where('congregation_id', $congregation_id)->get();
         $meetingSchedules = MeetingSchedules::query()
-            ->with('meetingScheduleTemplate')
-            ->whereHas('meetingScheduleTemplate', function ($query) use ($congregation_id) {
-                $query->where('congregation_id', $congregation_id);
-            });
+            ->where('congregation_id', $congregation_id);
         $meetingSchedules->where('week_from', '>=', Carbon::now()->startOfWeek()->format('Y-m-d'));
 
         if(!auth()->user()->can('schedule.redaction')) {
@@ -41,6 +46,7 @@ class MeetingSchedulesController extends Controller {
         $meetingSchedules = $meetingSchedules->orderBy('week_from', 'desc')->get();
 
         $meetingSchedulesTemplate = MeetingScheduleTemplate::query()->where('congregation_id', $congregation_id)->first();
+
         if($meetingSchedulesTemplate) {
             $data = json_decode($meetingSchedulesTemplate->template, true);
         } else {
@@ -64,6 +70,7 @@ class MeetingSchedulesController extends Controller {
             } else {
                 $viewedByUsers = json_decode($meetingSchedule->viewed_by_users, true);
             }
+
             if (is_array($viewedByUsers) && !in_array(Auth::id(), $viewedByUsers)) {
                 $viewed = true;
             }   else {
@@ -307,7 +314,7 @@ class MeetingSchedulesController extends Controller {
                 'schedule_id' => $meetingSchedule->id
             ];
         }
-        dd( $result['data']);
+//        dd( $result['data']);
         $compact = compact('result');
 //        return $result;
         return view ('BootstrapApp.Modules.home.includes.MyCongregationResponsibilities',$compact);

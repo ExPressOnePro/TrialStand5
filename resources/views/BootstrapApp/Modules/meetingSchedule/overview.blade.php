@@ -1,4 +1,4 @@
-@extends('BootstrapApp.layouts.bootstrapApp')
+@extends('BootstrapApp.layouts.app')
 @section('title') Meeper @endsection
 @section('content')
     <style>

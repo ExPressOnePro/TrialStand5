@@ -1,3 +1,22 @@
+<div class="row">
+    <div class="card col-4">
+        <div class="card-up aqua-gradient"></div>
+        <div class="avatar mx-auto white mt-4">
+            <i class="fa-regular fa-circle-user fa-5x"></i>
+        </div>
+        <div class="card-body text-center">
+            <h4 class="card-title font-weight-bold">Martha Smith</h4>
+            <button class="btn btn-outline-primary"> Написать</button>
+            <button class="btn btn-outline-secondary"> Позвонить</button>
+            <hr>
+{{--            <p><i class="fas fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos,--}}
+{{--                adipisci</p>--}}
+        </div>
+        <p class="h6">Логин: </p>
+        <p class="h6">Email: </p>
+        <p class="h6">Телефон: </p>
+    </div>
+</div>
 
 <div class="row p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
     <div class="col-md-6">

@@ -172,18 +172,7 @@
                                             <div class="row d-flex align-items-center">
                                                 <div class="col-9 lh-1">
                                                     <h4>{{ $weekData['week_start'] }} - {{ $weekData['week_end'] }}
-                                                        @if($weekData['viewed'] === true)
-                                                            <span class="badge bg-success">Новое</span>
-                                                        @else
-                                                        @endif
-
                                                     </h4>
-
-                                                    {{--                                                    @if($weekData['this_week'] === true)--}}
-                                                    {{--                                                        <small class="text-primary">--}}
-                                                    {{--                                                            Текущая неделя--}}
-                                                    {{--                                                        </small>--}}
-                                                    {{--                                                    @endif--}}
                                                     @can('schedule.redaction')
                                                         <small class="text-{{ $weekData['published'] ? 'success' : 'secondary' }}">
                                                             <i class="fa-solid fa-circle{{ $weekData['published'] ? '' : '-dot' }}"></i>

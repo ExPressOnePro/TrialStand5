@@ -18,13 +18,13 @@
                                 <i class="fa-solid fa-arrow-left fa-2x" ></i>
                             </a>
                         @else
-                            <a href="/home1" class="d-flex align-items-center link-body-emphasis text-decoration-none ms-3">
+                            <a href="/home" class="d-flex align-items-center link-body-emphasis text-decoration-none ms-3">
                                 <img src="{{asset('/android-chrome-192x192.png')}}" width="40" height="40" class="me-2" role="img">
                             </a>
                         @endif
                     </div>
                     <div class="d-none d-md-block">
-                        <a href="/home1" class="d-flex align-items-center link-body-emphasis text-decoration-none ms-3">
+                        <a href="/home" class="d-flex align-items-center link-body-emphasis text-decoration-none ms-3">
                             <img src="{{asset('/android-chrome-192x192.png')}}" width="40" height="40" class="me-2" role="img">
                         </a>
                     </div>

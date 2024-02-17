@@ -4,6 +4,12 @@
 {{--    </a>--}}
 {{--</div>--}}
 
+<style>
+    #example tbody tr:hover {
+        background-color: #f5f5f5; /* Цвет выделения при наведении */
+    }
+</style>
+
 <div class="row mb-5">
     <div class="col-lg-4 col-md-6">
         <div class="list-group">

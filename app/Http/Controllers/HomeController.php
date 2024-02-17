@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Congregation;
 use App\Models\CongregationRequests;
+use App\Models\MeetingSchedules;
 use App\Models\Stand;
 use App\Models\StandPublishers;
 use App\Models\StandTemplate;
@@ -232,6 +233,36 @@ class HomeController extends Controller {
             $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
         }
 
+
+        $meetingSchedules = MeetingSchedules::query()
+            ->where('congregation_id', $user->congregation_id)
+            ->where('week_from', '>=', Carbon::now()->startOfWeek()->format('Y-m-d'));
+
+        if(!auth()->user()->can('schedule.redaction')) {
+            $meetingSchedules->where('published', '=', 1);
+        }
+
+        $meetingSchedules = $meetingSchedules->orderBy('week_from', 'desc')->get();
+
+        $viewed = false; // Инициализируем флаг
+
+        foreach ($meetingSchedules as $meetingSchedule) {
+            $viewedByUsersType = json_decode($meetingSchedule->viewed_by_users, true);
+            if ($viewedByUsersType === null) {
+                $viewedByUsers = [];
+            } else {
+                $viewedByUsers = json_decode($meetingSchedule->viewed_by_users, true);
+            }
+
+            if (is_array($viewedByUsers) && in_array(Auth::id(), $viewedByUsers)) {
+                $viewed = true; // Если хотя бы один объект имеет true, устанавливаем флаг в true и выходим из цикла
+                break;
+            }
+        }
+
+
+
+
         $compact = compact(
 
             'standPublishersCountAll',
@@ -250,6 +281,7 @@ class HomeController extends Controller {
             'standPublishers',
             'nextWeekStart',
             'standPublishersCount',
+            'viewed',
         );
 
         return view ('BootstrapApp.Modules.home.home2', $compact);

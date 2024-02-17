@@ -1,4 +1,4 @@
-@extends('Mobile.layouts.front.app')
+@extends('BootstrapApp.layouts.app')
 @section('title') Stand | нет прав @endsection
 @section('content')
 

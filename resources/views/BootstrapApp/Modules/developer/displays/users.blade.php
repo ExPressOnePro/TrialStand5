@@ -1,4 +1,4 @@
-@extends('BootstrapApp.layouts.bootstrapApp')
+@extends('BootstrapApp.layouts.app')
 {{--@extends('Mobile.layouts.front.app')--}}
 @section('title') Meeper | Собрание @endsection
 @section('content')

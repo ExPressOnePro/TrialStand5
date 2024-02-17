@@ -35,9 +35,9 @@
     </table>
 </div>
 
-<div class="d-sm-none">
-    <div class="table-responsive">
-        <table class="table table-nowrap table-sm table-secondary lh-sm" style="overflow-x: auto;">
+
+<div class="table-responsive d-sm-none">
+    <table class="table table-nowrap table-sm table-secondary lh-sm" style="overflow-x: auto;">
         <tbody>
         @foreach($datas['weekday']['responsible_users'] as $key => $value)
             <tr>
@@ -48,7 +48,7 @@
                         <dd>{{ $value['name'] }}</dd>
                     @endempty
                 </td>
-                <td>
+                <td class="text-end">
                     @isset($value['value'])
                         @if($value['value']['user_id'] == $AuthUserId)
                             <h6 class="text-primary">{{ $value['value']['user_name'] }}</h6>
@@ -63,5 +63,4 @@
         @endforeach
         </tbody>
     </table>
-    </div>
 </div>

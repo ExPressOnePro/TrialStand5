@@ -11,13 +11,13 @@
 @foreach($datas['weekday']['field_ministry'] as $key => $value)
     <div class="d-flex justify-content-between align-items-center border-bottom">
         <div class="col-7">
-            <h5 style="color: #D68F00">
+            <h6 style="color: #D68F00; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                 @empty($value['name'])
                     название пункта программы
                 @else
                     {{ $value['name'] }}
                 @endempty
-            </h5>
+            </h6>
         </div>
 
         <div class="col-5 text-end">

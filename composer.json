@@ -20,7 +20,8 @@
         "opcodesio/log-viewer": "^3.1",
         "owen-it/laravel-auditing": "^13.5",
         "silviolleite/laravelpwa": "*",
-        "swiftmailer/swiftmailer": "*"
+        "swiftmailer/swiftmailer": "*",
+      "ext-simplexml": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

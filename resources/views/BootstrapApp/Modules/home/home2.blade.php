@@ -73,6 +73,26 @@
                         </a>
                     </div>
                 @endcan
+                @can('module.schedule')
+                    <div class="col mb-3 mb-lg-5">
+                        <a class="card border-left-empty rounded-3 text-decoration-none shadow mb-2 p-4" href="{{ route('meetingSchedules.overview', ['id' =>auth()->user()->congregation_id ]) }}">
+                            <div class="d-flex align-items-center">
+                                <div class="align-items-center me-3">
+                                    <img src="{{ asset('images/svg/schedule.svg') }}"  height="90" width="75" alt="Contact Icon">
+                                </div>
+                                <div class="col-9 align-items-center m-auto">
+                                    <h3 class="fw-bold mb-0 fs-2 text-body-emphasis">Расписания
+                                        @if($viewed === false)
+                                            <span class="badge bg-success">Новое</span>
+                                        @else
+                                        @endif
+                                    </h3>
+                                    <p class="m-auto">Просмотрите расписания будущих встреч собрания</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endcan
                 @can('congregation.open_congregation')
                     <div class="col mb-3 mb-lg-5">
                         <a class="card border-left-empty rounded-3 text-decoration-none shadow mb-2 p-4" href="{{ route('congregationView', ['id' =>auth()->user()->congregation_id ]) }}">
@@ -88,21 +108,6 @@
                         </a>
                     </div>
                 @endcan
-                    @can('module.schedule')
-                        <div class="col mb-3 mb-lg-5">
-                            <a class="card border-left-empty rounded-3 text-decoration-none shadow mb-2 p-4" href="{{ route('congregationView', ['id' =>auth()->user()->congregation_id ]) }}">
-                                <div class="d-flex align-items-center">
-                                    <div class="align-items-center me-3">
-                                        <img src="{{ asset('front/img/meeting.svg') }}"  height="90" width="75" alt="Contact Icon">
-                                    </div>
-                                    <div class="col-9 align-items-center m-auto">
-                                        <h3 class="fw-bold mb-0 fs-2 text-body-emphasis">{{ __('text.Собрание') }}</h3>
-                                        <p class="m-auto">{{ __('text.Управляйте собранием') }}</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    @endcan
             </div>
         </div>
 

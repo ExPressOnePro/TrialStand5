@@ -31,6 +31,21 @@ class DeveloperController extends Controller{
         return view('maintenance');
     }
 
+    public function createBackupAndDownload()
+    {
+        // Имя файла для бэкапа
+        $fileName = 'backup-' . date('Y-m-d-H-i-s') . '.sql';
+
+        // Путь для сохранения бэкапа
+        $path = storage_path('app/backups/' . $fileName);
+
+        // Создание бэкапа базы данных
+        exec('mysqldump -u ' . env('root')  . ' -p ' . env('Meeper') . ' > ' . $path);
+
+        // Скачивание файла бэкапа
+        return response()->download($path, $fileName)->deleteFileAfterSend(true);
+    }
+
     public function hub() {
 
         $roleDeveloper = Role::where('name', 'Developer')->first();

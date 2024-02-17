@@ -552,6 +552,7 @@ class StandController extends Controller
         }
     }
 
+
     public function tableEx(Request $request, $id) {
 
         $AuthUser = User::find(Auth::id());
@@ -639,14 +640,16 @@ class StandController extends Controller
     }
 
     public function tableJson(Request $request, $id) {
-
+        $canEdit = auth()->user()->can('stand.make_entry');
         $AuthUser = User::find(Auth::id());
+
+
         $stand = Stand::find($id);
+        dd($stand);
         $users = User::query()
             ->where('congregation_id', $stand->congregation_id)
             ->get(['id', 'first_name', 'last_name']);
 
-        $canEdit = auth()->user()->can('stand.make_entry');
 
         $standType = $request->is('*current*') ? 'current' : 'next';
 
@@ -703,7 +706,7 @@ class StandController extends Controller
             'currentDateTime',
             'activationDateTime',
         );
-
+        dd($compact);
         return response()->json(['data' => [$compact]], 200);
 //        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $stand->congregation_id)) {
 //            $view = 'BootstrapApp.Modules.stand.displays.weekly_schedule';
