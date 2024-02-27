@@ -13,8 +13,11 @@
             <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
                 <div class="container-fluid">
                     <div class="d-sm-block d-md-none">
-                        @if(Request::is('congregation*', 'meetingSchedules*'))
-                            <a class="d-flex align-items-center link-body-emphasis text-decoration-none ms-3" onclick="goBack()">
+                        @if(Request::is('congregation*'))
+                            <a class="d-flex align-items-center link-body-emphasis text-decoration-none ms-3"
+                               href="{{route('congregationView',Auth()->user()->congregation_id)}}"
+                            onclick=" localStorage.removeItem('lastContent');
+                            localStorage.removeItem('lastUserId');">
                                 <i class="fa-solid fa-arrow-left fa-2x" ></i>
                             </a>
                         @else

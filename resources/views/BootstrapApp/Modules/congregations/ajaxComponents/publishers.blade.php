@@ -9,7 +9,6 @@
         background-color: #f5f5f5; /* Цвет выделения при наведении */
     }
 </style>
-
 <div class="row mb-5">
     <div class="col-lg-4 col-md-6">
         <div class="list-group">
@@ -46,67 +45,82 @@
     </div>
 
     <!-- Table -->
-    <div class="table-responsive datatable-custom mb-5">
-        <table id="example" class=" table-borderless table-thead-bordered nowrap table-align-middle card-table">
+    <div class="table-responsive justify-content-center datatable-custom mb-5">
+        <table id="example" class="table-borderless table-bordered table-hover table-thead-bordered nowrap table-align-middle card-table  w-100">
 
             <thead class="thead-light">
             <tr>
-                <th>Фамилия Имя</th>
-                <th class="d-none d-sm-table-cell">Логин</th>
-                <th class="d-none d-sm-table-cell">Почта</th>
-                <th class="d-none d-sm-table-cell">Номер телефона</th>
-                <th>Настройки</th>
+                <th class="h4 text-center">Фамилия Имя</th>
+                <th class="d-none d-sm-table-cell h4">Логин</th>
+                <th class="d-none d-sm-table-cell h4">Почта</th>
+                <th class="d-none d-sm-table-cell h4">Номер телефона</th>
+{{--                <th>Настройки</th>--}}
             </tr>
             </thead>
 
             <tbody>
             @foreach($users as $user)
                 @php
-                    $user_id = $user->id
+                    $user_id = $user->id;
                 @endphp
-                <tr>
-                    <td>
-                        <div class="ms-3">
-                            <span class="d-block h5 text-inherit mb-0">{{$user->last_name}} {{ $user->first_name}}</span>
-                        </div>
-                        {{--                        </a>--}}
-                    </td>
-                    <td class="d-none d-sm-table-cell">
-                        <div>
-                            <span class="d-block h5 mb-0">{{$user->login}}</span>
-                        </div>
-                    </td>
-                    <td class="d-none d-sm-table-cell">
-                        <span class="d-block h5 mb-0">{{ $user->email}}</span>
+                <tr data-user-id="{{$user->id}}" onclick="loadsContent('personalInfo', this.dataset.userId)">
+                        <td>
 
-                    </td>
-                    <td class="d-none d-sm-table-cell">
-                        @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
-                            @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
-                                <span class="d-block h5 mb-0">{{ $decodedInfo['mobile_phone'] }}</span>
-                            @else
-                                <span class="d-block h5 mb-0">-</span>
-                            @endif
-                        @endif
-                    </td>
-
-                    <td>
-                        <div class="d-flex flex-grow-1">
-                            <div class="col-auto">
-                                <button class="btn btn-secondary ms-2" onclick="openModal('{{$user->id}}', '{{$user->last_name}}', '{{$user->first_name}}', '{{$decodedInfo['mobile_phone'] ?? ''}}')">
-                                    <i class="fa-solid fa-gear"></i>
-                                </button>
+                            <div class="ms-3">
+                                <span class="d-block h5 text-inherit mb-0">{{$user->last_name}} {{ $user->first_name}}</span>
                             </div>
-                        </div>
-                    </td>
-                </tr>
 
+                        </td>
+                        <td class="d-none d-sm-table-cell">
+                            <div>
+                                <span class="d-block h5 mb-0">{{$user->login}}</span>
+                            </div>
+                        </td>
+                        <td class="d-none d-sm-table-cell">
+                            <span class="d-block h5 mb-0">{{ $user->email}}</span>
+
+                        </td>
+                        <td class="d-none d-sm-table-cell">
+                            @if (isset($user->info) && $decodedInfo = json_decode($user->info, true))
+                                @if (isset($decodedInfo['mobile_phone']) && !empty($decodedInfo['mobile_phone']))
+                                    <span class="d-block h5 mb-0">{{ $decodedInfo['mobile_phone'] }}</span>
+                                @else
+                                    <span class="d-block h5 mb-0">-</span>
+                                @endif
+                            @endif
+                        </td>
+
+{{--                    <td>--}}
+{{--                        <div class="d-flex flex-grow-1">--}}
+{{--                            <div class="col-auto">--}}
+{{--                                <button class="btn btn-secondary ms-2" onclick="openModal('{{$user->id}}', '{{$user->last_name}}', '{{$user->first_name}}', '{{$decodedInfo['mobile_phone'] ?? ''}}')">--}}
+{{--                                    <i class="fa-solid fa-gear"></i>--}}
+{{--                                </button>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </td>--}}
+                </tr>
             @endforeach
             </tbody>
         </table>
     </div>
 </div>
+<script>
+    function loadsContent(content, userId) {
+        $.ajax({
+            url: '{{ route('get-cont', ['content' => 'personalInfo', 'id' => $user->id]) }}',
+            type: 'GET',
+            success: function(response) {
+                $('#content-container').html(response.content);
+                localStorage.setItem('lastUserId', userId);
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }
 
+</script>
 
 <div class="modal fade  mb-5" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen modal-lg">

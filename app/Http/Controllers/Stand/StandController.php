@@ -14,6 +14,7 @@ use App\Models\StandReports;
 use App\Models\StandTemplate;
 use App\Models\User;
 use App\Models\UsersPermissions;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Detection\MobileDetect;
 use Illuminate\Http\Request;
@@ -639,35 +640,123 @@ class StandController extends Controller
         //      return response()->json([$compact]);
     }
 
-    public function tableJson(Request $request, $id) {
+    public function standIndex($type, $id) {
+        $compact = compact(
+            'type',
+            'id',
+        );
+        return view('Modules.stand.stand', $compact);
+    }
+
+    public function standContent($type, $id) {
+        switch ($type) {
+            case 'current':
+                $html = $this->getTableJson($type, $id);
+                return response()->json(['content' => $html]);
+                break;
+        }
+        return response()->json(['content' => $type]);
+    }
+
+    public function getTableJson($type, $id) {
         $canEdit = auth()->user()->can('stand.make_entry');
         $AuthUser = User::find(Auth::id());
 
 
         $stand = Stand::find($id);
-        dd($stand);
-        $users = User::query()
-            ->where('congregation_id', $stand->congregation_id)
-            ->get(['id', 'first_name', 'last_name']);
+
+        //users
+        $users = [];
+
+        $usersWithPermission = User::query()->where('congregation_id', $stand->congregation_id)->get();
+
+        $filteredUsers = $usersWithPermission->filter(function ($user) {
+            return $user->hasPermission('module.stand');
+        });
+
+        $sortedUsers = $filteredUsers->sortBy('last_name');
+
+        foreach ($sortedUsers as $user) {
+            $users[] = [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+            ];
+        }
+        //end
 
 
-        $standType = $request->is('*current*') ? 'current' : 'next';
 
+        if ($type == 'current') {
+            $startDate = Carbon::now()->startOfWeek();
+            $endDate = Carbon::now()->endOfWeek();
+        } elseif ($type == 'next') {
+            $startDate = Carbon::now()->startOfWeek()->addWeek();
+            $endDate = Carbon::now()->endOfWeek()->addWeek();
+        }
         $query = StandTemplate::where('stand_id', $id)
-            ->where('type', '=', $standType);
+            ->where('type', '=', $type);
 
         if (!$AuthUser->hasRole('Developer')) {
             $query->where('congregation_id', '=', $AuthUser->congregation_id);
         }
 
+        $standPublishers = StandPublishers::query()
+            ->whereBetween('date', [$startDate, $endDate])
+            ->select('id', 'day', 'date', 'time', 'publishers')
+            ->get();
+
         $StandTemplate = $query->groupBy(['stand_id', 'congregation_id'])
+            ->select('week_schedule', 'settings')
             ->first();
 
-        $settings = json_decode($StandTemplate->settings, true);
-        $week_schedule = $StandTemplate->week_schedule;
-        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
+        $weekSchedule = $StandTemplate->week_schedule;
+        $schedule = [];
+
+        foreach ($weekSchedule as $day => $times) {
+            $daySchedule = [
+                'day' => $day,
+                'date' => $startDate->addDays($day - 1)->isoFormat('dddd DD.MM.Y'), // Получаем название дня недели
+                'times' => [] // Массив для хранения времён на этот день
+            ];
+
+            foreach ($times as $time) {
+                $timeSchedule = [
+                    'time' => $time,
+                    'users' => [] // Пользователи для данного времени
+                ];
+
+                foreach ($standPublishers as $publisher) {
+                    // Удаляем секунды из времени публикатора
+                    $publisherTime = substr($publisher->time, 0, 5);
+
+                    if ($publisher->day == $day && $publisherTime == $time) {
+                        $publishers = json_decode($publisher->publishers, true);
+                        foreach ($publishers as $user => $status) {
+                            if ($status !== "") {
+                                $userName = UserService::getUserNameById($status);
+                                $timeSchedule['standPublisher_id'] = $publisher->id;
+                                $timeSchedule['users'][] = [
+                                    'id' => $status, // Используем ключ пользователя в качестве id
+                                    'user_name' => $userName // Используем ключ пользователя в качестве имени
+                                ];
+                            }
+                        }
+                    }
+                }
+                $daySchedule['times'][] = $timeSchedule; // Добавляем временной слот в массив times
+            }
+
+            $schedule[] = $daySchedule;
+        }
+
+
+
+//        $standPublishers = StandPublishers::where('stand_template_id', $StandTemplate->id)->get();
         $StandTemplate_settings = json_decode($StandTemplate->settings, true);
         $valuePublishers_at_stand = $StandTemplate_settings['publishers_at_stand'];
+
+
         $user = User::find(Auth::id());
         $userInfo = json_decode($user->info, true);
 
@@ -684,30 +773,31 @@ class StandController extends Controller
             7 => trans('text.Воскресенье'),
         ];
 
-        $dayNumber = $activation_value[0];
-        $dayName = $daysOfWeek[$dayNumber];
+//        $dayNumber = $activation_value[0];
+//        $dayName = $daysOfWeek[$dayNumber];
         $currentDateTime = date('N-H:i');
-        $activationDateTime = $activation_value[1];
+//        $activationDateTime = $activation_value[1];
 
         $compact = compact(
-            'StandTemplate',
-            'week_schedule',
+            'schedule',
+//            'week_schedule',
             'users',
             'stand',
-            'settings',
-            'userInfo',
-            'canEdit',
+//            'settings',
+//            'userInfo',
+//            'canEdit',
             'valuePublishers_at_stand',
-            'standPublishers',
-            'activation',
+//            'standPublishers',
+//            'activation',
             'activation_value',
-            'dayName',
+//            'dayName',
             'valuePublishers_at_stand',
-            'currentDateTime',
-            'activationDateTime',
+//            'currentDateTime',
+//            'activationDateTime',
         );
-        dd($compact);
-        return response()->json(['data' => [$compact]], 200);
+        return view('Modules.stand.table', $compact)->render();
+//        return response()->json($compact);
+
 //        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $stand->congregation_id)) {
 //            $view = 'BootstrapApp.Modules.stand.displays.weekly_schedule';
 //            return view($view, $compact);

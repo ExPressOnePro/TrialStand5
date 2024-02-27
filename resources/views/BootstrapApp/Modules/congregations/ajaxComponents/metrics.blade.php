@@ -1,22 +1,3 @@
-<div class="row">
-    <div class="card col-4">
-        <div class="card-up aqua-gradient"></div>
-        <div class="avatar mx-auto white mt-4">
-            <i class="fa-regular fa-circle-user fa-5x"></i>
-        </div>
-        <div class="card-body text-center">
-            <h4 class="card-title font-weight-bold">Martha Smith</h4>
-            <button class="btn btn-outline-primary"> Написать</button>
-            <button class="btn btn-outline-secondary"> Позвонить</button>
-            <hr>
-{{--            <p><i class="fas fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos,--}}
-{{--                adipisci</p>--}}
-        </div>
-        <p class="h6">Логин: </p>
-        <p class="h6">Email: </p>
-        <p class="h6">Телефон: </p>
-    </div>
-</div>
 
 <div class="row p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
     <div class="col-md-6">
@@ -159,7 +140,7 @@
 <div class="row mb-5">
     @can('congregation.open_meetings_users')
         <div class="col-lg-4 my-1">
-            <a class="card grlight rounded-4 text-decoration-none" href="{{$route_publishers}}">
+            <a class="card grlight rounded-4 text-decoration-none" onclick="loadContent('publishers')">
                 <i class="fas fa-users fa-5x text-center p-3"></i>
                 <div class="card-body text-center">
                     <h4 class="card-title">Возвещатели</h4>
@@ -170,7 +151,7 @@
     @endcan
     @can('congregation.add_module')
         <div class="col-lg-4 my-1">
-            <a class="card grlight rounded-4 text-decoration-none" href="{{ route('congregation.modules', $congregation->id) }}">
+            <a class="card grlight rounded-4 text-decoration-none" onclick="loadContent('modules')">
                 <i class="fa-solid fa-network-wired fa-5x text-center p-3"></i>
                 <div class="card-body text-center">
                     <h4 class="card-title">Модули</h4>
@@ -181,7 +162,7 @@
     @endcan
     @can('module.stand')
         <div class="col-lg-4 my-1">
-            <a class="card grlight rounded-4 text-decoration-none align-items-center" href="{{ route('congregation.stands', $congregation->id) }}">
+            <a class="card grlight rounded-4 text-decoration-none align-items-center" onclick="loadContent('stands')">
                 <img src="{{asset('images/svg/stand.svg')}}" class="p-3" width="115">
                 <div class="card-body text-center">
                     <h4 class="card-title">Стенд</h4>

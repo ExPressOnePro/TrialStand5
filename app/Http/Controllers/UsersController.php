@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UsersController extends Controller{
@@ -59,6 +60,25 @@ class UsersController extends Controller{
             // If user is not found, return an error response
             return response()->json(['error' => 'User not found.'], 404);
         }
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user_info = json_decode($user->info, true);
+        if (isset($user_info['mobile_phone'])) {
+            $user_info['mobile_phone'] = $request->input('phone');
+        } else {
+            $user_info['mobile_phone'] = $request->input('phone');
+        }
+        $user->update([
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'login' => $request->input('login'),
+            'info' => json_encode($user_info),
+        ]);
+        return redirect()->back()->with('success', 'Данные пользователя успешно обновлены.');
     }
 
     public function userCard(StandPublishers $StandPublishers, $id) {

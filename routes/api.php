@@ -28,7 +28,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/generate-token/{id}', [UsersController::class, 'generateToken'])->name('generateToken');
 
+
 //
+
 //Route::middleware(['web', 'auth'])->group(function () {
 //
 //

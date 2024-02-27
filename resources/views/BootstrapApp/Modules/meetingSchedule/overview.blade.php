@@ -54,7 +54,7 @@
         function loadDynamicContent(routeName) {
             $('#preloader').show();
             $.ajax({
-                url: "{{ route('meetingSchedules.overviewAj', $congregation->id) }}",
+                {{--url: "{{ route('meetingSchedules.overviewAj', $congregation->id) }}",--}}
                 type: "GET",
                 success: function (data) {
                     $('#preloader').hide();

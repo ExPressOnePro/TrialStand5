@@ -31,19 +31,20 @@ class DeveloperController extends Controller{
         return view('maintenance');
     }
 
-    public function createBackupAndDownload()
+    public function createBackup()
     {
-        // Имя файла для бэкапа
-        $fileName = 'backup-' . date('Y-m-d-H-i-s') . '.sql';
+        $backupJob = BackupJobFactory::createFromArray(config('laravel-backup.backup'));
 
-        // Путь для сохранения бэкапа
-        $path = storage_path('app/backups/' . $fileName);
+        $backupJob->run();
 
-        // Создание бэкапа базы данных
-        exec('mysqldump -u ' . env('root')  . ' -p ' . env('Meeper') . ' > ' . $path);
+        return response()->json(['message' => 'Backup created successfully']);
+    }
 
-        // Скачивание файла бэкапа
-        return response()->download($path, $fileName)->deleteFileAfterSend(true);
+    public function downloadBackup($fileName)
+    {
+        $backupPath = storage_path('app/' . config('laravel-backup.backup.destination.disks')[0] . '/' . $fileName);
+
+        return response()->download($backupPath);
     }
 
     public function hub() {

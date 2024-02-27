@@ -103,6 +103,160 @@ class HomeController extends Controller {
     }
 
 
+    public function homeContent($content){
+        switch ($content) {
+            case 'main':
+                $html = $this->getMainContent();
+                return response()->json(['content' => $html]);
+                break;
+            case 'menu':
+                $html = $this->getMenuContent();
+                return response()->json(['content' => $html]);
+                break;
+        }
+        return response()->json(['content' => $content]);
+    }
+
+    private function getMainContent()
+    {
+        $user = User::find(Auth::id());
+        $stand = Stand::where('congregation_id', $user->congregation_id)->get();
+        $active_day = StandPublishers::select('day')->distinct()->get();
+        $startOfWeek = now()->format('Y-m-d');
+        $endOfWeek = now()->endOfWeek()->format('Y-m-d');
+        $nextWeekEnd = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
+        $userInfo = json_decode($user->info, true);
+
+        $standPublishersCount = StandPublishers::
+        whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->count();
+
+
+        $standPublishersCountAll = StandPublishers::
+        whereBetween('date', [$startOfWeek, $nextWeekEnd])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->count();
+
+        $user_congregation_id = $user->congregation_id;
+
+        $startOfWeek = now()->format('Y-m-d');
+        $endOfWeek = now()->endOfWeek()->format('Y-m-d');
+
+        $nextWeekStart = Carbon::now()->addWeek()->startOfWeek()->format('Y-m-d');
+        $nextWeekEnd = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
+        $standPublishersToday = StandPublishers::with('standTemplates')
+            ->where('date', $startOfWeek)
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->get();
+
+
+        $standPublishers = StandPublishers::with('standTemplates')
+            ->whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $standPublishersCount = $standPublishers->count();
+
+        $standPublishersNextWeek = StandPublishers::with('standTemplates')
+            ->whereBetween('date', [$nextWeekStart, $nextWeekEnd])
+            ->where(function ($query) use ($user) {
+                $query->where('publishers->user_1', $user->id)
+                    ->orWhere('publishers->user_2', $user->id)
+                    ->orWhere('publishers->user_3', $user->id)
+                    ->orWhere('publishers->user_4', $user->id);
+            })
+            ->orderBy('date', 'asc')
+            ->get();
+
+
+        $standPublishersCountNextWeek = $standPublishersNextWeek->count();
+
+        if($user->hasRole('Developer') ) {
+            $congregationRequestsCount = CongregationRequests::count();
+        } else {
+            $congregationRequestsCount = CongregationRequests::where('congregation_id', $user_congregation_id)->count();
+        }
+
+
+        $meetingSchedules = MeetingSchedules::query()
+            ->where('congregation_id', $user->congregation_id)
+            ->where('week_from', '>=', Carbon::now()->startOfWeek()->format('Y-m-d'));
+
+        if(!auth()->user()->can('schedule.redaction')) {
+            $meetingSchedules->where('published', '=', 1);
+        }
+
+        $meetingSchedules = $meetingSchedules->orderBy('week_from', 'desc')->get();
+
+        $viewed = false; // Инициализируем флаг
+
+        foreach ($meetingSchedules as $meetingSchedule) {
+            $viewedByUsersType = json_decode($meetingSchedule->viewed_by_users, true);
+            if ($viewedByUsersType === null) {
+                $viewedByUsers = [];
+            } else {
+                $viewedByUsers = json_decode($meetingSchedule->viewed_by_users, true);
+            }
+
+            if (is_array($viewedByUsers) && in_array(Auth::id(), $viewedByUsers)) {
+                $viewed = true; // Если хотя бы один объект имеет true, устанавливаем флаг в true и выходим из цикла
+                break;
+            }
+        }
+
+        $compact = compact(
+
+            'standPublishersCountAll',
+            'user',
+            'userInfo',
+            'standPublishersToday',
+            'stand',
+            'user_congregation_id',
+            'congregationRequestsCount',
+            'standPublishersCount',
+            'userInfo',
+            'active_day',
+            'standPublishersCountNextWeek',
+            'standPublishersNextWeek',
+            'standPublishers',
+            'nextWeekStart',
+            'standPublishersCount',
+            'viewed',
+        );
+
+        return view ('BootstrapApp.Modules.home.partials.main', $compact)->render();
+    }
+    private function getMenuContent()
+    {
+        return view ('BootstrapApp.Modules.home.partials.menu')->render();
+    }
+
+
     public function menu(){
         $user = User::find(Auth::id());
         $userInfo = json_decode($user->info, true);

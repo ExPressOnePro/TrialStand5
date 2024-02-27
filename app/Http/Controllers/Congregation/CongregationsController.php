@@ -59,142 +59,15 @@ class CongregationsController extends Controller {
 
     public function view($id) {
 
-        // Coutns
-        $countUsers = User::where('congregation_id', $id)->count();
-        $countGroups = Group::where('congregation_id', $id)->count();
-        $countStands = Stand::where('congregation_id', $id)->count();
-        $countCongregationsPermissions = CongregationsPermissions::with('permission')
-            ->whereHas('permission', function ($query) {
-                $query->where('name', 'like', 'module%');
-            })
-            ->where('congregation_id', $id)
-            ->count();
-
-
-        $usersRoleOverseers = UsersRoles::where('role_id', 'Overseer')->get();
-
-        $lastWeek = Carbon::now()->subWeek();
-        $usersActiveCount = User::where(DB::raw('info->>"$.last_login"'), '>=', $lastWeek)->where('congregation_id', $id)->count();
-        $usersCongregationCount = User::where('congregation_id', $id)
-            ->where(function ($query) {
-                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
-                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
-            })
-            ->count();
-
-// Проверка на пустые значения и присвоение 0
-        $usersActiveCount = !empty($usersActiveCount) ? $usersActiveCount : 0;
-        $usersCongregationCount = !empty($usersCongregationCount) ? $usersCongregationCount : 0;
-
-        // Проверка на ноль перед делением
-        if ($usersCongregationCount !== 0) {
-            $usersActiveCountPercent = ($usersActiveCount / $usersCongregationCount) * 100;
-        } else {
-            $usersActiveCountPercent = 0; // Если $usersCongregationCount равно нулю
-        }
-
-        if ($usersRoleOverseers->isEmpty()) {
-            $countOverseers = '0';
-        } else {
-            foreach ($usersRoleOverseers as $usersRoleOverseer) {
-                $countOverseers[] = User::where('congregation_id', $id)
-                    ->where('id', $usersRoleOverseers->user_id)
-                    ->count();
-            }
-        }
         $AuthUser = User::find(Auth::id());
         $congregation = Congregation::find($id);
-        $Developer = Role::where('slug', '=', 'Developer')->first();
-        $Developers_id = UsersRoles::where('role_id', $Developer->id)->get();
-        $permission_Overseers = Permission::where('name', 'like', 'Developer.User manager%')->get();
-
-        $groups = Group::with('responsibleUserId')
-            ->where('congregation_id', $id)
-            ->get();
-
-        foreach ($groups as $group) {
-            $users_groups[] = UsersGroups::with('User')->where('group_id', $group->id)->get();
-        }
-
-        if($permission_Overseers->isEmpty()) {
-            $permission_Overseer = '0';
-        } else {
-            foreach ($permission_Overseers as $permission_Oversee) {
-                $permission_Overseer[] = UsersPermissions::with('User')
-                    ->where('permission_id', $permission_Oversee->id)
-                    ->get();
-            }
-        }
-
-        $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
-        $permission_stands = Permission::where('name','like', 'User. Stand%')->get();
-
-        $users = User::where('congregation_id', $id)->get();
-
-        $congregationModules = CongregationsPermissions::where('congregation_id', $id)->get();
-        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
-        foreach ($permissions as $permission) {
-            $permission->has_permission = DB::table('congregations_permissions')
-                ->where('congregation_id', $id)
-                ->where('permission_id', $permission->id)
-                ->exists();
-        }
-
-        $connectedModules = CongregationsPermissions::with('permission')
-            ->whereHas('permission', function ($query) {
-                $query->where('name', 'like', 'module%');
-            })
-            ->where('congregation_id', $id)
-            ->get();
-
-        $congregationRequests = CongregationRequests::with('user')
-            ->where('congregation_id', $id)
-            ->get();
-
-        $congregationRequestsCount = CongregationRequests::with('user')
-            ->where('congregation_id', $id)
-            ->count();
-
-        $metrics = [
-            [
-                'title' => 'Количество возвещателей',
-                'route' => route('congregation.publishers', $id),
-                'count' => $usersCongregationCount,
-                'percent' => null,
-            ],
-//            [
-//                'title' => 'Активных за неделю',
-//                'route' =>  route('congregation.ActiveUsersPerWeek', $id),
-//                'count' => $usersActiveCount,
-//                'percent' => $usersActiveCountPercent,
-//            ],
-            [
-                'title' => 'Работающих стендов',
-                'route' => route('congregation.stands', $id),
-                'count' => $countStands,
-                'percent' => null, // Здесь процент не указан
-            ],
-            [
-                'title' => 'Подключено модулей',
-                'route' => route('congregation.modules', $id),
-                'count' => $countCongregationsPermissions,
-                'percent' => null, // Здесь процент не указан
-            ],
-        ];
-
 
 
         $compact = compact(
             'congregation',
-            'metrics',
-            'congregationRequests',
-            'congregationRequestsCount',
         );
 
-        $mobile_detect = new MobileDetect();
-
         if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
-            $view = $mobile_detect->isMobile() ? 'Modules.congregation.overview' : 'Modules.congregation.overview';
             $view2 = 'BootstrapApp.Modules.congregations.overview';
             return view($view2, $compact);
         } else {
@@ -235,17 +108,17 @@ class CongregationsController extends Controller {
         $metrics = [
             [
                 'title' => 'Возвещатели',
-                'route' => route('congregation.publishers', $id),
+                'route' => '',
                 'count' => $usersCongregationCount,
             ],
             [
                 'title' => 'Стенды',
-                'route' => route('congregation.stands', $id),
+                'route' => '',
                 'count' => $countStands,
             ],
             [
                 'title' => 'Модули',
-                'route' => route('congregation.modules', $id),
+                'route' => '',
                 'count' => $countCongregationsPermissions,
             ],
         ];
@@ -263,13 +136,9 @@ class CongregationsController extends Controller {
 
         }
 
-        $route_publishers = route('congregation.publishers', $id);
-
-
         $compact = compact(
             'congregation',
             'metrics',
-            'route_publishers',
             'congregation_info',
         );
 
@@ -304,7 +173,6 @@ class CongregationsController extends Controller {
             return redirect()->back()->with('error', 'Собрание не найдено');
         }
     }
-
     public function groupView($congregation_id, $group_id) {
 
         $countUsers = User::where('congregation_id', $congregation_id)->count();
@@ -403,121 +271,9 @@ class CongregationsController extends Controller {
             }
         }
     }
-
     public function viewExampleSchedule(){
 
         return view ('Mobile.menu.modules.meetingSchedules.overview');
-    }
-
-    public function modulesAj($congregation_id) {
-        $AuthUser = User::find(Auth::id());
-        $congregation = Congregation::find($congregation_id);
-        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
-
-        $data = [
-            'congregation' => [
-                'id' => $congregation->id,
-                'name' => $congregation->name,
-            ],
-            'permissions' => [],
-        ];
-        foreach ($permissions as $permission) {
-            $has_permission = CongregationsPermissions::query()
-                ->where('congregation_id', $congregation_id)
-                ->where('permission_id', $permission->id)
-                ->exists();
-
-            $data['permissions'][] = [
-                'id' => $permission->id,
-                'name' => $permission->name,
-                'has_permission' => $has_permission,
-            ];
-        }
-
-
-        $compact = compact('data');
-
-        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
-            $view = 'BootstrapApp.Modules.congregations.ajaxComponents.modules';
-            return view($view, $compact);
-        } else {
-            return view('errors.423Locked');
-        }
-    }
-
-
-
-    public function displayRequests($congregation_id) {
-        $AuthUser = User::find(Auth::id());
-        $congregation = Congregation::find($congregation_id);
-        $congregationRequests = CongregationRequests::with('user')
-            ->where('congregation_id', $congregation_id)
-            ->get();
-        $congregationRequestsCount = CongregationRequests::with('user')
-            ->where('congregation_id', $congregation_id)
-            ->count();
-
-        $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
-        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
-        foreach ($permissions as $permission) {
-            $permission->has_permission = DB::table('congregations_permissions')
-                ->where('congregation_id', $congregation_id)
-                ->where('permission_id', $permission->id)
-                ->exists();
-        }
-
-        $compact = compact(
-            'congregation',
-            'permissions',
-            'congregationRequests',
-            'congregationRequestsCount'
-        );
-
-        $mobile_detect = new MobileDetect();
-        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
-            $view =  'Modules.congregation.displays.requests';
-            return view($view, $compact);
-        } else {
-            return view('errors.423Locked');
-        }
-    }
-    public function displayPublishers($congregation_id) {
-        $congregation = Congregation::find($congregation_id);
-        $congregationRequestsCount = CongregationRequests::with('user')
-            ->where('congregation_id', $congregation_id)
-            ->count();
-
-        $users = User::where('congregation_id', $congregation_id)
-            ->where(function ($query) {
-                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
-                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
-            })
-            ->get();
-
-        $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
-
-        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
-        foreach ($permissions as $permission) {
-            $permission->has_permission = DB::table('congregations_permissions')
-                ->where('congregation_id', $congregation_id)
-                ->where('permission_id', $permission->id)
-                ->exists();
-        }
-
-        if(Auth::user()->hasRole('Developer')) {
-            $permissions_users = Permission::get();
-        } else{
-            $permissions_users = Permission::where('name', 'LIKE', 'Stand%')->get();
-        }
-
-        $view1 = 'Modules.congregation.displays.publishers';
-        $view2 = 'BootstrapApp.Modules.congregations.displays.publishers';
-
-        return view($view2,compact(
-            'congregation',
-            'permissions_users',
-            'users',
-            'permissions','congregationRequestsCount'));
     }
 
 
@@ -559,7 +315,6 @@ class CongregationsController extends Controller {
             'users',
             'permissions','congregationRequestsCount'));
     }
-
     public function createUserAj($congregation_id){
         $congregation = Congregation::query()->find($congregation_id);
         $compact = compact('congregation');
@@ -573,6 +328,7 @@ class CongregationsController extends Controller {
         $compact = compact('congregation');
         return view('BootstrapApp.Modules.congregations.ajaxComponents.settings', $compact);
     }
+
     public function standsAj($congregation_id){
 
         $congregation = Congregation::query()->find($congregation_id);
@@ -589,6 +345,212 @@ class CongregationsController extends Controller {
         );
 
         return view('BootstrapApp.Modules.congregations.ajaxComponents.stands', $compact);
+    }
+
+    public function getContent($content)
+    {
+        $user = User::find(Auth::id());
+        $congregation_id = $user->congregation_id;
+
+        switch ($content) {
+            case 'over':
+                $html = $this->over($congregation_id);
+                return response()->json(['content' => $html]);
+                break;
+            case 'publishers':
+                $html = $this->getAllPublishers($congregation_id);
+                return response()->json(['content' => $html]);
+                break;
+            case 'modules':
+                $html = $this->getAllModules($congregation_id);
+                return response()->json(['content' => $html]);
+                break;
+            case 'stands':
+                $html = $this->getAllStands($congregation_id);
+                return response()->json(['content' => $html]);
+                break;
+            case 'personalInfo':
+                $html = $this->getPersonalInfo($congregation_id);
+                return response()->json(['content' => $html]);
+                break;
+        }
+        return response()->json(['content' => $content]);
+    }
+
+    public function getCont($content, $userId)
+    {
+        // Fetch the user based on the user_id
+        $user = User::find($userId);
+
+        // Handle if the user is not found
+        if (!$user) {
+            return response()->json(['error' => 'User not found']);
+        }
+
+        // Fetch other required data
+        $congregation_id = $user->congregation_id;
+        $congregation = Congregation::find($congregation_id);
+        $userInfo = json_decode($user->info, true);
+
+        // Prepare the compact array and return the view
+        $compact = compact('user', 'userInfo', 'congregation');
+        $html = view('BootstrapApp.Modules.congregations.ajaxComponents.publisherSettings', $compact)->render();
+
+        return response()->json(['content' => $html]);
+    }
+
+    private function over($congregation_id)
+    {
+        $countStands = Stand::where('congregation_id', $congregation_id)->count();
+        $countCongregationsPermissions = CongregationsPermissions::with('permission')
+            ->whereHas('permission', function ($query) {
+                $query->where('name', 'like', 'module%');
+            })
+            ->where('congregation_id', $congregation_id)
+            ->count();
+
+        $usersCongregationCount = User::where('congregation_id', $congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->count();
+        $usersCongregationCount = !empty($usersCongregationCount) ? $usersCongregationCount : 0;
+
+        $AuthUser = User::find(Auth::id());
+        $congregation = Congregation::find($congregation_id);
+
+        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
+        foreach ($permissions as $permission) {
+            $permission->has_permission = DB::table('congregations_permissions')
+                ->where('congregation_id', $congregation_id)
+                ->where('permission_id', $permission->id)
+                ->exists();
+        }
+        $metrics = [
+            [
+                'title' => 'Возвещатели',
+                'count' => $usersCongregationCount,
+            ],
+            [
+                'title' => 'Стенды',
+                'count' => $countStands,
+            ],
+            [
+                'title' => 'Модули',
+                'count' => $countCongregationsPermissions,
+            ],
+        ];
+
+        $congregationInfo = json_decode($congregation->info, true);
+
+        if($congregationInfo === null) {
+            $congregation_info = null;
+        } else  {
+            $weekday = $congregationInfo['weekday'];
+            $weekend = $congregationInfo['weekend'];
+            $day_weekday = Carbon::now()->startOfWeek()->addDays($weekday - 1)->isoFormat('dddd');
+            $day_weekend = Carbon::now()->startOfWeek()->addDays($weekend - 1)->isoFormat('dddd');
+            $congregation_info = $day_weekday .' '.$congregationInfo['weekdayTime'].', '. $day_weekend .' '.$congregationInfo['weekendTime'];
+
+        }
+
+        $compact = compact(
+            'congregation',
+            'metrics',
+            'congregation_info',
+        );
+
+
+        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
+            $view2 =  'BootstrapApp.Modules.congregations.ajaxComponents.metrics';
+            return view($view2, $compact)->render();
+        } else {
+            return view('errors.423Locked');
+        }
+    }
+
+    private function getAllPublishers($congregation_id)
+    {
+        $congregation = Congregation::find($congregation_id);
+
+        $users = User::where('congregation_id', $congregation_id)
+            ->where(function ($query) {
+                $query->whereRaw("JSON_EXTRACT(info, '$.account_type') IS NULL")
+                    ->orWhereRaw("JSON_EXTRACT(info, '$.account_type') != 'deleted'");
+            })
+            ->get();
+
+        return view('BootstrapApp.Modules.congregations.ajaxComponents.publishers', compact('congregation', 'users'))->render();
+    }
+
+    private function getAllModules($congregation_id)
+    {
+        $AuthUser = User::find(Auth::id());
+        $congregation = Congregation::find($congregation_id);
+        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
+
+        $data = [
+            'congregation' => [
+                'id' => $congregation->id,
+                'name' => $congregation->name,
+            ],
+            'permissions' => [],
+        ];
+        foreach ($permissions as $permission) {
+            $has_permission = CongregationsPermissions::query()
+                ->where('congregation_id', $congregation_id)
+                ->where('permission_id', $permission->id)
+                ->exists();
+
+            $data['permissions'][] = [
+                'id' => $permission->id,
+                'name' => $permission->name,
+                'has_permission' => $has_permission,
+            ];
+        }
+        $compact = compact('data');
+
+        if ($AuthUser->hasRole('Developer') || ($AuthUser->congregation_id == $congregation->id)) {
+            $view = 'BootstrapApp.Modules.congregations.ajaxComponents.modules';
+            return view($view, $compact)->render();
+        } else {
+            return view('errors.423Locked');
+        }
+    }
+
+    private function getAllStands($congregation_id)
+    {
+
+        $congregation = Congregation::query()->find($congregation_id);
+        $user = User::find(Auth::id());
+
+        $accessible_stands_for_the_user = User::findOrFail(Auth::id())
+            ->stands()
+            ->where('congregation_id', $congregation->id)
+            ->get();
+
+        $compact = compact(
+            'accessible_stands_for_the_user',
+            'congregation',
+        );
+
+        return view('BootstrapApp.Modules.congregations.ajaxComponents.stands', $compact)->render();
+    }
+
+    private function getPersonalInfo($congregation_id)
+    {
+        $congregation = Congregation::find($congregation_id);
+//        $user = User::find($user_id);
+//
+//        if (!$user) {
+//            return redirect()->back()->with('error', 'User not found');
+//        }
+//
+//        $userInfo = json_decode($user->info, true);
+//        $compact = compact('user', 'userInfo', 'congregation');
+
+        return view('BootstrapApp.Modules.congregations.ajaxComponents.publisherSettings')->render();
     }
 
     public function createUserFromCongregation(Request $request, $id)
@@ -645,128 +607,6 @@ class CongregationsController extends Controller {
         ]);
 
         return $this->view($id);
-    }
-
-
-    public function switchPermission(Request $request) {
-        $userId = $request->input('user_id');
-        $permissionId = $request->input('permission_id');
-        $isChecked = $request->input('is_checked');
-
-
-        $existingPermission = UsersPermissions::where('user_id', $userId)
-            ->where('permission_id', $permissionId)
-            ->first();
-
-//        if ($isChecked && !$existingPermission) {
-//            DB::table('users_permissions')::insert([
-//                'user_id' => $userId,
-//                'permission_id' => $permissionId,
-//            ]);
-//        } elseif (!$isChecked && $existingPermission) {
-//            $existingPermission->delete();
-//        }
-    }
-
-    public function displayAppointed($congregation_id) {
-        $congregation = Congregation::find($congregation_id);
-
-        $congregationRequestsCount = CongregationRequests::with('user')
-            ->where('congregation_id', $congregation_id)
-            ->count();
-
-        $users = User::where('congregation_id', $congregation_id)->get();
-
-        $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
-        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
-        foreach ($permissions as $permission) {
-            $permission->has_permission = DB::table('congregations_permissions')
-                ->where('congregation_id', $congregation_id)
-                ->where('permission_id', $permission->id)
-                ->exists();
-        }
-
-        return view('Mobile.menu.modules.congregation.display.appointed',compact(
-            'congregation',
-            'users',
-            'permissions','congregationRequestsCount'));
-    }
-    public function displaySettings($congregation_id) {
-        $congregation = Congregation::find($congregation_id);
-        $congregationRequestsCount = CongregationRequests::with('user')
-            ->where('congregation_id', $congregation_id)
-            ->count();
-
-        $users = User::where('congregation_id', $congregation_id)->get();
-
-        $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
-        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
-        foreach ($permissions as $permission) {
-            $permission->has_permission = DB::table('congregations_permissions')
-                ->where('congregation_id', $congregation_id)
-                ->where('permission_id', $permission->id)
-                ->exists();
-        }
-
-        return view('Mobile.menu.modules.congregation.display.settings',compact(
-            'congregation',
-            'users',
-            'permissions','congregationRequestsCount'));
-    }
-
-    public function displayActiveUsersPerWeek($congregation_id) {
-
-        $lastWeekTimestamp = now()->subWeek();
-        $users = User::whereRaw('JSON_EXTRACT(info, "$.last_login") IS NOT NULL')
-            ->where('congregation_id', $congregation_id)
-            ->where(DB::raw('info->>"$.last_login"'), '>=', $lastWeekTimestamp)
-            ->orderByDesc('info->last_login')
-            ->get();
-
-        $congregation = Congregation::query()->find($congregation_id);
-        $compact = compact('users',
-            'congregation');
-        return view('Modules.congregation.displays.ActiveUsersPerWeek', $compact);
-    }
-
-    public function displayStands($congregation_id) {
-
-        $user = User::find(Auth::id());
-        $congregation = Congregation::find($congregation_id);
-
-        if($user->hasRole('Developer')) {
-            $accessible_stands_for_the_user = Stand::where('congregation_id', $congregation_id)->get();
-        } else {
-            $accessible_stands_for_the_user = DB::table('users')
-                ->join('stands', 'stands.congregation_id', '=', 'users.congregation_id')
-                ->select('stands.*')
-                ->where('users.id', Auth::id())
-                ->where('stands.congregation_id', $congregation_id)
-                ->get();
-        }
-
-
-        $congregationRequestsCount = CongregationRequests::with('user')
-            ->where('congregation_id', $congregation_id)
-            ->count();
-
-        $congregationModules = CongregationsPermissions::where('congregation_id', $congregation_id)->get();
-        $permissions = Permission::where('name', 'LIKE', 'module%')->get();
-
-        foreach ($permissions as $permission) {
-            $permission->has_permission = DB::table('congregations_permissions')
-                ->where('congregation_id', $congregation_id)
-                ->where('permission_id', $permission->id)
-                ->exists();
-        }
-        $compact = compact(
-            'congregation',
-            'accessible_stands_for_the_user',
-            'permissions',
-            'congregationRequestsCount'
-        );
-
-        return view('Modules.congregation.displays.stands', $compact);
     }
 
     public function infoSave($congregation_id) {
@@ -832,6 +672,7 @@ class CongregationsController extends Controller {
         return redirect()->back();
     }
 
+
     public function deleteProfile(Request $request, $id)
     {
         $request->validate([
@@ -856,11 +697,6 @@ class CongregationsController extends Controller {
 
         return redirect()->back();
     }
-
-
-
-
-
 
 
     public function reject($id, $conReq) {

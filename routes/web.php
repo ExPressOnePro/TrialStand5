@@ -71,9 +71,11 @@ Route::group(['middleware' => 'auth'], function () {
         ], function () {
             Route::get('/', [HomeController::class, 'index'])->name('home');
             Route::get('/records-with-stand', [HomeController::class, 'recordsWithStandPage'])->name('home.recordsWithStandPage');
+            Route::get('/{id}', [CongregationsController::class, 'view'])->name('congregationView');
+
+            Route::get('/home-content/{content}', [HomeController::class, 'homeContent'])->name('home-content');
         });
 
-        Route::get('/LZn1XfWhZUqi', [HomeController::class, 'home2'])->name('home2');
         Route::get('/help', [HomeController::class, 'helpfaq'])->name('helpfaq');
 
         Route::get('/changeLog', [HomeController::class, 'changeLog'])->name('changeLog');
@@ -136,7 +138,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/current/{id}', [StandController::class, 'table'])->name('stand.current');
             Route::get('/next/{id}', [StandController::class, 'table'])->name('stand.next');
 
-            Route::get('table/{id}', [StandController::class, 'tableJson'])->name('stand.table_json');
+
+            Route::get('table/{type}/{id}', [StandController::class, 'standIndex'])->name('stand.content');
+            Route::get('tableContent/{type}/{id}', [StandController::class, 'standContent'])->name('stand.table_json');
 
 
             Route::get('/current2/{id}', [StandController::class, 'table2'])->name('stand.current2');
@@ -241,23 +245,20 @@ Route::group(['middleware' => 'auth'], function () {
             'prefix' => 'congregation',
         ], function () {
             // Stand Controller
-            Route::get('/overview/{id}', [CongregationsController::class, 'view'])->name('congregationView');
-            Route::get('/overviewAj/{id}', [CongregationsController::class, 'overviewAj'])->name('overviewAj');
-            Route::get('/publishers/{congregation_id}/', [CongregationsController::class, 'view'])->name('congregation.publishers');
-            Route::get('/publishersAj/{id}/', [CongregationsController::class, 'publishersAj'])->name('congregation.publishersAj');
+            Route::get('/{id}', [CongregationsController::class, 'view'])->name('congregationView');
+
+            Route::get('/get-content/{content}', [CongregationsController::class, 'getContent'])->name('get-content');
+            Route::get('/get-content/{content}/{id}', [CongregationsController::class, 'getCont'])->name('get-cont');
+
+//            Route::get('/personalInfo/{id}', [CongregationsController::class, 'view'])->name('congregation.personalInfo');
+
+//            Route::get('/personalInfoAj/{id}', [CongregationsController::class, 'personalInfoAj'])->name('congregation.personalInfoAj');
+
+            Route::post('/users/{id}', [UsersController::class, 'updateUser'])->name('users.update');
+
+
             Route::get('/createUser/{id}', [CongregationsController::class, 'view'])->name('congregation.createU');
             Route::get('/createUserAj/{id}', [CongregationsController::class, 'createUserAj'])->name('congregation.createUserAj');
-
-            Route::get('/settings/{id}', [CongregationsController::class, 'view'])->name('congregation.settings');
-            Route::get('/settingsAj/{id}', [CongregationsController::class, 'settingsAj'])->name('congregation.settingsAj');
-
-            Route::get('/stands/{id}', [CongregationsController::class, 'view'])->name('congregation.stands');
-            Route::get('/standsAj/{id}', [CongregationsController::class, 'standsAj'])->name('congregation.standsAj');
-
-            Route::get('/modules/{id}', [CongregationsController::class, 'view'])->name('congregation.modules');
-            Route::get('/modulesAj/{id}', [CongregationsController::class, 'modulesAj'])->name('congregation.modulesAj');
-
-
             Route::post('/saveDateTimeForMeetings/{id}', [CongregationsController::class, 'saveDateTimeForMeetings'])->name('congregation.saveDateTimeForMeetings');
             Route::post('/crus/{id}', [CongregationsController::class, 'createUserFromCongregation'])->name('createPublisher');
 
@@ -267,6 +268,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/appointed/{congregation_id}/', [CongregationsController::class, 'displayAppointed'])->name('congregation.appointed');
             Route::get('/settings/{congregation_id}/', [CongregationsController::class, 'displaySettings'])->name('congregation.settings');
             Route::get('/stands/{congregation_id}/', [CongregationsController::class, 'displayStands'])->name('congregation.stands');
+
 
         });
 
@@ -361,6 +363,8 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
 
+
+
         Route::group([
             'middleware' => 'can:congregation.open_congregation',
             'prefix' => 'congregation',
@@ -378,8 +382,6 @@ Route::group(['middleware' => 'auth'], function () {
         ], function () {
             Route::get('/', [RolesAndPermissionsController::class, 'rolesPermissionsPage'])->name('rolesPermissionsPage');
             Route::post('/delete', [RolesAndPermissionsController::class, 'rolePermissionDelete'])->name('rolePermissionDelete');
-
-
             Route::get('/createRole', [DeveloperController::class, 'createNewRolePage'])->name('createNewRolePage');
             Route::post('/createRole', [DeveloperController::class, 'createNewRole'])->name('createNewRole');
             Route::get('/createPermission', [DeveloperController::class, 'createNewPermissionPage'])->name('createNewPermissionPage');
@@ -392,25 +394,25 @@ Route::group(['middleware' => 'auth'], function () {
         });
     });
 
-Route::group([
-    'middleware' => 'can:congregation.open_meetings_users',
-    'prefix' => 'users',
-], function () {
-    Route::get('/', [UsersController::class, 'allUsersPage'])->name('users');
-    Route::get('/card/{id}', [UsersController::class, 'userCard'])->name('userCard');
-    Route::post('/card/{id}', [UsersController::class, 'roleAllow'])->name('roleAllow');
-    Route::post('/card/{id}/roledelete', [UsersController::class, 'roleDelete'])->name('roleDelete');
-    Route::post('/card/{id}/permissionAllow', [UsersController::class, 'permissionAllow'])->name('permissionAllow');
-    Route::post('/card/{id}/permissionDelete', [UsersController::class, 'permissionDelete'])->name('permissionDelete');
-    Route::post('/card/switchPermission', [CongregationsController::class, 'switchPermission'])->name('switchPermission');
-    Route::post('/card/{id}/changeGroup', [UsersController::class, 'changeGroup'])->name('user.changeGroup');
 
-    Route::get('/responsible/', [UsersController::class, 'displayResponsi ble'])->name('users.responsible');
-    Route::post('/responsible/', [UsersController::class, 'updateResponsibilities'])->name('users.updateResponsibilities');
 
-    Route::post('/updateGeneratePassword', [UsersController::class, 'updateGeneratePassword'])->name('users.updateGeneratePassword');
-    Route::post('/UIkSTqWyNt3X', [UsersController::class, 'connectUser'])->name('connect.user');
-});
+    Route::group([
+        'middleware' => 'can:congregation.open_meetings_users',
+        'prefix' => 'uusuuse',
+    ], function () {
+        Route::get('/', [UsersController::class, 'allUsersPage'])->name('users');
+        Route::get('/card/{id}', [UsersController::class, 'userCard'])->name('userCard');
+        Route::post('/card/{id}', [UsersController::class, 'roleAllow'])->name('roleAllow');
+        Route::post('/card/{id}/roledelete', [UsersController::class, 'roleDelete'])->name('roleDelete');
+        Route::post('/card/{id}/permissionAllow', [UsersController::class, 'permissionAllow'])->name('permissionAllow');
+        Route::post('/card/{id}/permissionDelete', [UsersController::class, 'permissionDelete'])->name('permissionDelete');
+        Route::post('/card/switchPermission', [CongregationsController::class, 'switchPermission'])->name('switchPermission');
+        Route::post('/card/{id}/changeGroup', [UsersController::class, 'changeGroup'])->name('user.changeGroup');
+        Route::get('/responsible/', [UsersController::class, 'displayResponsible'])->name('users.responsible');
+        Route::post('/responsible/', [UsersController::class, 'updateResponsibilities'])->name('users.updateResponsibilities');
+        Route::post('/updateGeneratePassword', [UsersController::class, 'updateGeneratePassword'])->name('users.updateGeneratePassword');
+        Route::post('/UIkSTqWyNt3X', [UsersController::class, 'connectUser'])->name('connect.user');
+    });
 
 
 

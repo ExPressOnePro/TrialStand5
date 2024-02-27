@@ -110,7 +110,6 @@
                 @endcan
             </div>
         </div>
-
     </div>
     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
         <p>This is some placeholder content the <strong>Contact tab's</strong> associated content. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling. You can use it with tabs, pills, and any other <code>.nav</code>-powered navigation.</p>
@@ -138,6 +137,6 @@
             }
         });
     }
-</script>
+</script>f
 
 
